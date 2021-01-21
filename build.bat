@@ -1,2 +1,3 @@
 @echo off
-go build -o bin/compose-generator.exe src/compose-generator.go
+cd src
+go build -o ../bin/compose-generator.exe compose-generator.go

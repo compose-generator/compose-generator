@@ -5,14 +5,21 @@ name: Go CI
 on:
   push:
   pull_request:
-    branches: [ main, beta, dev ]
+    branches: [ main, dev ]
 
 jobs:
   build:
     strategy:
       matrix:
         go-version: [1.14.x, 1.15.x]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            prepare_command: GO111MODULE=on go get github.com/urfave/cli/v2
+            build_script: chmod +x build.sh; ./build.sh
+          - os: windows-latest
+            prepare_command: go env -w GO111MODULE=on && go get github.com/urfave/cli/v2
+            build_script: .\build.bat
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -22,5 +29,7 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Test
-      run: go test ./...
+    - name: Install dependencies
+      run: ${{ matrix.prepare_command }}
+    - name: Build testwise
+      run: ${{ matrix.script_name }}

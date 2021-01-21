@@ -1,2 +1,3 @@
 #!/bin/sh
-go build -o bin/compose-generator src/compose-generator.go
+cd src
+go build -o bin/compose-generator compose-generator.go
