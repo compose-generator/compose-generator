@@ -16,7 +16,7 @@ jobs:
         include:
           - os: ubuntu-latest
             prepare_command: GO111MODULE=on go get github.com/urfave/cli/v2
-            build_script: chmod +x build.sh; ./build.sh
+            build_script: sed -i -e 's/\r$//' build.sh; chmod +x build.sh; ./build.sh
           - os: windows-latest
             prepare_command: go env -w GO111MODULE=on && go get github.com/urfave/cli/v2
             build_script: .\build.bat
@@ -31,5 +31,5 @@ jobs:
       uses: actions/checkout@v2
     - name: Install dependencies
       run: ${{ matrix.prepare_command }}
-    - name: Build testwise
+    - name: Run build process
       run: ${{ matrix.script_name }}

@@ -64,6 +64,7 @@ func main() {
 
 func generate() {
 	fmt.Print("What is the name of your project: ")
+
 }
 
 func add() {
