@@ -15,10 +15,18 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            prepare_command: GO111MODULE=on go get github.com/urfave/cli/v2
+            prepare_command: |
+              GO111MODULE=on go get github.com/urfave/cli/v2
+              GO111MODULE=on go get gopkg.in/yaml.v2
+              GO111MODULE=on go get github.com/fatih/color
+              GO111MODULE=on go get github.com/tockins/interact
             build_script: sed -i -e 's/\r$//' build.sh; chmod +x build.sh; ./build.sh
           - os: windows-latest
-            prepare_command: go env -w GO111MODULE=on && go get github.com/urfave/cli/v2
+            prepare_command: |
+              go env -w GO111MODULE=on && go get github.com/urfave/cli/v2
+              go env -w GO111MODULE=on && go get gopkg.in/yaml.v2
+              go env -w GO111MODULE=on && go get github.com/fatih/color
+              go env -w GO111MODULE=on && go get github.com/tockins/interact
             build_script: .\build.bat
 
     runs-on: ${{ matrix.os }}

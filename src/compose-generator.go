@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/urfave/cli/v2"
+
+	"compose-generator/src/commands"
 )
 
 const VERSION = "1.0.0"
@@ -28,7 +29,7 @@ func main() {
 		Copyright: "© 2021 Marc Auberer",
 		Usage:     "Generate docker compose configuration files for your projects.",
 		Action: func(c *cli.Context) error {
-			generate()
+			commands.Generate()
 			return nil
 		},
 		Flags: []cli.Flag{
@@ -40,7 +41,7 @@ func main() {
 				Aliases: []string{"a"},
 				Usage:   "Adds a service to an existing compose file",
 				Action: func(c *cli.Context) error {
-					add()
+					commands.Add()
 					return nil
 				},
 			},
@@ -49,7 +50,7 @@ func main() {
 				Aliases: []string{"r", "rm"},
 				Usage:   "Removes a service from an existing compose file",
 				Action: func(c *cli.Context) error {
-					remove()
+					commands.Remove()
 					return nil
 				},
 			},
@@ -60,17 +61,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func generate() {
-	fmt.Print("What is the name of your project: ")
-
-}
-
-func add() {
-
-}
-
-func remove() {
-
 }

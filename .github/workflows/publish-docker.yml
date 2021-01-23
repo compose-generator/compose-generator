@@ -19,7 +19,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Install dependencies
-      run: GO111MODULE=on go get github.com/urfave/cli/v2
+      run: |
+        GO111MODULE=on go get github.com/urfave/cli/v2
+        GO111MODULE=on go get gopkg.in/yaml.v2
+        GO111MODULE=on go get github.com/fatih/color
+        GO111MODULE=on go get github.com/tockins/interact
     - name: Run build process
       run: |
         sed -i -e 's/\r$//' build.sh

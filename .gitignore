@@ -1,2 +1,5 @@
 # Ignore executables
 bin/*
+
+# Ignore compose-generator output
+docker-compose.yml
