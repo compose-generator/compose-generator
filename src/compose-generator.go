@@ -6,7 +6,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"compose-generator/src/commands"
+	"compose-generator/commands"
 )
 
 const VERSION = "1.0.0"
