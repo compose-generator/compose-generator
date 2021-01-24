@@ -1,0 +1,1 @@
+# Predefined Stack templates

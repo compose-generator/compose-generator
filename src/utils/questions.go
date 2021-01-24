@@ -65,11 +65,31 @@ func YesNoQuestion(question string, default_value bool) bool {
 }
 
 func MenuQuestion(label string, items []string) string {
-	prompt := promptui.Select{Label: label, Items: items}
+	prompt := promptui.Select{
+		Label: label,
+		Items: items,
+		//Stdout: &bellSkipper{},
+	}
 	_, result, err := prompt.Run()
 	if err != nil {
 		fmt.Printf("Prompt failed %v\n", err)
 		os.Exit(1)
 	}
 	return result
+}
+
+// -------------------------- Skip bell sound output on select questions --------------------------
+
+type bellSkipper struct{}
+
+func (bs *bellSkipper) Write(b []byte) (int, error) {
+	const charBell = 7 // c.f. readline.CharBell
+	if len(b) == 1 && b[0] == charBell {
+		return 0, nil
+	}
+	return os.Stderr.Write(b)
+}
+
+func (bs *bellSkipper) Close() error {
+	return os.Stderr.Close()
 }

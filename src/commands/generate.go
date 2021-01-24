@@ -21,7 +21,7 @@ func Generate() {
 	fmt.Println(project_name)
 
 	// Docker Swarm compatability (default: no)
-	docker_swarm := question.YesNoQuestion("Should your compose file be used for Docker Swarm?", false)
+	docker_swarm := question.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
 	fmt.Println(docker_swarm)
 
 	// Predefined stack (default: yes)

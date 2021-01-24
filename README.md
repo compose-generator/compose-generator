@@ -12,7 +12,7 @@ $ apt-get install compose-generator
 
 ## Generate compose file on the fly with Docker container
 ```sh
-$ docker run -i -v docker-compose.yml:/compose-generator/out/docker-compose.yml -v environment.env:/compose-generator/out/environment.env ghcr.io/marcauberer/compose-generator
+$ docker run --rm -it -v .:/compose-generator/out ghcr.io/marcauberer/compose-generator
 ```
 
 ## Supported host systems

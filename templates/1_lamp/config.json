@@ -1,0 +1,9 @@
+{
+    "label": "LAMP (Linux, Apache, MySQL, PHP)",
+    "questions": [
+        {
+            "question": "",
+            "env_var": ""
+        }
+    ]
+}
