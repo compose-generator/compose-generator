@@ -3,3 +3,4 @@ bin/*
 
 # Ignore compose-generator output
 docker-compose.yml
+environment.env

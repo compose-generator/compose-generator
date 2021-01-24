@@ -6,13 +6,13 @@
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
 
 ### Install Compose Generator CLI
-```console
-user@local:~$ git add .
+```sh
+$ apt-get install compose-generator
 ```
 
 ## Generate compose file on the fly with Docker container
-```console
-user@local:~$ docker run -i -v docker-compose.yml:/out/docker-compose.yml ghcr.io/marcauberer/compose-generator
+```sh
+$ docker run -i -v docker-compose.yml:/compose-generator/out/docker-compose.yml -v environment.env:/compose-generator/out/environment.env ghcr.io/marcauberer/compose-generator
 ```
 
 ## Supported host systems
