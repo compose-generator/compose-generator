@@ -6,6 +6,7 @@ COPY templates/ templates/
 
 ENV PATH="/compose-generator:${PATH}"
 ENV TERM="xterm-256color"
+ENV COMPOSE_GENERATOR_DOCKERIZED=1
 
 RUN chmod +x compose-generator
 RUN mkdir out

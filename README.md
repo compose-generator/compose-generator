@@ -11,8 +11,10 @@ $ apt-get install compose-generator
 ```
 
 ## Generate compose file on the fly with Docker container
+*Note: This command does not work with Windows CMD command line. Please use PowerShell.*
+
 ```sh
-$ docker run --rm -it -v .:/compose-generator/out ghcr.io/marcauberer/compose-generator
+$ docker run --rm -it -v ${pwd}:/compose-generator/out chillibits/compose-generator
 ```
 
 ## Supported host systems
