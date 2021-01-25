@@ -2,11 +2,9 @@ package commands
 
 import (
 	"fmt"
-	"os"
 
+	"compose-generator/parser"
 	"compose-generator/utils"
-
-	"github.com/fatih/color"
 )
 
 func Generate() {
@@ -21,8 +19,7 @@ func Generate() {
 	// Project name
 	project_name := utils.TextQuestion("What is the name of your project: ")
 	if project_name == "" {
-		color.Red("Error. You must specify a project name!")
-		os.Exit(1)
+		utils.Error("Error. You must specify a project name!", true)
 	}
 	fmt.Println(project_name)
 
@@ -33,10 +30,12 @@ func Generate() {
 	// Predefined stack (default: yes)
 	use_predefined_stack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
 	if use_predefined_stack {
+		// Load stacks from templates
+		template_data := parser.ParseTemplates()
 		// Predefined stack menu
-		items := []string{
-			"LAMP (Linux, Apache, MySQL, PHP)",
-			"MEAN (MongoDB, Express.js, Angular.js, Node.js)",
+		var items []string
+		for _, t := range template_data {
+			items = append(items, t.Label)
 		}
 		stack := utils.MenuQuestion("Predefined software stack", items)
 		fmt.Println(stack)

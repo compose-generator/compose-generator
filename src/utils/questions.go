@@ -2,7 +2,6 @@ package utils
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
 
@@ -24,8 +23,7 @@ func TextQuestion(question string) string {
 	result_string, _ := reader.ReadString('\n')
 	result_string = strings.TrimRight(result_string, "\r\n")
 	if result_string == "" {
-		fmt.Println("Error. This value is required!")
-		os.Exit(1)
+		Error("This value is required", true)
 	}
 	return result_string
 }
@@ -72,10 +70,16 @@ func MenuQuestion(label string, items []string) string {
 	}
 	_, result, err := prompt.Run()
 	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
+		Error("Prompt failed", true)
 	}
 	return result
+}
+
+func Error(description string, exit bool) {
+	color.Red("Error: " + description)
+	if exit {
+		os.Exit(1)
+	}
 }
 
 // -------------------------- Skip bell sound output on select questions --------------------------
