@@ -1,5 +1,6 @@
 {
     "label": "MEAN (MongoDB, Express.js, Angular.js, Node.js)",
+    "dir": "2_mean",
     "questions": [
         {
             "question": "",

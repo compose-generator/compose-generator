@@ -24,6 +24,7 @@ jobs:
         GO111MODULE=on go get gopkg.in/yaml.v2
         GO111MODULE=on go get github.com/fatih/color
         GO111MODULE=on go get github.com/tockins/interact
+        GO111MODULE=on go get github.com/otiai10/copy
     - name: Run build process
       run: |
         sed -i -e 's/\r$//' build.sh

@@ -3,6 +3,9 @@ package commands
 import (
 	"fmt"
 	"strconv"
+	"strings"
+
+	"github.com/otiai10/copy"
 
 	"compose-generator/parser"
 	"compose-generator/utils"
@@ -45,21 +48,26 @@ func Generate() {
 		for _, q := range template_data[index].Questions {
 			switch q.Type {
 			case 1: // Yes/No
-				default_value, _ := strconv.ParseBool(q.DefaultValue)
-				env_map[q.EnvVar] = strconv.FormatBool(utils.YesNoQuestion(q.Question, default_value))
+				default_value, _ := strconv.ParseBool(q.Default_value)
+				env_map[q.Env_var] = strconv.FormatBool(utils.YesNoQuestion(q.Question, default_value))
 			case 2: // Text
-				env_map[q.EnvVar] = utils.TextQuestionWithDefault(q.Question, q.DefaultValue)
+				env_map[q.Env_var] = utils.TextQuestionWithDefault(q.Question, q.Default_value)
 			}
+		}
+		// Copy files and replace variables
+		src_path := utils.GetTemplatesPath() + "/" + template_data[index].Dir
+		dst_path := "."
+		opt := copy.Options{
+			Skip: func(src string) (bool, error) {
+				return strings.HasSuffix(src, "config.json") || strings.HasSuffix(src, "README.md") || strings.HasSuffix(src, ".gitkeep"), nil
+			},
+		}
+		err := copy.Copy(src_path, dst_path, opt)
+		if err != nil {
+			utils.Error("Could not copy template files.", true)
 		}
 	} else {
 		// Create custom stack
 		utils.Heading("Let's create a custom stack for you!")
 	}
-
-	// Generate files based on the answers
-	process()
-}
-
-func process() {
-
 }

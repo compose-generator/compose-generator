@@ -13,11 +13,7 @@ import (
 )
 
 func ParseTemplates() []model.Config {
-	templates_path := "../templates"
-	if utils.IsDockerized() {
-		templates_path = "/compose-generator/templates"
-	}
-
+	templates_path := utils.GetTemplatesPath()
 	files, err := ioutil.ReadDir(templates_path)
 	if err != nil {
 		utils.Error("Internal error - could not load templates.", true)

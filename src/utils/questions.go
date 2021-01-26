@@ -32,7 +32,7 @@ func TextQuestionWithDefault(question string, default_value string) string {
 	reader := bufio.NewReader(os.Stdin)
 	cyan := color.New(color.FgCyan)
 
-	cyan.Print(question)
+	cyan.Print(question + " [Default: " + default_value + "]: ")
 
 	result_string, _ := reader.ReadString('\n')
 	result_string = strings.TrimRight(result_string, "\r\n")

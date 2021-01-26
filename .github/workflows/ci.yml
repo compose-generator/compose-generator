@@ -20,6 +20,7 @@ jobs:
               GO111MODULE=on go get gopkg.in/yaml.v2
               GO111MODULE=on go get github.com/fatih/color
               GO111MODULE=on go get github.com/tockins/interact
+              GO111MODULE=on go get github.com/otiai10/copy
             build_script: sed -i -e 's/\r$//' build.sh; chmod +x build.sh; ./build.sh
           - os: windows-latest
             prepare_command: |
@@ -27,6 +28,7 @@ jobs:
               go env -w GO111MODULE=on && go get gopkg.in/yaml.v2
               go env -w GO111MODULE=on && go get github.com/fatih/color
               go env -w GO111MODULE=on && go get github.com/tockins/interact
+              go env -w GO111MODULE=on && go get github.com/otiai10/copy
             build_script: .\build.bat
 
     runs-on: ${{ matrix.os }}

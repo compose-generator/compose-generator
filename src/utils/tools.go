@@ -32,3 +32,13 @@ func fileExists(path string) bool {
 	_, err := os.Stat(path)
 	return !os.IsNotExist(err)
 }
+
+func GetTemplatesPath() string {
+	if IsDockerized() {
+		return "/compose-generator/templates"
+	} else if fileExists("/usr/bin/compose-generator") {
+		return "/usr/bin/compose-generator/templates"
+	} else {
+		return "../templates"
+	}
+}

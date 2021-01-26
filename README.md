@@ -1,5 +1,6 @@
 # Compose Generator
 ![Build passing](https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg)
+[![Go Report](https://goreportcard.com/badge/github.com/marcauberer/compose-generator)](https://goreportcard.com/report/github.com/marcauberer/compose-generator)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 ## Usage

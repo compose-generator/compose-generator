@@ -1,5 +1,6 @@
 {
     "label": "LAMP (Linux, Apache, MySQL, PHP)",
+    "dir": "1_lamp",
     "questions": [
         {
             "question": "On which port you want to expose your app?",
