@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"strconv"
 
 	"compose-generator/parser"
 	"compose-generator/utils"
@@ -21,7 +22,6 @@ func Generate() {
 	if project_name == "" {
 		utils.Error("Error. You must specify a project name!", true)
 	}
-	fmt.Println(project_name)
 
 	// Docker Swarm compatability (default: no)
 	docker_swarm := utils.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
@@ -37,8 +37,20 @@ func Generate() {
 		for _, t := range template_data {
 			items = append(items, t.Label)
 		}
-		stack := utils.MenuQuestion("Predefined software stack", items)
-		fmt.Println(stack)
+		index, _ := utils.MenuQuestion("Predefined software stack", items)
+
+		// Ask configured questions to the user
+		env_map := make(map[string]string)
+		env_map["PROJECT_NAME"] = project_name
+		for _, q := range template_data[index].Questions {
+			switch q.Type {
+			case 1: // Yes/No
+				default_value, _ := strconv.ParseBool(q.DefaultValue)
+				env_map[q.EnvVar] = strconv.FormatBool(utils.YesNoQuestion(q.Question, default_value))
+			case 2: // Text
+				env_map[q.EnvVar] = utils.TextQuestionWithDefault(q.Question, q.DefaultValue)
+			}
+		}
 	} else {
 		// Create custom stack
 		utils.Heading("Let's create a custom stack for you!")

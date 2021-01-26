@@ -6,6 +6,8 @@ type Config struct {
 }
 
 type Question struct {
-	Question string
-	EnvVar   string
+	Question     string
+	Type         int // 1 = Yes/No; 2 = Text
+	DefaultValue string
+	EnvVar       string
 }

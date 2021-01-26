@@ -62,17 +62,17 @@ func YesNoQuestion(question string, default_value bool) bool {
 	return result
 }
 
-func MenuQuestion(label string, items []string) string {
+func MenuQuestion(label string, items []string) (int, string) {
 	prompt := promptui.Select{
 		Label: label,
 		Items: items,
 		//Stdout: &bellSkipper{},
 	}
-	_, result, err := prompt.Run()
+	index, result, err := prompt.Run()
 	if err != nil {
 		Error("Prompt failed", true)
 	}
-	return result
+	return index, result
 }
 
 func Error(description string, exit bool) {

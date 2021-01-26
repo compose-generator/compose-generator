@@ -2,8 +2,16 @@
     "label": "LAMP (Linux, Apache, MySQL, PHP)",
     "questions": [
         {
-            "question": "",
-            "env_var": ""
+            "question": "On which port you want to expose your app?",
+            "type": 2,
+            "default_value": "80",
+            "env_var": "HOST_APP_PORT"
+        },
+        {
+            "question": "On which port you want to expose MySQL?",
+            "type": 2,
+            "default_value": "3306",
+            "env_var": "HOST_MYSQL_PORT"
         }
     ]
 }
