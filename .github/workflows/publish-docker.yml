@@ -25,6 +25,7 @@ jobs:
         GO111MODULE=on go get github.com/fatih/color
         GO111MODULE=on go get github.com/tockins/interact
         GO111MODULE=on go get github.com/otiai10/copy
+        GO111MODULE=on go get github.com/sethvargo/go-password/password
     - name: Run build process
       run: |
         sed -i -e 's/\r$//' build.sh

@@ -4,6 +4,7 @@ type Config struct {
 	Label     string
 	Dir       string
 	Questions []Question
+	Secrets   []Secret
 }
 
 type Question struct {
@@ -12,4 +13,10 @@ type Question struct {
 	Default_value string
 	Env_var       string
 	Advanced      bool
+}
+
+type Secret struct {
+	Name   string
+	Var    string
+	Length int
 }

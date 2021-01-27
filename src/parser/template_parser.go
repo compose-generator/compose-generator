@@ -2,7 +2,6 @@ package parser
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -23,7 +22,6 @@ func ParseTemplates() []model.Config {
 
 	var configs []model.Config
 	for _, f := range file_names {
-		fmt.Println(f)
 		config := getConfigFromFile(filepath.Join(templates_path, f))
 		configs = append(configs, config)
 	}

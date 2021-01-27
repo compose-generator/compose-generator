@@ -2,9 +2,14 @@ package utils
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/fatih/color"
+	"github.com/sethvargo/go-password/password"
+
+	"compose-generator/model"
 )
 
 func ExecuteSafetyFileChecks() {
@@ -41,4 +46,52 @@ func GetTemplatesPath() string {
 	} else {
 		return "../templates"
 	}
+}
+
+func ReplaceVarsInFile(path string, envMap map[string]string) {
+	// Read file content
+	content, err := ioutil.ReadFile(path)
+	if err != nil {
+		Error("Could not read from "+path, true)
+	}
+
+	// Replace variables
+	newContent := string(content)
+	for key, value := range envMap {
+		newContent = strings.ReplaceAll(newContent, "${{"+key+"}}", value)
+	}
+
+	// Write content back
+	err = ioutil.WriteFile(path, []byte(newContent), 0777)
+	if err != nil {
+		Error("Could not write to "+path, true)
+	}
+}
+
+func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
+	// Read file content
+	content, err := ioutil.ReadFile(path)
+	if err != nil {
+		Error("Could not read from "+path, true)
+	}
+
+	// Generate a password for each occurrence of _GENERATE_PW
+	newContent := string(content)
+	secretsMap := make(map[string]string)
+	for _, s := range secrets {
+		res, err := password.Generate(s.Length, 10, 0, false, false)
+		if err != nil {
+			Error("Password generation failed.", true)
+		}
+		newContent = strings.ReplaceAll(newContent, "${{"+s.Var+"}}", res)
+		secretsMap[s.Name] = res
+	}
+
+	// Write content back
+	err = ioutil.WriteFile(path, []byte(newContent), 0777)
+	if err != nil {
+		Error("Could not write to "+path+" - "+err.Error(), true)
+	}
+
+	return secretsMap
 }

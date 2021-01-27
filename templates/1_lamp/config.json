@@ -26,7 +26,7 @@
         {
             "text": "How do you want to call the MySQL user for your application?",
             "type": 2,
-            "default_value": "./volumes/pma-php-config",
+            "default_value": "application",
             "env_var": "MYSQL_USER",
             "advanced": "false"
         },
@@ -92,6 +92,18 @@
             "default_value": "./volumes/pma-php-config",
             "env_var": "VOLUME_PMA_PHP_CONFIG",
             "advanced": "true"
+        }
+    ],
+    "secrets": [
+        {
+            "name": "MySQL password for user 'root'",
+            "var": "_PW_MYSQL_ROOT",
+            "length": 50
+        },
+        {
+            "name": "MySQL password for the application user",
+            "var": "_PW_MYSQL_USER",
+            "length": 30
         }
     ]
 }
