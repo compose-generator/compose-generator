@@ -1,0 +1,6 @@
+# Docker compose file for ${{PROJECT_NAME}}
+
+version: '3.8'
+
+services:
+  

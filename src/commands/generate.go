@@ -49,9 +49,9 @@ func Generate() {
 			switch q.Type {
 			case 1: // Yes/No
 				default_value, _ := strconv.ParseBool(q.Default_value)
-				env_map[q.Env_var] = strconv.FormatBool(utils.YesNoQuestion(q.Question, default_value))
+				env_map[q.Env_var] = strconv.FormatBool(utils.YesNoQuestion(q.Text, default_value))
 			case 2: // Text
-				env_map[q.Env_var] = utils.TextQuestionWithDefault(q.Question, q.Default_value)
+				env_map[q.Env_var] = utils.TextQuestionWithDefault(q.Text, q.Default_value)
 			}
 		}
 		// Copy files and replace variables

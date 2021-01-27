@@ -7,8 +7,9 @@ type Config struct {
 }
 
 type Question struct {
-	Question      string
+	Text          string
 	Type          int // 1 = Yes/No; 2 = Text
 	Default_value string
 	Env_var       string
+	Advanced      bool
 }

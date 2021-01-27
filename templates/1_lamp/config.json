@@ -3,16 +3,95 @@
     "dir": "1_lamp",
     "questions": [
         {
-            "question": "On which port you want to expose your app?",
+            "text": "On which port you want to expose your app?",
             "type": 2,
             "default_value": "80",
-            "env_var": "HOST_APP_PORT"
+            "env_var": "HOST_APP_PORT",
+            "advanced": "false"
         },
         {
-            "question": "On which port you want to expose MySQL?",
+            "text": "On which port you want to expose MySQL?",
             "type": 2,
             "default_value": "3306",
-            "env_var": "HOST_MYSQL_PORT"
+            "env_var": "HOST_MYSQL_PORT",
+            "advanced": "false"
+        },
+        {
+            "text": "On which port you want to expose PHPMyAdmin?",
+            "type": 2,
+            "default_value": "81",
+            "env_var": "HOST_PMA_PORT",
+            "advanced": "false"
+        },
+        {
+            "text": "How do you want to call the MySQL user for your application?",
+            "type": 2,
+            "default_value": "./volumes/pma-php-config",
+            "env_var": "MYSQL_USER",
+            "advanced": "false"
+        },
+        {
+            "text": "How do you want to call the database for your application?",
+            "type": 2,
+            "default_value": "main",
+            "env_var": "MYSQL_DATABASE",
+            "advanced": "false"
+        },
+        {
+            "text": "Which MySQL version do you want to use?",
+            "type": 2,
+            "default_value": "latest",
+            "env_var": "MYSQL_VERSION",
+            "advanced": "true"
+        },
+        {
+            "text": "Which version of PHPMyAdmin do you want to use?",
+            "type": 2,
+            "default_value": "latest",
+            "env_var": "PMA_VERSION",
+            "advanced": "true"
+        },
+        {
+            "text": "Custom path for Apache html volume?",
+            "type": 2,
+            "default_value": "./volumes/apache-html",
+            "env_var": "VOLUME_APACHE_HTML",
+            "advanced": "true"
+        },
+        {
+            "text": "Custom path for Apache logs volume?",
+            "type": 2,
+            "default_value": "./volumes/apache-logs",
+            "env_var": "VOLUME_APACHE_LOGS",
+            "advanced": "true"
+        },
+        {
+            "text": "Custom path for PHP configuration volume?",
+            "type": 2,
+            "default_value": "./volumes/apache-php-config",
+            "env_var": "VOLUME_APACHE_PHP_CONFIG",
+            "advanced": "true"
+        },
+        {
+            "text": "Custom path for MySQL data volume?",
+            "type": 2,
+            "default_value": "./volumes/mysql-data",
+            "env_var": "VOLUME_MYSQL_DATA",
+            "advanced": "true"
+        },
+        {
+            "text": "Custom path for MySQL logs volume?",
+            "type": 2,
+            "default_value": "./volumes/mysql-logs",
+            "env_var": "VOLUME_MYSQL_LOGS",
+            "advanced": "true"
+        },
+        {
+            "text": "Custom path for PHPMyAdmin PHP configuration volume?",
+            "type": 2,
+            "default_value": "./volumes/pma-php-config",
+            "env_var": "VOLUME_PMA_PHP_CONFIG",
+            "advanced": "true"
         }
     ]
 }
