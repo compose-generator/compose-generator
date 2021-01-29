@@ -29,11 +29,13 @@ func main() {
 		Copyright: "© 2021 Marc Auberer",
 		Usage:     "Generate docker compose configuration files for your projects.",
 		Action: func(c *cli.Context) error {
-			commands.Generate()
+			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"))
 			return nil
 		},
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
+			&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
+			&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
 		},
 		Commands: []*cli.Command{
 			{
@@ -55,6 +57,7 @@ func main() {
 				},
 			},
 		},
+		UseShortOptionHandling: true,
 	}
 
 	err := app.Run(os.Args)

@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 
@@ -13,7 +14,7 @@ import (
 	"compose-generator/utils"
 )
 
-func Generate() {
+func Generate(flag_advanced bool, flag_run bool, flag_demonized bool) {
 	// Execute SafetyFileChecks
 	utils.ExecuteSafetyFileChecks()
 
@@ -51,14 +52,20 @@ func Generate() {
 		envMap["PROJECT_NAME"] = project_name
 		envMap["PROJECT_NAME_CONTAINER"] = project_name_container
 		for _, q := range template_data[index].Questions {
-			switch q.Type {
-			case 1: // Yes/No
-				default_value, _ := strconv.ParseBool(q.Default_value)
-				envMap[q.Env_var] = strconv.FormatBool(utils.YesNoQuestion(q.Text, default_value))
-			case 2: // Text
-				envMap[q.Env_var] = utils.TextQuestionWithDefault(q.Text, q.Default_value)
+			if !q.Advanced || (q.Advanced && flag_advanced) {
+				switch q.Type {
+				case 1: // Yes/No
+					default_value, _ := strconv.ParseBool(q.Default_value)
+					envMap[q.Env_var] = strconv.FormatBool(utils.YesNoQuestion(q.Text, default_value))
+				case 2: // Text
+					envMap[q.Env_var] = utils.TextQuestionWithDefault(q.Text, q.Default_value)
+				}
+			} else {
+				envMap[q.Env_var] = q.Default_value
 			}
 		}
+		fmt.Println()
+
 		// Copy templates
 		fmt.Print("Copying template ...")
 		src_path := utils.GetTemplatesPath() + "/" + template_data[index].Dir
@@ -86,6 +93,10 @@ func Generate() {
 		fmt.Print("Applying customizations ...")
 		utils.ReplaceVarsInFile("./docker-compose.yml", envMap)
 		utils.ReplaceVarsInFile("./environment.env", envMap)
+		color.Green(" [done]")
+
+		// Generate secrets
+		fmt.Print("Generate secrets ...")
 		secretsMap := utils.GenerateSecrets("./environment.env", template_data[index].Secrets)
 		color.Green(" [done]")
 		// Print secrets to console
@@ -98,5 +109,20 @@ func Generate() {
 	} else {
 		// Create custom stack
 		utils.Heading("Let's create a custom stack for you!")
+	}
+
+	// Run if the regarding flag is set
+	if flag_run || flag_demonized {
+		fmt.Println()
+		fmt.Println("Running docker-compose ...")
+		fmt.Println()
+
+		cmd := exec.Command("docker-compose", "up")
+		if flag_demonized {
+			cmd = exec.Command("docker-compose", "up", "-d")
+		}
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Run()
 	}
 }

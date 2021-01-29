@@ -11,8 +11,7 @@ services:
       - "${{HOST_APP_PORT}}:80"
     depends_on: 
       - database
-    volumes: 
-      - ${{VOLUME_APACHE_HTML}}:/var/www/html
+    volumes:
       - ${{VOLUME_APACHE_LOGS}}:/var/log/apache2
       - ${{VOLUME_APACHE_PHP_CONFIG}}:/usr/local/etc/php
     env_file:
@@ -39,13 +38,7 @@ services:
       - database
     env_file:
       - environment.env
-    environment:
-      PMA_HOST: database
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '${{HOST_PMA_PORT}}:80'
     volumes: 
       - /sessions
-      - ${{VOLUME_PMA_PHP_CONFIG}}:/usr/local/etc/php/conf.d
