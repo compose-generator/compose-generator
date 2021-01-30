@@ -48,6 +48,16 @@ func GetTemplatesPath() string {
 	}
 }
 
+func GetPredefinedTemplatesPath() string {
+	if IsDockerized() {
+		return "/compose-generator/predefined-templates"
+	} else if FileExists("/usr/bin/compose-generator") {
+		return "/usr/bin/compose-generator/predefined-templates"
+	} else {
+		return "../predefined-templates"
+	}
+}
+
 func ReplaceVarsInFile(path string, envMap map[string]string) {
 	// Read file content
 	content, err := ioutil.ReadFile(path)

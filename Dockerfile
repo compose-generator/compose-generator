@@ -2,7 +2,7 @@ FROM alpine:3.13
 WORKDIR /compose-generator
 
 COPY bin/compose-generator-amd64 ./compose-generator
-COPY templates/ templates/
+COPY predefined-templates/ predefined-templates/
 
 ENV PATH="/compose-generator:${PATH}"
 ENV TERM="xterm-256color"

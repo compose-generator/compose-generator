@@ -1,6 +1,6 @@
 package model
 
-type Config struct {
+type TemplateConfig struct {
 	Label     string
 	Dir       string
 	Questions []Question

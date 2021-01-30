@@ -40,7 +40,7 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 	use_predefined_stack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
 	if use_predefined_stack {
 		// Load stacks from templates
-		template_data := parser.ParseTemplates()
+		template_data := parser.ParsePredefinedTemplates()
 		// Predefined stack menu
 		var items []string
 		for _, t := range template_data {
@@ -70,12 +70,12 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 
 		// Copy templates
 		fmt.Print("Copying template ...")
-		src_path := utils.GetTemplatesPath() + "/" + template_data[index].Dir
+		src_path := utils.GetPredefinedTemplatesPath() + "/" + template_data[index].Dir
 		dst_path := "."
 
 		os.Remove(dst_path + "/docker-compose.yml")
 		os.Remove(dst_path + "/environment.env")
-		os.Remove(dst_path + "/volumes")
+		os.RemoveAll(dst_path + "/volumes")
 
 		opt := copy.Options{
 			Skip: func(src string) (bool, error) {

@@ -68,10 +68,11 @@ func main() {
 						Usage:   "Save a custom template.",
 						Flags: []cli.Flag{
 							&cli.BoolFlag{Name: "stash", Aliases: []string{"s"}, Usage: "Move the regarding files, instead of copying them"},
+							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							commands.SaveTemplate(name, c.Bool("stash"))
+							commands.SaveTemplate(name, c.Bool("stash"), c.Bool("force"))
 							return nil
 						},
 					},
@@ -81,10 +82,11 @@ func main() {
 						Usage:   "Load a custom template.",
 						Flags: []cli.Flag{
 							&cli.BoolFlag{Name: "show-predefined", Aliases: []string{"p"}, Usage: "Show predefined templates in addition to the custom ones"},
+							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							commands.LoadTemplate(name)
+							commands.LoadTemplate(name, c.Bool("force"))
 							return nil
 						},
 					},

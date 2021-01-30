@@ -3,9 +3,6 @@ bin/*
 
 # Ignore custom templates
 templates/*
-!templates/1_lamp
-!templates/2_mean
-!templates/README.md
 
 # Ignore compose-generator output
 ./docker-compose.yml
