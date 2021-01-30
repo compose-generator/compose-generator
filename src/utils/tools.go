@@ -15,9 +15,9 @@ import (
 func ExecuteSafetyFileChecks() {
 	isNotSafe := true
 	if IsDockerized() {
-		isNotSafe = fileExists("/compose-generator/out/docker-compose.yml") || fileExists("/compose-generator/out/environment.env")
+		isNotSafe = FileExists("/compose-generator/out/docker-compose.yml") || FileExists("/compose-generator/out/environment.env")
 	} else {
-		isNotSafe = fileExists("docker-compose.yml") || fileExists("environment.env")
+		isNotSafe = FileExists("docker-compose.yml") || FileExists("environment.env")
 	}
 	if isNotSafe {
 		color.Red("Warning: docker-compose.yml or environment.env already exists. By continuing, you might overwrite those files.")
@@ -33,7 +33,7 @@ func IsDockerized() bool {
 	return os.Getenv("COMPOSE_GENERATOR_DOCKERIZED") == "1"
 }
 
-func fileExists(path string) bool {
+func FileExists(path string) bool {
 	_, err := os.Stat(path)
 	return !os.IsNotExist(err)
 }
@@ -41,7 +41,7 @@ func fileExists(path string) bool {
 func GetTemplatesPath() string {
 	if IsDockerized() {
 		return "/compose-generator/templates"
-	} else if fileExists("/usr/bin/compose-generator") {
+	} else if FileExists("/usr/bin/compose-generator") {
 		return "/usr/bin/compose-generator/templates"
 	} else {
 		return "../templates"

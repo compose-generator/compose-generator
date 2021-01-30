@@ -27,7 +27,7 @@ func main() {
 			{Name: "Marc Auberer", Email: "marc.auberer@chillibits.com"},
 		},
 		Copyright: "© 2021 Marc Auberer",
-		Usage:     "Generate docker compose configuration files for your projects.",
+		Usage:     "Generate and manage docker compose configuration files for your projects.",
 		Action: func(c *cli.Context) error {
 			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"))
 			return nil
@@ -54,6 +54,36 @@ func main() {
 				Action: func(c *cli.Context) error {
 					commands.Remove()
 					return nil
+				},
+			},
+			{
+				Name:    "template",
+				Aliases: []string{"t"},
+				Usage:   "Saves / loads snapshots of your compose configuration for later use",
+				Subcommands: []*cli.Command{
+					{
+						Name:    "save",
+						Aliases: []string{"s"},
+						Usage:   "Save a custom template.",
+						Flags: []cli.Flag{
+							&cli.BoolFlag{Name: "show-predefined", Aliases: []string{"p"}, Usage: "Show predefined templates in addition to the custom ones"},
+						},
+						Action: func(c *cli.Context) error {
+							name := c.Args().Get(0)
+							commands.SaveTemplate(name)
+							return nil
+						},
+					},
+					{
+						Name:    "load",
+						Aliases: []string{"l"},
+						Usage:   "Load a custom template.",
+						Action: func(c *cli.Context) error {
+							name := c.Args().Get(0)
+							commands.LoadTemplate(name)
+							return nil
+						},
+					},
 				},
 			},
 		},

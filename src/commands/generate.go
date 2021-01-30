@@ -87,18 +87,18 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool) {
 		if err != nil {
 			utils.Error("Could not copy template files.", true)
 		}
-		color.Green(" [done]")
+		color.Green(" done")
 
 		// Replace variables
 		fmt.Print("Applying customizations ...")
 		utils.ReplaceVarsInFile("./docker-compose.yml", envMap)
 		utils.ReplaceVarsInFile("./environment.env", envMap)
-		color.Green(" [done]")
+		color.Green(" done")
 
 		// Generate secrets
-		fmt.Print("Generate secrets ...")
+		fmt.Print("Generating secrets ...")
 		secretsMap := utils.GenerateSecrets("./environment.env", template_data[index].Secrets)
-		color.Green(" [done]")
+		color.Green(" done")
 		// Print secrets to console
 		fmt.Println()
 		fmt.Println("Following secrets were automatically generated:")
