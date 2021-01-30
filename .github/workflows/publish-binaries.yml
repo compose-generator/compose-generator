@@ -1,0 +1,93 @@
+# Publish binaries to installation repositories
+
+name: Publish Binaries
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Prepare environment
+        run: sudo apt-get install tree
+      - name: Run tests
+        run: |
+          cd src
+          go test
+      - name: Build for all linux architectures
+        run: |
+          sed -i -e 's/\r$//' build.sh
+          chmod +x build.sh
+          ./build.sh
+      - name: Prepare packages
+        run: |
+          mkdir -p .pkg-amd64/usr/bin
+          mkdir -p .pkg-amd64/usr/lib/compose-generator
+          cp bin/compose-generator-amd64 .pkg-amd64/usr/bin/compose-generator
+          chmod +x .pkg-amd64/usr/bin/compose-generator
+          cp -R predefined-templates .pkg-amd64/usr/lib/compose-generator
+
+          mkdir -p .pkg-armv7/usr/bin
+          mkdir -p .pkg-armv7/usr/lib/compose-generator
+          cp bin/compose-generator-armv7 .pkg-armv7/usr/bin/compose-generator
+          chmod +x .pkg-armv7/usr/bin/compose-generator
+          cp -R predefined-templates .pkg-armv7/usr/lib/compose-generator
+      # deb package for amd64
+      - name: Build deb package - amd64
+        uses: jiro4989/build-deb-action@v2
+        with:
+          package: compose-generator
+          package_root: .pkg-amd64
+          maintainer: 'Marc Auberer'
+          version: ${{ github.ref }}
+          arch: 'amd64'
+          desc: 'Generate and manage docker compose configuration files for your projects.'
+      # deb package for armv7
+      - name: Build deb package - arm-v7
+        uses: jiro4989/build-deb-action@v2
+        with:
+          package: compose-generator
+          package_root: .pkg-armv7
+          maintainer: 'Marc Auberer'
+          version: ${{ github.ref }}
+          arch: 'armv7'
+          desc: 'Generate and manage docker compose configuration files for your projects.'
+      - run: tree .
+      # rpm package for x86_64
+      #- name: Build rpm package - x86_64
+      #  uses: jiro4989/build-rpm-action@v2
+      #  with:
+      #    summary: 'Generate and manage docker compose configuration files for your projects.'
+      #    package: compose-generator
+      #    package_root: .pkg-amd64
+      #    maintainer: 'Marc Auberer'
+      #    version: ${{ github.ref }}
+      #    arch: 'x86_64'
+      #    desc: 'Generate and manage docker compose configuration files for your projects.'
+
+      # Upload debian artifact for amd64
+      - name: Upload deb artifacts - amd64
+        uses: actions/upload-artifact@v2
+        with:
+          name: compose-generator_${{ github.event.release.tag_name }}_amd64.deb
+          path: ./compose-generator_${{ github.event.release.tag_name }}_amd64.deb
+      
+      # Upload debian artifact for armv7
+      - name: Upload deb artifacts - armv7
+        uses: actions/upload-artifact@v2
+        with:
+          name: compose-generator_${{ github.event.release.tag_name }}_armv7.deb
+          path: ./compose-generator_${{ github.event.release.tag_name }}_armv7.deb
+
+      # Upload rpm artifact for x86_64
+      #- name: Upload rpm artifacts - x86_64
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: compose-generator_${{ github.event.release.tag_name }}_x86_64.rpm
+      #    path: ./compose-generator_${{ github.event.release.tag_name }}_x86_64.rpm

@@ -14,27 +14,16 @@ jobs:
     steps:
     - name: Install Go
       uses: actions/setup-go@v2
-      with:
-        go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Install dependencies
-      run: |
-        GO111MODULE=on go get github.com/urfave/cli/v2
-        GO111MODULE=on go get gopkg.in/yaml.v2
-        GO111MODULE=on go get github.com/fatih/color
-        GO111MODULE=on go get github.com/tockins/interact
-        GO111MODULE=on go get github.com/otiai10/copy
-        GO111MODULE=on go get github.com/sethvargo/go-password/password
     - name: Run build process
       run: |
-        sed -i -e 's/\r$//' build.sh
-        chmod +x build.sh
-        ./build.sh
+        cd src
+        env GOOS=linux GOARCH=amd64 go build -x -o ../bin/compose-generator-amd64 compose-generator.go
     - name: GH Packages deploy
       uses: actions/upload-artifact@v1
       with:
-        name: compose-generator
+        name: compose-generator-${VERSION}
         path: bin
     - name: Docker build and push
       run: |

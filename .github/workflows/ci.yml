@@ -15,22 +15,10 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            prepare_command: |
-              GO111MODULE=on go get github.com/urfave/cli/v2
-              GO111MODULE=on go get gopkg.in/yaml.v2
-              GO111MODULE=on go get github.com/fatih/color
-              GO111MODULE=on go get github.com/tockins/interact
-              GO111MODULE=on go get github.com/otiai10/copy
-              GO111MODULE=on go get github.com/sethvargo/go-password/password
-            build_script: sed -i -e 's/\r$//' build.sh; chmod +x build.sh; ./build.sh
+            build_script: |
+              cd src
+              go build -x
           - os: windows-latest
-            prepare_command: |
-              go env -w GO111MODULE=on && go get github.com/urfave/cli/v2
-              go env -w GO111MODULE=on && go get gopkg.in/yaml.v2
-              go env -w GO111MODULE=on && go get github.com/fatih/color
-              go env -w GO111MODULE=on && go get github.com/tockins/interact
-              go env -w GO111MODULE=on && go get github.com/otiai10/copy
-              go env -w GO111MODULE=on && go get github.com/sethvargo/go-password/password
             build_script: .\build.bat
 
     runs-on: ${{ matrix.os }}
@@ -39,9 +27,22 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: ${{ matrix.go-version }}
+    - name: Prepare environment
+      run: |
+        go version
+        go get -u golang.org/x/lint/golint
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Install dependencies
-      run: ${{ matrix.prepare_command }}
-    - name: Run build process
-      run: ${{ matrix.script_name }}
+    - name: Run build
+      run: |
+        cd src
+        go build -x
+    - name: Run vet & lint
+      run: |
+        cd src
+        go vet .
+        golint .
+    - name: Run tests
+      run: |
+        cd src
+        go test

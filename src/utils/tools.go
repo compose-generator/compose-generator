@@ -41,8 +41,8 @@ func FileExists(path string) bool {
 func GetTemplatesPath() string {
 	if IsDockerized() {
 		return "/compose-generator/templates"
-	} else if FileExists("/usr/bin/compose-generator") {
-		return "/usr/bin/compose-generator/templates"
+	} else if FileExists("/usr/lib/compose-generator") {
+		return "/usr/lib/compose-generator/templates"
 	} else {
 		return "../templates"
 	}
@@ -51,8 +51,8 @@ func GetTemplatesPath() string {
 func GetPredefinedTemplatesPath() string {
 	if IsDockerized() {
 		return "/compose-generator/predefined-templates"
-	} else if FileExists("/usr/bin/compose-generator") {
-		return "/usr/bin/compose-generator/predefined-templates"
+	} else if FileExists("/usr/lib/compose-generator") {
+		return "/usr/lib/compose-generator/predefined-templates"
 	} else {
 		return "../predefined-templates"
 	}
