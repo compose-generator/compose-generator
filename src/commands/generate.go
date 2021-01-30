@@ -14,9 +14,11 @@ import (
 	"compose-generator/utils"
 )
 
-func Generate(flag_advanced bool, flag_run bool, flag_demonized bool) {
+func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool) {
 	// Execute SafetyFileChecks
-	utils.ExecuteSafetyFileChecks()
+	if !flag_force {
+		utils.ExecuteSafetyFileChecks()
+	}
 
 	// Welcome Message
 	utils.Heading("Welcome to Compose Generator!")

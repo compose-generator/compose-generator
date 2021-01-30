@@ -29,13 +29,14 @@ func main() {
 		Copyright: "© 2021 Marc Auberer",
 		Usage:     "Generate and manage docker compose configuration files for your projects.",
 		Action: func(c *cli.Context) error {
-			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"))
+			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"), c.Bool("force"))
 			return nil
 		},
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
 			&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
 			&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
+			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 		},
 		Commands: []*cli.Command{
 			{
@@ -66,11 +67,11 @@ func main() {
 						Aliases: []string{"s"},
 						Usage:   "Save a custom template.",
 						Flags: []cli.Flag{
-							&cli.BoolFlag{Name: "show-predefined", Aliases: []string{"p"}, Usage: "Show predefined templates in addition to the custom ones"},
+							&cli.BoolFlag{Name: "stash", Aliases: []string{"s"}, Usage: "Move the regarding files, instead of copying them"},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							commands.SaveTemplate(name)
+							commands.SaveTemplate(name, c.Bool("stash"))
 							return nil
 						},
 					},
@@ -78,6 +79,9 @@ func main() {
 						Name:    "load",
 						Aliases: []string{"l"},
 						Usage:   "Load a custom template.",
+						Flags: []cli.Flag{
+							&cli.BoolFlag{Name: "show-predefined", Aliases: []string{"p"}, Usage: "Show predefined templates in addition to the custom ones"},
+						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
 							commands.LoadTemplate(name)
