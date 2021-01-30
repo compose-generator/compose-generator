@@ -67,28 +67,54 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 			}
 		}
 		fmt.Println()
+		// Ask for custom volume paths
+		volumesMap := make(map[string]string)
+		for _, v := range template_data[index].Volumes {
+			if !v.Advanced || (v.Advanced && flag_advanced) {
+				envMap[v.Env_var] = utils.TextQuestionWithDefault(v.Text, v.Default_value)
+			} else {
+				envMap[v.Env_var] = v.Default_value
+			}
+			volumesMap[v.Default_value] = envMap[v.Env_var]
+		}
 
-		// Copy templates
+		// Copy template files
 		fmt.Print("Copying template ...")
 		src_path := utils.GetPredefinedTemplatesPath() + "/" + template_data[index].Dir
 		dst_path := "."
 
 		os.Remove(dst_path + "/docker-compose.yml")
 		os.Remove(dst_path + "/environment.env")
-		os.RemoveAll(dst_path + "/volumes")
 
-		opt := copy.Options{
-			Skip: func(src string) (bool, error) {
-				return strings.HasSuffix(src, "config.json") || strings.HasSuffix(src, "README.md") || strings.HasSuffix(src, ".gitkeep"), nil
-			},
-			OnDirExists: func(src string, dst string) copy.DirExistsAction {
-				return copy.Replace
-			},
-		}
-		err := copy.Copy(src_path, dst_path, opt)
-		if err != nil {
+		err1 := copy.Copy(src_path+"/docker-compose.yml", dst_path+"/docker-compose.yml")
+		err2 := copy.Copy(src_path+"/environment.env", dst_path+"/environment.env")
+		if err1 != nil || err2 != nil {
 			utils.Error("Could not copy template files.", true)
 		}
+
+		color.Green(" done")
+
+		// Create volumes
+		fmt.Print("Creating volumes ...")
+
+		for src, dst := range volumesMap {
+			os.RemoveAll(dst)
+			src = src_path + src[1:]
+
+			opt := copy.Options{
+				Skip: func(src string) (bool, error) {
+					return strings.HasSuffix(src, ".gitkeep"), nil
+				},
+				OnDirExists: func(src string, dst string) copy.DirExistsAction {
+					return copy.Replace
+				},
+			}
+			err := copy.Copy(src, dst, opt)
+			if err != nil {
+				utils.Error("Could not copy volume files.", true)
+			}
+		}
+
 		color.Green(" done")
 
 		// Replace variables
