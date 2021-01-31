@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/kardianos/osext"
 	"github.com/sethvargo/go-password/password"
 
 	"compose-generator/model"
@@ -39,20 +40,26 @@ func FileExists(path string) bool {
 }
 
 func GetTemplatesPath() string {
-	if IsDockerized() {
-		return "/compose-generator/templates"
-	} else if FileExists("/usr/lib/compose-generator") {
-		return "/usr/lib/compose-generator/templates"
+	filename, _ := osext.Executable()
+	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filename[:strings.LastIndex(filename, "/")]
+	if FileExists(filename + "/templates") {
+		return filename + "/templates"
+	} else if FileExists(filename + "/../templates") {
+		return filename + "/../templates"
 	} else {
 		return "../templates"
 	}
 }
 
 func GetPredefinedTemplatesPath() string {
-	if IsDockerized() {
-		return "/compose-generator/predefined-templates"
-	} else if FileExists("/usr/lib/compose-generator") {
-		return "/usr/lib/compose-generator/predefined-templates"
+	filename, _ := osext.Executable()
+	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filename[:strings.LastIndex(filename, "/")]
+	if FileExists(filename + "/predefined-templates") {
+		return filename + "/predefined-templates"
+	} else if FileExists(filename + "/../predefined-templates") {
+		return filename + "/../predefined-templates"
 	} else {
 		return "../predefined-templates"
 	}
