@@ -1,6 +1,6 @@
-# Publish binaries to installation repositories
+# Publish binaries to installation repositories for Linux
 
-name: Publish Binaries
+name: Publish for Linux
 
 on:
   release:

@@ -7,11 +7,33 @@
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
 
 ### Install Compose Generator CLI
+**Linux (Debian based distributions)**<br>
 ```sh
-$ apt-get install compose-generator
+$ sudo apt-get update
+
+$ 
+
+$ sudo apt-get install compose-generator
 ```
 
-## Generate compose file on the fly with Docker container
+**Linux (RPM based distributions)**<br>
+```sh
+$ sudo apt-get update
+
+$
+
+$ sudo apt-get install compose-generator
+```
+
+**Windows**
+Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft.
+
+As soon as the Windows package manager is installed on your Windows machine, you can open powershell and execute this installation command:
+```
+$ winget install ChilliBits.ComposeGenerator
+```
+
+### Generate compose file on the fly with Docker container
 *Note: This command does not work with Windows CMD command line. Please use PowerShell.*
 
 ```sh

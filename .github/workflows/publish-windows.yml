@@ -1,0 +1,55 @@
+# Publish installer file for Windows
+
+name: Publish for Windows
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Download EnVar plugin for NSIS
+        uses: carlosperate/download-file-action@v1.0.3
+        with:
+          file-url: https://nsis.sourceforge.io/mediawiki/images/7/7f/EnVar_plugin.zip
+          file-name: envar_plugin.zip
+          location: ${{ github.workspace }}
+      - name: Extract EnVar plugin
+        run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/envar_plugin.zip"
+      - name: Install makensis
+        run: sudo apt-get update && sudo apt-get install -y nsis nsis-pluginapi
+      - name: Set plugin permissions
+        run: sudo chown -R $(whoami) /usr/share/nsis/Plugins/
+      - name: Run tests
+        run: |
+          cd src
+          go test
+      - name: Build for all windows architectures
+        run: |
+          cd src
+          env GOOS=windows GOARCH=386 go build -x -o ../bin/compose-generator-386.exe compose-generator.go
+          env GOOS=windows GOARCH=amd64 go build -x -o ../bin/compose-generator-amd64.exe compose-generator.go
+      # 386
+      #- name: Create nsis installer - 386
+      #  uses: joncloud/makensis-action@v3.4
+      #  with:
+      #    additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
+      #- name: Upload artifact
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: ComposeGenerator_${{ github.event.release.tag_name }}_386_Setup.exe
+      #    path: compose-generator.exe
+      # amd64
+      - name: Create nsis installer - amd64
+        uses: joncloud/makensis-action@v3.4
+        with:
+          additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ComposeGenerator_${{ github.event.release.tag_name }}_x64_Setup.exe
+          path: compose-generator.exe
