@@ -40,28 +40,32 @@ func FileExists(path string) bool {
 }
 
 func GetTemplatesPath() string {
-	filename, _ := osext.Executable()
-	filename = strings.ReplaceAll(filename, "\\", "/")
-	filename = filename[:strings.LastIndex(filename, "/")]
-	if FileExists(filename + "/templates") {
-		return filename + "/templates"
-	} else if FileExists(filename + "/../templates") {
-		return filename + "/../templates"
+	if FileExists("/usr/lib/compose-generator/templates") { // Linux
+		return "/usr/lib/compose-generator/templates"
 	} else {
-		return "../templates"
+		filename, _ := osext.Executable()
+		filename = strings.ReplaceAll(filename, "\\", "/")
+		filename = filename[:strings.LastIndex(filename, "/")]
+		if FileExists(filename + "/templates") { // Windows + Docker
+			return filename + "/templates"
+		} else { // Dev
+			return "../templates"
+		}
 	}
 }
 
 func GetPredefinedTemplatesPath() string {
-	filename, _ := osext.Executable()
-	filename = strings.ReplaceAll(filename, "\\", "/")
-	filename = filename[:strings.LastIndex(filename, "/")]
-	if FileExists(filename + "/predefined-templates") {
-		return filename + "/predefined-templates"
-	} else if FileExists(filename + "/../predefined-templates") {
-		return filename + "/../predefined-templates"
+	if FileExists("/usr/lib/compose-generator/predefined-templates") { // Linux
+		return "/usr/lib/compose-generator/predefined-templates"
 	} else {
-		return "../predefined-templates"
+		filename, _ := osext.Executable()
+		filename = strings.ReplaceAll(filename, "\\", "/")
+		filename = filename[:strings.LastIndex(filename, "/")]
+		if FileExists(filename + "/predefined-templates") { // Windows + Docker
+			return filename + "/predefined-templates"
+		} else { // Dev
+			return "../predefined-templates"
+		}
 	}
 }
 

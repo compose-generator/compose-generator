@@ -1,5 +1,5 @@
 ; -------------------------------
-; Start 
+; Start
   
   !define PRODUCT_NAME "Compose Generator"
   !define PUBLISHER_NAME "ChilliBits"
@@ -37,7 +37,7 @@
   !insertmacro MUI_LANGUAGE "English"
  
 ;-------------------------------- 
-;Installer Sections     
+;Installer Sections
 Section "install" Installation
  
   EnVar::Check "NULL" "NULL"
@@ -52,30 +52,30 @@ Section "install" Installation
   SetOutPath "$INSTDIR"
   File /oname=compose-generator.exe bin/compose-generator-amd64.exe
   File /r predefined-templates
- 
+
 ;create start-menu items
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
   ;CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\${MUI_FILE}.exe" "" "$INSTDIR\${MUI_FILE}.exe" 0
- 
+
 ;write uninstall information to the registry
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "DisplayName" "${PRODUCT_NAME} (remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "DisplayName" "${PRODUCT_NAME}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "UninstallString" "$INSTDIR\Uninstall.exe"
- 
+
   WriteUninstaller "$INSTDIR\Uninstall.exe"
- 
+
 SectionEnd
- 
-;--------------------------------    
-;Uninstaller Section  
+
+;--------------------------------
+;Uninstaller Section
 Section "Uninstall"
- 
+
 ;Delete Files 
-  RMDir /r "$INSTDIR\*.*"    
- 
+  RMDir /r "$INSTDIR\*.*"
+
 ;Remove the installation directory
   RMDir "$INSTDIR"
- 
+
 ;Delete Start Menu Shortcuts
   Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
@@ -83,7 +83,7 @@ Section "Uninstall"
  
 ;Delete Uninstaller And Unistall Registry Entries
   DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${PRODUCT_NAME}"
-  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"  
+  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
  
 SectionEnd
 

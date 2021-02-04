@@ -1,0 +1,11 @@
+[DEFAULT]
+default_host_main = chillibits
+
+[chillibits]
+fqdn = apt.chillibits.com
+method = scp
+login = user
+incoming = /docker/incoming
+ssh_config_options =
+    	Port 9022
+    	StrictHostKeyChecking no
