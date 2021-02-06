@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"compose-generator/utils"
 
@@ -30,8 +31,6 @@ func Install() {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Run()
-		fmt.Println()
-		color.Green(" done")
 		fmt.Println()
 	} else { // Running on linux
 		if utils.GetProcessOwner() == "root" {
@@ -98,6 +97,10 @@ func Install() {
 				exec.Command("sudo apt-get update")
 				exec.Command("sudo apt-get install docker-ce docker-ce-cli containerd.io")
 			}
+
+			// Install Docker Compose
+			exec.Command("sudo curl -L \"https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose")
+			exec.Command("sudo chmod +x /usr/local/bin/docker-compose")
 		} else {
 			color.Red("Please execute this command with sudo privileges. The cli is not able to install Docker and Docker Compose without those privileges.")
 		}
@@ -106,8 +109,10 @@ func Install() {
 	// Check if installation was successful
 	if utils.CommandExists("docker") {
 		cmd := exec.Command("docker", "-v")
-		version, _ := cmd.CombinedOutput()
-		color.Yellow("Congrats! You have installed " + string(version) + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
+		docker_version, _ := cmd.CombinedOutput()
+		cmd = exec.Command("docker-compose", "-v")
+		compose_version, _ := cmd.CombinedOutput()
+		color.Yellow("Congrats! You have installed " + strings.TrimRight(string(docker_version), "\r\n") + " and " + strings.TrimRight(string(compose_version), "\r\n") + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
 	} else {
 		color.Red("An error occured while installing Docker.")
 	}
