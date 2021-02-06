@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
@@ -142,4 +143,13 @@ func DownloadFile(url string, filepath string) error {
 func CommandExists(cmd string) bool {
 	_, err := exec.LookPath(cmd)
 	return err == nil
+}
+
+func GetProcessOwner() string {
+	stdout, err := exec.Command("ps", "-o", "user=", "-p", strconv.Itoa(os.Getpid())).Output()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	return string(stdout)
 }
