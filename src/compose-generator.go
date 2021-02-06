@@ -92,6 +92,15 @@ func main() {
 					},
 				},
 			},
+			{
+				Name:    "install",
+				Aliases: []string{"i"},
+				Usage:   "Installs Docker and Docker Compose with a single command",
+				Action: func(c *cli.Context) error {
+					commands.Install()
+					return nil
+				},
+			},
 		},
 		UseShortOptionHandling: true,
 	}

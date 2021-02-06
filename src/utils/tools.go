@@ -2,8 +2,11 @@ package utils
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/fatih/color"
@@ -115,4 +118,28 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	}
 
 	return secretsMap
+}
+
+func DownloadFile(url string, filepath string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	return err
+}
+
+func CommandExists(cmd string) bool {
+	_, err := exec.LookPath(cmd)
+	return err == nil
 }

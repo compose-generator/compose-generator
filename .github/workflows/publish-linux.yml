@@ -15,7 +15,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Prepare environment
-        run: sudo apt-get install tree
+        run: |
+          sudo apt-get install tree dh-make
+          export DEBFULLNAME="Marc Auberer"
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.APT_CHILLIBITS_SSH_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       - name: Run tests
         run: |
           cd src
@@ -70,7 +77,9 @@ jobs:
       #    version: ${{ github.ref }}
       #    arch: 'x86_64'
       #    desc: 'Generate and manage docker compose configuration files for your projects.'
-
+      # Deploy debian artifact for amd64
+      #- name: Depoly deb artifact - amd64
+      #  run: 
       # Upload debian artifact for amd64
       - name: Upload deb artifacts - amd64
         uses: actions/upload-artifact@v2
