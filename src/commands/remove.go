@@ -38,17 +38,19 @@ func Remove() {
 
 	// Remove service
 	fmt.Print("Removing service ...")
-	delete(compose_file.Services, service_name)
+	delete(compose_file.Services, service_name) // Remove service itself
+	for k, s := range compose_file.Services {
+		s.DependsOn = utils.RemoveStringFromSlice(s.DependsOn, service_name) // Remove dependencies on service
+		s.Links = utils.RemoveStringFromSlice(s.Links, service_name)         // Remove links on service
+		compose_file.Services[k] = s
+	}
 	color.Green(" done")
 
 	// Write to file
 	fmt.Print("Saving compose file ...")
-	output, err := yaml.Marshal(&compose_file)
-	if err != nil {
-		utils.Error("Could not marshal yaml.", true)
-	}
-	err = ioutil.WriteFile(path, output, 0777)
-	if err != nil {
+	output, err1 := yaml.Marshal(&compose_file)
+	err2 := ioutil.WriteFile(path, output, 0777)
+	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
 	color.Green(" done")
