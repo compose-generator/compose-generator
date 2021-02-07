@@ -162,3 +162,17 @@ func RemoveStringFromSlice(s []string, r string) []string {
 	}
 	return s
 }
+
+func DockerComposeUp(demonized bool) {
+	fmt.Println()
+	fmt.Println("Running docker-compose ...")
+	fmt.Println()
+
+	cmd := exec.Command("docker-compose", "up")
+	if demonized {
+		cmd = exec.Command("docker-compose", "up", "-d")
+	}
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
+}

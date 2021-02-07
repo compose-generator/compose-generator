@@ -3,7 +3,6 @@ package commands
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 
@@ -139,18 +138,8 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 		utils.Heading("Let's create a custom stack for you!")
 	}
 
-	// Run if the regarding flag is set
+	// Run if the corresponding flag is set
 	if flag_run || flag_demonized {
-		fmt.Println()
-		fmt.Println("Running docker-compose ...")
-		fmt.Println()
-
-		cmd := exec.Command("docker-compose", "up")
-		if flag_demonized {
-			cmd = exec.Command("docker-compose", "up", "-d")
-		}
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Run()
+		utils.DockerComposeUp(flag_demonized)
 	}
 }
