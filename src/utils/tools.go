@@ -145,13 +145,21 @@ func CommandExists(cmd string) bool {
 	return err == nil
 }
 
-func GetProcessOwner() string {
-	stdout, err := exec.Command("ps", "-o", "user=", "-p", strconv.Itoa(os.Getpid())).Output()
+func IsPrivileged() bool {
+	cmd := exec.Command("id", "-u")
+	output, err := cmd.Output()
+
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
-	return string(stdout)
+
+	// 0 = root, 501 = non-root user
+	i, err := strconv.Atoi(string(output[:len(output)-1]))
+
+	if err != nil {
+		panic(err)
+	}
+	return i == 0
 }
 
 func RemoveStringFromSlice(s []string, r string) []string {
@@ -175,4 +183,16 @@ func DockerComposeUp(demonized bool) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Run()
+}
+
+func ExecuteAndWait(c ...string) {
+	cmd := exec.Command(c[0], c[1:]...)
+	cmd.Start()
+	cmd.Wait()
+}
+
+func ExecuteAndWaitWithOutput(c ...string) {
+	cmd := exec.Command(c[0], c[1:]...)
+	output, _ := cmd.CombinedOutput()
+	fmt.Println(strings.TrimRight(string(output), "\r\n"))
 }
