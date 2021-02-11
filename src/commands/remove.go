@@ -13,7 +13,7 @@ import (
 
 func Remove(flag_run bool, flag_demonized bool) {
 	// Ask for custom YAML file
-	path := utils.TextQuestionWithDefault("From which compose file do you want to remove the service?", "./docker-compose.yml")
+	path := utils.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 
 	fmt.Print("Parsing compose file ...")
 	// Load compose file
