@@ -3,7 +3,9 @@
   
   !define PRODUCT_NAME "Compose Generator"
   !define PUBLISHER_NAME "ChilliBits"
-  !define MUI_BRANDINGTEXT "Compose Generator v1.0.0"
+  !define VERSION "$%VERSION%"
+  !define ARCH "$%ARCH%"
+  !define MUI_BRANDINGTEXT "Compose Generator $%VERSION%"
   CRCCheck On
 
 !include "MUI.nsh"
@@ -50,7 +52,7 @@ Section "install" Installation
 
 ;Add files
   SetOutPath "$INSTDIR"
-  File /oname=compose-generator.exe bin/compose-generator-amd64.exe
+  File /oname=compose-generator.exe dist/compose-generator_windows_${ARCH}/compose-generator.exe
   File /r predefined-templates
 
 ;create start-menu items

@@ -1,0 +1,58 @@
+project_name: compose-generator
+builds:
+  - env: [CGO_ENABLED=0]
+    dir: src
+    main: ./compose-generator.go
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+    goarch:
+      - amd64
+      - arm
+      - arm64
+      - 386
+    goarm:
+      - 5
+      - 6
+      - 7
+dockers:
+  - image_templates: ["ghcr.io/marcauberer/compose-generator:{{ .Version }}"]
+    dockerfile: Dockerfile
+    use_buildx: true
+    extra_files:
+      - predefined-templates
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/marcauberer/compose-generator
+      - --label=org.opencontainers.image.source=https://github.com/marcauberer/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2021-02-14T18:30:05Z01:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --platform=linux/amd64
+archives:
+  - files:
+      - README.md
+      - LICENSE
+      - predefined-templates/*
+    format_overrides:
+      - goos: windows
+        format: zip
+nfpms:
+  - maintainer: Marc Auberer <marc.auberer@chillibits.com>
+    description: Easy to use cli to generate Docker Compose YAML configuration files.
+    homepage: https://www.marc-auberer.com
+    license: Apache 2.0
+    formats:
+      - deb
+      - rpm
+      - apk
+release:
+  name_template: "v{{.Tag}}"
+  github:
+    owner: marcauberer
+    name: compose-generator
+  prerelease: auto

@@ -1,7 +1,7 @@
 FROM alpine:3.13
 WORKDIR /compose-generator
 
-COPY bin/compose-generator-amd64 ./compose-generator
+COPY compose-generator ./compose-generator
 COPY predefined-templates/ predefined-templates/
 
 ENV PATH="/compose-generator:${PATH}"
