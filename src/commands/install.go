@@ -75,7 +75,7 @@ func Install() {
 				utils.ExecuteAndWait("apt-get", "remove docker", "docker-engine", "docker.io", "containerd", "runc")
 				// Add repository
 				utils.ExecuteAndWait("apt-get", "update")
-				utils.ExecuteAndWait("apt-get", "install", "apt-transport-https", "ca-certificates", "curl", "gnupg-agent", "software-properties-common", "curl")
+				utils.ExecuteAndWait("apt-get", "install", "apt-transport-https", "ca-certificates", "curl", "gnupg-agent", "software-properties-common")
 				utils.ExecuteAndWait("wget", "https://download.docker.com/linux/ubuntu/gpg")
 				utils.ExecuteAndWait("apt-key", "add", "gpg")
 				utils.ExecuteAndWait("rm", "gpg")
@@ -105,7 +105,7 @@ func Install() {
 
 				// Add repository
 				utils.ExecuteAndWaitWithOutput("apt-get", "update")
-				utils.ExecuteAndWaitWithOutput("apt-get", "install", "apt-transport-https", "ca-certificates", "curl", "gnupg-agent", "software-properties-common", "curl", "-y")
+				utils.ExecuteAndWaitWithOutput("apt-get", "install", "apt-transport-https", "ca-certificates", "curl", "gnupg-agent", "software-properties-common", "-y")
 				utils.ExecuteAndWaitWithOutput("wget", "https://download.docker.com/linux/ubuntu/gpg")
 				utils.ExecuteAndWaitWithOutput("apt-key", "add", "gpg")
 				utils.ExecuteAndWaitWithOutput("rm", "gpg")

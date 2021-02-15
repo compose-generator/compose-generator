@@ -50,9 +50,17 @@ nfpms:
       - deb
       - rpm
       - apk
+    dependencies:
+      - lsb-release
+      - curl
 release:
   name_template: "v{{.Tag}}"
   github:
     owner: marcauberer
     name: compose-generator
   prerelease: auto
+artifactories:
+  - name: production
+    target: http://repo.chillibits.com:8081/artifactory/compose-generator/{{ .ProjectName }}/{{ .Version }}/
+    username: github
+    checksum: true

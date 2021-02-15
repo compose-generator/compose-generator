@@ -41,6 +41,7 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACTORY_PRODUCTION_SECRET: ${{ secrets.ARTIFACTORY_API_KEY }}
 
       - name: Download EnVar plugin for NSIS
         uses: carlosperate/download-file-action@v1.0.3
