@@ -11,6 +11,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Get version name
+        id: get_version
+        uses: battila7/get-version-action@v2
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Go
@@ -67,7 +70,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: compose-generator.exe
-          asset_name: ComposeGenerator_${{ github.event.release.tag_name }}_x64_Setup.exe
+          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_x64_Setup.exe
           tag: ${{ github.ref }}
       - name: Create NSIS installer - i386
         uses: joncloud/makensis-action@v3.4
@@ -81,5 +84,5 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: compose-generator.exe
-          asset_name: ComposeGenerator_${{ github.event.release.tag_name }}_x86_Setup.exe
+          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_x86_Setup.exe
           tag: ${{ github.ref }}

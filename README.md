@@ -1,5 +1,6 @@
 # Compose Generator
 ![Build passing](https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/marcauberer/compose-generator?include_prereleases)
 [![Go Report](https://goreportcard.com/badge/github.com/marcauberer/compose-generator)](https://goreportcard.com/report/github.com/marcauberer/compose-generator)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -10,18 +11,15 @@ You can use the Compose Generator CLI by directly installing it on your Docker h
 **Linux (Debian based distributions)**<br>
 ```sh
 $ sudo apt-get update
-
-$ 
-
+$ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common lsb-release
+$ sudo add-apt-repository "deb [arch=amd64] https://repo.chillibits.com/artifactory/compose-generator/linux/$(lsb_release -is) stable"
 $ sudo apt-get install compose-generator
 ```
 
 **Linux (RPM based distributions)**<br>
 ```sh
 $ sudo apt-get update
-
 $
-
 $ sudo apt-get install compose-generator
 ```
 
@@ -44,7 +42,20 @@ $ docker run --rm -it -v ${pwd}:/compose-generator/out chillibits/compose-genera
 ```
 
 ## Supported host systems
+There are also downloadable packages available for all supported platforms:
 
+| **Platform**                | **x86_64 / amd64**                                                                     | **i386**                                                                             | **armv5**                                                                              | **armv6**                                                                              | **armv7**                                                                              | **arm64**                                                                              |
+|-----------------------------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| **Darwin / MacOS (tar.gz)** | [download](../../releases/download/0.1.0/compose-generator_0.1.0_darwin_amd64.tar.gz)  | -                                                                                    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
+| **FreeBSD (tag.gz)**        | [download](../../releases/download/0.1.0/compose-generator_0.1.0_freebsd_amd64.tar.gz) | [download](../../releases/download/0.1.0/compose-generator_0.1.0_freebsd_386.tar.gz) | [download](../../releases/download/0.1.0/compose-generator_0.1.0_freebsd_armv5.tar.gz) | [download](../../releases/download/0.1.0/compose-generator_0.1.0_freebsd_armv6.tar.gz) | [download](../../releases/download/0.1.0/compose-generator_0.1.0_freebsd_armv7.tar.gz) | [download](../../releases/download/0.1.0/compose-generator_0.1.0_freebsd_arm64.tar.gz) |
+| **Alpine (apk)**            | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_amd64.apk)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_386.apk)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv5.apk)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv6.apk)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv7.apk)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_arm64.apk)      |
+| **CentOS (rpm)**            | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_amd64.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_386.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv5.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv6.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv7.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_arm64.rpm)      |
+| **Debian (deb)**            | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_amd64.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_386.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv5.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv6.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv7.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_arm64.deb)      |
+| **Fedora (rpm)**            | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_amd64.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_386.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv5.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv6.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv7.rpm)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_arm64.rpm)      |
+| **Raspbian (deb)**          | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_amd64.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_386.deb)      | -                                                                                      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv6.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv7.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_arm64.deb)      |
+| **Ubuntu (deb)**            | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_amd64.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_386.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv5.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv6.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_armv7.deb)      | [download](../../releases/download/0.1.0/compose-generator_0.1.0_linux_arm64.deb)      |
+| **Windows Installer (exe)** | [download](../../releases/download/0.1.0/ComposeGenerator_0.1.0_x64_Setup.exe)         | [download](../../releases/download/0.1.0/ComposeGenerator_0.1.0_x86_Setup.exe)       | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
+| **Windows Portable (zip)**  | [download](../../releases/download/0.1.0/compose-generator_0.1.0_windows_amd64.zip)    | [download](../../releases/download/0.1.0/compose-generator_0.1.0_windows_386.zip)    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
 
 ## Contribute to the project
 If you want to contribute to this project, please feel free to send us a pull request.

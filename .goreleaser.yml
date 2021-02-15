@@ -61,6 +61,7 @@ release:
   prerelease: auto
 artifactories:
   - name: production
-    target: http://repo.chillibits.com:8081/artifactory/compose-generator/{{ .ProjectName }}/{{ .Version }}/
+    target: http://repo.chillibits.com:8081/artifactory/compose-generator/{{ .Os }}/{{ .Arch }}{{ if .Arm }}{{ .Arm }}{{ end }}/{{ .Version }}/
     username: github
     checksum: true
+    signature: true
