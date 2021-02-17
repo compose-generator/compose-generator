@@ -17,6 +17,9 @@ builds:
       - 5
       - 6
       - 7
+    ignore:
+      - goos: darwin
+        goarch: arm64
 dockers:
   - image_templates: ["ghcr.io/marcauberer/compose-generator:{{ .Version }}"]
     dockerfile: Dockerfile
@@ -42,26 +45,39 @@ archives:
       - goos: windows
         format: zip
 nfpms:
-  - maintainer: Marc Auberer <marc.auberer@chillibits.com>
+  - id: alpine
+    maintainer: Marc Auberer <marc.auberer@chillibits.com>
+    description: Easy to use cli to generate Docker Compose YAML configuration files.
+    homepage: https://www.marc-auberer.com
+    license: Apache 2.0
+    formats:
+      - apk
+    dependencies:
+      - curl
+  - id: debian
+    maintainer: Marc Auberer <marc.auberer@chillibits.com>
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.marc-auberer.com
     license: Apache 2.0
     formats:
       - deb
-      - rpm
-      - apk
     dependencies:
       - lsb-release
       - curl
+  - id: rpm
+    maintainer: Marc Auberer <marc.auberer@chillibits.com>
+    description: Easy to use cli to generate Docker Compose YAML configuration files.
+    homepage: https://www.marc-auberer.com
+    license: Apache 2.0
+    formats:
+      - rpm
+    dependencies:
+      - redhat-lsb
+      - curl
+
 release:
   name_template: "v{{.Tag}}"
   github:
     owner: marcauberer
     name: compose-generator
   prerelease: auto
-artifactories:
-  - name: production
-    target: http://repo.chillibits.com:8081/artifactory/compose-generator/{{ .Os }}/{{ .Arch }}{{ if .Arm }}{{ .Arm }}{{ end }}/{{ .Version }}/
-    username: github
-    checksum: true
-    signature: true

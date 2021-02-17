@@ -44,7 +44,35 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACTORY_PRODUCTION_SECRET: ${{ secrets.ARTIFACTORY_API_KEY }}
+          ARTIFACTORY_ALPINE_SECRET: ${{ secrets.ARTIFACTORY_API_KEY }}
+          ARTIFACTORY_DEBIAN_SECRET: ${{ secrets.ARTIFACTORY_API_KEY }}
+          ARTIFACTORY_RPM_SECRET: ${{ secrets.ARTIFACTORY_API_KEY }}
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v1
+        env:
+          JF_ARTIFACTORY_1: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
+      - name: Deploy to Alpine repository
+        run: |
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.13/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.12/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.11/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.10/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.13/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.12/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.11/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.10/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
+      - name: Deploy to Debian repository
+        run: |
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/amd64
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/arm64
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv5.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv5
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv6.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv6
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv7.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv7
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_386.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/i386
+      - name: Deploy to RPM repository
+        run: |
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.rpm" rpm/x86_64/stable/compose-generator/${{ steps.get_version.outputs.version }}/compose-generator_${{ steps.get_version.outputs.version }}_amd64.rpm
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.rpm" rpm/aarch64/stable/compose-generator/${{ steps.get_version.outputs.version }}/compose-generator_${{ steps.get_version.outputs.version }}_arm64.rpm
 
       - name: Download EnVar plugin for NSIS
         uses: carlosperate/download-file-action@v1.0.3

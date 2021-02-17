@@ -1,6 +1,6 @@
 # Compose Generator
 ![Build passing](https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/marcauberer/compose-generator?include_prereleases)
+![GitHub release](https://img.shields.io/github/v/release/marcauberer/compose-generator?include_prereleases)
 [![Go Report](https://goreportcard.com/badge/github.com/marcauberer/compose-generator)](https://goreportcard.com/report/github.com/marcauberer/compose-generator)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -8,31 +8,52 @@
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
 
 ### Install Compose Generator CLI
-**Linux (Debian based distributions)**<br>
-```sh
-$ sudo apt-get update
-$ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common lsb-release
-$ sudo add-apt-repository "deb [arch=amd64] https://repo.chillibits.com/artifactory/compose-generator/linux/$(lsb_release -is) stable"
-$ sudo apt-get install compose-generator
-```
+<details>
+    <summary><b>Install on Debian / Ubuntu</b></summary>
+    $ sudo apt-get update
+    $ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common lsb-release
+    $ curl -fsSL https://chillibits.jfrog.io/artifactory/debian/gpg | sudo apt-key add -
+    $ sudo add-apt-repository "deb https://chillibits.jfrog.io/artifactory/compose-generator/linux/ $(lsb_release -is) main"
+    $ sudo apt-get install compose-generator
+</details>
 
-**Linux (RPM based distributions)**<br>
-```sh
-$ sudo apt-get update
-$
-$ sudo apt-get install compose-generator
-```
+<details>
+    <summary><b>Install on Fedora</b></summary>
+    $ sudo dnf -y install dnf-plugins-core
+    $ sudo dnf config-manager --add-repo https://chillibits.jfrog.io/artifactory/rpm/chillibits.repo
+    $ sudo dnf install compose-generator
+</details>
 
-**Windows**
-Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft.
+<details>
+    <summary><b>Install on CentOS</b></summary>
+    $ sudo yum install -y yum-utils
+    $ sudo yum-config-manager --add-repo https://chillibits.jfrog.io/artifactory/rpm/chillibits.repo
+    $ sudo yum install compose-generator
+</details>
 
-As soon as the Windows package manager is installed on your Windows machine, you can open powershell and execute this installation command:
+<details>
+    <summary><b>Install on Alpine</b></summary>
+    $ apk update
+    $ sh -c "echo 'https://chillibits.jfrog.io/artifactory/alpine/$(cat /etc/os-release | grep VERSION_ID | cut -d "=" -f2 | cut -d "." -f1,2)/main'" >> /etc/apk/repositories
+    $ wget -O /etc/apk/keys/alpine.rsa.pub https://chillibits.jfrog.io/artifactory/api/security/keypair/public/repositories/alpine
+    $ apk add compose-generator
 
-```sh
-$ winget install ChilliBits.ComposeGenerator
-```
+    If there occure any errors on the last step, please try the following instead
 
-After installing Compose Generator, you should restart your powershell instance to make it reload the available commands.
+    $ apk add compose-generator --allow-untrusted
+</details>
+
+<details>
+    <summary><b>Windows</b></summary>
+    
+    Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft.
+
+    As soon as the Windows package manager is installed on your Windows machine, you can open powershell and execute this installation command:
+
+    $ winget install ChilliBits.ComposeGenerator
+
+    After installing Compose Generator, you should restart your powershell instance to make it reload the available commands.
+</details>
 
 ### Generate compose file on the fly with Docker container
 *Note: This command does not work with Windows CMD command line. Please use PowerShell.*
