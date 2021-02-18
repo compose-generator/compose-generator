@@ -45,36 +45,30 @@ archives:
       - goos: windows
         format: zip
 nfpms:
-  - id: alpine
-    maintainer: Marc Auberer <marc.auberer@chillibits.com>
+  - maintainer: Marc Auberer <marc.auberer@chillibits.com>
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.marc-auberer.com
     license: Apache 2.0
     formats:
       - apk
-    dependencies:
-      - curl
-  - id: debian
-    maintainer: Marc Auberer <marc.auberer@chillibits.com>
-    description: Easy to use cli to generate Docker Compose YAML configuration files.
-    homepage: https://www.marc-auberer.com
-    license: Apache 2.0
-    formats:
       - deb
-    dependencies:
-      - lsb-release
-      - curl
-  - id: rpm
-    maintainer: Marc Auberer <marc.auberer@chillibits.com>
-    description: Easy to use cli to generate Docker Compose YAML configuration files.
-    homepage: https://www.marc-auberer.com
-    license: Apache 2.0
-    formats:
       - rpm
     dependencies:
-      - redhat-lsb
       - curl
-
+      - lsb-release
+    overrides:
+      rpm:
+        dependencies:
+          - redhat-lsb
+          - curl
+      apk:
+        dependencies:
+          - curl
+    contents:
+      - src: predefined-templates/*
+        dst: /usr/lib/compose-generator/predefined-templates/
+    empty_folders:
+      - /usr/lib/compose-generator/templates
 release:
   name_template: "v{{.Tag}}"
   github:

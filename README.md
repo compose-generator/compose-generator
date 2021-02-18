@@ -8,18 +8,18 @@
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
 
 ### Install Compose Generator CLI
-<details><summary><b>Install on Debian / Ubuntu</b></summary>
+<details><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
 <p>
 
-# Install
+## Install
 ```sh
 $ sudo apt-get update
 $ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common lsb-release
 $ curl -fsSL https://chillibits.jfrog.io/artifactory/debian/gpg | sudo apt-key add -
-$ sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/compose-generator/linux/ $(lsb_release -is) main"
+$ sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/debian $(lsb_release -cs) main"
 $ sudo apt-get install compose-generator
 ```
-# Use
+### Use
 ```sh
 $ compose-generator
 ```
@@ -30,13 +30,13 @@ $ compose-generator
 <details><summary><b>Install on Fedora</b></summary>
 <p>
 
-# Install
+### Install
 ```sh
 $ sudo dnf -y install dnf-plugins-core
 $ sudo dnf config-manager --add-repo https://repo.chillibits.com/artifactory/rpm/chillibits.repo
 $ sudo dnf install compose-generator
 ```
-# Use
+### Use
 ```sh
 $ compose-generator
 ```
@@ -47,13 +47,13 @@ $ compose-generator
 <details><summary><b>Install on CentOS</b></summary>
 <p>
 
-# Install
+### Install
 ```sh
 $ sudo yum install -y yum-utils
 $ sudo yum-config-manager --add-repo https://repo.chillibits.com/artifactory/rpm/chillibits.repo
 $ sudo yum install compose-generator
 ```
-# Use
+### Use
 ```sh
 $ compose-generator
 ```
@@ -64,7 +64,7 @@ $ compose-generator
 <details><summary><b>Install on Alpine</b></summary>
 <p>
 
-# Install
+### Install
 ```sh
 $ apk update
 $ sh -c "echo 'https://repo.chillibits.com/artifactory/alpine/$(cat /etc/os-release | grep VERSION_ID | cut -d "=" -f2 | cut -d "." -f1,2)/main'" >> /etc/apk/repositories
@@ -75,7 +75,7 @@ If there occure any errors on the last step, please try the following instead
 ```sh
 $ apk add compose-generator --allow-untrusted
 ```
-# Use
+### Use
 ```sh
 $ compose-generator
 ```
@@ -86,14 +86,14 @@ $ compose-generator
 <details><summary><b>Windows</b></summary>
 <p>
 
-# Install
+### Install
 Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft. <br>
 As soon as the Windows package manager is installed on your Windows machine, you can open powershell and execute this installation command: <br>
 ```sh
 $ winget install ChilliBits.ComposeGenerator
 ```
 After installing Compose Generator, you should restart your powershell instance to make it reload the available commands.
-# Use
+### Use
 ```sh
 $ compose-generator
 ```
@@ -101,14 +101,14 @@ $ compose-generator
 </p>
 </details>
 
-### Generate compose file on the fly with Docker container
+## Use with Docker
 *Note: This command does not work with Windows CMD command line. Please use PowerShell.*
 
 ```sh
 $ docker run --rm -it -v ${pwd}:/compose-generator/out chillibits/compose-generator
 ```
 
-## Supported host systems
+## Supported host systems & file downloads
 There are also downloadable packages available for all supported platforms:
 
 | **Platform**                | **x86_64 / amd64**                                                                     | **i386**                                                                             | **armv5**                                                                              | **armv6**                                                                              | **armv7**                                                                              | **arm64**                                                                              |

@@ -6,6 +6,9 @@ on:
   push:
     paths-ignore:
       - 'README.md'
+      - '.*'
+    tags-ignore:
+      - '*'
   pull_request:
     branches: [ main, dev ]
 
