@@ -1,0 +1,72 @@
+site_name: Compose Generator
+site_description: Deliver Go binaries as fast and easily as possible
+site_autor: Marc Auberer
+copyright: Made with ❤️ by Compose Generator contributors.
+repo_name: marcauberer/compose-generator
+repo_url: https://github.com/marcauberer/compose-generator
+edit_uri: edit/master/docs/docs/
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.sections
+    - navigation.tabs
+  palette:
+    scheme: default
+    primary: indigo
+    accent: indigo
+  font:
+    text: Roboto
+    code: Roboto Mono
+  logo: static/avatar.png
+  favicon: static/favicon.ico
+  include_search_page: false
+  search_index_only: true
+
+plugins:
+  # disable temporarely because its freezing the page
+  - search:
+      prebuild_index: python
+      lang:
+      - en
+  - minify:
+      minify_html: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/marcauberer/compose-generator
+    - icon: fontawesome/brands/medium
+      link: https://medium.com/p/d4356d38922d
+
+nav:
+- Home: index.md
+- intro.md
+- Install:
+  - install/debian.md
+  - install/ubuntu.md
+  - install/raspbian.md
+  - install/fedora.md
+  - install/centos.md
+  - install/alpine.md
+  - install/windows.md
+- quick-start.md
+- environment.md
+- Usage:
+  - usage/generate.md
+  - usage/add.md
+  - usage/remove.md
+  - usage/template.md
+  - usage/install.md
+- contributing.md
+- links.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.tabbed
+  - pymdownx.superfences

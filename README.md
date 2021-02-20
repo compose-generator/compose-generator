@@ -15,8 +15,9 @@ You can use the Compose Generator CLI by directly installing it on your Docker h
 ```sh
 $ sudo apt-get update
 $ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common lsb-release
-$ curl -fsSL https://chillibits.jfrog.io/artifactory/debian/gpg | sudo apt-key add -
+$ curl -fsSL https://repo.chillibits.com/artifactory/debian/gpg | sudo apt-key add -
 $ sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/debian $(lsb_release -cs) main"
+$ sudo sudo apt-get update
 $ sudo apt-get install compose-generator
 ```
 ### Use

@@ -1,0 +1,4 @@
+---
+title: Generate command
+---
+

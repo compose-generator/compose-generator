@@ -1,0 +1,24 @@
+# Publish documentation
+
+name: Publish documentation
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'docs/*'
+
+jobs:
+  docs-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build docs
+        run: docker run --rm -v ${PWD}/docs:/docs squidfunk/mkdocs-material build
+      - name: Deploy docs
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: docs/site
