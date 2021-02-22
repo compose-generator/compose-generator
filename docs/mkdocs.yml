@@ -50,7 +50,6 @@ extra:
 
 nav:
 - Home: index.md
-- intro.md
 - Install:
   - install/debian.md
   - install/ubuntu.md

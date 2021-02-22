@@ -32,8 +32,8 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 	project_name_container := strings.ReplaceAll(strings.ToLower(project_name), " ", "-")
 
 	// Docker Swarm compatability (default: no)
-	docker_swarm := utils.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
-	fmt.Println(docker_swarm)
+	//docker_swarm := utils.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
+	//fmt.Println(docker_swarm)
 
 	// Predefined stack (default: yes)
 	use_predefined_stack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
