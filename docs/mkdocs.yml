@@ -51,15 +51,10 @@ extra:
 nav:
 - Home: index.md
 - Install:
-  - install/debian.md
-  - install/ubuntu.md
-  - install/raspbian.md
-  - install/fedora.md
-  - install/centos.md
-  - install/alpine.md
+  - install/docker.md
+  - install/linux.md
   - install/windows.md
 - quick-start.md
-- environment.md
 - Usage:
   - usage/generate.md
   - usage/add.md
