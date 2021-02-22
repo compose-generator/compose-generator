@@ -1,6 +1,6 @@
 site_name: Compose Generator
 site_description: Deliver Go binaries as fast and easily as possible
-site_autor: Marc Auberer
+site_author: Marc Auberer
 copyright: Made with ❤️ by Compose Generator contributors.
 repo_name: marcauberer/compose-generator
 repo_url: https://github.com/marcauberer/compose-generator
@@ -8,15 +8,22 @@ edit_uri: edit/main/docs/docs/
 
 theme:
   name: material
-  custom_dir: docs/overrides
   language: en
   features:
-    - navigation.sections
-    - navigation.tabs
+    - navigation.instant
   palette:
-    scheme: default
-    primary: indigo
-    accent: indigo
+    - scheme: default # Light mode
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+    - scheme: slate # Dark mode
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
   font:
     text: Roboto
     code: Roboto Mono
@@ -61,7 +68,7 @@ nav:
   - usage/template.md
   - usage/install.md
 - contributing.md
-- links.md
+- About: links.md
 
 markdown_extensions:
   - admonition

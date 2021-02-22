@@ -15,10 +15,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build docs
-        run: docker run --rm -v ${PWD}/docs:/docs squidfunk/mkdocs-material build
-      - name: Deploy docs
-        uses: JamesIves/github-pages-deploy-action@4.0.0
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
-          branch: gh-pages
-          folder: docs/site
+          python-version: 3.x
+      - name: Build and deploy
+        run: |
+          cd docs
+          pip install mkdocs-material mkdocs-minify-plugin
+          mkdocs gh-deploy --force
