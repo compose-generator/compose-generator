@@ -4,10 +4,11 @@ site_autor: Marc Auberer
 copyright: Made with ❤️ by Compose Generator contributors.
 repo_name: marcauberer/compose-generator
 repo_url: https://github.com/marcauberer/compose-generator
-edit_uri: edit/master/docs/docs/
+edit_uri: edit/main/docs/docs/
 
 theme:
   name: material
+  custom_dir: docs/overrides
   language: en
   features:
     - navigation.sections
@@ -20,7 +21,7 @@ theme:
     text: Roboto
     code: Roboto Mono
   logo: static/avatar.png
-  favicon: static/favicon.ico
+  favicon: static/favicon-48x48.ico
   include_search_page: false
   search_index_only: true
 

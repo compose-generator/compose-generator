@@ -7,3 +7,6 @@ templates/*
 # Ignore compose-generator output
 ./docker-compose.yml
 ./environment.env
+
+# Documentation build output
+docs/site/*
