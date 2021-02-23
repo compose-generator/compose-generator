@@ -11,7 +11,7 @@ import (
 	yaml "gopkg.in/yaml.v3"
 )
 
-func Remove(flag_run bool, flag_demonized bool) {
+func Remove(flag_run bool, flag_demonized bool, flag_with_volumes bool, flag_force bool) {
 	// Ask for custom YAML file
 	path := utils.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 
@@ -54,6 +54,8 @@ func Remove(flag_run bool, flag_demonized bool) {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
 	color.Green(" done")
+
+	// Remove volumes
 
 	// Run if the corresponding flag is set
 	if flag_run || flag_demonized {

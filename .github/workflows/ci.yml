@@ -6,7 +6,8 @@ on:
   push:
     paths-ignore:
       - 'README.md'
-      - '.*'
+      - '.gitignore'
+      - '.github/**'
     tags-ignore:
       - '*'
   pull_request:
