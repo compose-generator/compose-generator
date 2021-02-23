@@ -2,10 +2,10 @@
 title: Remove command
 ---
 
-### Description
+## Description
 Removed a service from an existing compose file. You also can remove multiple services at once.
 
-### Usage
+## Usage
 === "Long form"
     Use the `remove` command by executing:
     ```sh
@@ -17,7 +17,7 @@ Removed a service from an existing compose file. You also can remove multiple se
     $ compose-generator r [service-name]
     ```
 
-### Options
+## Options
 You can apply following options to the `remove` command:
 
 | Option           | Short | Description                                                                                                        |

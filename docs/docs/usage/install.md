@@ -2,10 +2,10 @@
 title: Install command
 ---
 
-### Description
+## Description
 Installs Docker and Docker compose to make your start more seamless.
 
-### Usage
+## Usage
 === "Long form"
     Use the `install` command by executing:
     ```sh
@@ -17,7 +17,7 @@ Installs Docker and Docker compose to make your start more seamless.
     $ compose-generator i
     ```
 
-### Options
+## Options
 You can apply following options to the `install` command:
 
 | Option             | Short | Description                 |

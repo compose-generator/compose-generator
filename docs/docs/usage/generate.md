@@ -2,13 +2,13 @@
 title: Generate command
 ---
 
-### Description
+## Description
 You can use the `generate` command to generate Docker Compose configurations. You can generate your configurations from predefined stack templates or create your own stack.
 
 !!! tip
     You can later save / load your own templates with the [`template` command](../template).
 
-### Usage
+## Usage
 === "Root command"
     Use the `generate` command by executing:
     ```sh
@@ -25,7 +25,7 @@ You can use the `generate` command to generate Docker Compose configurations. Yo
     $ compose-generator g
     ```
 
-### Options
+## Options
 You can apply following options to the `generate` command:
 
 | Option          | Short | Description                                                                                                        |
