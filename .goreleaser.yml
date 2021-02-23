@@ -21,7 +21,11 @@ builds:
       - goos: darwin
         goarch: arm64
 dockers:
-  - image_templates: ["ghcr.io/marcauberer/compose-generator:{{ .Version }}"]
+  - image_templates:
+      - "ghcr.io/marcauberer/compose-generator:{{ .Version }}"
+      - "ghcr.io/marcauberer/compose-generator:latest"
+      - "docker.io/chillibits/compose-generator:{{ .Version }}"
+      - "docker.io/chillibits/compose-generator:latest"
     dockerfile: Dockerfile
     use_buildx: true
     extra_files:
