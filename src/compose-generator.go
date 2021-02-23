@@ -107,7 +107,6 @@ func main() {
 						Aliases: []string{"l"},
 						Usage:   "Load a custom template.",
 						Flags: []cli.Flag{
-							&cli.BoolFlag{Name: "show-predefined", Aliases: []string{"p"}, Usage: "Show predefined templates in addition to the custom ones"},
 							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 						},
 						Action: func(c *cli.Context) error {
