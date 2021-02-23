@@ -40,6 +40,21 @@ func main() {
 		},
 		Commands: []*cli.Command{
 			{
+				Name:    "generate",
+				Aliases: []string{"g"},
+				Usage:   "Generates a docker compose configuration",
+				Flags: []cli.Flag{
+					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
+					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
+					&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
+					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
+				},
+				Action: func(c *cli.Context) error {
+					commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"), c.Bool("force"))
+					return nil
+				},
+			},
+			{
 				Name:    "add",
 				Aliases: []string{"a"},
 				Usage:   "Adds a service to an existing compose file",
