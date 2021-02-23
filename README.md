@@ -1,6 +1,6 @@
 # Compose Generator
-![Build passing](https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg)
 ![GitHub release](https://img.shields.io/github/v/release/marcauberer/compose-generator?include_prereleases)
+![Build passing](https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg)
 [![Go Report](https://goreportcard.com/badge/github.com/marcauberer/compose-generator)](https://goreportcard.com/report/github.com/marcauberer/compose-generator)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -8,7 +8,7 @@
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
 
 ### Install Compose Generator CLI
-<details><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
+<details style="background-color: gray"><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
 <p>
 
 ### Install
@@ -31,7 +31,7 @@ $ compose-generator
 </p>
 </details>
 
-<details><summary><b>Install on Fedora</b></summary>
+<details style="background-color: gray"><summary><b>Install on Fedora</b></summary>
 <p>
 
 ### Install
@@ -49,7 +49,7 @@ $ compose-generator
 </p>
 </details>
 
-<details><summary><b>Install on CentOS</b></summary>
+<details style="background-color: gray"><summary><b>Install on CentOS</b></summary>
 <p>
 
 ### Install
@@ -67,7 +67,7 @@ $ compose-generator
 </p>
 </details>
 
-<details><summary><b>Install on Alpine</b></summary>
+<details style="background-color: gray"><summary><b>Install on Alpine</b></summary>
 <p>
 
 ### Install
@@ -92,7 +92,7 @@ $ compose-generator
 </p>
 </details>
 
-<details><summary><b>Windows</b></summary>
+<details style="background-color: gray"><summary><b>Windows</b></summary>
 <p>
 
 ### Install
@@ -110,8 +110,8 @@ $ compose-generator
 </p>
 </details>
 
-## Use with Docker
-*Note: This command does not work with Windows CMD command line. Please use PowerShell.*
+## QuickStart with Docker
+*Note for Windows users: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
 
 ```sh
 $ docker run --rm -it -v ${pwd}:/compose-generator/out chillibits/compose-generator
@@ -134,6 +134,6 @@ There are also downloadable packages available for all supported platforms:
 | **Windows Portable (zip)**  | [download](../../releases/download/0.1.0/compose-generator_0.1.0_windows_amd64.zip)    | [download](../../releases/download/0.1.0/compose-generator_0.1.0_windows_386.zip)    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
 
 ## Contribute to the project
-If you want to contribute to this project, please feel free to send us a pull request.
+If you want to contribute to this project, please ensure you comply with the [contribution guidelines](CONTRIBUTING.md).
 
 © Marc Auberer 2021

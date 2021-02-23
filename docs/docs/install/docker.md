@@ -2,7 +2,7 @@
 title: Install for Docker
 ---
 
-### Pull Docker image
+### Use
 ```sh
-docker pull ghcr.io/marcauberer/compose-generator:latest
+docker run --rm -it -v ${pwd}:/compose-generator/out chillibits/compose-generator
 ```
