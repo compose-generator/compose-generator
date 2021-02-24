@@ -1,15 +1,27 @@
-# Compose Generator
-![GitHub release](https://img.shields.io/github/v/release/marcauberer/compose-generator?include_prereleases)
-![Build passing](https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg)
-[![Go Report](https://goreportcard.com/badge/github.com/marcauberer/compose-generator)](https://goreportcard.com/report/github.com/marcauberer/compose-generator)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+<p align="center">
+  <img alt="Compose Generator Logo" src="./docs/docs/static/avatar.png" height="200" />
+  <h3 align="center">Compose Generator</h3>
+  <p align="center">Easy to use cli to generate Docker Compose YAML configuration files.</p>
+  <p align="center">
+    <a target="_blank" href="./.github/workflows/ci.yml"><img src="https://img.shields.io/github/v/release/marcauberer/compose-generator?include_prereleases"></a>
+    <a target="_blank" href="https://github.com/marcauberer/compose-generator/releases/latest"><img src="https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg"></a>
+    <a target="_blank" href="https://goreportcard.com/report/github.com/marcauberer/compose-generator"><img src="https://goreportcard.com/badge/github.com/marcauberer/compose-generator"></a>
+    <a target="_blank" href="https://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
+    <a target="_blank" href="./LICENSE.md"><img src="https://img.shields.io/github/license/marcauberer/compose-generator"></a>
+  </p>
+</p>
+
+---
+
+## Documentation
+Please visit the documentation on [https://compose-generator.com](https://www.compose-generator.com).
 
 ## Usage
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
 
 ### Install Compose Generator CLI
-<details style="background-color: gray"><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
-<p>
+<details><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
+<p style="padding-left: 30px;">
 
 ### Install
 ```sh
@@ -31,8 +43,8 @@ $ compose-generator
 </p>
 </details>
 
-<details style="background-color: gray"><summary><b>Install on Fedora</b></summary>
-<p>
+<details><summary><b>Install on Fedora</b></summary>
+<p style="padding-left: 30px;">
 
 ### Install
 ```sh
@@ -49,8 +61,8 @@ $ compose-generator
 </p>
 </details>
 
-<details style="background-color: gray"><summary><b>Install on CentOS</b></summary>
-<p>
+<details><summary><b>Install on CentOS</b></summary>
+<p style="padding-left: 30px;">
 
 ### Install
 ```sh
@@ -67,8 +79,8 @@ $ compose-generator
 </p>
 </details>
 
-<details style="background-color: gray"><summary><b>Install on Alpine</b></summary>
-<p>
+<details><summary><b>Install on Alpine</b></summary>
+<p style="padding-left: 30px;">
 
 ### Install
 ```sh
@@ -92,8 +104,8 @@ $ compose-generator
 </p>
 </details>
 
-<details style="background-color: gray"><summary><b>Windows</b></summary>
-<p>
+<details><summary><b>Windows</b></summary>
+<p style="padding-left: 30px;">
 
 ### Install
 Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft. <br>
