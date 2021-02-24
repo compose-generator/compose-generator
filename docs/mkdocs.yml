@@ -68,6 +68,7 @@ markdown_extensions:
   - admonition
   - codehilite
   - meta
+  - footnotes
   - toc:
       permalink: true
   - pymdownx.tabbed

@@ -73,13 +73,14 @@ func main() {
 				Aliases: []string{"r", "rm"},
 				Usage:   "Removes a service from an existing compose file",
 				Flags: []cli.Flag{
+					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Show questions for advanced customization"},
+					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
 					&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
 					&cli.BoolFlag{Name: "with-volumes", Aliases: []string{"v"}, Usage: "Remove associated volumes"},
-					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Remove(c.Bool("run"), c.Bool("demonized"), c.Bool("with-volumes"), c.Bool("force"))
+					commands.Remove(c.Bool("run"), c.Bool("demonized"), c.Bool("with-volumes"), c.Bool("force"), c.Bool("advanced"))
 					return nil
 				},
 			},

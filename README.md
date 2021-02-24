@@ -21,7 +21,7 @@ You can use the Compose Generator CLI by directly installing it on your Docker h
 
 ### Install Compose Generator CLI
 <details><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
-<p style="padding-left: 30px;">
+<p>
 
 ### Install
 ```sh
@@ -44,7 +44,7 @@ $ compose-generator
 </details>
 
 <details><summary><b>Install on Fedora</b></summary>
-<p style="padding-left: 30px;">
+<p>
 
 ### Install
 ```sh
@@ -62,7 +62,7 @@ $ compose-generator
 </details>
 
 <details><summary><b>Install on CentOS</b></summary>
-<p style="padding-left: 30px;">
+<p>
 
 ### Install
 ```sh
@@ -80,7 +80,7 @@ $ compose-generator
 </details>
 
 <details><summary><b>Install on Alpine</b></summary>
-<p style="padding-left: 30px;">
+<p>
 
 ### Install
 ```sh
@@ -105,7 +105,7 @@ $ compose-generator
 </details>
 
 <details><summary><b>Windows</b></summary>
-<p style="padding-left: 30px;">
+<p>
 
 ### Install
 Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft. <br>
