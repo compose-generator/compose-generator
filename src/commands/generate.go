@@ -31,7 +31,7 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 	}
 	project_name_container := strings.ReplaceAll(strings.ToLower(project_name), " ", "-")
 
-	// Docker Swarm compatability (default: no)
+	// Docker Swarm compatibility (default: no)
 	//docker_swarm := utils.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
 	//fmt.Println(docker_swarm)
 

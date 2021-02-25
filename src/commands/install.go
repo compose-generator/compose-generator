@@ -74,6 +74,6 @@ func Install(flag_only_compose bool, flag_only_docker bool) {
 			color.Yellow("Congrats! You have installed " + strings.TrimRight(string(docker_version), "\r\n") + " and " + strings.TrimRight(string(compose_version), "\r\n") + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
 		}
 	} else {
-		color.Red("An error occured while installing Docker.")
+		color.Red("An error occurred while installing Docker.")
 	}
 }
