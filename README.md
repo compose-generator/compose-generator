@@ -145,7 +145,11 @@ There are also downloadable packages available for all supported platforms:
 | **Windows Installer (exe)** | [download](../../releases/download/0.1.0/ComposeGenerator_0.1.0_x64_Setup.exe)         | [download](../../releases/download/0.1.0/ComposeGenerator_0.1.0_x86_Setup.exe)       | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
 | **Windows Portable (zip)**  | [download](../../releases/download/0.1.0/compose-generator_0.1.0_windows_amd64.zip)    | [download](../../releases/download/0.1.0/compose-generator_0.1.0_windows_386.zip)    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
 
-## Contribute to the project
+## Contribute by providing predefined templates
+If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-templates/README.md). Fork the repository, create the template and open a pr.
+The community is thankful for every predefined template!
+
+## Contribute otherwise to the project
 If you want to contribute to this project, please ensure you comply with the [contribution guidelines](CONTRIBUTING.md).
 
 © Marc Auberer 2021

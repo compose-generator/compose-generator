@@ -55,8 +55,8 @@ There are two predefined variables, which the cli will provide:
 *Note: This configuration will use an environment variable from the host system: `${VARIABLE_NAME}`. Don't confuse the notations*
 
 ## Environment file ([example file](1_lamp/environment.env))
-This file is not mandatory and should only to be used for secrets, username, configurable paths, urls, etc.
-This file consists of key-value pares. That means, that the `environment.env` file is the only one where the secret variables (the ones starting with an underscore) from the configuration file will be applied by the cli.<br>
+This file consists of key-value pares, and is not mandatory and should only be used for secrets, usernames, configurable paths, urls, etc.
+The `environment.env` file is the only one where the secret variables (the ones starting with an underscore) from the configuration file will be applied by the cli.<br>
 The environment file can be attached to a container by including it into the compose file like this:
 ```
 ...
