@@ -2,8 +2,8 @@ site_name: Compose Generator
 site_description: Deliver Go binaries as fast and easily as possible
 site_author: Marc Auberer
 copyright: Made with ❤️ by Compose Generator contributors.
-repo_name: marcauberer/compose-generator
-repo_url: https://github.com/marcauberer/compose-generator
+repo_name: compose-generator/compose-generator
+repo_url: https://github.com/compose-generator/compose-generator
 edit_uri: edit/main/docs/docs/
 
 theme:
@@ -44,7 +44,7 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/marcauberer/compose-generator
+      link: https://github.com/compose-generator/compose-generator
     - icon: fontawesome/brands/medium
       link: https://medium.com/p/d4356d38922d
 

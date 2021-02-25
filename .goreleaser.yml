@@ -22,8 +22,8 @@ builds:
         goarch: arm64
 dockers:
   - image_templates:
-      - "ghcr.io/marcauberer/compose-generator:{{ .Version }}"
-      - "ghcr.io/marcauberer/compose-generator:latest"
+      - "ghcr.io/compose-generator/compose-generator:{{ .Version }}"
+      - "ghcr.io/compose-generator/compose-generator:latest"
       - "docker.io/chillibits/compose-generator:{{ .Version }}"
       - "docker.io/chillibits/compose-generator:latest"
     dockerfile: Dockerfile
@@ -33,8 +33,8 @@ dockers:
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
-      - --label=org.opencontainers.image.url=https://github.com/marcauberer/compose-generator
-      - --label=org.opencontainers.image.source=https://github.com/marcauberer/compose-generator
+      - --label=org.opencontainers.image.url=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.created={{ time "2021-02-14T18:30:05Z01:00" }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
@@ -76,6 +76,6 @@ nfpms:
 release:
   name_template: "v{{.Tag}}"
   github:
-    owner: marcauberer
+    owner: compose-generator
     name: compose-generator
   prerelease: auto

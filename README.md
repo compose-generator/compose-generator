@@ -3,11 +3,11 @@
   <h3 align="center">Compose Generator</h3>
   <p align="center">Easy to use cli to generate Docker Compose YAML configuration files.</p>
   <p align="center">
-    <a target="_blank" href="./.github/workflows/ci.yml"><img src="https://img.shields.io/github/v/release/marcauberer/compose-generator?include_prereleases"></a>
-    <a target="_blank" href="https://github.com/marcauberer/compose-generator/releases/latest"><img src="https://github.com/marcauberer/compose-generator/workflows/Go%20CI/badge.svg"></a>
-    <a target="_blank" href="https://goreportcard.com/report/github.com/marcauberer/compose-generator"><img src="https://goreportcard.com/badge/github.com/marcauberer/compose-generator"></a>
+    <a target="_blank" href="./.github/workflows/ci.yml"><img src="https://img.shields.io/github/v/release/compose-generator/compose-generator?include_prereleases"></a>
+    <a target="_blank" href="https://github.com/compose-generator/compose-generator/releases/latest"><img src="https://github.com/compose-generator/compose-generator/workflows/Go%20CI/badge.svg"></a>
+    <a target="_blank" href="https://goreportcard.com/report/github.com/compose-generator/compose-generator"><img src="https://goreportcard.com/badge/github.com/compose-generator/compose-generator"></a>
     <a target="_blank" href="https://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
-    <a target="_blank" href="./LICENSE.md"><img src="https://img.shields.io/github/license/marcauberer/compose-generator"></a>
+    <a target="_blank" href="./LICENSE.md"><img src="https://img.shields.io/github/license/compose-generator/compose-generator"></a>
   </p>
 </p>
 
