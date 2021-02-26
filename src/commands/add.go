@@ -12,10 +12,11 @@ import (
 	yaml "gopkg.in/yaml.v3"
 )
 
-func Add(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool) {
+// Add: Adds a service to an existing compose file
+func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
-	if flag_advanced {
+	if flagAdvanced {
 		path = utils.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
 	}
 
@@ -24,24 +25,28 @@ func Add(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool
 	jsonFile, err := os.Open(path)
 	if err != nil {
 		utils.Error("Internal error - unable to load compose file", true)
+		err = nil
 	}
 	bytes, _ := ioutil.ReadAll(jsonFile)
 
 	// Parse YAML
-	compose_file := model.ComposeFile{}
-	err = yaml.Unmarshal(bytes, &compose_file)
+	composeFile := model.ComposeFile{}
+	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
+		utils.Error("Internal error - unable to parse compose file", true)
+		err = nil
+	}
 	color.Green(" done")
 	fmt.Println()
 
 	// Ask if the image should be built from source
 	build := utils.YesNoQuestion("Build from source?", false)
-	var build_path string
+	var buildPath string
 	registry := ""
 	if build {
 		// Ask for build path
-		build_path = utils.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
+		buildPath = utils.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
 		// Check if Dockerfile exists
-		if !utils.FileExists(build_path+"/Dockerfile") && !utils.FileExists(build_path+"Dockerfile") {
+		if !utils.FileExists(buildPath+"/Dockerfile") && !utils.FileExists(buildPath+"Dockerfile") {
 			utils.Error("Aborting. The Dockerfile cannot be found.", true)
 		}
 	} else {
@@ -57,30 +62,29 @@ func Add(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool
 	// Ask for image
 	image := utils.TextQuestionWithDefault("Which base image do you want to pick?", "hello-world")
 
-	default_service_name := image
-	i := strings.Index(default_service_name, "/")
+	defaultServiceName := image
+	i := strings.Index(defaultServiceName, "/")
 	if i != -1 {
-		default_service_name = default_service_name[i+1:]
+		defaultServiceName = defaultServiceName[i+1:]
 	}
-	i = strings.Index(default_service_name, ":")
+	i = strings.Index(defaultServiceName, ":")
 	if i != -1 {
-		default_service_name = default_service_name[:i]
+		defaultServiceName = defaultServiceName[:i]
 	}
 
 	// Ask for service name
-	service_name := utils.TextQuestionWithDefault("How do you want to call your service (best practise: lower cased):", default_service_name)
-	if _, ok := compose_file.Services[service_name]; ok {
+	serviceName := utils.TextQuestionWithDefault("How do you want to call your service (best practise: lower cased):", defaultServiceName)
+	if _, ok := composeFile.Services[serviceName]; ok {
 		// Service name already existing
-		overwrite_service := utils.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false)
-		if !overwrite_service {
+		if !utils.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
 			os.Exit(0)
 		}
 	}
 
 	// Ask for container name
-	container_name := service_name
-	if flag_advanced {
-		container_name = utils.TextQuestionWithDefault("How do you want to call your container (best practise: lower cased):", service_name)
+	containerName := serviceName
+	if flagAdvanced {
+		containerName = utils.TextQuestionWithDefault("How do you want to call your container (best practise: lower cased):", serviceName)
 	}
 
 	// Ask for volumes
@@ -114,10 +118,10 @@ func Add(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool
 	}
 
 	// Ask for restart mode
-	var restart_value string = ""
-	if flag_advanced {
+	var restartValue string = ""
+	if flagAdvanced {
 		items := []string{"always", "on-failure", "unless-stopped", "no"}
-		restart_value = utils.MenuQuestion("When should the service get restarted?", items)
+		restartValue = utils.MenuQuestion("When should the service get restarted?", items)
 		fmt.Println()
 
 	}
@@ -125,17 +129,17 @@ func Add(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool
 	// Add service
 	fmt.Print("Adding service ...")
 	service := model.Service{
-		Build:         build_path,
+		Build:         buildPath,
 		Image:         registry + image,
-		ContainerName: container_name,
-		Restart:       restart_value,
+		ContainerName: containerName,
+		Restart:       restartValue,
 	}
-	compose_file.Services[service_name] = service
+	composeFile.Services[serviceName] = service
 	color.Green(" done")
 
 	// Write to file
 	fmt.Print("Saving compose file ...")
-	output, err1 := yaml.Marshal(&compose_file)
+	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
@@ -143,7 +147,7 @@ func Add(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool
 	color.Green(" done")
 
 	// Run if the corresponding flag is set
-	if flag_run || flag_demonized {
-		utils.DockerComposeUp(flag_demonized)
+	if flagRun || flagDetached {
+		utils.DockerComposeUp(flagDetached)
 	}
 }

@@ -12,10 +12,10 @@ import (
 	yaml "gopkg.in/yaml.v3"
 )
 
-func Remove(service_names []string, flag_run bool, flag_demonized bool, flag_with_volumes bool, flag_force bool, flag_advanced bool) {
+func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
-	if flag_advanced {
+	if flagAdvanced {
 		path = utils.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 	}
 
@@ -24,57 +24,61 @@ func Remove(service_names []string, flag_run bool, flag_demonized bool, flag_wit
 	jsonFile, err := os.Open(path)
 	if err != nil {
 		utils.Error("Internal error - unable to load compose file", true)
+		err = nil
 	}
 	bytes, _ := ioutil.ReadAll(jsonFile)
 
 	// Parse YAML
-	compose_file := model.ComposeFile{}
-	err = yaml.Unmarshal(bytes, &compose_file)
+	composeFile := model.ComposeFile{}
+	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
+		utils.Error("Internal error - unable to parse compose file", true)
+		err = nil
+	}
 	color.Green(" done")
 
 	// Ask for service
-	if len(service_names) == 0 {
+	if len(serviceNames) == 0 {
 		var items []string
-		for k := range compose_file.Services {
+		for k := range composeFile.Services {
 			items = append(items, k)
 		}
-		service_names = utils.MultiSelectMenuQuestion("Which services do you want to remove?", items)
+		serviceNames = utils.MultiSelectMenuQuestion("Which services do you want to remove?", items)
 		fmt.Println()
 	}
 
-	for _, service_name := range service_names {
+	for _, serviceName := range serviceNames {
 		// Remove volumes
-		if flag_with_volumes {
-			really_delete_volumes := true
-			if !flag_force {
-				really_delete_volumes = utils.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
+		if flagWithVolumes {
+			reallyDeleteVolumes := true
+			if !flagForce {
+				reallyDeleteVolumes = utils.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
 			}
-			if really_delete_volumes {
-				fmt.Print("Removing volumes of '" + service_name + "' ...")
-				volumes := compose_file.Services[service_name].Volumes
+			if reallyDeleteVolumes {
+				fmt.Print("Removing volumes of '" + serviceName + "' ...")
+				volumes := composeFile.Services[serviceName].Volumes
 				for _, paths := range volumes {
 					path := paths
 					if strings.Contains(path, ":") {
 						path = path[:strings.IndexByte(path, ':')]
 					}
 					// Check if volume is used by another container
-					can_be_deleted := true
+					canBeDeleted := true
 				out:
-					for k, s := range compose_file.Services {
-						if k != service_name {
-							for _, paths_inner := range s.Volumes {
-								path_inner := paths_inner
-								if strings.Contains(path_inner, ":") {
-									path_inner = path_inner[:strings.IndexByte(path_inner, ':')]
+					for k, s := range composeFile.Services {
+						if k != serviceName {
+							for _, pathsInner := range s.Volumes {
+								pathInner := pathsInner
+								if strings.Contains(pathInner, ":") {
+									pathInner = pathInner[:strings.IndexByte(pathInner, ':')]
 								}
-								if path_inner == path {
-									can_be_deleted = false
+								if pathInner == path {
+									canBeDeleted = false
 									break out
 								}
 							}
 						}
 					}
-					if can_be_deleted && utils.FileExists(path) {
+					if canBeDeleted && utils.FileExists(path) {
 						os.RemoveAll(path)
 					}
 				}
@@ -83,19 +87,19 @@ func Remove(service_names []string, flag_run bool, flag_demonized bool, flag_wit
 		}
 
 		// Remove service
-		fmt.Print("Removing service '" + service_name + "' ...")
-		delete(compose_file.Services, service_name) // Remove service itself
-		for k, s := range compose_file.Services {
-			s.DependsOn = utils.RemoveStringFromSlice(s.DependsOn, service_name) // Remove dependencies on service
-			s.Links = utils.RemoveStringFromSlice(s.Links, service_name)         // Remove links on service
-			compose_file.Services[k] = s
+		fmt.Print("Removing service '" + serviceName + "' ...")
+		delete(composeFile.Services, serviceName) // Remove service itself
+		for k, s := range composeFile.Services {
+			s.DependsOn = utils.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
+			s.Links = utils.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
+			composeFile.Services[k] = s
 		}
 		color.Green(" done")
 	}
 
 	// Write to file
 	fmt.Print("Saving compose file ...")
-	output, err1 := yaml.Marshal(&compose_file)
+	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
@@ -103,7 +107,7 @@ func Remove(service_names []string, flag_run bool, flag_demonized bool, flag_wit
 	color.Green(" done")
 
 	// Run if the corresponding flag is set
-	if flag_run || flag_demonized {
-		utils.DockerComposeUp(flag_demonized)
+	if flagRun || flagDetached {
+		utils.DockerComposeUp(flagDetached)
 	}
 }

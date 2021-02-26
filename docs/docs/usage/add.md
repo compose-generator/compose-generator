@@ -20,9 +20,9 @@ Adds a service to an existing compose file.
 ## Options
 You can apply following options to the `add` command:
 
-| Option           | Short | Description                                                                                                    |
-| ---------------- | ----- | -------------------------------------------------------------------------------------------------------------- |
-| `--advanced`     | `-a`  | Show questions for advanced customization                                                                      |
-| `--demonized`    | `-d`  | To run the compose configuration after adding in detached mode. For combined use with the `--run` / `-r` flag. |
-| `--force`        | `-f`  | Skip safety checks and delete all files that may exist.                                                        |
-| `--run`          | `-r`  | To run the compose configuration after adding.                                                                 |
+| Option       | Short | Description                                                                                                    |
+| ------------ | ----- | -------------------------------------------------------------------------------------------------------------- |
+| `--advanced` | `-a`  | Show questions for advanced customization                                                                      |
+| `--detached` | `-d`  | To run the compose configuration after adding in detached mode. For combined use with the `--run` / `-r` flag. |
+| `--force`    | `-f`  | Skip safety checks and delete all files that may exist.                                                        |
+| `--run`      | `-r`  | To run the compose configuration after adding.                                                                 |

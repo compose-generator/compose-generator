@@ -9,9 +9,9 @@ import (
 	"compose-generator/commands"
 )
 
-const VERSION = "1.0.0"
-
 func main() {
+	const VERSION = "0.1.0"
+
 	// Version flag
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
@@ -31,11 +31,11 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
 			&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-			&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
+			&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 		},
 		Action: func(c *cli.Context) error {
-			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"), c.Bool("force"))
+			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 			return nil
 		},
 		Commands: []*cli.Command{
@@ -46,11 +46,11 @@ func main() {
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
 					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-					&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
+					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"), c.Bool("force"))
+					commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 					return nil
 				},
 			},
@@ -61,11 +61,11 @@ func main() {
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
 					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-					&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
+					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("demonized"), c.Bool("force"))
+					commands.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 					return nil
 				},
 			},
@@ -77,12 +77,12 @@ func main() {
 					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Show questions for advanced customization"},
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-					&cli.BoolFlag{Name: "demonized", Aliases: []string{"d"}, Usage: "Run docker-compose demonized after creating the compose file"},
+					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 					&cli.BoolFlag{Name: "with-volumes", Aliases: []string{"v"}, Usage: "Remove associated volumes"},
 				},
 				Action: func(c *cli.Context) error {
-					service_names := c.Args().Slice()
-					commands.Remove(service_names, c.Bool("run"), c.Bool("demonized"), c.Bool("with-volumes"), c.Bool("force"), c.Bool("advanced"))
+					serviceNames := c.Args().Slice()
+					commands.Remove(serviceNames, c.Bool("run"), c.Bool("detached"), c.Bool("with-volumes"), c.Bool("force"), c.Bool("advanced"))
 					return nil
 				},
 			},

@@ -4,10 +4,8 @@ name: Go CI
 
 on:
   push:
-    paths-ignore:
-      - 'README.md'
-      - '.gitignore'
-      - '.github/**'
+    paths:
+      - 'src/**'
     tags-ignore:
       - '*'
   pull_request:

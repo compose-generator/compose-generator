@@ -13,9 +13,10 @@ import (
 	"compose-generator/utils"
 )
 
-func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool) {
+// Generate: Generates a docker compose configuration
+func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Execute SafetyFileChecks
-	if !flag_force {
+	if !flagForce {
 		utils.ExecuteSafetyFileChecks()
 	}
 
@@ -25,24 +26,24 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 	fmt.Println()
 
 	// Project name
-	project_name := utils.TextQuestion("What is the name of your project: ")
-	if project_name == "" {
+	projectName := utils.TextQuestion("What is the name of your project: ")
+	if projectName == "" {
 		utils.Error("Error. You must specify a project name!", true)
 	}
-	project_name_container := strings.ReplaceAll(strings.ToLower(project_name), " ", "-")
+	projectNameContainer := strings.ReplaceAll(strings.ToLower(projectName), " ", "-")
 
 	// Docker Swarm compatibility (default: no)
-	//docker_swarm := utils.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
-	//fmt.Println(docker_swarm)
+	//dockerSwarm := utils.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
+	//fmt.Println(dockerSwarm)
 
 	// Predefined stack (default: yes)
-	use_predefined_stack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
-	if use_predefined_stack {
+	usePredefinedStack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
+	if usePredefinedStack {
 		// Load stacks from templates
-		template_data := parser.ParsePredefinedTemplates()
+		templateData := parser.ParsePredefinedTemplates()
 		// Predefined stack menu
 		var items []string
-		for _, t := range template_data {
+		for _, t := range templateData {
 			items = append(items, t.Label)
 		}
 		index := utils.MenuQuestionIndex("Predefined software stack", items)
@@ -50,44 +51,44 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 
 		// Ask configured questions to the user
 		envMap := make(map[string]string)
-		envMap["PROJECT_NAME"] = project_name
-		envMap["PROJECT_NAME_CONTAINER"] = project_name_container
+		envMap["PROJECT_NAME"] = projectName
+		envMap["PROJECT_NAME_CONTAINER"] = projectNameContainer
 
-		for _, q := range template_data[index].Questions {
-			if !q.Advanced || (q.Advanced && flag_advanced) {
+		for _, q := range templateData[index].Questions {
+			if !q.Advanced || (q.Advanced && flagAdvanced) {
 				switch q.Type {
 				case 1: // Yes/No
-					default_value, _ := strconv.ParseBool(q.Default_value)
-					envMap[q.Env_var] = strconv.FormatBool(utils.YesNoQuestion(q.Text, default_value))
+					defaultValue, _ := strconv.ParseBool(q.DefaultValue)
+					envMap[q.EnvVar] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
 				case 2: // Text
-					envMap[q.Env_var] = utils.TextQuestionWithDefault(q.Text, q.Default_value)
+					envMap[q.EnvVar] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
 				}
 			} else {
-				envMap[q.Env_var] = q.Default_value
+				envMap[q.EnvVar] = q.DefaultValue
 			}
 		}
 		fmt.Println()
 		// Ask for custom volume paths
 		volumesMap := make(map[string]string)
-		for _, v := range template_data[index].Volumes {
-			if !v.Advanced || (v.Advanced && flag_advanced) {
-				envMap[v.Env_var] = utils.TextQuestionWithDefault(v.Text, v.Default_value)
+		for _, v := range templateData[index].Volumes {
+			if !v.Advanced || (v.Advanced && flagAdvanced) {
+				envMap[v.EnvVar] = utils.TextQuestionWithDefault(v.Text, v.DefaultValue)
 			} else {
-				envMap[v.Env_var] = v.Default_value
+				envMap[v.EnvVar] = v.DefaultValue
 			}
-			volumesMap[v.Default_value] = envMap[v.Env_var]
+			volumesMap[v.DefaultValue] = envMap[v.EnvVar]
 		}
 
 		// Copy template files
 		fmt.Print("Copying template ...")
-		src_path := utils.GetPredefinedTemplatesPath() + "/" + template_data[index].Dir
-		dst_path := "."
+		srcPath := utils.GetPredefinedTemplatesPath() + "/" + templateData[index].Dir
+		dstPath := "."
 
-		os.Remove(dst_path + "/docker-compose.yml")
-		os.Remove(dst_path + "/environment.env")
+		os.Remove(dstPath + "/docker-compose.yml")
+		os.Remove(dstPath + "/environment.env")
 
-		err1 := copy.Copy(src_path+"/docker-compose.yml", dst_path+"/docker-compose.yml")
-		err2 := copy.Copy(src_path+"/environment.env", dst_path+"/environment.env")
+		err1 := copy.Copy(srcPath+"/docker-compose.yml", dstPath+"/docker-compose.yml")
+		err2 := copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
 		if err1 != nil || err2 != nil {
 			utils.Error("Could not copy template files.", true)
 		}
@@ -99,7 +100,7 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 
 		for src, dst := range volumesMap {
 			os.RemoveAll(dst)
-			src = src_path + src[1:]
+			src = srcPath + src[1:]
 
 			opt := copy.Options{
 				Skip: func(src string) (bool, error) {
@@ -125,7 +126,7 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 
 		// Generate secrets
 		fmt.Print("Generating secrets ...")
-		secretsMap := utils.GenerateSecrets("./environment.env", template_data[index].Secrets)
+		secretsMap := utils.GenerateSecrets("./environment.env", templateData[index].Secrets)
 		color.Green(" done")
 		// Print secrets to console
 		fmt.Println()
@@ -140,7 +141,7 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 	}
 
 	// Run if the corresponding flag is set
-	if flag_run || flag_demonized {
-		utils.DockerComposeUp(flag_demonized)
+	if flagRun || flagDetached {
+		utils.DockerComposeUp(flagDetached)
 	}
 }

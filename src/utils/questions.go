@@ -7,102 +7,89 @@ import (
 	"github.com/fatih/color"
 )
 
+// Function for settings suggestions to a question for autocompletion
 type suggest func(toComplete string) []string
 
+// Print heading to console
 func Heading(text string) {
 	green := color.New(color.FgGreen).Add(color.Bold)
 	green.Println(text)
 }
 
-func TextQuestion(question string) string {
-	result := ""
+// Print simple text question
+func TextQuestion(question string) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 	}
 	survey.AskOne(prompt, &result)
-	return result
+	return
 }
 
-func TextQuestionWithDefault(question string, default_value string) string {
-	result := ""
+// Print simple text question with default value
+func TextQuestionWithDefault(question string, default_value string) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 		Default: default_value,
 	}
 	survey.AskOne(prompt, &result)
-	return result
+	return
 }
 
-func TextQuestionWithSuggestions(question string, default_value string, sf suggest) string {
-	result := ""
+// Print simple text question with default value and a suggestion function
+func TextQuestionWithSuggestions(question string, default_value string, sf suggest) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 		Default: default_value,
 		Suggest: sf,
 	}
 	survey.AskOne(prompt, &result)
-	return result
+	return
 }
 
-func YesNoQuestion(question string, default_value bool) bool {
-	result := default_value
+// Print simple yes/no question with default value
+func YesNoQuestion(question string, default_value bool) (result bool) {
 	prompt := &survey.Confirm{
 		Message: question,
 		Default: default_value,
 	}
 	survey.AskOne(prompt, &result)
-	return result
+	return
 }
 
-func MenuQuestion(label string, items []string) string {
-	result := ""
+// Prints a selection of predefined items
+func MenuQuestion(label string, items []string) (result string) {
 	prompt := &survey.Select{
 		Message: label,
 		Options: items,
 	}
 	survey.AskOne(prompt, &result)
-	return result
+	return
 }
 
-func MenuQuestionIndex(label string, items []string) int {
-	result := 0
+// Prints a selection of predefined items and return the selected index
+func MenuQuestionIndex(label string, items []string) (result int) {
 	prompt := &survey.Select{
 		Message: label,
 		Options: items,
 	}
 	survey.AskOne(prompt, &result)
-	return result
+	return
 }
 
-func MultiSelectMenuQuestion(label string, items []string) []string {
-	result := []string{}
+// Prints a multi selection of predefined items
+func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 	prompt := &survey.MultiSelect{
 		Message: label,
 		Options: items,
 	}
 	survey.AskOne(prompt, &result)
-	return result
+	return
 }
 
+// Prints an error message
 func Error(description string, exit bool) {
 	color.Red("Error: " + description)
 	if exit {
 		os.Exit(1)
 	}
-}
-
-// -------------------------- Skip bell sound output on select questions --------------------------
-
-type bellSkipper struct{}
-
-func (bs *bellSkipper) Write(b []byte) (int, error) {
-	const charBell = 7 // c.f. readline.CharBell
-	if len(b) == 1 && b[0] == charBell {
-		return 0, nil
-	}
-	return os.Stderr.Write(b)
-}
-
-func (bs *bellSkipper) Close() error {
-	return os.Stderr.Close()
 }
