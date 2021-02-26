@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"bufio"
 	"os"
-	"strings"
 
+	survey "github.com/AlecAivazis/survey/v2"
 	"github.com/fatih/color"
-	"github.com/manifoldco/promptui"
 )
+
+type suggest func(toComplete string) []string
 
 func Heading(text string) {
 	green := color.New(color.FgGreen).Add(color.Bold)
@@ -15,64 +15,73 @@ func Heading(text string) {
 }
 
 func TextQuestion(question string) string {
-	reader := bufio.NewReader(os.Stdin)
-	cyan := color.New(color.FgCyan)
-
-	cyan.Print(question)
-
-	result_string, _ := reader.ReadString('\n')
-	result_string = strings.TrimRight(result_string, "\r\n")
-	if result_string == "" {
-		Error("This value is required", true)
+	result := ""
+	prompt := &survey.Input{
+		Message: question,
 	}
-	return result_string
-}
-
-func TextQuestionWithDefault(question string, default_value string) string {
-	reader := bufio.NewReader(os.Stdin)
-	cyan := color.New(color.FgCyan)
-
-	cyan.Print(question + " [Default: " + default_value + "]: ")
-
-	result_string, _ := reader.ReadString('\n')
-	result_string = strings.TrimRight(result_string, "\r\n")
-	if result_string != "" {
-		return result_string
-	} else {
-		return default_value
-	}
-}
-
-func YesNoQuestion(question string, default_value bool) bool {
-	reader := bufio.NewReader(os.Stdin)
-	cyan := color.New(color.FgCyan)
-
-	if default_value {
-		cyan.Print(question + " [Y/n]: ")
-	} else {
-		cyan.Print(question + " [y/N]: ")
-	}
-
-	result_string, _ := reader.ReadString('\n')
-	result_string = strings.TrimRight(result_string, "\r\n")
-	result := default_value
-	if result_string != "" {
-		result = strings.ToLower(result_string) == "y"
-	}
+	survey.AskOne(prompt, &result)
 	return result
 }
 
-func MenuQuestion(label string, items []string) (int, string) {
-	prompt := promptui.Select{
-		Label: label,
-		Items: items,
-		//Stdout: &bellSkipper{},
+func TextQuestionWithDefault(question string, default_value string) string {
+	result := ""
+	prompt := &survey.Input{
+		Message: question,
+		Default: default_value,
 	}
-	index, result, err := prompt.Run()
-	if err != nil {
-		Error("Prompt failed", true)
+	survey.AskOne(prompt, &result)
+	return result
+}
+
+func TextQuestionWithSuggestions(question string, default_value string, sf suggest) string {
+	result := ""
+	prompt := &survey.Input{
+		Message: question,
+		Default: default_value,
+		Suggest: sf,
 	}
-	return index, result
+	survey.AskOne(prompt, &result)
+	return result
+}
+
+func YesNoQuestion(question string, default_value bool) bool {
+	result := default_value
+	prompt := &survey.Confirm{
+		Message: question,
+		Default: default_value,
+	}
+	survey.AskOne(prompt, &result)
+	return result
+}
+
+func MenuQuestion(label string, items []string) string {
+	result := ""
+	prompt := &survey.Select{
+		Message: label,
+		Options: items,
+	}
+	survey.AskOne(prompt, &result)
+	return result
+}
+
+func MenuQuestionIndex(label string, items []string) int {
+	result := 0
+	prompt := &survey.Select{
+		Message: label,
+		Options: items,
+	}
+	survey.AskOne(prompt, &result)
+	return result
+}
+
+func MultiSelectMenuQuestion(label string, items []string) []string {
+	result := []string{}
+	prompt := &survey.MultiSelect{
+		Message: label,
+		Options: items,
+	}
+	survey.AskOne(prompt, &result)
+	return result
 }
 
 func Error(description string, exit bool) {

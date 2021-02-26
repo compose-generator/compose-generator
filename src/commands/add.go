@@ -117,7 +117,7 @@ func Add(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force bool
 	var restart_value string = ""
 	if flag_advanced {
 		items := []string{"always", "on-failure", "unless-stopped", "no"}
-		_, restart_value = utils.MenuQuestion("When should the service get restarted?", items)
+		restart_value = utils.MenuQuestion("When should the service get restarted?", items)
 		fmt.Println()
 
 	}

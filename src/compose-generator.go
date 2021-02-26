@@ -81,7 +81,8 @@ func main() {
 					&cli.BoolFlag{Name: "with-volumes", Aliases: []string{"v"}, Usage: "Remove associated volumes"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Remove(c.Bool("run"), c.Bool("demonized"), c.Bool("with-volumes"), c.Bool("force"), c.Bool("advanced"))
+					service_names := c.Args().Slice()
+					commands.Remove(service_names, c.Bool("run"), c.Bool("demonized"), c.Bool("with-volumes"), c.Bool("force"), c.Bool("advanced"))
 					return nil
 				},
 			},

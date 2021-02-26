@@ -45,13 +45,14 @@ func Generate(flag_advanced bool, flag_run bool, flag_demonized bool, flag_force
 		for _, t := range template_data {
 			items = append(items, t.Label)
 		}
-		index, _ := utils.MenuQuestion("Predefined software stack", items)
+		index := utils.MenuQuestionIndex("Predefined software stack", items)
 		fmt.Println()
 
 		// Ask configured questions to the user
 		envMap := make(map[string]string)
 		envMap["PROJECT_NAME"] = project_name
 		envMap["PROJECT_NAME_CONTAINER"] = project_name_container
+
 		for _, q := range template_data[index].Questions {
 			if !q.Advanced || (q.Advanced && flag_advanced) {
 				switch q.Type {

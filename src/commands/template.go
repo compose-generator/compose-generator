@@ -92,7 +92,7 @@ func LoadTemplate(name string, flag_force bool) {
 			creation_date := time.Unix(0, t.CreationTime*int64(time.Millisecond)).Format(timeFormat)
 			items = append(items, t.Label+" (Saved at: "+creation_date+")")
 		}
-		index, _ := utils.MenuQuestion("Saved templates", items)
+		index := utils.MenuQuestionIndex("Saved templates", items)
 		target_dir = target_dir + template_data[index].Label
 		fmt.Println()
 	}
