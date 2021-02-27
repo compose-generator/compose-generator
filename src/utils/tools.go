@@ -45,6 +45,15 @@ func FileExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
+// IsDirectory: Checks if a file is a directory
+func IsDirectory(path string) bool {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return fileInfo.IsDir()
+}
+
 // GetTemplatesPath: Returns the path to the custom templates directory
 func GetTemplatesPath() string {
 	if FileExists("/usr/lib/compose-generator/templates") {

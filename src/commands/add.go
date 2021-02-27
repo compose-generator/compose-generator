@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -36,6 +37,11 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 		utils.Error("Internal error - unable to parse compose file", true)
 		err = nil
 	}
+
+	serviceNames := []string{}
+	for name, _ := range composeFile.Services {
+		serviceNames = append(serviceNames, name)
+	}
 	color.Green(" done")
 	fmt.Println()
 
@@ -64,11 +70,11 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	image := utils.TextQuestionWithDefault("Which base image do you want to pick?", "hello-world")
 
 	// Check image
-	if !flagForce {
+	if !build && !flagForce {
 		fmt.Print("\nChecking image ...")
 		layerCount := utils.CheckDockerImage(registry + image)
 		if layerCount > -1 {
-			color.Green(" found (" + strconv.Itoa(layerCount) + " layers)\n\n")
+			color.Green(" found (" + strconv.Itoa(layerCount) + " layer(s))\n\n")
 		} else {
 			color.Red(" not found or no access\n\n")
 		}
@@ -119,14 +125,28 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 
 	}
 
-	// Ask for env file
+	// Ask for env files
+	envFile := ""
 	if utils.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
-
+	EnvFile:
+		fmt.Println()
+		envFile = utils.TextQuestionWithSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
+			files, _ = filepath.Glob(toComplete + "*")
+			return
+		})
+		if !utils.FileExists(envFile) || utils.IsDirectory(envFile) {
+			utils.Error("File is not valid. Please select another file", false)
+			goto EnvFile
+		}
+		fmt.Println()
 	}
 
 	// Ask for depends on
+	dependsServices := []string{}
 	if utils.YesNoQuestion("Should your service depend on other services?", false) {
-
+		fmt.Println()
+		dependsServices = utils.MultiSelectMenuQuestion("From which services should your service depend?", serviceNames)
+		fmt.Println()
 	}
 
 	// Ask for restart mode
@@ -145,6 +165,8 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 		Image:         registry + image,
 		ContainerName: containerName,
 		Restart:       restartValue,
+		DependsOn:     dependsServices,
+		EnvFile:       []string{envFile},
 	}
 	composeFile.Services[serviceName] = service
 	color.Green(" done")
