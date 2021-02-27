@@ -1,12 +1,12 @@
 package model
 
-// Yaml structure of docker compose file
+// ComposeFile represents the YAML structure of docker compose file
 type ComposeFile struct {
 	Version  string
 	Services map[string]Service
 }
 
-// Yaml structure of a service in a docker compose file
+// Service represents the YAML structure of a service in a docker compose file
 type Service struct {
 	Build         string   `yaml:"build,omitempty"`
 	Image         string   `yaml:"image,omitempty"`

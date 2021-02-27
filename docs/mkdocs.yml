@@ -49,7 +49,7 @@ extra:
       link: https://medium.com/p/d4356d38922d
 
 nav:
-- Home: index.md
+- Introduction: index.md
 - Install:
   - install/docker.md
   - install/linux.md
@@ -62,7 +62,6 @@ nav:
   - usage/template.md
   - usage/install.md
 - contributing.md
-- About: links.md
 
 markdown_extensions:
   - admonition

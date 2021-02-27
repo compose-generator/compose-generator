@@ -14,7 +14,7 @@ import (
 	yaml "gopkg.in/yaml.v3"
 )
 
-// Add: Adds a service to an existing compose file
+// Add a service to an existing compose file
 func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
@@ -27,7 +27,6 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	jsonFile, err := os.Open(path)
 	if err != nil {
 		utils.Error("Internal error - unable to load compose file", true)
-		err = nil
 	}
 	bytes, _ := ioutil.ReadAll(jsonFile)
 
@@ -35,11 +34,10 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	composeFile := model.ComposeFile{}
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", true)
-		err = nil
 	}
 
 	serviceNames := []string{}
-	for name, _ := range composeFile.Services {
+	for name := range composeFile.Services {
 		serviceNames = append(serviceNames, name)
 	}
 	color.Green(" done")

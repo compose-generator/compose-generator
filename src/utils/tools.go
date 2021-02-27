@@ -18,7 +18,7 @@ import (
 	"compose-generator/model"
 )
 
-// ExecuteSafetyFileChecks: Checks if commonly used files are already existing and warns the user about it
+// ExecuteSafetyFileChecks checks if commonly used files are already existing and warns the user about it
 func ExecuteSafetyFileChecks() {
 	isNotSafe := FileExists("docker-compose.yml") || FileExists("environment.env")
 	if IsDockerized() {
@@ -34,18 +34,18 @@ func ExecuteSafetyFileChecks() {
 	}
 }
 
-// IsDockerized: Checks if Compose Generator runs within a dockerized environment
+// IsDockerized checks if Compose Generator runs within a dockerized environment
 func IsDockerized() bool {
 	return os.Getenv("COMPOSE_GENERATOR_DOCKERIZED") == "1"
 }
 
-// FileExists: Checks if a file exists
+// FileExists checks if a file exists
 func FileExists(path string) bool {
 	_, err := os.Stat(path)
 	return !os.IsNotExist(err)
 }
 
-// IsDirectory: Checks if a file is a directory
+// IsDirectory checks if a file is a directory
 func IsDirectory(path string) bool {
 	fileInfo, err := os.Stat(path)
 	if err != nil {
@@ -54,7 +54,7 @@ func IsDirectory(path string) bool {
 	return fileInfo.IsDir()
 }
 
-// GetTemplatesPath: Returns the path to the custom templates directory
+// GetTemplatesPath returns the path to the custom templates directory
 func GetTemplatesPath() string {
 	if FileExists("/usr/lib/compose-generator/templates") {
 		return "/usr/lib/compose-generator/templates" // Linux
@@ -68,7 +68,7 @@ func GetTemplatesPath() string {
 	return "../templates" // Dev
 }
 
-// GetPredefinedTemplatesPath: Returns the path to the predefined templates directory
+// GetPredefinedTemplatesPath returns the path to the predefined templates directory
 func GetPredefinedTemplatesPath() string {
 	if FileExists("/usr/lib/compose-generator/predefined-templates") {
 		return "/usr/lib/compose-generator/predefined-templates" // Linux
@@ -82,7 +82,7 @@ func GetPredefinedTemplatesPath() string {
 	return "../predefined-templates" // Dev
 }
 
-// ReplaceVarsInFile: Replaces all variables in the stated file with the contents of the map
+// ReplaceVarsInFile replaces all variables in the stated file with the contents of the map
 func ReplaceVarsInFile(path string, envMap map[string]string) {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
@@ -103,7 +103,7 @@ func ReplaceVarsInFile(path string, envMap map[string]string) {
 	}
 }
 
-// GenerateSecrets: Generates random strings as secrets and replaces them in the stated file
+// GenerateSecrets generates random strings as secrets and replaces them in the stated file
 func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
@@ -132,7 +132,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	return secretsMap
 }
 
-// DownloadFile: Downloads a file by its url
+// DownloadFile downloads a file by its url
 func DownloadFile(url string, filepath string) error {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -152,13 +152,13 @@ func DownloadFile(url string, filepath string) error {
 	return err
 }
 
-// CommandExists: Checks if the stated command exists on the host system
+// CommandExists checks if the stated command exists on the host system
 func CommandExists(cmd string) bool {
 	_, err := exec.LookPath(cmd)
 	return err == nil
 }
 
-// IsPrivileged: Checks if the user has root priviledges
+// IsPrivileged checks if the user has root priviledges
 func IsPrivileged() bool {
 	cmd := exec.Command("id", "-u")
 	output, err := cmd.Output()
@@ -176,7 +176,7 @@ func IsPrivileged() bool {
 	return i == 0
 }
 
-// RemoveStringFromSlice: Searches a string in a slice and removes it
+// RemoveStringFromSlice searches a string in a slice and removes it
 func RemoveStringFromSlice(s []string, r string) []string {
 	for i, v := range s {
 		if v == r {
@@ -186,7 +186,7 @@ func RemoveStringFromSlice(s []string, r string) []string {
 	return s
 }
 
-// DockerComposeUp: Executes 'docker compose up' in the current directory
+// DockerComposeUp executes 'docker compose up' in the current directory
 func DockerComposeUp(detached bool) {
 	fmt.Println()
 	fmt.Println("Running docker-compose ...")
@@ -201,30 +201,30 @@ func DockerComposeUp(detached bool) {
 	cmd.Run()
 }
 
-// ExecuteAndWait: Execute a command and wait till the execution is complete
+// ExecuteAndWait executes a command and wait till the execution is complete
 func ExecuteAndWait(c ...string) {
 	cmd := exec.Command(c[0], c[1:]...)
 	cmd.Start()
 	cmd.Wait()
 }
 
-// ExecuteAndWaitWithOutput: Execute a command and return the command output as string
+// ExecuteAndWaitWithOutput executes a command and return the command output as string
 func ExecuteAndWaitWithOutput(c ...string) string {
 	cmd := exec.Command(c[0], c[1:]...)
 	output, _ := cmd.CombinedOutput()
 	return strings.TrimRight(string(output), "\r\n")
 }
 
-// CheckDockerImage: Check if Docker image exists in remote repository
+// CheckDockerImage checks if Docker image exists in remote repository
 func CheckDockerImage(image string) int {
-	manifestJson := ExecuteAndWaitWithOutput("docker", "manifest", "inspect", "-v", image)
-	if strings.HasPrefix(manifestJson, "[") {
+	manifestJSON := ExecuteAndWaitWithOutput("docker", "manifest", "inspect", "-v", image)
+	if strings.HasPrefix(manifestJSON, "[") {
 		var manifest []model.DockerManifest
-		json.Unmarshal([]byte(manifestJson), &manifest)
+		json.Unmarshal([]byte(manifestJSON), &manifest)
 		return len(manifest[0].SchemaV2Manifest.Layers)
-	} else if strings.HasPrefix(manifestJson, "{") {
+	} else if strings.HasPrefix(manifestJSON, "{") {
 		var manifest model.DockerManifest
-		json.Unmarshal([]byte(manifestJson), &manifest)
+		json.Unmarshal([]byte(manifestJSON), &manifest)
 		return len(manifest.SchemaV2Manifest.Layers)
 	}
 	return -1

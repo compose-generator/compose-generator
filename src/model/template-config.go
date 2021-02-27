@@ -1,6 +1,6 @@
 package model
 
-// Json structure of predefined template configuration file
+// TemplateConfig represents the JSON structure of predefined template configuration file
 type TemplateConfig struct {
 	Label     string
 	Dir       string
@@ -9,7 +9,7 @@ type TemplateConfig struct {
 	Secrets   []Secret
 }
 
-// Json structure of a question of a predefined template
+// Question represents the JSON structure of a question of a predefined template
 type Question struct {
 	Text         string
 	Type         int // 1 = Yes/No; 2 = Text
@@ -18,7 +18,7 @@ type Question struct {
 	Advanced     bool
 }
 
-// Json structure of a volume of a predefined template
+// Volume represents the JSON structure of a volume of a predefined template
 type Volume struct {
 	Text         string
 	DefaultValue string
@@ -26,7 +26,7 @@ type Volume struct {
 	Advanced     bool
 }
 
-// Json structure of a secret of a predefined template
+// Secret represents the JSON structure of a secret of a predefined template
 type Secret struct {
 	Name   string
 	Var    string

@@ -24,8 +24,8 @@ dockers:
   - image_templates:
       - "ghcr.io/compose-generator/compose-generator:{{ .Version }}"
       - "ghcr.io/compose-generator/compose-generator:latest"
-      - "docker.io/chillibits/compose-generator:{{ .Version }}"
-      - "docker.io/chillibits/compose-generator:latest"
+      - "chillibits/compose-generator:{{ .Version }}"
+      - "chillibits/compose-generator:latest"
     dockerfile: Dockerfile
     use_buildx: true
     extra_files:

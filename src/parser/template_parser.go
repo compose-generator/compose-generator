@@ -11,7 +11,7 @@ import (
 	"compose-generator/utils"
 )
 
-// Get list of all predefined templates
+// ParsePredefinedTemplates returns a list of all predefined templates
 func ParsePredefinedTemplates() (configs []model.TemplateConfig) {
 	templatesPath := utils.GetPredefinedTemplatesPath()
 	files, err := ioutil.ReadDir(templatesPath)
@@ -19,16 +19,16 @@ func ParsePredefinedTemplates() (configs []model.TemplateConfig) {
 		utils.Error("Internal error - could not load templates.", true)
 	}
 	filterFunc := func(s string) bool { return strings.Contains(s, "_") && !strings.Contains(s, ".") }
-	file_names := filterFilenames(files, filterFunc)
+	fileNames := filterFilenames(files, filterFunc)
 
-	for _, f := range file_names {
+	for _, f := range fileNames {
 		config := getConfigFromFile(filepath.Join(templatesPath, f))
 		configs = append(configs, config)
 	}
 	return
 }
 
-// Get list of all custom templates
+// ParseTemplates returns a list of all custom templates
 func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	templatesPath := utils.GetTemplatesPath()
 	files, err := ioutil.ReadDir(templatesPath)
@@ -48,11 +48,11 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 }
 
 // Load predefined template config file to TemplateConfig object
-func getConfigFromFile(dir_path string) (config model.TemplateConfig) {
+func getConfigFromFile(dirPath string) (config model.TemplateConfig) {
 	// Read JSON file
-	jsonFile, err := os.Open(dir_path + "/config.json")
+	jsonFile, err := os.Open(dirPath + "/config.json")
 	if err != nil {
-		utils.Error("Internal error - unable to load config file of template "+dir_path, true)
+		utils.Error("Internal error - unable to load config file of template "+dirPath, true)
 	}
 
 	// Parse json to TemplateConfig struct
@@ -64,12 +64,11 @@ func getConfigFromFile(dir_path string) (config model.TemplateConfig) {
 	return
 }
 
-// Load custom template metadata file to TemplateMetadata object
-func getMetadataFromFile(dir_path string) (metadata model.TemplateMetadata) {
+func getMetadataFromFile(dirPath string) (metadata model.TemplateMetadata) {
 	// Read JSON file
-	jsonFile, err := os.Open(dir_path + "/metadata.json")
+	jsonFile, err := os.Open(dirPath + "/metadata.json")
 	if err != nil {
-		utils.Error("Internal error - unable to load metadata file of template "+dir_path, true)
+		utils.Error("Internal error - unable to load metadata file of template "+dirPath, true)
 	}
 
 	// Parse json to TemplateMetadata struct

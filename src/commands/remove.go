@@ -12,6 +12,7 @@ import (
 	yaml "gopkg.in/yaml.v3"
 )
 
+// Remove services from an existing compose file
 func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
@@ -24,7 +25,6 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	jsonFile, err := os.Open(path)
 	if err != nil {
 		utils.Error("Internal error - unable to load compose file", true)
-		err = nil
 	}
 	bytes, _ := ioutil.ReadAll(jsonFile)
 
@@ -32,7 +32,6 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	composeFile := model.ComposeFile{}
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", true)
-		err = nil
 	}
 	color.Green(" done")
 

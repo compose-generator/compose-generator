@@ -19,6 +19,7 @@ const (
 	timeFormat = "Jan-02-06 3:04:05 PM"
 )
 
+// SaveTemplate copies the compose configuration in the current directory to a central templates directory
 func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	if name == "" {
 		name = utils.TextQuestion("How would you like to call your template: ")
@@ -38,8 +39,8 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	var metadata model.TemplateMetadata
 	metadata.Label = name
 	metadata.CreationTime = time.Now().UnixNano() / int64(time.Millisecond)
-	metadataJson, _ := json.MarshalIndent(metadata, "", " ")
-	err := ioutil.WriteFile(targetDir+"/metadata.json", metadataJson, 0777)
+	metadataJSON, _ := json.MarshalIndent(metadata, "", " ")
+	err := ioutil.WriteFile(targetDir+"/metadata.json", metadataJSON, 0777)
 	if err != nil {
 		utils.Error("Could not write metadata.", true)
 	}
@@ -74,6 +75,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	}
 }
 
+// LoadTemplate copies a template from the central templates directory to the working directory
 func LoadTemplate(name string, flagForce bool) {
 	// Execute safety checks
 	if !flagForce {

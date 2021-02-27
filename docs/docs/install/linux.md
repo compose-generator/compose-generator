@@ -2,7 +2,7 @@
 title: Install on Linux
 ---
 
-### Install
+### Install from repository
 === "Debian"
     To install Compose Generator on Debian, execute the following commands in your terminal:
     ```sh
@@ -78,6 +78,44 @@ title: Install on Linux
         $(lsb_release -cs) main"
     sudo sudo apt-get update
     sudo apt-get install compose-generator
+    ```
+
+### Install from package file
+You also can install Compose Generator from a Debian package (`.deb`). You can download the package [here](https://github.com/compose-generator/compose-generator/releases/latest).
+
+=== "Debian"
+    To install it, execute the following command:
+    ```sh
+    dpkg -i <deb-file-name>
+    ```
+=== "Ubuntu"
+    To install it, execute the following command:
+    ```sh
+    dpkg -i <deb-file-name>
+    ```
+
+=== "Fedora"
+    To install it, execute the following command:
+    ```sh
+    rpm -U <rpm-file-name>
+    ```
+
+=== "CentOS"
+    To install it, execute the following command:
+    ```sh
+    rpm -U <rpm-file-name>
+    ```
+
+=== "Alpine"
+    To install it, execute the following command:
+    ```sh
+    apk add --allow-untrusted <apk-file-name>
+    ```
+
+=== "Raspbian"
+    To install it, execute the following command:
+    ```sh
+    dpkg -i <deb-file-name>
     ```
 
 ### Use

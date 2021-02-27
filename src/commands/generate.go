@@ -13,7 +13,7 @@ import (
 	"compose-generator/utils"
 )
 
-// Generate: Generates a docker compose configuration
+// Generate a docker compose configuration
 func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Execute SafetyFileChecks
 	if !flagForce {

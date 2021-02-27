@@ -10,13 +10,13 @@ import (
 // Function for settings suggestions to a question for autocompletion
 type suggest func(toComplete string) []string
 
-// Print heading to console
+// Heading prints heading to console
 func Heading(text string) {
 	green := color.New(color.FgGreen).Add(color.Bold)
 	green.Println(text)
 }
 
-// Print simple text question
+// TextQuestion prints simple text question
 func TextQuestion(question string) (result string) {
 	prompt := &survey.Input{
 		Message: question,
@@ -25,38 +25,38 @@ func TextQuestion(question string) (result string) {
 	return
 }
 
-// Print simple text question with default value
-func TextQuestionWithDefault(question string, default_value string) (result string) {
+// TextQuestionWithDefault prints simple text question with default value
+func TextQuestionWithDefault(question string, defaultValue string) (result string) {
 	prompt := &survey.Input{
 		Message: question,
-		Default: default_value,
+		Default: defaultValue,
 	}
 	survey.AskOne(prompt, &result)
 	return
 }
 
-// Print simple text question with default value and a suggestion function
-func TextQuestionWithSuggestions(question string, default_value string, sf suggest) (result string) {
+// TextQuestionWithSuggestions prints simple text question with default value and a suggestion function
+func TextQuestionWithSuggestions(question string, defaultValue string, sf suggest) (result string) {
 	prompt := &survey.Input{
 		Message: question,
-		Default: default_value,
+		Default: defaultValue,
 		Suggest: sf,
 	}
 	survey.AskOne(prompt, &result)
 	return
 }
 
-// Print simple yes/no question with default value
-func YesNoQuestion(question string, default_value bool) (result bool) {
+// YesNoQuestion prints simple yes/no question with default value
+func YesNoQuestion(question string, defaultValue bool) (result bool) {
 	prompt := &survey.Confirm{
 		Message: question,
-		Default: default_value,
+		Default: defaultValue,
 	}
 	survey.AskOne(prompt, &result)
 	return
 }
 
-// Prints a selection of predefined items
+// MenuQuestion prints a selection of predefined items
 func MenuQuestion(label string, items []string) (result string) {
 	prompt := &survey.Select{
 		Message: label,
@@ -66,7 +66,7 @@ func MenuQuestion(label string, items []string) (result string) {
 	return
 }
 
-// Prints a selection of predefined items and return the selected index
+// MenuQuestionIndex prints a selection of predefined items and return the selected index
 func MenuQuestionIndex(label string, items []string) (result int) {
 	prompt := &survey.Select{
 		Message: label,
@@ -76,7 +76,7 @@ func MenuQuestionIndex(label string, items []string) (result int) {
 	return
 }
 
-// Prints a multi selection of predefined items
+// MultiSelectMenuQuestion prints a multi selection of predefined items
 func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 	prompt := &survey.MultiSelect{
 		Message: label,
@@ -86,7 +86,7 @@ func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 	return
 }
 
-// Prints an error message
+// Error prints an error message
 func Error(description string, exit bool) {
 	color.Red("Error: " + description)
 	if exit {

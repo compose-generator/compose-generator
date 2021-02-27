@@ -12,16 +12,15 @@ import (
 	"github.com/fatih/color"
 )
 
-// Url to the official Docker installer file for Windows
-const WINDOWS_INSTALLER = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
-
-// Install: Installs Docker and Docker Compose with a single command
+// Install Docker and Docker Compose with a single command
 func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
+	const WindowsInstallerURL = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
+
 	if runtime.GOOS == "windows" { // Running on windows
 		// Download Docker installer
 		fmt.Print("Downloading Docker installer ...")
 		filePath := os.TempDir() + "/DockerInstaller.exe"
-		err := utils.DownloadFile(WINDOWS_INSTALLER, filePath)
+		err := utils.DownloadFile(WindowsInstallerURL, filePath)
 		if err != nil {
 			panic(err)
 		}
