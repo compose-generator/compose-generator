@@ -6,8 +6,6 @@ on:
   push:
     paths:
       - 'src/**'
-    tags-ignore:
-      - '*'
   pull_request:
     branches: [ main, dev ]
 

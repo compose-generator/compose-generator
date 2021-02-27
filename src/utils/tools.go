@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -199,8 +200,23 @@ func ExecuteAndWait(c ...string) {
 }
 
 // ExecuteAndWaitWithOutput: Execute a command and return the command output as string
-func ExecuteAndWaitWithOutput(c ...string) {
+func ExecuteAndWaitWithOutput(c ...string) string {
 	cmd := exec.Command(c[0], c[1:]...)
 	output, _ := cmd.CombinedOutput()
-	fmt.Println(strings.TrimRight(string(output), "\r\n"))
+	return strings.TrimRight(string(output), "\r\n")
+}
+
+// CheckDockerImage: Check if Docker image exists in remote repository
+func CheckDockerImage(image string) int {
+	manifestJson := ExecuteAndWaitWithOutput("docker", "manifest", "inspect", "-v", image)
+	if strings.HasPrefix(manifestJson, "[") {
+		var manifest []model.DockerManifest
+		json.Unmarshal([]byte(manifestJson), &manifest)
+		return len(manifest[0].SchemaV2Manifest.Layers)
+	} else if strings.HasPrefix(manifestJson, "{") {
+		var manifest model.DockerManifest
+		json.Unmarshal([]byte(manifestJson), &manifest)
+		return len(manifest.SchemaV2Manifest.Layers)
+	}
+	return -1
 }

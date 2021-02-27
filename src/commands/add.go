@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
@@ -61,6 +62,17 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 
 	// Ask for image
 	image := utils.TextQuestionWithDefault("Which base image do you want to pick?", "hello-world")
+
+	// Check image
+	if !flagForce {
+		fmt.Print("\nChecking image ...")
+		layerCount := utils.CheckDockerImage(registry + image)
+		if layerCount > -1 {
+			color.Green(" found (" + strconv.Itoa(layerCount) + " layers)\n\n")
+		} else {
+			color.Red(" not found or no access\n\n")
+		}
+	}
 
 	defaultServiceName := image
 	i := strings.Index(defaultServiceName, "/")
