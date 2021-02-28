@@ -205,7 +205,15 @@ func askForNetworks() (networks []string) {
 
 func askForPorts() (ports []string) {
 	if utils.YesNoQuestion("Do you want to expose ports of your service?", false) {
-
+	Ports:
+		// Ask user for port exposures
+		portInner := utils.TextQuestionWithValidator("Which port do you want to expose? (inner port)", utils.PortValidator)
+		portOuter := utils.TextQuestionWithValidator("To which destination port on the host machine?", utils.PortValidator)
+		ports = append(ports, portOuter+":"+portInner)
+		// Ask for another env file
+		if utils.YesNoQuestion("Expose another port?", true) {
+			goto Ports
+		}
 	}
 	return
 }
@@ -233,7 +241,7 @@ func askForEnvFiles() (envFiles []string) {
 		}
 		envFiles = append(envFiles, envFile)
 		// Ask for another env file
-		if utils.YesNoQuestion("Do you want to add another environment file?", false) {
+		if utils.YesNoQuestion("Add another environment file?", true) {
 			goto EnvFile
 		}
 		fmt.Println()

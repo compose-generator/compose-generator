@@ -25,6 +25,18 @@ func TextQuestion(question string) (result string) {
 	return
 }
 
+// TextQuestionWithValidator prints simple text question with a validation
+func TextQuestionWithValidator(question string, fn survey.Validator) (result string) {
+	prompt := &survey.Question{
+		Prompt: &survey.Input{
+			Message: question,
+		},
+		Validate: fn,
+	}
+	survey.Ask([]*survey.Question{prompt}, &result)
+	return
+}
+
 // TextQuestionWithDefault prints simple text question with default value
 func TextQuestionWithDefault(question string, defaultValue string) (result string) {
 	prompt := &survey.Input{
@@ -36,11 +48,11 @@ func TextQuestionWithDefault(question string, defaultValue string) (result strin
 }
 
 // TextQuestionWithSuggestions prints simple text question with default value and a suggestion function
-func TextQuestionWithSuggestions(question string, defaultValue string, sf suggest) (result string) {
+func TextQuestionWithSuggestions(question string, defaultValue string, fn suggest) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 		Default: defaultValue,
-		Suggest: sf,
+		Suggest: fn,
 	}
 	survey.AskOne(prompt, &result)
 	return
