@@ -12,6 +12,8 @@ import (
 	yaml "gopkg.in/yaml.v3"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // Remove services from an existing compose file
 func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
 	// Ask for custom YAML file
@@ -110,3 +112,5 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		utils.DockerComposeUp(flagDetached)
 	}
 }
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------

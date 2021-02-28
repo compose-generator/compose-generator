@@ -19,6 +19,8 @@ const (
 	timeFormat = "Jan-02-06 3:04:05 PM"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // SaveTemplate copies the compose configuration in the current directory to a central templates directory
 func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	if name == "" {
@@ -121,3 +123,5 @@ func LoadTemplate(name string, flagForce bool) {
 	}
 	color.Green(" done")
 }
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------

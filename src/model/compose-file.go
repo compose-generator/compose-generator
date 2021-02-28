@@ -4,6 +4,7 @@ package model
 type ComposeFile struct {
 	Version  string
 	Services map[string]Service
+	Networks map[string]Network
 }
 
 // Service represents the YAML structure of a service in a docker compose file
@@ -11,11 +12,30 @@ type Service struct {
 	Build         string   `yaml:"build,omitempty"`
 	Image         string   `yaml:"image,omitempty"`
 	ContainerName string   `yaml:"container_name,omitempty"`
+	Volumes       []string `yaml:"volumes,omitempty"`
+	Networks      []string `yaml:"networks,omitempty"`
+	Ports         []string `yaml:"ports,omitempty"`
+	EnvFile       []string `yaml:"env_file,omitempty"`
+	Environment   []string `yaml:"environment,omitempty"`
 	Restart       string   `yaml:"restart,omitempty"`
 	DependsOn     []string `yaml:"depends_on,omitempty"`
 	Links         []string `yaml:"links,omitempty"`
-	Ports         []string `yaml:"ports,omitempty"`
-	Volumes       []string `yaml:"volumes,omitempty"`
-	Environment   []string `yaml:"environment,omitempty"`
-	EnvFile       []string `yaml:"env_file,omitempty"`
+}
+
+// Network represents the YAML structure of a network configuration in a docker compose file
+type Network struct {
+	External ExtneralNetwork
+	Ipam     IPAMNetwork
+}
+
+// IPAMNetwork represents the YAML structure of an ipam network configuration in a docker compose file
+type IPAMNetwork struct {
+	Driver     string
+	DriverOpts map[string]string
+	Config     []string
+}
+
+// ExtneralNetwork represents the YAML structure of an external network configuration in a docker compose file
+type ExtneralNetwork struct {
+	Name string
 }

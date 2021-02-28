@@ -12,6 +12,8 @@ import (
 	"github.com/fatih/color"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // Install Docker and Docker Compose with a single command
 func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 	const WindowsInstallerURL = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
@@ -78,3 +80,5 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 		color.Red("An error occurred while installing Docker.")
 	}
 }
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------

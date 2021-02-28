@@ -14,6 +14,8 @@ import (
 	yaml "gopkg.in/yaml.v3"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // Add a service to an existing compose file
 func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Ask for custom YAML file
@@ -65,106 +67,59 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	}
 
 	// Ask for image
-	image := utils.TextQuestionWithDefault("Which base image do you want to pick?", "hello-world")
+	imageName := askForImage()
 
-	// Check image
+	// Search for remote image and check manifest
 	if !build && !flagForce {
-		fmt.Print("\nChecking image ...")
-		layerCount := utils.CheckDockerImage(registry + image)
-		if layerCount > -1 {
-			color.Green(" found (" + strconv.Itoa(layerCount) + " layer(s))\n\n")
-		} else {
-			color.Red(" not found or no access\n\n")
-		}
-	}
-
-	defaultServiceName := image
-	i := strings.Index(defaultServiceName, "/")
-	if i != -1 {
-		defaultServiceName = defaultServiceName[i+1:]
-	}
-	i = strings.Index(defaultServiceName, ":")
-	if i != -1 {
-		defaultServiceName = defaultServiceName[:i]
+		searchRemoteImage(registry, imageName)
 	}
 
 	// Ask for service name
-	serviceName := utils.TextQuestionWithDefault("How do you want to call your service (best practise: lower cased):", defaultServiceName)
-	if _, ok := composeFile.Services[serviceName]; ok {
-		// Service name already existing
-		if !utils.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
-			os.Exit(0)
-		}
-	}
+	serviceName := askForServiceName(composeFile.Services, imageName)
 
 	// Ask for container name
 	containerName := serviceName
 	if flagAdvanced {
-		containerName = utils.TextQuestionWithDefault("How do you want to call your container (best practise: lower cased):", serviceName)
+		containerName = askForContainerName(serviceName)
 	}
 
 	// Ask for volumes
-	if utils.YesNoQuestion("Do you want to add volumes to your service?", false) {
-
-	}
+	volumes := askForVolumes()
 
 	// Ask for networks
-	if utils.YesNoQuestion("Do you want to add networks to your service?", false) {
-
-	}
+	networks := askForNetworks()
 
 	// Ask for ports
-	if utils.YesNoQuestion("Do you want to expose ports of your service?", false) {
-
-	}
-
-	// Ask for env variables
-	if utils.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
-
-	}
+	ports := askForPorts()
 
 	// Ask for env files
-	envFile := ""
-	if utils.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
-	EnvFile:
-		fmt.Println()
-		envFile = utils.TextQuestionWithSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
-			files, _ = filepath.Glob(toComplete + "*")
-			return
-		})
-		if !utils.FileExists(envFile) || utils.IsDirectory(envFile) {
-			utils.Error("File is not valid. Please select another file", false)
-			goto EnvFile
-		}
-		fmt.Println()
+	envFiles := askForEnvFiles()
+
+	// Ask for env variables
+	envVariables := []string{}
+	if len(envFiles) == 0 {
+		askForEnvVariables()
 	}
 
 	// Ask for depends on
-	dependsServices := []string{}
-	if utils.YesNoQuestion("Should your service depend on other services?", false) {
-		fmt.Println()
-		dependsServices = utils.MultiSelectMenuQuestion("From which services should your service depend?", serviceNames)
-		fmt.Println()
-	}
+	dependsServices := askForDependsOn(serviceNames)
 
 	// Ask for restart mode
-	var restartValue string = ""
-	if flagAdvanced {
-		items := []string{"always", "on-failure", "unless-stopped", "no"}
-		restartValue = utils.MenuQuestion("When should the service get restarted?", items)
-		fmt.Println()
-
-	}
+	restartValue := askForRestart(flagAdvanced)
 
 	// Add service
 	fmt.Print("Adding service ...")
 	service := model.Service{
 		Build:         buildPath,
-		Image:         registry + image,
+		Image:         registry + imageName,
 		ContainerName: containerName,
+		Volumes:       volumes,
+		Networks:      networks,
+		Ports:         ports,
 		Restart:       restartValue,
 		DependsOn:     dependsServices,
-		EnvFile:       []string{envFile},
+		EnvFile:       envFiles,
+		Environment:   envVariables,
 	}
 	composeFile.Services[serviceName] = service
 	color.Green(" done")
@@ -182,4 +137,124 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	if flagRun || flagDetached {
 		utils.DockerComposeUp(flagDetached)
 	}
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func askForImage() (name string) {
+	name = utils.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
+	return
+}
+
+func searchRemoteImage(registry string, image string) {
+	fmt.Print("\nSearching image ...")
+	layerCount := utils.CheckDockerImage(registry + image)
+	if layerCount > -1 {
+		color.Green(" found (" + strconv.Itoa(layerCount) + " layer(s))\n\n")
+	} else {
+		color.Red(" not found or no access\n")
+		proceed := utils.YesNoQuestion("Proceed anyway?", false)
+		if !proceed {
+			os.Exit(0)
+		}
+		fmt.Println()
+	}
+}
+
+func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {
+	// Set image name as default service name
+	defaultName := imageName
+	i := strings.Index(defaultName, "/")
+	if i > -1 {
+		defaultName = defaultName[i+1:]
+	}
+	i = strings.Index(defaultName, ":")
+	if i > -1 {
+		defaultName = defaultName[:i]
+	}
+
+	// Ask for the service name
+	name = utils.TextQuestionWithDefault("How do you want to call your service (best practise: lower cased):", defaultName)
+	if _, exists := existingServices[name]; exists {
+		// Service name already exists
+		if !utils.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
+			os.Exit(0)
+		}
+	}
+	return
+}
+
+func askForContainerName(serviceName string) (name string) {
+	name = utils.TextQuestionWithDefault("How do you want to call your container (best practise: lower cased):", serviceName)
+	return
+}
+
+func askForVolumes() (voluems []string) {
+	if utils.YesNoQuestion("Do you want to add volumes to your service?", false) {
+
+	}
+	return
+}
+
+func askForNetworks() (networks []string) {
+	if utils.YesNoQuestion("Do you want to add networks to your service?", false) {
+
+	}
+	return
+}
+
+func askForPorts() (ports []string) {
+	if utils.YesNoQuestion("Do you want to expose ports of your service?", false) {
+
+	}
+	return
+}
+
+func askForEnvVariables() (envVariables []string) {
+	if utils.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
+
+	}
+	return
+}
+
+func askForEnvFiles() (envFiles []string) {
+	if utils.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
+	EnvFile:
+		fmt.Println()
+		// Ask user for env file with auto-suggested text input
+		envFile := utils.TextQuestionWithSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
+			files, _ = filepath.Glob(toComplete + "*")
+			return
+		})
+		// Check if the selected file is valid
+		if !utils.FileExists(envFile) || utils.IsDirectory(envFile) {
+			utils.Error("File is not valid. Please select another file", false)
+			goto EnvFile
+		}
+		envFiles = append(envFiles, envFile)
+		// Ask for another env file
+		if utils.YesNoQuestion("Do you want to add another environment file?", false) {
+			goto EnvFile
+		}
+		fmt.Println()
+	}
+	return
+}
+
+func askForDependsOn(serviceNames []string) (dependsServices []string) {
+	if utils.YesNoQuestion("Should your service depend on other services?", false) {
+		fmt.Println()
+		dependsServices = utils.MultiSelectMenuQuestion("From which services should your service depend?", serviceNames)
+		fmt.Println()
+	}
+	return
+}
+
+func askForRestart(flagAdvanced bool) (restartValue string) {
+	if flagAdvanced {
+		items := []string{"always", "on-failure", "unless-stopped", "no"}
+		restartValue = utils.MenuQuestion("When should the service get restarted?", items)
+		fmt.Println()
+	}
+	return
 }

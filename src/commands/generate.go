@@ -13,6 +13,8 @@ import (
 	"compose-generator/utils"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // Generate a docker compose configuration
 func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Execute SafetyFileChecks
@@ -145,3 +147,5 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 		utils.DockerComposeUp(flagDetached)
 	}
 }
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
