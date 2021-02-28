@@ -12,3 +12,13 @@ func PortValidator(val interface{}) error {
 	}
 	return nil
 }
+
+// EnvVarNameValidator is a validator to check if a name of an environment variable is valid
+func EnvVarNameValidator(val interface{}) error {
+	for _, char := range val.(string) {
+		if (char < 'a' || char > 'z') && (char < 'A' || char > 'Z') && (char < '0' || char > '9') && char != '_' {
+			return errors.New("Please provide a valid name. Only alphanumeric chars and underscores are allowed")
+		}
+	}
+	return nil
+}

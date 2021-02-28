@@ -98,11 +98,11 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Ask for env variables
 	envVariables := []string{}
 	if len(envFiles) == 0 {
-		askForEnvVariables()
+		envVariables = askForEnvVariables()
 	}
 
 	// Ask for depends on
-	dependsServices := askForDependsOn(serviceNames)
+	dependsServices := askForDependsOn(utils.RemoveStringFromSlice(serviceNames, serviceName))
 
 	// Ask for restart mode
 	restartValue := askForRestart(flagAdvanced)
@@ -205,6 +205,7 @@ func askForNetworks() (networks []string) {
 
 func askForPorts() (ports []string) {
 	if utils.YesNoQuestion("Do you want to expose ports of your service?", false) {
+		fmt.Println()
 	Ports:
 		// Ask user for port exposures
 		portInner := utils.TextQuestionWithValidator("Which port do you want to expose? (inner port)", utils.PortValidator)
@@ -214,21 +215,32 @@ func askForPorts() (ports []string) {
 		if utils.YesNoQuestion("Expose another port?", true) {
 			goto Ports
 		}
+		fmt.Println()
 	}
 	return
 }
 
 func askForEnvVariables() (envVariables []string) {
 	if utils.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
-
+		fmt.Println()
+	EnvVar:
+		// Ask for environment variables
+		variableName := utils.TextQuestionWithValidator("Variable name:", utils.EnvVarNameValidator)
+		variableValue := utils.TextQuestion("Variable value:")
+		envVariables = append(envVariables, variableName+"="+variableValue)
+		// Ask for another env file
+		if utils.YesNoQuestion("Expose another environment variable?", true) {
+			goto EnvVar
+		}
+		fmt.Println()
 	}
 	return
 }
 
 func askForEnvFiles() (envFiles []string) {
 	if utils.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
-	EnvFile:
 		fmt.Println()
+	EnvFile:
 		// Ask user for env file with auto-suggested text input
 		envFile := utils.TextQuestionWithSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
 			files, _ = filepath.Glob(toComplete + "*")
