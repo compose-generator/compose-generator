@@ -85,7 +85,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	}
 
 	// Ask for volumes
-	volumes := askForVolumes()
+	volumes := askForVolumes(flagAdvanced)
 
 	// Ask for networks
 	networks := askForNetworks()
@@ -190,7 +190,7 @@ func askForContainerName(serviceName string) (name string) {
 	return
 }
 
-func askForVolumes() (volumes []string) {
+func askForVolumes(flagAdvanced bool) (volumes []string) {
 	if utils.YesNoQuestion("Do you want to add volumes to your service?", false) {
 		fmt.Println()
 	Volumes:
@@ -200,18 +200,20 @@ func askForVolumes() (volumes []string) {
 		if globalVolume {
 			globalVolumes, err := diu.GetExistingVolumes()
 			if err == nil {
-				menuItmes := []string{}
+				menuItems := []string{}
 				for _, volume := range globalVolumes {
-					menuItmes = append(menuItmes, volume.Name+" | Driver: "+volume.Driver)
+					menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
 				}
 				if len(globalVolumes) >= 1 {
-					itemIndex := utils.MenuQuestionIndex("Which global volume?", menuItmes)
+					itemIndex := utils.MenuQuestionIndex("Which global volume?", menuItems)
 					volumeOuter = globalVolumes[itemIndex].Name
 				} else if utils.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
-
+					volumeOuter = utils.TextQuestion("How do you want to call the new global volume?")
+					utils.ExecuteAndWait("docker", "volume", "create", volumeOuter)
 				}
 			} else {
 				utils.Error("Error parsing global volumes.", false)
+				goto Volumes
 			}
 		} else {
 			volumeOuter = utils.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
@@ -223,8 +225,21 @@ func askForVolumes() (volumes []string) {
 				volumeOuter = "./" + volumeOuter
 			}
 		}
+
+		// Ask for inner path
 		volumeInner := utils.TextQuestion("Directory / file inside the container:")
-		volumes = append(volumes, volumeOuter+":"+volumeInner)
+
+		// Ask for volume priviledges if advanced more is enabled
+		priviledges := "rw"
+		if flagAdvanced {
+			result := utils.MenuQuestionIndex("Which priviledges does the container has on the volume?", []string{"Read + Write", "Read-only"})
+			if result == 1 {
+				priviledges = "ro"
+			}
+		}
+
+		volumes = append(volumes, volumeOuter+":"+volumeInner+":"+priviledges)
+
 		// Ask for another volume
 		if utils.YesNoQuestion("Share another volume?", true) {
 			goto Volumes
@@ -236,7 +251,40 @@ func askForVolumes() (volumes []string) {
 
 func askForNetworks() (networks []string) {
 	if utils.YesNoQuestion("Do you want to add networks to your service?", false) {
+		fmt.Println()
+	Networks:
+		// Ask user for network assignments
+		globalNetwork := utils.YesNoQuestion("Do you want to add an external network (y) or create assign a new one (n)?", false)
+		networkName := ""
+		if globalNetwork {
+			globalNetworks, err := diu.GetExistingNetworks()
+			if err == nil {
+				menuItems := []string{}
+				for _, network := range globalNetworks {
+					menuItems = append(menuItems, network.Name+" | Driver: "+network.Driver)
+				}
+				if len(globalNetworks) >= 1 {
+					itemIndex := utils.MenuQuestionIndex("Which external network?", menuItems)
+					networkName = globalNetworks[itemIndex].Name
+				} else if utils.YesNoQuestion("No external networks found. Do you want to create one?", true) {
+					networkName = utils.TextQuestion("How do you want to call the new external network?")
+					utils.ExecuteAndWait("docker", "network", "create", networkName)
+				}
+			} else {
+				utils.Error("Error parsing external networks.", false)
+				goto Networks
+			}
+		} else {
+			networkName = utils.TextQuestion("How do you want to call the new network?")
+		}
 
+		networks = append(networks, networkName)
+
+		// Ask for another network
+		if utils.YesNoQuestion("Assign another network?", true) {
+			goto Networks
+		}
+		fmt.Println()
 	}
 	return
 }
