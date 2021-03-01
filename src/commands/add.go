@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/compose-generator/diu"
 	"github.com/fatih/color"
 	yaml "gopkg.in/yaml.v3"
 )
@@ -148,9 +149,9 @@ func askForImage() (name string) {
 
 func searchRemoteImage(registry string, image string) {
 	fmt.Print("\nSearching image ...")
-	layerCount := utils.CheckDockerImage(registry + image)
-	if layerCount > -1 {
-		color.Green(" found (" + strconv.Itoa(layerCount) + " layer(s))\n\n")
+	manifest, err := diu.GetImageManifest(registry + image)
+	if err == nil {
+		color.Green(" found (" + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s))\n\n")
 	} else {
 		color.Red(" not found or no access\n")
 		proceed := utils.YesNoQuestion("Proceed anyway?", false)
@@ -189,9 +190,46 @@ func askForContainerName(serviceName string) (name string) {
 	return
 }
 
-func askForVolumes() (voluems []string) {
+func askForVolumes() (volumes []string) {
 	if utils.YesNoQuestion("Do you want to add volumes to your service?", false) {
+		fmt.Println()
+	Volumes:
+		// Ask user for volume attachments
+		globalVolume := utils.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
+		volumeOuter := ""
+		if globalVolume {
+			globalVolumes, err := diu.GetExistingVolumes()
+			if err == nil {
+				menuItmes := []string{}
+				for _, volume := range globalVolumes {
+					menuItmes = append(menuItmes, volume.Name+" | Driver: "+volume.Driver)
+				}
+				if len(globalVolumes) >= 1 {
+					itemIndex := utils.MenuQuestionIndex("Which global volume?", menuItmes)
+					volumeOuter = globalVolumes[itemIndex].Name
+				} else if utils.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
 
+				}
+			} else {
+				utils.Error("Error parsing global volumes.", false)
+			}
+		} else {
+			volumeOuter = utils.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
+				files, _ = filepath.Glob(toComplete + "*")
+				return
+			})
+			volumeOuter = strings.TrimSpace(volumeOuter)
+			if !strings.HasPrefix(volumeOuter, "./") && !strings.HasPrefix(volumeOuter, "/") {
+				volumeOuter = "./" + volumeOuter
+			}
+		}
+		volumeInner := utils.TextQuestion("Directory / file inside the container:")
+		volumes = append(volumes, volumeOuter+":"+volumeInner)
+		// Ask for another volume
+		if utils.YesNoQuestion("Share another volume?", true) {
+			goto Volumes
+		}
+		fmt.Println()
 	}
 	return
 }
@@ -242,8 +280,8 @@ func askForEnvFiles() (envFiles []string) {
 		fmt.Println()
 	EnvFile:
 		// Ask user for env file with auto-suggested text input
-		envFile := utils.TextQuestionWithSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
-			files, _ = filepath.Glob(toComplete + "*")
+		envFile := utils.TextQuestionWithDefaultAndSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
+			files, _ = filepath.Glob(toComplete + "*.*")
 			return
 		})
 		// Check if the selected file is valid

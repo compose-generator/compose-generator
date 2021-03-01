@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -213,19 +212,4 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 	cmd := exec.Command(c[0], c[1:]...)
 	output, _ := cmd.CombinedOutput()
 	return strings.TrimRight(string(output), "\r\n")
-}
-
-// CheckDockerImage checks if Docker image exists in remote repository
-func CheckDockerImage(image string) int {
-	manifestJSON := ExecuteAndWaitWithOutput("docker", "manifest", "inspect", "-v", image)
-	if strings.HasPrefix(manifestJSON, "[") {
-		var manifest []model.DockerManifest
-		json.Unmarshal([]byte(manifestJSON), &manifest)
-		return len(manifest[0].SchemaV2Manifest.Layers)
-	} else if strings.HasPrefix(manifestJSON, "{") {
-		var manifest model.DockerManifest
-		json.Unmarshal([]byte(manifestJSON), &manifest)
-		return len(manifest.SchemaV2Manifest.Layers)
-	}
-	return -1
 }

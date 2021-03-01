@@ -11,6 +11,8 @@ import (
 	"compose-generator/utils"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // ParsePredefinedTemplates returns a list of all predefined templates
 func ParsePredefinedTemplates() (configs []model.TemplateConfig) {
 	templatesPath := utils.GetPredefinedTemplatesPath()
@@ -47,7 +49,8 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	return
 }
 
-// Load predefined template config file to TemplateConfig object
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
 func getConfigFromFile(dirPath string) (config model.TemplateConfig) {
 	// Read JSON file
 	jsonFile, err := os.Open(dirPath + "/config.json")

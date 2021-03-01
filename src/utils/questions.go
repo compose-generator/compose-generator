@@ -47,8 +47,18 @@ func TextQuestionWithDefault(question string, defaultValue string) (result strin
 	return
 }
 
-// TextQuestionWithSuggestions prints simple text question with default value and a suggestion function
-func TextQuestionWithSuggestions(question string, defaultValue string, fn suggest) (result string) {
+// TextQuestionWithSuggestions prints simple text question with a suggestion function
+func TextQuestionWithSuggestions(question string, fn suggest) (result string) {
+	prompt := &survey.Input{
+		Message: question,
+		Suggest: fn,
+	}
+	survey.AskOne(prompt, &result)
+	return
+}
+
+// TextQuestionWithDefaultAndSuggestions prints simple text question with default value and a suggestion function
+func TextQuestionWithDefaultAndSuggestions(question string, defaultValue string, fn suggest) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 		Default: defaultValue,

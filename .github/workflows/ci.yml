@@ -13,15 +13,8 @@ jobs:
   build:
     strategy:
       matrix:
-        go-version: [1.15.x, 1.16.x]
+        go-version: [1.14.x, 1.15.x]
         os: [ubuntu-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            build_script: |
-              cd src
-              go build -x
-          - os: windows-latest
-            build_script: .\build.bat
 
     runs-on: ${{ matrix.os }}
     steps:
