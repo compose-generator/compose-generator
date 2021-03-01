@@ -25,11 +25,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - name: Run tests
-        run: |
-          cd src
-          go mod tidy
-          go test -v ./...
       - name: Docker login GHCR
         uses: docker/login-action@v1
         with:
