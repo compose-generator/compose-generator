@@ -49,7 +49,8 @@ archives:
       - goos: windows
         format: zip
 nfpms:
-  - maintainer: Marc Auberer <marc.auberer@chillibits.com>
+  - id: publish
+    maintainer: Marc Auberer <marc.auberer@chillibits.com>
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.marc-auberer.com
     license: Apache 2.0
@@ -73,6 +74,9 @@ nfpms:
         dst: /usr/lib/compose-generator/predefined-templates/
     empty_folders:
       - /usr/lib/compose-generator/templates
+signs:
+  - artifacts: all
+    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
 release:
   name_template: "v{{.Tag}}"
   github:
