@@ -28,9 +28,9 @@ You can use the `generate` command to generate Docker Compose configurations. Yo
 ## Options
 You can apply following options to the `generate` command:
 
-| Option       | Short | Description                                                                                                        |
-| ------------ | ----- | ------------------------------------------------------------------------------------------------------------------ |
-| `--advanced` | `-a`  | Enabled advanced mode to show advanced questions to allow more customization                                       |
-| `--detached` | `-d`  | To run the compose configuration after generating in detached mode. For combined use with the `--run` / `-r` flag. |
-| `--force`    | `-f`  | Skip safety checks and overwrite all files, that may exist.                                                        |
-| `--run`      | `-r`  | To run the compose configuration after generating.                                                                 |
+| Option       | Short | Description                                                                   |
+| ------------ | ----- | ----------------------------------------------------------------------------- |
+| `--advanced` | `-a`  | Enabled advanced mode to show advanced questions to allow more customization. |
+| `--detached` | `-d`  | To run the compose configuration after generating in detached mode.           |
+| `--force`    | `-f`  | Skip safety checks and overwrite all files, that may exist.                   |
+| `--run`      | `-r`  | To run the compose configuration after generating.                            |

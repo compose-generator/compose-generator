@@ -74,9 +74,6 @@ nfpms:
         dst: /usr/lib/compose-generator/predefined-templates/
     empty_folders:
       - /usr/lib/compose-generator/templates
-signs:
-  - artifacts: all
-    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
 release:
   name_template: "v{{.Tag}}"
   github:

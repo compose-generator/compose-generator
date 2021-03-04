@@ -38,34 +38,47 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", true)
 	}
-
-	serviceNames := []string{}
-	for name := range composeFile.Services {
-		serviceNames = append(serviceNames, name)
-	}
 	color.Green(" done")
 	fmt.Println()
 
-	// Ask if the image should be built from source
-	build := utils.YesNoQuestion("Build from source?", false)
-	var buildPath string
-	registry := ""
-	if build {
-		// Ask for build path
-		buildPath = utils.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
-		// Check if Dockerfile exists
-		if !utils.FileExists(buildPath+"/Dockerfile") && !utils.FileExists(buildPath+"Dockerfile") {
-			utils.Error("Aborting. The Dockerfile cannot be found.", true)
-		}
-	} else {
-		// Ask for registry
-		registry = utils.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
-		if registry == "docker.io" {
-			registry = ""
-		} else {
-			registry = registry + "/"
-		}
+	service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce)
+
+	// Ask for services that depend on the new service
+	for _, existingServiceName := range askForDependant(existingServiceNames) {
+		currentService := composeFile.Services[existingServiceName]
+		currentService.DependsOn = append(currentService.DependsOn, serviceName)
+		composeFile.Services[existingServiceName] = currentService
 	}
+
+	// Add service
+	fmt.Print("Adding service ...")
+	composeFile.Services[serviceName] = service
+	color.Green(" done")
+
+	// Write to file
+	fmt.Print("Saving compose file ...")
+	output, err1 := yaml.Marshal(&composeFile)
+	err2 := ioutil.WriteFile(path, output, 0777)
+	if err1 != nil || err2 != nil {
+		utils.Error("Could not write yaml to compose file.", true)
+	}
+	color.Green(" done")
+
+	// Run if the corresponding flag is set
+	if flagRun || flagDetached {
+		utils.DockerComposeUp(flagDetached)
+	}
+}
+
+// AddService asks the user for a new service
+func AddService(existingServices map[string]model.Service, flagAdvanced bool, flagForce bool) (service model.Service, serviceName string, existingServiceNames []string) {
+	// Get names of existing services
+	for name := range existingServices {
+		existingServiceNames = append(existingServiceNames, name)
+	}
+
+	// Ask if the image should be built from source
+	build, buildPath, registry := askBuildFromSource()
 
 	// Ask for image
 	imageName := askForImage()
@@ -76,7 +89,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	}
 
 	// Ask for service name
-	serviceName := askForServiceName(composeFile.Services, imageName)
+	serviceName = askForServiceName(existingServices, imageName)
 
 	// Ask for container name
 	containerName := serviceName
@@ -102,15 +115,14 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 		envVariables = askForEnvVariables()
 	}
 
-	// Ask for depends on
-	dependsServices := askForDependsOn(utils.RemoveStringFromSlice(serviceNames, serviceName))
+	// Ask for services, the new one should depend on
+	dependsServices := askForDependsOn(utils.RemoveStringFromSlice(existingServiceNames, serviceName))
 
 	// Ask for restart mode
 	restartValue := askForRestart(flagAdvanced)
 
-	// Add service
-	fmt.Print("Adding service ...")
-	service := model.Service{
+	// Build service object
+	service = model.Service{
 		Build:         buildPath,
 		Image:         registry + imageName,
 		ContainerName: containerName,
@@ -122,25 +134,31 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 		EnvFile:       envFiles,
 		Environment:   envVariables,
 	}
-	composeFile.Services[serviceName] = service
-	color.Green(" done")
-
-	// Write to file
-	fmt.Print("Saving compose file ...")
-	output, err1 := yaml.Marshal(&composeFile)
-	err2 := ioutil.WriteFile(path, output, 0777)
-	if err1 != nil || err2 != nil {
-		utils.Error("Could not write yaml to compose file.", true)
-	}
-	color.Green(" done")
-
-	// Run if the corresponding flag is set
-	if flagRun || flagDetached {
-		utils.DockerComposeUp(flagDetached)
-	}
+	return
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func askBuildFromSource() (build bool, buildPath string, registry string) {
+	build = utils.YesNoQuestion("Build from source?", false)
+	if build {
+		// Ask for build path
+		buildPath = utils.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
+		// Check if Dockerfile exists
+		if !utils.FileExists(buildPath+"/Dockerfile") && !utils.FileExists(buildPath+"Dockerfile") {
+			utils.Error("Aborting. The Dockerfile cannot be found.", true)
+		}
+	} else {
+		// Ask for registry
+		registry = utils.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
+		if registry == "docker.io" {
+			registry = ""
+		} else {
+			registry = registry + "/"
+		}
+	}
+	return
+}
 
 func askForImage() (name string) {
 	name = utils.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
@@ -351,6 +369,15 @@ func askForDependsOn(serviceNames []string) (dependsServices []string) {
 	if utils.YesNoQuestion("Should your service depend on other services?", false) {
 		fmt.Println()
 		dependsServices = utils.MultiSelectMenuQuestion("From which services should your service depend?", serviceNames)
+		fmt.Println()
+	}
+	return
+}
+
+func askForDependant(serviceNames []string) (dependantServices []string) {
+	if utils.YesNoQuestion("Should other services depend on your service?", false) {
+		fmt.Println()
+		dependantServices = utils.MultiSelectMenuQuestion("Which services should depend on your service?", serviceNames)
 		fmt.Println()
 	}
 	return
