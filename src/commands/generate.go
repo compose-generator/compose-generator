@@ -2,13 +2,16 @@ package commands
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
 	"github.com/otiai10/copy"
+	yaml "gopkg.in/yaml.v3"
 
+	"compose-generator/model"
 	"compose-generator/parser"
 	"compose-generator/utils"
 )
@@ -42,7 +45,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 	if usePredefinedStack {
 		generateFromPredefinedTemplate(projectName, flagAdvanced)
 	} else {
-		generateFromScratch(projectName, flagAdvanced)
+		generateFromScratch(projectName, flagAdvanced, flagForce)
 	}
 
 	// Run if the corresponding flag is set
@@ -152,9 +155,47 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 	}
 }
 
-func generateFromScratch(projectName string, flagAdvanced bool) {
+func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {
 	// Create custom stack
 	utils.Heading("Let's create a custom stack for you!")
+	fmt.Println()
 
-	
+	services := make(map[string]model.Service)
+AddService:
+	service, serviceName, _ := AddService(services, flagAdvanced, flagForce, true)
+	services[serviceName] = service
+	fmt.Println()
+
+	// Ask for another service
+	if utils.YesNoQuestion("Generate another service?", true) {
+		goto AddService
+	}
+	fmt.Println()
+
+	// Ask for the dependencies
+	var serviceNames []string
+	for name := range services {
+		serviceNames = append(serviceNames, name)
+	}
+	for serviceName, service := range services {
+		currentService := service
+		service.DependsOn = utils.MultiSelectMenuQuestion("On which services should your service '"+serviceName+"' depend?", utils.RemoveStringFromSlice(serviceNames, serviceName))
+		services[serviceName] = currentService
+	}
+
+	// Generate compose file
+	fmt.Println("Generating compose file ...")
+	composeFile := model.ComposeFile{}
+	composeFile.Version = "3.8"
+	composeFile.Services = services
+	color.Green(" done")
+
+	// Write to file
+	fmt.Print("Saving compose file ...")
+	output, err1 := yaml.Marshal(&composeFile)
+	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
+	if err1 != nil || err2 != nil {
+		utils.Error("Could not write yaml to compose file.", true)
+	}
+	color.Green(" done")
 }

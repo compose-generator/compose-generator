@@ -41,7 +41,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	color.Green(" done")
 	fmt.Println()
 
-	service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce)
+	service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce, false)
 
 	// Ask for services that depend on the new service
 	for _, existingServiceName := range askForDependant(existingServiceNames) {
@@ -71,7 +71,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 }
 
 // AddService asks the user for a new service
-func AddService(existingServices map[string]model.Service, flagAdvanced bool, flagForce bool) (service model.Service, serviceName string, existingServiceNames []string) {
+func AddService(existingServices map[string]model.Service, flagAdvanced bool, flagForce bool, modeGenerate bool) (service model.Service, serviceName string, existingServiceNames []string) {
 	// Get names of existing services
 	for name := range existingServices {
 		existingServiceNames = append(existingServiceNames, name)
@@ -81,7 +81,7 @@ func AddService(existingServices map[string]model.Service, flagAdvanced bool, fl
 	build, buildPath, registry := askBuildFromSource()
 
 	// Ask for image
-	imageName := askForImage()
+	imageName := askForImage(build)
 
 	// Search for remote image and check manifest
 	if !build && !flagForce {
@@ -116,7 +116,10 @@ func AddService(existingServices map[string]model.Service, flagAdvanced bool, fl
 	}
 
 	// Ask for services, the new one should depend on
-	dependsServices := askForDependsOn(utils.RemoveStringFromSlice(existingServiceNames, serviceName))
+	var dependsServices []string
+	if !modeGenerate {
+		dependsServices = askForDependsOn(utils.RemoveStringFromSlice(existingServiceNames, serviceName))
+	}
 
 	// Ask for restart mode
 	restartValue := askForRestart(flagAdvanced)
@@ -160,9 +163,12 @@ func askBuildFromSource() (build bool, buildPath string, registry string) {
 	return
 }
 
-func askForImage() (name string) {
-	name = utils.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
-	return
+func askForImage(build bool) (string) {
+	if build {
+		return utils.TextQuestion("How do you want to call the built image?")
+	} else {
+		return utils.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
+	}
 }
 
 func searchRemoteImage(registry string, image string) {
@@ -329,7 +335,7 @@ func askForEnvVariables() (envVariables []string) {
 		fmt.Println()
 	EnvVar:
 		// Ask for environment variables
-		variableName := utils.TextQuestionWithValidator("Variable name:", utils.EnvVarNameValidator)
+		variableName := utils.TextQuestionWithValidator("Variable name (BEST_PRACTISE_IS_CAPS):", utils.EnvVarNameValidator)
 		variableValue := utils.TextQuestion("Variable value:")
 		envVariables = append(envVariables, variableName+"="+variableValue)
 		// Ask for another env file
@@ -368,7 +374,7 @@ func askForEnvFiles() (envFiles []string) {
 func askForDependsOn(serviceNames []string) (dependsServices []string) {
 	if utils.YesNoQuestion("Should your service depend on other services?", false) {
 		fmt.Println()
-		dependsServices = utils.MultiSelectMenuQuestion("From which services should your service depend?", serviceNames)
+		dependsServices = utils.MultiSelectMenuQuestion("On which services should your service depend?", serviceNames)
 		fmt.Println()
 	}
 	return
