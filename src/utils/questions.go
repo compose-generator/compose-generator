@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 
 	survey "github.com/AlecAivazis/survey/v2"
@@ -9,6 +10,26 @@ import (
 
 // Function for settings suggestions to a question for autocompletion
 type suggest func(toComplete string) []string
+
+// P prints a normal text to the console
+func P(text string) {
+	fmt.Print(text)
+}
+
+// Pl prints a normal text line to the console
+func Pl(text string) {
+	fmt.Println(text)
+}
+
+// Pel prints an empty line to the console
+func Pel() {
+	fmt.Println()
+}
+
+// PrintDone prints 'done' in green to the console
+func PrintDone() {
+	color.Green(" done")
+}
 
 // Heading prints heading to console
 func Heading(text string) {
@@ -114,4 +135,9 @@ func Error(description string, exit bool) {
 	if exit {
 		os.Exit(1)
 	}
+}
+
+// Warning prints an warning message
+func Warning(description string) {
+	color.Red("Warning: " + description)
 }

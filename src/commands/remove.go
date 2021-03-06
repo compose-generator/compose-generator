@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
 	yaml "gopkg.in/yaml.v3"
 )
 
@@ -16,6 +15,8 @@ import (
 
 // Remove services from an existing compose file
 func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
+	utils.ClearScreen()
+
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
 	if flagAdvanced {
@@ -35,7 +36,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", true)
 	}
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Ask for service
 	if len(serviceNames) == 0 {
@@ -44,7 +45,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 			items = append(items, k)
 		}
 		serviceNames = utils.MultiSelectMenuQuestion("Which services do you want to remove?", items)
-		fmt.Println()
+		utils.Pel()
 	}
 
 	for _, serviceName := range serviceNames {
@@ -83,7 +84,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 						os.RemoveAll(path)
 					}
 				}
-				color.Green(" done")
+				utils.PrintDone()
 			}
 		}
 
@@ -95,7 +96,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 			s.Links = utils.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
 			composeFile.Services[k] = s
 		}
-		color.Green(" done")
+		utils.PrintDone()
 	}
 
 	// Write to file
@@ -105,7 +106,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {

@@ -20,6 +20,8 @@ import (
 
 // Generate a docker compose configuration
 func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
+	utils.ClearScreen()
+
 	// Execute SafetyFileChecks
 	if !flagForce {
 		utils.ExecuteSafetyFileChecks()
@@ -27,18 +29,18 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 	// Welcome Message
 	utils.Heading("Welcome to Compose Generator!")
-	fmt.Println("Please continue by answering a few questions:")
-	fmt.Println()
+	utils.Pl("Please continue by answering a few questions:")
+	utils.Pel()
 
 	// Project name
-	projectName := utils.TextQuestion("What is the name of your project: ")
+	projectName := utils.TextQuestion("What is the name of your project:")
 	if projectName == "" {
 		utils.Error("Error. You must specify a project name!", true)
 	}
 
 	// Docker Swarm compatibility (default: no)
 	//dockerSwarm := utils.YesNoQuestion("Should your compose file be used for distributed deployment with Docker Swarm?", false)
-	//fmt.Println(dockerSwarm)
+	//utils.Pl(dockerSwarm)
 
 	// Predefined stack (default: yes)
 	usePredefinedStack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
@@ -57,6 +59,8 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
+	utils.ClearScreen()
+
 	// Load stacks from templates
 	templateData := parser.ParsePredefinedTemplates()
 	// Predefined stack menu
@@ -65,7 +69,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 		items = append(items, t.Label)
 	}
 	index := utils.MenuQuestionIndex("Predefined software stack", items)
-	fmt.Println()
+	utils.Pel()
 
 	// Ask configured questions to the user
 	envMap := make(map[string]string)
@@ -85,7 +89,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 			envMap[q.EnvVar] = q.DefaultValue
 		}
 	}
-	fmt.Println()
+	utils.Pel()
 	// Ask for custom volume paths
 	volumesMap := make(map[string]string)
 	for _, v := range templateData[index].Volumes {
@@ -111,7 +115,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 		utils.Error("Could not copy template files.", true)
 	}
 
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Create volumes
 	fmt.Print("Creating volumes ...")
@@ -134,21 +138,21 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 		}
 	}
 
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Replace variables
 	fmt.Print("Applying customizations ...")
 	utils.ReplaceVarsInFile("./docker-compose.yml", envMap)
 	utils.ReplaceVarsInFile("./environment.env", envMap)
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Generate secrets
 	fmt.Print("Generating secrets ...")
 	secretsMap := utils.GenerateSecrets("./environment.env", templateData[index].Secrets)
-	color.Green(" done")
+	utils.PrintDone()
 	// Print secrets to console
-	fmt.Println()
-	fmt.Println("Following secrets were automatically generated:")
+	utils.Pel()
+	utils.Pl("Following secrets were automatically generated:")
 	for key, secret := range secretsMap {
 		fmt.Print("   " + key + ": ")
 		color.Yellow(secret)
@@ -157,20 +161,22 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 
 func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {
 	// Create custom stack
-	utils.Heading("Let's create a custom stack for you!")
-	fmt.Println()
+	utils.ClearScreen()
+	utils.Heading("Okay. Let's create a custom stack for you!")
+	utils.Pel()
 
 	services := make(map[string]model.Service)
-AddService:
-	service, serviceName, _ := AddService(services, flagAdvanced, flagForce, true)
-	services[serviceName] = service
-	fmt.Println()
-
-	// Ask for another service
-	if utils.YesNoQuestion("Generate another service?", true) {
-		goto AddService
+	i := 1
+	for another := true; another; another = utils.YesNoQuestion("Generate another service?", true) {
+		utils.ClearScreen()
+		color.Blue("Service no. " + strconv.Itoa(i) + ":")
+		service, serviceName, _ := AddService(services, flagAdvanced, flagForce, true)
+		services[serviceName] = service
+		utils.ClearScreen()
+		color.Green("✓ Created Service '" + serviceName + "'")
+		i++
 	}
-	fmt.Println()
+	utils.ClearScreen()
 
 	// Ask for the dependencies
 	var serviceNames []string
@@ -184,18 +190,18 @@ AddService:
 	}
 
 	// Generate compose file
-	fmt.Println("Generating compose file ...")
+	utils.P("Generating compose file ...")
 	composeFile := model.ComposeFile{}
 	composeFile.Version = "3.8"
 	composeFile.Services = services
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Write to file
-	fmt.Print("Saving compose file ...")
+	utils.P("Saving compose file ...")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
-	color.Green(" done")
+	utils.PrintDone()
 }

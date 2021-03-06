@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/otiai10/copy"
 )
 
@@ -23,6 +22,8 @@ const (
 
 // SaveTemplate copies the compose configuration in the current directory to a central templates directory
 func SaveTemplate(name string, flagStash bool, flagForce bool) {
+	utils.ClearScreen()
+
 	if name == "" {
 		name = utils.TextQuestion("How would you like to call your template: ")
 	}
@@ -33,7 +34,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 		if !result {
 			return
 		}
-		fmt.Println()
+		utils.Pel()
 	}
 	// Create metadata
 	fmt.Print("Creating metadata file ...")
@@ -46,7 +47,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	if err != nil {
 		utils.Error("Could not write metadata.", true)
 	}
-	color.Green(" done")
+	utils.PrintDone()
 	// Save template
 	fmt.Print("Saving template ...")
 	var savedFiles []string
@@ -66,19 +67,21 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	if err != nil {
 		utils.Error("Could not copy files. Is the permission granted?", true)
 	}
-	color.Green(" done")
+	utils.PrintDone()
 	// Delete files from source dir if stash flag is set
 	if flagStash {
 		fmt.Print("Stashing ...")
 		for _, f := range savedFiles {
 			os.RemoveAll(f)
 		}
-		color.Green(" done")
+		utils.PrintDone()
 	}
 }
 
 // LoadTemplate copies a template from the central templates directory to the working directory
 func LoadTemplate(name string, flagForce bool) {
+	utils.ClearScreen()
+
 	// Execute safety checks
 	if !flagForce {
 		utils.ExecuteSafetyFileChecks()
@@ -98,7 +101,7 @@ func LoadTemplate(name string, flagForce bool) {
 		}
 		index := utils.MenuQuestionIndex("Saved templates", items)
 		targetDir = targetDir + templateData[index].Label
-		fmt.Println()
+		utils.Pel()
 	}
 	// Load template
 	fmt.Print("Loading template ...")
@@ -121,7 +124,5 @@ func LoadTemplate(name string, flagForce bool) {
 	if err != nil {
 		utils.Error("Could not load template files.", true)
 	}
-	color.Green(" done")
+	utils.PrintDone()
 }
-
-// --------------------------------------------------------------- Private functions ---------------------------------------------------------------

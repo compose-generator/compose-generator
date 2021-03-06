@@ -18,6 +18,8 @@ import (
 func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 	const WindowsInstallerURL = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
 
+	utils.ClearScreen()
+
 	if runtime.GOOS == "windows" { // Running on windows
 		// Download Docker installer
 		fmt.Print("Downloading Docker installer ...")
@@ -26,15 +28,15 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 		if err != nil {
 			panic(err)
 		}
-		color.Green(" done")
+		utils.PrintDone()
 		// Run Docker installer
-		fmt.Println("Starting installation ...")
-		fmt.Println()
+		utils.Pl("Starting installation ...")
+		utils.Pel()
 		cmd := exec.Command(filePath)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Run()
-		fmt.Println()
+		utils.Pel()
 	} else { // Running on linux
 		if utils.IsPrivileged() {
 			// Install lsb_release if not installed already

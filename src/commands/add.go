@@ -19,6 +19,8 @@ import (
 
 // Add a service to an existing compose file
 func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
+	utils.ClearScreen()
+
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
 	if flagAdvanced {
@@ -38,8 +40,8 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", true)
 	}
-	color.Green(" done")
-	fmt.Println()
+	utils.PrintDone()
+	utils.Pel()
 
 	service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce, false)
 
@@ -53,7 +55,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Add service
 	fmt.Print("Adding service ...")
 	composeFile.Services[serviceName] = service
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Write to file
 	fmt.Print("Saving compose file ...")
@@ -62,7 +64,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
-	color.Green(" done")
+	utils.PrintDone()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -163,7 +165,7 @@ func askBuildFromSource() (build bool, buildPath string, registry string) {
 	return
 }
 
-func askForImage(build bool) (string) {
+func askForImage(build bool) string {
 	if build {
 		return utils.TextQuestion("How do you want to call the built image?")
 	} else {
@@ -175,14 +177,14 @@ func searchRemoteImage(registry string, image string) {
 	fmt.Print("\nSearching image ...")
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err == nil {
-		color.Green(" found (" + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s))\n\n")
+		color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")
 	} else {
 		color.Red(" not found or no access\n")
 		proceed := utils.YesNoQuestion("Proceed anyway?", false)
 		if !proceed {
 			os.Exit(0)
 		}
-		fmt.Println()
+		utils.Pel()
 	}
 }
 
@@ -216,184 +218,167 @@ func askForContainerName(serviceName string) (name string) {
 
 func askForVolumes(flagAdvanced bool) (volumes []string) {
 	if utils.YesNoQuestion("Do you want to add volumes to your service?", false) {
-		fmt.Println()
-	Volumes:
-		// Ask user for volume attachments
-		globalVolume := utils.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
-		volumeOuter := ""
-		if globalVolume {
-			globalVolumes, err := diu.GetExistingVolumes()
-			if err == nil {
-				menuItems := []string{}
-				for _, volume := range globalVolumes {
-					menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
-				}
-				if len(globalVolumes) >= 1 {
-					itemIndex := utils.MenuQuestionIndex("Which global volume?", menuItems)
-					volumeOuter = globalVolumes[itemIndex].Name
-				} else if utils.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
-					volumeOuter = utils.TextQuestion("How do you want to call the new global volume?")
-					utils.ExecuteAndWait("docker", "volume", "create", volumeOuter)
+		utils.Pel()
+		for another := true; another; another = utils.YesNoQuestion("Share another volume?", true) {
+			// Ask user for volume attachments
+			globalVolume := utils.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
+			volumeOuter := ""
+			if globalVolume {
+				globalVolumes, err := diu.GetExistingVolumes()
+				if err == nil {
+					menuItems := []string{}
+					for _, volume := range globalVolumes {
+						menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
+					}
+					if len(globalVolumes) >= 1 {
+						itemIndex := utils.MenuQuestionIndex("Which global volume?", menuItems)
+						volumeOuter = globalVolumes[itemIndex].Name
+					} else if utils.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
+						volumeOuter = utils.TextQuestion("How do you want to call the new global volume?")
+						utils.ExecuteAndWait("docker", "volume", "create", volumeOuter)
+					}
+				} else {
+					utils.Error("Error parsing global volumes.", false)
+					continue
 				}
 			} else {
-				utils.Error("Error parsing global volumes.", false)
-				goto Volumes
+				volumeOuter = utils.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
+					files, _ = filepath.Glob(toComplete + "*")
+					return
+				})
+				volumeOuter = strings.TrimSpace(volumeOuter)
+				if !strings.HasPrefix(volumeOuter, "./") && !strings.HasPrefix(volumeOuter, "/") {
+					volumeOuter = "./" + volumeOuter
+				}
 			}
-		} else {
-			volumeOuter = utils.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
-				files, _ = filepath.Glob(toComplete + "*")
-				return
-			})
-			volumeOuter = strings.TrimSpace(volumeOuter)
-			if !strings.HasPrefix(volumeOuter, "./") && !strings.HasPrefix(volumeOuter, "/") {
-				volumeOuter = "./" + volumeOuter
+
+			// Ask for inner path
+			volumeInner := utils.TextQuestion("Directory / file inside the container:")
+
+			// Ask for volume priviledges if advanced more is enabled
+			priviledges := "rw"
+			if flagAdvanced {
+				result := utils.MenuQuestionIndex("Which priviledges does the container has on the volume?", []string{"Read + Write", "Read-only"})
+				if result == 1 {
+					priviledges = "ro"
+				}
 			}
+
+			volumes = append(volumes, volumeOuter+":"+volumeInner+":"+priviledges)
 		}
 
-		// Ask for inner path
-		volumeInner := utils.TextQuestion("Directory / file inside the container:")
-
-		// Ask for volume priviledges if advanced more is enabled
-		priviledges := "rw"
-		if flagAdvanced {
-			result := utils.MenuQuestionIndex("Which priviledges does the container has on the volume?", []string{"Read + Write", "Read-only"})
-			if result == 1 {
-				priviledges = "ro"
-			}
-		}
-
-		volumes = append(volumes, volumeOuter+":"+volumeInner+":"+priviledges)
-
-		// Ask for another volume
-		if utils.YesNoQuestion("Share another volume?", true) {
-			goto Volumes
-		}
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }
 
 func askForNetworks() (networks []string) {
 	if utils.YesNoQuestion("Do you want to add networks to your service?", false) {
-		fmt.Println()
-	Networks:
-		// Ask user for network assignments
-		globalNetwork := utils.YesNoQuestion("Do you want to add an external network (y) or create assign a new one (n)?", false)
-		networkName := ""
-		if globalNetwork {
-			globalNetworks, err := diu.GetExistingNetworks()
-			if err == nil {
-				menuItems := []string{}
-				for _, network := range globalNetworks {
-					menuItems = append(menuItems, network.Name+" | Driver: "+network.Driver)
-				}
-				if len(globalNetworks) >= 1 {
-					itemIndex := utils.MenuQuestionIndex("Which external network?", menuItems)
-					networkName = globalNetworks[itemIndex].Name
-				} else if utils.YesNoQuestion("No external networks found. Do you want to create one?", true) {
-					networkName = utils.TextQuestion("How do you want to call the new external network?")
-					utils.ExecuteAndWait("docker", "network", "create", networkName)
+		utils.Pel()
+		for another := true; another; another = utils.YesNoQuestion("Assign another network?", true) {
+			// Ask user for network assignments
+			globalNetwork := utils.YesNoQuestion("Do you want to add an external network (y) or create assign a new one (n)?", false)
+			networkName := ""
+			if globalNetwork {
+				globalNetworks, err := diu.GetExistingNetworks()
+				if err == nil {
+					menuItems := []string{}
+					for _, network := range globalNetworks {
+						menuItems = append(menuItems, network.Name+" | Driver: "+network.Driver)
+					}
+					if len(globalNetworks) >= 1 {
+						itemIndex := utils.MenuQuestionIndex("Which external network?", menuItems)
+						networkName = globalNetworks[itemIndex].Name
+					} else if utils.YesNoQuestion("No external networks found. Do you want to create one?", true) {
+						networkName = utils.TextQuestion("How do you want to call the new external network?")
+						utils.ExecuteAndWait("docker", "network", "create", networkName)
+					}
+				} else {
+					utils.Error("Error parsing external networks.", false)
+					continue
 				}
 			} else {
-				utils.Error("Error parsing external networks.", false)
-				goto Networks
+				networkName = utils.TextQuestion("How do you want to call the new network?")
 			}
-		} else {
-			networkName = utils.TextQuestion("How do you want to call the new network?")
-		}
 
-		networks = append(networks, networkName)
-
-		// Ask for another network
-		if utils.YesNoQuestion("Assign another network?", true) {
-			goto Networks
+			networks = append(networks, networkName)
 		}
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }
 
 func askForPorts() (ports []string) {
 	if utils.YesNoQuestion("Do you want to expose ports of your service?", false) {
-		fmt.Println()
-	Ports:
-		// Ask user for port exposures
-		portInner := utils.TextQuestionWithValidator("Which port do you want to expose? (inner port)", utils.PortValidator)
-		portOuter := utils.TextQuestionWithValidator("To which destination port on the host machine?", utils.PortValidator)
-		ports = append(ports, portOuter+":"+portInner)
-		// Ask for another env file
-		if utils.YesNoQuestion("Expose another port?", true) {
-			goto Ports
+		utils.Pel()
+		for another := true; another; another = utils.YesNoQuestion("Expose another port?", true) {
+			portInner := utils.TextQuestionWithValidator("Which port do you want to expose? (inner port)", utils.PortValidator)
+			portOuter := utils.TextQuestionWithValidator("To which destination port on the host machine?", utils.PortValidator)
+			ports = append(ports, portOuter+":"+portInner)
 		}
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }
 
 func askForEnvVariables() (envVariables []string) {
 	if utils.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
-		fmt.Println()
-	EnvVar:
-		// Ask for environment variables
-		variableName := utils.TextQuestionWithValidator("Variable name (BEST_PRACTISE_IS_CAPS):", utils.EnvVarNameValidator)
-		variableValue := utils.TextQuestion("Variable value:")
-		envVariables = append(envVariables, variableName+"="+variableValue)
-		// Ask for another env file
-		if utils.YesNoQuestion("Expose another environment variable?", true) {
-			goto EnvVar
+		utils.Pel()
+		for another := true; another; another = utils.YesNoQuestion("Expose another environment variable?", true) {
+			variableName := utils.TextQuestionWithValidator("Variable name (BEST_PRACTISE_IS_CAPS):", utils.EnvVarNameValidator)
+			variableValue := utils.TextQuestion("Variable value:")
+			envVariables = append(envVariables, variableName+"="+variableValue)
 		}
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }
 
 func askForEnvFiles() (envFiles []string) {
 	if utils.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
-		fmt.Println()
-	EnvFile:
-		// Ask user for env file with auto-suggested text input
-		envFile := utils.TextQuestionWithDefaultAndSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
-			files, _ = filepath.Glob(toComplete + "*.*")
-			return
-		})
-		// Check if the selected file is valid
-		if !utils.FileExists(envFile) || utils.IsDirectory(envFile) {
-			utils.Error("File is not valid. Please select another file", false)
-			goto EnvFile
+		utils.Pel()
+		for another := true; another; another = utils.YesNoQuestion("Add another environment file?", true) {
+			// Ask user for env file with auto-suggested text input
+			envFile := utils.TextQuestionWithDefaultAndSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
+				files, _ = filepath.Glob(toComplete + "*.*")
+				return
+			})
+			// Check if the selected file is valid
+			if !utils.FileExists(envFile) || utils.IsDirectory(envFile) {
+				utils.Error("File is not valid. Please select another file", false)
+				continue
+			}
+			envFiles = append(envFiles, envFile)
 		}
-		envFiles = append(envFiles, envFile)
-		// Ask for another env file
-		if utils.YesNoQuestion("Add another environment file?", true) {
-			goto EnvFile
-		}
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }
 
 func askForDependsOn(serviceNames []string) (dependsServices []string) {
 	if utils.YesNoQuestion("Should your service depend on other services?", false) {
-		fmt.Println()
+		utils.Pel()
 		dependsServices = utils.MultiSelectMenuQuestion("On which services should your service depend?", serviceNames)
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }
 
 func askForDependant(serviceNames []string) (dependantServices []string) {
 	if utils.YesNoQuestion("Should other services depend on your service?", false) {
-		fmt.Println()
+		utils.Pel()
 		dependantServices = utils.MultiSelectMenuQuestion("Which services should depend on your service?", serviceNames)
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }
 
 func askForRestart(flagAdvanced bool) (restartValue string) {
 	if flagAdvanced {
+		utils.Pel()
 		items := []string{"always", "on-failure", "unless-stopped", "no"}
 		restartValue = utils.MenuQuestion("When should the service get restarted?", items)
-		fmt.Println()
+		utils.Pel()
 	}
 	return
 }

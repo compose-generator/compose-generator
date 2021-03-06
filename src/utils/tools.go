@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/kardianos/osext"
 	"github.com/sethvargo/go-password/password"
 
@@ -24,12 +23,12 @@ func ExecuteSafetyFileChecks() {
 		isNotSafe = FileExists("/compose-generator/out/docker-compose.yml") || FileExists("/compose-generator/out/environment.env")
 	}
 	if isNotSafe {
-		color.Red("Warning: docker-compose.yml or environment.env already exists. By continuing, you might overwrite those files.")
+		Warning("docker-compose.yml or environment.env already exists. By continuing, you might overwrite those files.")
 		result := YesNoQuestion("Do you want to continue?", true)
 		if !result {
 			os.Exit(0)
 		}
-		fmt.Println()
+		ClearScreen()
 	}
 }
 
@@ -187,9 +186,9 @@ func RemoveStringFromSlice(s []string, r string) []string {
 
 // DockerComposeUp executes 'docker compose up' in the current directory
 func DockerComposeUp(detached bool) {
-	fmt.Println()
-	fmt.Println("Running docker-compose ...")
-	fmt.Println()
+	Pel()
+	Pl("Running docker-compose ...")
+	Pel()
 
 	cmd := exec.Command("docker-compose", "up")
 	if detached {
@@ -212,4 +211,9 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 	cmd := exec.Command(c[0], c[1:]...)
 	output, _ := cmd.CombinedOutput()
 	return strings.TrimRight(string(output), "\r\n")
+}
+
+// ClearScreen errases the console contents
+func ClearScreen() {
+	fmt.Print("\033[H\033[2J")
 }
