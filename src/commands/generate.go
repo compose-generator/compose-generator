@@ -68,7 +68,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 	for _, t := range templateData {
 		items = append(items, t.Label)
 	}
-	index := utils.MenuQuestionIndex("Predefined software stack", items)
+	index := utils.MenuQuestionIndex("Predefined software stack templates", items)
 	utils.Pel()
 
 	// Ask configured questions to the user
@@ -102,7 +102,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 	}
 
 	// Copy template files
-	fmt.Print("Copying template ...")
+	fmt.Print("Copying predefined template ...")
 	srcPath := utils.GetPredefinedTemplatesPath() + "/" + templateData[index].Dir
 	dstPath := "."
 
@@ -112,7 +112,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 	err1 := copy.Copy(srcPath+"/docker-compose.yml", dstPath+"/docker-compose.yml")
 	err2 := copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
 	if err1 != nil || err2 != nil {
-		utils.Error("Could not copy template files.", true)
+		utils.Error("Could not copy predefined template files.", true)
 	}
 
 	utils.PrintDone()

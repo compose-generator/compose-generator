@@ -22,8 +22,6 @@ const (
 
 // SaveTemplate copies the compose configuration in the current directory to a central templates directory
 func SaveTemplate(name string, flagStash bool, flagForce bool) {
-	utils.ClearScreen()
-
 	if name == "" {
 		name = utils.TextQuestion("How would you like to call your template: ")
 	}
@@ -80,8 +78,6 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 
 // LoadTemplate copies a template from the central templates directory to the working directory
 func LoadTemplate(name string, flagForce bool) {
-	utils.ClearScreen()
-
 	// Execute safety checks
 	if !flagForce {
 		utils.ExecuteSafetyFileChecks()

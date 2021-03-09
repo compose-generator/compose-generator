@@ -18,8 +18,6 @@ import (
 func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 	const WindowsInstallerURL = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
 
-	utils.ClearScreen()
-
 	if runtime.GOOS == "windows" { // Running on windows
 		// Download Docker installer
 		fmt.Print("Downloading Docker installer ...")
