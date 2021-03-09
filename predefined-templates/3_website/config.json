@@ -1,0 +1,52 @@
+{
+    "label": "Common website",
+    "dir": "3_website",
+    "questions": [
+        {
+            "text": "On which port you want to expose your website?",
+            "type": 2,
+            "defaultValue": "80",
+            "envVar": "HOST_APP_PORT",
+            "advanced": true
+        },
+        {
+            "text": "TLS Certificate Domain:",
+            "type": 2,
+            "envVar": "DOMAIN_URL",
+            "advanced": false
+        },
+        {
+            "text": "TLS Certificate E-Mail Adress:",
+            "type": 2,
+            "envVar": "DOMAIN_EMAIL",
+            "advanced": false
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for proxy config volume?",
+            "defaultValue": "./volumes/proxy-config",
+            "envVar": "VOLUME_PROXY_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for proxy certificates volume?",
+            "defaultValue": "./volumes/proxy-certs",
+            "envVar": "VOLUME_PROXY_CERTS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for proxy virtual hosts volume?",
+            "defaultValue": "./volumes/proxy-vhosts",
+            "envVar": "VOLUME_PROXY_VHOSTS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Proxy html volume?",
+            "defaultValue": "./volumes/proxy-html",
+            "envVar": "VOLUME_PROXY_HTML",
+            "advanced": true
+        }
+    ],
+    "secrets": []
+}

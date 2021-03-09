@@ -60,6 +60,7 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 			}
 		} else {
 			color.Red("Please execute this command with root privileges. The cli is not able to install Docker and Docker Compose without those privileges.")
+			return
 		}
 	}
 

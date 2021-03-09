@@ -160,8 +160,9 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 }
 
 func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {
-	// Create custom stack
 	utils.ClearScreen()
+	
+	// Create custom stack
 	utils.Heading("Okay. Let's create a custom stack for you!")
 	utils.Pel()
 

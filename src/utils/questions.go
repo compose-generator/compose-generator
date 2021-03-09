@@ -13,12 +13,12 @@ type suggest func(toComplete string) []string
 
 // P prints a normal text to the console
 func P(text string) {
-	fmt.Print(text)
+	color.New(color.FgWhite).Print(text)
 }
 
 // Pl prints a normal text line to the console
 func Pl(text string) {
-	fmt.Println(text)
+	color.White(text)
 }
 
 // Pel prints an empty line to the console

@@ -168,9 +168,8 @@ func askBuildFromSource() (build bool, buildPath string, registry string) {
 func askForImage(build bool) string {
 	if build {
 		return utils.TextQuestion("How do you want to call the built image?")
-	} else {
-		return utils.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
 	}
+	return utils.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
 }
 
 func searchRemoteImage(registry string, image string) {
