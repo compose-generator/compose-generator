@@ -1,0 +1,65 @@
+version: 2
+updates:
+  # Golang dependency updates
+  - package-ecosystem: gomod
+    directory: /src
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # Docker image updates
+  - package-ecosystem: docker
+    directory: /predefined-templates/1_lamp
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+  - package-ecosystem: docker
+    directory: /predefined-templates/2_mean
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+  - package-ecosystem: docker
+    directory: /predefined-templates/3_website
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+  - package-ecosystem: docker
+    directory: /predefined-templates/4_website_insecure
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer

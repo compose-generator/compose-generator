@@ -54,6 +54,12 @@
     ],
     "volumes": [
         {
+            "text": "Custom path for source directory?",
+            "defaultValue": "./src",
+            "envVar": "SOURCE_DIRECTORY",
+            "advanced": false
+        },
+        {
             "text": "Custom path for Apache logs volume?",
             "defaultValue": "./volumes/apache-logs",
             "envVar": "VOLUME_APACHE_LOGS",
