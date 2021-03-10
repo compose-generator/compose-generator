@@ -47,6 +47,8 @@ extra:
       link: https://github.com/compose-generator/compose-generator
     - icon: fontawesome/brands/medium
       link: https://medium.com/p/d4356d38922d
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/chillibits/compose-generator
 
 nav:
 - Introduction: index.md

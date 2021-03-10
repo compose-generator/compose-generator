@@ -19,7 +19,7 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Generate a docker compose configuration
-func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
+func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool) {
 	utils.ClearScreen()
 
 	// Execute SafetyFileChecks
@@ -45,7 +45,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 	// Predefined stack (default: yes)
 	usePredefinedStack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
 	if usePredefinedStack {
-		generateFromPredefinedTemplate(projectName, flagAdvanced)
+		generateFromPredefinedTemplate(projectName, flagAdvanced, flagWithInstructions)
 	} else {
 		generateFromScratch(projectName, flagAdvanced, flagForce)
 	}
@@ -58,7 +58,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
+func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagWithInstructions bool) {
 	utils.ClearScreen()
 
 	// Load stacks from templates
@@ -108,10 +108,17 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 
 	os.Remove(dstPath + "/docker-compose.yml")
 	os.Remove(dstPath + "/environment.env")
+	if flagWithInstructions {
+		os.Remove(dstPath + "/README.md")
+	}
 
 	err1 := copy.Copy(srcPath+"/docker-compose.yml", dstPath+"/docker-compose.yml")
 	err2 := copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
-	if err1 != nil || err2 != nil {
+	var err3 error
+	if flagWithInstructions {
+		err3 = copy.Copy(srcPath+"/README.md", dstPath+"/README.md")
+	}
+	if err1 != nil || err2 != nil || err3 != nil {
 		utils.Error("Could not copy predefined template files.", true)
 	}
 
@@ -161,7 +168,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool) {
 
 func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {
 	utils.ClearScreen()
-	
+
 	// Create custom stack
 	utils.Heading("Okay. Let's create a custom stack for you!")
 	utils.Pel()

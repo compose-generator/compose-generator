@@ -66,3 +66,6 @@ services:
 	  - environment.env
 ...
 ```
+
+## README file ([example file](1_lamp/README.md))
+This file contains instructions about using the predefined template.
