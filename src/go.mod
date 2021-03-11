@@ -3,7 +3,7 @@ module compose-generator
 go 1.15
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.2.8
+	github.com/AlecAivazis/survey/v2 v2.2.9
 	github.com/compose-generator/diu v0.0.0-20210301043742-b81382c28701
 	github.com/fatih/color v1.10.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
