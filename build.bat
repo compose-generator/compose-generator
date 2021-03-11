@@ -1,5 +1,5 @@
 @echo off
-mkdir bin
+mkdir bin 2> NUL
 cd src
 
 go env -w GOOS=windows

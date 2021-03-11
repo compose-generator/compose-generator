@@ -35,3 +35,4 @@ You can apply following options to the `generate` command:
 | `--force`             | `-f`  | Skip safety checks and overwrite all files, that may exist.                   |
 | `--run`               | `-r`  | To run the compose configuration after generating.                            |
 | `--with-instructions` | `-i`  | Generate a README.md file with usage instruction for predefined template.     |
+| `--with-dockerfile`   | `-w`  | Generate the Dockerfile for your project.                                     |

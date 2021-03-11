@@ -34,9 +34,10 @@ func main() {
 			&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 			&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
+			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 		},
 		Action: func(c *cli.Context) error {
-			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"))
+			commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 			return nil
 		},
 		Commands: []*cli.Command{
@@ -50,9 +51,10 @@ func main() {
 					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 					&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
+					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"))
+					commands.Generate(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 					return nil
 				},
 			},

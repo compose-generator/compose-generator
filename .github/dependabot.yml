@@ -16,6 +16,18 @@ updates:
 
   # Docker image updates
   - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+  - package-ecosystem: docker
     directory: /predefined-templates/1_lamp
     schedule:
       interval: daily

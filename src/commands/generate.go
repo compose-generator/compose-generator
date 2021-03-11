@@ -19,7 +19,7 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Generate a docker compose configuration
-func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool) {
+func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
 	utils.ClearScreen()
 
 	// Execute SafetyFileChecks
@@ -45,7 +45,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 	// Predefined stack (default: yes)
 	usePredefinedStack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
 	if usePredefinedStack {
-		generateFromPredefinedTemplate(projectName, flagAdvanced, flagWithInstructions)
+		generateFromPredefinedTemplate(projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
 	} else {
 		generateFromScratch(projectName, flagAdvanced, flagForce)
 	}
@@ -58,7 +58,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagWithInstructions bool) {
+func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagWithInstructions bool,flagWithDockerfile bool) {
 	utils.ClearScreen()
 
 	// Load stacks from templates
@@ -111,6 +111,9 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	if flagWithInstructions {
 		os.Remove(dstPath + "/README.md")
 	}
+	if flagWithDockerfile {
+		os.Remove(dstPath + "/README.md")
+	}
 
 	err1 := copy.Copy(srcPath+"/docker-compose.yml", dstPath+"/docker-compose.yml")
 	err2 := copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
@@ -118,7 +121,11 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	if flagWithInstructions {
 		err3 = copy.Copy(srcPath+"/README.md", dstPath+"/README.md")
 	}
-	if err1 != nil || err2 != nil || err3 != nil {
+	var err4 error
+	if flagWithDockerfile {
+		err4 = copy.Copy(srcPath+"/Dockerfile", dstPath+"/Dockerfile")
+	}
+	if err1 != nil || err2 != nil || err3 != nil || err4 != nil {
 		utils.Error("Could not copy predefined template files.", true)
 	}
 
