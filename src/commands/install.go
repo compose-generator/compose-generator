@@ -16,6 +16,11 @@ import (
 
 // Install Docker and Docker Compose with a single command
 func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
+	// Check if Compose Generator runs in dockerized environment
+	if utils.IsDockerized() {
+		utils.Error("You are currently using the Docker container of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", true)
+	}
+
 	const WindowsInstallerURL = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
 
 	if runtime.GOOS == "windows" { // Running on windows
@@ -35,7 +40,7 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 		cmd.Stderr = os.Stderr
 		cmd.Run()
 		utils.Pel()
-	} else { // Running on linux
+	} else if runtime.GOOS == "linux" { // Running on linux
 		if utils.IsPrivileged() {
 			// Install lsb_release if not installed already
 			utils.ExecuteAndWait("apt-get", "update")
@@ -62,6 +67,8 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 			color.Red("Please execute this command with root privileges. The cli is not able to install Docker and Docker Compose without those privileges.")
 			return
 		}
+	} else {
+		utils.Error("Compose Generator does not support your host system yet, sorry for that.", true)
 	}
 
 	// Check if installation was successful
