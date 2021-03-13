@@ -52,7 +52,7 @@ nfpms:
   - id: publish
     maintainer: Marc Auberer <marc.auberer@chillibits.com>
     description: Easy to use cli to generate Docker Compose YAML configuration files.
-    homepage: https://www.marc-auberer.com
+    homepage: https://www.compose-generator.com
     license: Apache 2.0
     formats:
       - apk

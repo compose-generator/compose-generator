@@ -3,20 +3,13 @@
     "dir": "3_website",
     "questions": [
         {
-            "text": "On which port you want to expose your website?",
-            "type": 2,
-            "defaultValue": "80",
-            "envVar": "HOST_APP_PORT",
-            "advanced": true
-        },
-        {
-            "text": "TLS Certificate Domain:",
+            "text": "TLS Certificate Host (e.g. test.example.com):",
             "type": 2,
             "envVar": "DOMAIN_URL",
             "advanced": false
         },
         {
-            "text": "TLS Certificate E-Mail Adress:",
+            "text": "TLS Certificate E-Mail Adress (e.g. admin@example.com):",
             "type": 2,
             "envVar": "DOMAIN_EMAIL",
             "advanced": false

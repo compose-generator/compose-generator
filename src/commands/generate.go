@@ -58,7 +58,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagWithInstructions bool,flagWithDockerfile bool) {
+func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
 	utils.ClearScreen()
 
 	// Load stacks from templates
@@ -116,7 +116,10 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	}
 
 	err1 := copy.Copy(srcPath+"/docker-compose.yml", dstPath+"/docker-compose.yml")
-	err2 := copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
+	var err2 error
+	if utils.FileExists(srcPath + "/environment.env") {
+		err2 = copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
+	}
 	var err3 error
 	if flagWithInstructions {
 		err3 = copy.Copy(srcPath+"/README.md", dstPath+"/README.md")
@@ -157,19 +160,23 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	// Replace variables
 	fmt.Print("Applying customizations ...")
 	utils.ReplaceVarsInFile("./docker-compose.yml", envMap)
-	utils.ReplaceVarsInFile("./environment.env", envMap)
+	if utils.FileExists("./environment.env") {
+		utils.ReplaceVarsInFile("./environment.env", envMap)
+	}
 	utils.PrintDone()
 
-	// Generate secrets
-	fmt.Print("Generating secrets ...")
-	secretsMap := utils.GenerateSecrets("./environment.env", templateData[index].Secrets)
-	utils.PrintDone()
-	// Print secrets to console
-	utils.Pel()
-	utils.Pl("Following secrets were automatically generated:")
-	for key, secret := range secretsMap {
-		fmt.Print("   " + key + ": ")
-		color.Yellow(secret)
+	if utils.FileExists("./environment.env") {
+		// Generate secrets
+		fmt.Print("Generating secrets ...")
+		secretsMap := utils.GenerateSecrets("./environment.env", templateData[index].Secrets)
+		utils.PrintDone()
+		// Print secrets to console
+		utils.Pel()
+		utils.Pl("Following secrets were automatically generated:")
+		for key, secret := range secretsMap {
+			fmt.Print("   " + key + ": ")
+			color.Yellow(secret)
+		}
 	}
 }
 
