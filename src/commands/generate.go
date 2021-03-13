@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/fatih/color"
+	"github.com/go-playground/validator"
 	"github.com/otiai10/copy"
 	yaml "gopkg.in/yaml.v3"
 
@@ -89,20 +91,20 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 				envMap[q.EnvVar] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
 			case 2: // Text
 				if q.Validator != "" {
-					var validator survey.Validator
+					var customValidator survey.Validator
 					switch q.Validator {
-					case "no-spaces":
-						validator = utils.NoSpacesValidator
-					case "email":
-						validator = utils.EmailValidator
 					case "port":
-						validator = utils.PortValidator
-					case "hostname":
-						validator = utils.HostNameValidator
-					case "env-var-name":
-						validator = utils.EnvVarNameValidator
+						customValidator = utils.PortValidator
+					default:
+						customValidator = func(val interface{}) error {
+							validate := validator.New()
+							if validate.Var(val.(string), "required,"+q.Validator) != nil {
+								return errors.New("please provide a valid input")
+							}
+							return nil
+						}
 					}
-					envMap[q.EnvVar] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, validator)
+					envMap[q.EnvVar] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, customValidator)
 				} else {
 					envMap[q.EnvVar] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
 				}

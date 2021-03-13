@@ -1,15 +1,13 @@
 FROM alpine:3.13
-WORKDIR /compose-generator
+WORKDIR /cg/out
 
-COPY compose-generator ./compose-generator
-COPY predefined-templates/ predefined-templates/
+COPY compose-generator /cg/compose-generator
+COPY predefined-templates/ /cg/predefined-templates/
 
-ENV PATH="/compose-generator:${PATH}"
+ENV PATH="/cg:${PATH}"
 ENV TERM="xterm-256color"
 ENV COMPOSE_GENERATOR_DOCKERIZED=1
 
-RUN chmod +x compose-generator
-RUN mkdir out
+RUN chmod +x /cg/compose-generator
 RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
-RUN ln -s /compose-generator /cg
 ENTRYPOINT [ "compose-generator" ]

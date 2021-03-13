@@ -24,10 +24,11 @@ Saves the compose configuration in the current directory.
 ### Options
 You can apply following options to the `save` sub-command:
 
-| Option    | Short | Description                                                 |
-| --------- | ----- | ----------------------------------------------------------- |
-| `--force` | `-f`  | Skip safety checks and overwrite all files, that may exist. |
-| `--stash` | `-s`  | Remove configuration files after saving the template.       |
+| Option              | Short | Description                                                 |
+| ------------------- | ----- | ----------------------------------------------------------- |
+| `--force`           | `-f`  | Skip safety checks and overwrite all files, that may exist. |
+| `--stash`           | `-s`  | Remove configuration files after saving the template.       |
+| `--with-dockerfile` | `-w`  | Save also Dockerfile in the template.                       |
 
 ## Load template
 ### Description
@@ -48,6 +49,7 @@ Loads a compose configuration from a custom template.
 ### Options
 You can apply following options to the `load` sub-command:
 
-| Option    | Short | Description                                                 |
-| --------- | ----- | ----------------------------------------------------------- |
-| `--force` | `-f`  | Skip safety checks and overwrite all files, that may exist. |
+| Option              | Short | Description                                                 |
+| ------------------- | ----- | ----------------------------------------------------------- |
+| `--force`           | `-f`  | Skip safety checks and overwrite all files, that may exist. |
+| `--with-dockerfile` | `-w`  | Load Dockerfile from template (if exists)                   |

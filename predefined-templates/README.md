@@ -23,7 +23,7 @@ It consists of following parts:
 	- `text` - Question itself (keep it as short as possible).
 	- `type` - 1 = Yes/No question, 2 = Text question
 	- `defaultValue` - Default value of the question (Will be displayed in braces after the question)
-	- `validator` - Choose from `no-spaces`, `email`, `port`, `hostname` and `env-var-name` to validate the user input and print an error message if the validation fails
+	- `validator` - Validate the user input. All validators are listed in the section about [input validators](#input-validators).
 	- `var` - Name of the variable, which the answer of the question will be assigned to.
 	- `advanced` - false = show question always, true = show question only in advanced mode
 	- `withDockerfile` - false = show question always, true = show question only if the flag `--with-dockerfile` is set
@@ -72,3 +72,8 @@ services:
 
 ## README file ([example file](1_lamp/README.md))
 This file contains instructions about using the predefined template.
+
+## Input validators
+You have the option to validate the user input for questions. Compose Generator is able to use all validators from the [go-playground/validator library](https://github.com/go-playground/validator#baked-in-validations). Furthermore you can use the following additional validators:
+
+-	`port`: Requires an integer number between 0 and 65535

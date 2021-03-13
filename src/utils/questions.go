@@ -164,6 +164,7 @@ func Warning(description string) {
 
 func handleInterrupt(err error) {
 	if err == terminal.InterruptErr {
+		Pel()
 		os.Exit(0)
 	} else if err != nil {
 		panic(err)

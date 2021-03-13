@@ -11,9 +11,9 @@ services:
     networks:
       - ${{PROJECT_NAME_CONTAINER}}
     environment:
-      VIRTUAL_HOST: ${{DOMAIN_URL}}
-      LETSENCRYPT_HOST: ${{DOMAIN_URL}}
-      VIRTUAL_PORT: 443
+      - VIRTUAL_HOST=${{DOMAIN_URL}}
+      - LETSENCRYPT_HOST=${{DOMAIN_URL}}
+      - VIRTUAL_PORT=443
     depends_on:
       - proxy
 
@@ -49,8 +49,8 @@ services:
     networks:
       - ${{PROJECT_NAME_CONTAINER}}
     environment:
-      DEFAULT_EMAIL: ${{DOMAIN_EMAIL}}
-      NGINX_PROXY_CONTAINER: proxy
+      - DEFAULT_EMAIL=${{DOMAIN_EMAIL}}
+      - NGINX_PROXY_CONTAINER=proxy
     depends_on:
       - proxy
     
