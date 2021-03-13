@@ -5,6 +5,7 @@ import (
 	"os"
 
 	survey "github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/terminal"
 	"github.com/fatih/color"
 )
 
@@ -37,12 +38,18 @@ func Heading(text string) {
 	green.Println(text)
 }
 
+// SuccessMessage prints a success message to console
+func SuccessMessage(text string) {
+	green := color.New(color.FgGreen).Add(color.Italic)
+	green.Println(text)
+}
+
 // TextQuestion prints simple text question
 func TextQuestion(question string) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -54,7 +61,20 @@ func TextQuestionWithValidator(question string, fn survey.Validator) (result str
 		},
 		Validate: fn,
 	}
-	survey.Ask([]*survey.Question{prompt}, &result)
+	handleInterrupt(survey.Ask([]*survey.Question{prompt}, &result))
+	return
+}
+
+// TextQuestionWithDefaultAndValidator prints simple text question with a validation and default value
+func TextQuestionWithDefaultAndValidator(question string, defaultValue string, fn survey.Validator) (result string) {
+	prompt := &survey.Question{
+		Prompt: &survey.Input{
+			Message: question,
+			Default: defaultValue,
+		},
+		Validate: fn,
+	}
+	handleInterrupt(survey.Ask([]*survey.Question{prompt}, &result))
 	return
 }
 
@@ -64,7 +84,7 @@ func TextQuestionWithDefault(question string, defaultValue string) (result strin
 		Message: question,
 		Default: defaultValue,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -74,7 +94,7 @@ func TextQuestionWithSuggestions(question string, fn suggest) (result string) {
 		Message: question,
 		Suggest: fn,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -85,7 +105,7 @@ func TextQuestionWithDefaultAndSuggestions(question string, defaultValue string,
 		Default: defaultValue,
 		Suggest: fn,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -95,7 +115,7 @@ func YesNoQuestion(question string, defaultValue bool) (result bool) {
 		Message: question,
 		Default: defaultValue,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -105,7 +125,7 @@ func MenuQuestion(label string, items []string) (result string) {
 		Message: label,
 		Options: items,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -115,7 +135,7 @@ func MenuQuestionIndex(label string, items []string) (result int) {
 		Message: label,
 		Options: items,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -125,7 +145,7 @@ func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 		Message: label,
 		Options: items,
 	}
-	survey.AskOne(prompt, &result)
+	handleInterrupt(survey.AskOne(prompt, &result))
 	return
 }
 
@@ -140,4 +160,12 @@ func Error(description string, exit bool) {
 // Warning prints an warning message
 func Warning(description string) {
 	color.Red("Warning: " + description)
+}
+
+func handleInterrupt(err error) {
+	if err == terminal.InterruptErr {
+		os.Exit(0)
+	} else if err != nil {
+		panic(err)
+	}
 }

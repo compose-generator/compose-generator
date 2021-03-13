@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/fatih/color"
 	"github.com/otiai10/copy"
 	yaml "gopkg.in/yaml.v3"
@@ -53,6 +54,10 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		utils.DockerComposeUp(flagDetached)
+	} else {
+		// Print success message
+		utils.Pel()
+		utils.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
 	}
 }
 
@@ -83,22 +88,47 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 				defaultValue, _ := strconv.ParseBool(q.DefaultValue)
 				envMap[q.EnvVar] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
 			case 2: // Text
-				envMap[q.EnvVar] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
+				if q.Validator != "" {
+					var validator survey.Validator
+					switch q.Validator {
+					case "no-spaces":
+						validator = utils.NoSpacesValidator
+					case "email":
+						validator = utils.EmailValidator
+					case "port":
+						validator = utils.PortValidator
+					case "hostname":
+						validator = utils.HostNameValidator
+					case "env-var-name":
+						validator = utils.EnvVarNameValidator
+					}
+					envMap[q.EnvVar] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, validator)
+				} else {
+					envMap[q.EnvVar] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
+				}
 			}
 		} else {
 			envMap[q.EnvVar] = q.DefaultValue
 		}
 	}
-	utils.Pel()
+
 	// Ask for custom volume paths
 	volumesMap := make(map[string]string)
-	for _, v := range templateData[index].Volumes {
-		if !v.Advanced || (v.Advanced && flagAdvanced) {
-			envMap[v.EnvVar] = utils.TextQuestionWithDefault(v.Text, v.DefaultValue)
-		} else {
-			envMap[v.EnvVar] = v.DefaultValue
+	if len(templateData[index].Volumes) > 0 {
+		utils.Pel()
+		for _, v := range templateData[index].Volumes {
+			if !v.Advanced || (v.Advanced && flagAdvanced) {
+				if !v.WithDockerfile || (v.WithDockerfile && flagWithDockerfile) {
+					envMap[v.EnvVar] = utils.TextQuestionWithDefault(v.Text, v.DefaultValue)
+				} else {
+					envMap[v.EnvVar] = v.DefaultValue
+				}
+			} else {
+				envMap[v.EnvVar] = v.DefaultValue
+			}
+			volumesMap[v.DefaultValue] = envMap[v.EnvVar]
 		}
-		volumesMap[v.DefaultValue] = envMap[v.EnvVar]
+		utils.Pel()
 	}
 
 	// Copy template files
@@ -136,7 +166,6 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 
 	// Create volumes
 	fmt.Print("Creating volumes ...")
-
 	for src, dst := range volumesMap {
 		os.RemoveAll(dst)
 		src = srcPath + src[1:]
@@ -154,7 +183,6 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 			utils.Error("Could not copy volume files.", true)
 		}
 	}
-
 	utils.PrintDone()
 
 	// Replace variables

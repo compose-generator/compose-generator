@@ -5,14 +5,14 @@
         {
             "text": "TLS Certificate Host (e.g. test.example.com):",
             "type": 2,
-            "envVar": "DOMAIN_URL",
-            "advanced": false
+            "validator": "hostname",
+            "envVar": "DOMAIN_URL"
         },
         {
             "text": "TLS Certificate E-Mail Adress (e.g. admin@example.com):",
             "type": 2,
-            "envVar": "DOMAIN_EMAIL",
-            "advanced": false
+            "validator": "email",
+            "envVar": "DOMAIN_EMAIL"
         }
     ],
     "volumes": [

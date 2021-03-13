@@ -3,8 +3,12 @@
     "dir": "4_website_insecure",
     "questions": [
         {
-            "question": "",
-            "envVar": ""
+            "question": "On which port do you want to expose your website?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "envVar": "HOST_APP_PORT",
+            "advanced": true
         }
     ],
     "volumes": [],

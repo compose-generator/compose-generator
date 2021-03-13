@@ -6,41 +6,42 @@
             "text": "On which port you want to expose your app?",
             "type": 2,
             "defaultValue": "80",
-            "envVar": "HOST_APP_PORT",
-            "advanced": false
+            "validator": "port",
+            "envVar": "HOST_APP_PORT"
         },
         {
             "text": "On which port you want to expose MySQL?",
             "type": 2,
             "defaultValue": "3306",
-            "envVar": "HOST_MYSQL_PORT",
-            "advanced": false
+            "validator": "port",
+            "envVar": "HOST_MYSQL_PORT"
         },
         {
             "text": "On which port you want to expose PHPMyAdmin?",
             "type": 2,
             "defaultValue": "81",
-            "envVar": "HOST_PMA_PORT",
-            "advanced": false
+            "validator": "port",
+            "envVar": "HOST_PMA_PORT"
         },
         {
             "text": "How do you want to call the MySQL user for your application?",
             "type": 2,
             "defaultValue": "application",
-            "envVar": "MYSQL_USER",
-            "advanced": false
+            "validator": "no-spaces",
+            "envVar": "MYSQL_USER"
         },
         {
             "text": "How do you want to call the database for your application?",
             "type": 2,
             "defaultValue": "main",
-            "envVar": "MYSQL_DATABASE",
-            "advanced": false
+            "validator": "no-spaces",
+            "envVar": "MYSQL_DATABASE"
         },
         {
             "text": "Which MySQL version do you want to use?",
             "type": 2,
             "defaultValue": "latest",
+            "validator": "no-spaces",
             "envVar": "MYSQL_VERSION",
             "advanced": true
         },
@@ -48,6 +49,7 @@
             "text": "Which version of PHPMyAdmin do you want to use?",
             "type": 2,
             "defaultValue": "latest",
+            "validator": "no-spaces",
             "envVar": "PMA_VERSION",
             "advanced": true
         }
@@ -57,7 +59,7 @@
             "text": "Custom path for source directory?",
             "defaultValue": "./src",
             "envVar": "SOURCE_DIRECTORY",
-            "advanced": false
+            "withDockerfile": true
         },
         {
             "text": "Custom path for Apache logs volume?",
