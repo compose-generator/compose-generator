@@ -27,9 +27,9 @@ func Pel() {
 	fmt.Println()
 }
 
-// PrintDone prints 'done' in green to the console
-func PrintDone() {
-	color.Green(" done")
+// Done prints 'done' in green to the console
+func Done() {
+	color.Green("done")
 }
 
 // Heading prints heading to console

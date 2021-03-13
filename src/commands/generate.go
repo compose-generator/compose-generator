@@ -25,7 +25,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 	// Execute SafetyFileChecks
 	if !flagForce {
-		utils.ExecuteSafetyFileChecks()
+		utils.ExecuteSafetyFileChecks(flagWithInstructions, flagWithDockerfile)
 	}
 
 	// Welcome Message
@@ -132,7 +132,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	}
 
 	// Copy template files
-	fmt.Print("Copying predefined template ...")
+	fmt.Print("Copying predefined template ... ")
 	srcPath := utils.GetPredefinedTemplatesPath() + "/" + templateData[index].Dir
 	dstPath := "."
 
@@ -162,10 +162,10 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 		utils.Error("Could not copy predefined template files.", true)
 	}
 
-	utils.PrintDone()
+	utils.Done()
 
 	// Create volumes
-	fmt.Print("Creating volumes ...")
+	fmt.Print("Creating volumes ... ")
 	for src, dst := range volumesMap {
 		os.RemoveAll(dst)
 		src = srcPath + src[1:]
@@ -183,21 +183,21 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 			utils.Error("Could not copy volume files.", true)
 		}
 	}
-	utils.PrintDone()
+	utils.Done()
 
 	// Replace variables
-	fmt.Print("Applying customizations ...")
+	fmt.Print("Applying customizations ... ")
 	utils.ReplaceVarsInFile("./docker-compose.yml", envMap)
 	if utils.FileExists("./environment.env") {
 		utils.ReplaceVarsInFile("./environment.env", envMap)
 	}
-	utils.PrintDone()
+	utils.Done()
 
 	if utils.FileExists("./environment.env") {
 		// Generate secrets
-		fmt.Print("Generating secrets ...")
+		fmt.Print("Generating secrets ... ")
 		secretsMap := utils.GenerateSecrets("./environment.env", templateData[index].Secrets)
-		utils.PrintDone()
+		utils.Done()
 		// Print secrets to console
 		utils.Pel()
 		utils.Pl("Following secrets were automatically generated:")
@@ -240,18 +240,18 @@ func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) 
 	}
 
 	// Generate compose file
-	utils.P("Generating compose file ...")
+	utils.P("Generating compose file ... ")
 	composeFile := model.ComposeFile{}
 	composeFile.Version = "3.8"
 	composeFile.Services = services
-	utils.PrintDone()
+	utils.Done()
 
 	// Write to file
-	utils.P("Saving compose file ...")
+	utils.P("Saving compose file ... ")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 }

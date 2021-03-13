@@ -102,10 +102,11 @@ func main() {
 						Flags: []cli.Flag{
 							&cli.BoolFlag{Name: "stash", Aliases: []string{"s"}, Usage: "Move the regarding files, instead of copying them"},
 							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
+							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also save the Dockerfile in the template"},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							commands.SaveTemplate(name, c.Bool("stash"), c.Bool("force"))
+							commands.SaveTemplate(name, c.Bool("stash"), c.Bool("force"), c.Bool("with-dockerfile"))
 							return nil
 						},
 					},
@@ -115,10 +116,11 @@ func main() {
 						Usage:   "Load a custom template.",
 						Flags: []cli.Flag{
 							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
+							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also load the Dockerfile from the template (if existing)"},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							commands.LoadTemplate(name, c.Bool("force"))
+							commands.LoadTemplate(name, c.Bool("force"), c.Bool("with-dockerfile"))
 							return nil
 						},
 					},

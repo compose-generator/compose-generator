@@ -27,7 +27,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 		path = utils.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
 	}
 
-	fmt.Print("Parsing compose file ...")
+	fmt.Print("Parsing compose file ... ")
 	// Load compose file
 	jsonFile, err := os.Open(path)
 	if err != nil {
@@ -40,7 +40,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 	utils.Pel()
 
 	service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce, false)
@@ -53,18 +53,18 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	}
 
 	// Add service
-	fmt.Print("Adding service ...")
+	fmt.Print("Adding service ... ")
 	composeFile.Services[serviceName] = service
-	utils.PrintDone()
+	utils.Done()
 
 	// Write to file
-	fmt.Print("Saving compose file ...")
+	fmt.Print("Saving compose file ... ")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -173,7 +173,7 @@ func askForImage(build bool) string {
 }
 
 func searchRemoteImage(registry string, image string) {
-	fmt.Print("\nSearching image ...")
+	fmt.Print("\nSearching image ... ")
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err == nil {
 		color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")

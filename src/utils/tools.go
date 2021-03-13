@@ -17,13 +17,19 @@ import (
 )
 
 // ExecuteSafetyFileChecks checks if commonly used files are already existing and warns the user about it
-func ExecuteSafetyFileChecks() {
+func ExecuteSafetyFileChecks(flagWithInstructions bool, flagWithDockerfile bool) {
 	isNotSafe := FileExists("docker-compose.yml") || FileExists("environment.env")
 	if IsDockerized() {
 		isNotSafe = FileExists("/compose-generator/out/docker-compose.yml") || FileExists("/compose-generator/out/environment.env")
 	}
+	if flagWithInstructions && !isNotSafe {
+		isNotSafe = FileExists("README.md")
+	}
+	if flagWithDockerfile && !isNotSafe {
+		isNotSafe = FileExists("Dockerfile")
+	}
 	if isNotSafe {
-		Warning("docker-compose.yml or environment.env already exists. By continuing, you might overwrite those files.")
+		Warning("One or more output files already exist at the target path. By continuing, this files could potentally get overwritten.")
 		result := YesNoQuestion("Do you want to continue?", true)
 		if !result {
 			os.Exit(0)
@@ -187,7 +193,7 @@ func RemoveStringFromSlice(s []string, r string) []string {
 // DockerComposeUp executes 'docker compose up' in the current directory
 func DockerComposeUp(detached bool) {
 	Pel()
-	Pl("Running docker-compose ...")
+	Pl("Running docker-compose ... ")
 	Pel()
 
 	cmd := exec.Command("docker-compose", "up")

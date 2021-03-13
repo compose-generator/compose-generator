@@ -21,7 +21,7 @@ const (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // SaveTemplate copies the compose configuration in the current directory to a central templates directory
-func SaveTemplate(name string, flagStash bool, flagForce bool) {
+func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bool) {
 	if name == "" {
 		name = utils.TextQuestion("How would you like to call your template: ")
 	}
@@ -35,7 +35,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 		utils.Pel()
 	}
 	// Create metadata
-	fmt.Print("Creating metadata file ...")
+	fmt.Print("Creating metadata file ... ")
 	os.MkdirAll(targetDir, os.ModePerm)
 	var metadata model.TemplateMetadata
 	metadata.Label = name
@@ -45,13 +45,13 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	if err != nil {
 		utils.Error("Could not write metadata.", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 	// Save template
-	fmt.Print("Saving template ...")
+	fmt.Print("Saving template ... ")
 	var savedFiles []string
 	opt := copy.Options{
 		Skip: func(src string) (bool, error) {
-			conditionToSkip := !strings.HasSuffix(src, "docker-compose.yml") && !strings.HasSuffix(src, "environment.env") && !strings.Contains(src, "volumes")
+			conditionToSkip := !strings.HasSuffix(src, "docker-compose.yml") && !strings.HasSuffix(src, "environment.env") && (!withDockerfile || !strings.HasSuffix(src, "Dockerfile")) && !strings.Contains(src, "volumes")
 			if !conditionToSkip && flagStash {
 				savedFiles = append(savedFiles, src)
 			}
@@ -65,22 +65,22 @@ func SaveTemplate(name string, flagStash bool, flagForce bool) {
 	if err != nil {
 		utils.Error("Could not copy files. Is the permission granted?", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 	// Delete files from source dir if stash flag is set
 	if flagStash {
-		fmt.Print("Stashing ...")
+		fmt.Print("Stashing ... ")
 		for _, f := range savedFiles {
 			os.RemoveAll(f)
 		}
-		utils.PrintDone()
+		utils.Done()
 	}
 }
 
 // LoadTemplate copies a template from the central templates directory to the working directory
-func LoadTemplate(name string, flagForce bool) {
+func LoadTemplate(name string, flagForce bool, withDockerfile bool) {
 	// Execute safety checks
 	if !flagForce {
-		utils.ExecuteSafetyFileChecks()
+		utils.ExecuteSafetyFileChecks(false, withDockerfile)
 	}
 	// Check if the template exists
 	targetDir := utils.GetTemplatesPath() + "/" + name
@@ -100,17 +100,21 @@ func LoadTemplate(name string, flagForce bool) {
 		utils.Pel()
 	}
 	// Load template
-	fmt.Print("Loading template ...")
+	fmt.Print("Loading template ... ")
 	srcPath := targetDir
 	dstPath := "."
 
 	os.Remove(dstPath + "/docker-compose.yml")
 	os.Remove(dstPath + "/environment.env")
+	if withDockerfile {
+		os.Remove(dstPath + "/Dockerfile")
+	}
 	os.RemoveAll(dstPath + "/volumes")
 
 	opt := copy.Options{
 		Skip: func(src string) (bool, error) {
-			return strings.HasSuffix(src, "metadata.json"), nil
+			conditionToSkip := strings.HasSuffix(src, "metadata.json") || (!withDockerfile && strings.HasSuffix(src, "Dockerfile"))
+			return conditionToSkip, nil
 		},
 		OnDirExists: func(src string, dst string) copy.DirExistsAction {
 			return copy.Replace
@@ -120,5 +124,5 @@ func LoadTemplate(name string, flagForce bool) {
 	if err != nil {
 		utils.Error("Could not load template files.", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 }

@@ -23,7 +23,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		path = utils.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 	}
 
-	fmt.Print("Parsing compose file ...")
+	fmt.Print("Parsing compose file ... ")
 	// Load compose file
 	jsonFile, err := os.Open(path)
 	if err != nil {
@@ -36,7 +36,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 
 	// Ask for service
 	if len(serviceNames) == 0 {
@@ -56,7 +56,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 				reallyDeleteVolumes = utils.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
 			}
 			if reallyDeleteVolumes {
-				fmt.Print("Removing volumes of '" + serviceName + "' ...")
+				fmt.Print("Removing volumes of '" + serviceName + "' ... ")
 				volumes := composeFile.Services[serviceName].Volumes
 				for _, paths := range volumes {
 					path := paths
@@ -84,34 +84,32 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 						os.RemoveAll(path)
 					}
 				}
-				utils.PrintDone()
+				utils.Done()
 			}
 		}
 
 		// Remove service
-		fmt.Print("Removing service '" + serviceName + "' ...")
+		fmt.Print("Removing service '" + serviceName + "' ... ")
 		delete(composeFile.Services, serviceName) // Remove service itself
 		for k, s := range composeFile.Services {
 			s.DependsOn = utils.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
 			s.Links = utils.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
 			composeFile.Services[k] = s
 		}
-		utils.PrintDone()
+		utils.Done()
 	}
 
 	// Write to file
-	fmt.Print("Saving compose file ...")
+	fmt.Print("Saving compose file ... ")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
 	if err1 != nil || err2 != nil {
 		utils.Error("Could not write yaml to compose file.", true)
 	}
-	utils.PrintDone()
+	utils.Done()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		utils.DockerComposeUp(flagDetached)
 	}
 }
-
-// --------------------------------------------------------------- Private functions ---------------------------------------------------------------

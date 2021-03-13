@@ -25,15 +25,15 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 
 	if runtime.GOOS == "windows" { // Running on windows
 		// Download Docker installer
-		fmt.Print("Downloading Docker installer ...")
+		fmt.Print("Downloading Docker installer ... ")
 		filePath := os.TempDir() + "/DockerInstaller.exe"
 		err := utils.DownloadFile(WindowsInstallerURL, filePath)
 		if err != nil {
 			panic(err)
 		}
-		utils.PrintDone()
+		utils.Done()
 		// Run Docker installer
-		utils.Pl("Starting installation ...")
+		utils.Pl("Starting installation ... ")
 		utils.Pel()
 		cmd := exec.Command(filePath)
 		cmd.Stdout = os.Stdout
