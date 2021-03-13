@@ -193,6 +193,9 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	if utils.FileExists("./environment.env") {
 		utils.ReplaceVarsInFile("./environment.env", envMap)
 	}
+	if flagWithDockerfile && utils.FileExists("./Dockerfile") {
+		utils.ReplaceVarsInFile("./Dockerfile", envMap)
+	}
 	utils.Done()
 
 	if utils.FileExists("./environment.env") {
