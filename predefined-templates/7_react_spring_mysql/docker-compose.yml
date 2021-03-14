@@ -2,31 +2,44 @@
 version: '3.9'
 
 services:
-  # ${{PROJECT_NAME}} application server
-  webserver:
-    build: .
-    container_name: ${{PROJECT_NAME_CONTAINER}}-app
+  # ${{PROJECT_NAME}} React frontend
+  frontend:
+    build: frontend
+    container_name: ${{PROJECT_NAME_CONTAINER}}-frontend
     restart: always
-    ports:
-      - ${{HOST_APP_PORT}}:80
-    depends_on: 
-      - database
     volumes:
-      - ${{VOLUME_APACHE_LOGS}}:/var/log/apache2
-      - ${{VOLUME_APACHE_PHP_CONFIG}}:/usr/local/etc/php
+      - ./frontend/src:/code/src
+      - /project/node_modules
+    networks:
+      - react-spring
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+
+  # ${{PROJECT_NAME}} Spring backend
+  backend:
+    build: backend
+    container_name: ${{PROJECT_NAME_CONTAINER}}-backend
+    restart: always
+    networks:
+      - react-spring
+      - spring-mysql
     env_file:
       - environment.env
+    depends_on:
+      - database
 
   # MySQL database
   database:
     image: mysql:${{MYSQL_VERSION}}
     container_name: ${{PROJECT_NAME_CONTAINER}}-db
     restart: always
-    ports:
-      - ${{HOST_MYSQL_PORT}}:3306
-    volumes: 
+    volumes:
       - ${{VOLUME_MYSQL_DATA}}:/var/lib/mysql
       - ${{VOLUME_MYSQL_LOGS}}:/var/log/mysql
+    networks:
+      - spring-mysql
     env_file:
       - environment.env
 

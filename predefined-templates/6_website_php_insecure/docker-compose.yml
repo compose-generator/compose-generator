@@ -5,7 +5,7 @@ services:
   # ${{PROJECT_NAME}} webserver
   website:
     build: .
-    container_name: '${{PROJECT_NAME_CONTAINER}}-app'
-    restart: 'always'
+    container_name: ${{PROJECT_NAME_CONTAINER}}-app
+    restart: always
     ports:
       - ${{HOST_APP_PORT}}:80
