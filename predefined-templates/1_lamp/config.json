@@ -27,21 +27,21 @@
             "text": "How do you want to call the MySQL user for your application?",
             "type": 2,
             "defaultValue": "application",
-            "validator": "no-spaces",
+            "validator": "alphanum",
             "envVar": "MYSQL_USER"
         },
         {
             "text": "How do you want to call the database for your application?",
             "type": 2,
             "defaultValue": "main",
-            "validator": "no-spaces",
+            "validator": "alphanum",
             "envVar": "MYSQL_DATABASE"
         },
         {
             "text": "Which MySQL version do you want to use?",
             "type": 2,
             "defaultValue": "latest",
-            "validator": "no-spaces",
+            "validator": "alphanum",
             "envVar": "MYSQL_VERSION",
             "advanced": true
         },
@@ -49,7 +49,7 @@
             "text": "Which version of PHPMyAdmin do you want to use?",
             "type": 2,
             "defaultValue": "latest",
-            "validator": "no-spaces",
+            "validator": "alphanum",
             "envVar": "PMA_VERSION",
             "advanced": true
         }

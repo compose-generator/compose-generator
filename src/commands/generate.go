@@ -117,7 +117,6 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	// Ask for custom volume paths
 	volumesMap := make(map[string]string)
 	if len(templateData[index].Volumes) > 0 {
-		utils.Pel()
 		for _, v := range templateData[index].Volumes {
 			if !v.Advanced || (v.Advanced && flagAdvanced) {
 				if !v.WithDockerfile || (v.WithDockerfile && flagWithDockerfile) {
@@ -153,11 +152,11 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 		err2 = copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
 	}
 	var err3 error
-	if flagWithInstructions {
+	if flagWithInstructions && utils.FileExists(srcPath+"/README.md") {
 		err3 = copy.Copy(srcPath+"/README.md", dstPath+"/README.md")
 	}
 	var err4 error
-	if flagWithDockerfile {
+	if flagWithDockerfile && utils.FileExists(srcPath+"/Dockerfile") {
 		err4 = copy.Copy(srcPath+"/Dockerfile", dstPath+"/Dockerfile")
 	}
 	if err1 != nil || err2 != nil || err3 != nil || err4 != nil {

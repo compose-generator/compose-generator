@@ -1,7 +1,14 @@
 {
-    "label": "Common website (insecure)",
-    "dir": "4_website_insecure",
+    "label": "Common website with PHP support (insecure)",
+    "dir": "6_website_php_insecure",
     "questions": [
+        {
+            "text": "PHP version (e.g. 8 or 7.2):",
+            "type": 2,
+            "defaultValue": "8",
+            "validator": "numeric",
+            "envVar": "PHP_VERSION"
+        },
         {
             "question": "On which port do you want to expose your website?",
             "type": 2,

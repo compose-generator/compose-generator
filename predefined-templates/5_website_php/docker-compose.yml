@@ -1,0 +1,60 @@
+# Docker compose file for ${{PROJECT_NAME}}
+version: '3.9'
+
+services:
+  # ${{PROJECT_NAME}} website
+  website:
+    build: .
+    image: ${{PROJECT_NAME_CONTAINER}}-app
+    container_name: ${{PROJECT_NAME_CONTAINER}}-app
+    restart: always
+    networks:
+      - ${{PROJECT_NAME_CONTAINER}}
+    environment:
+      - VIRTUAL_HOST=${{DOMAIN_URL}}
+      - LETSENCRYPT_HOST=${{DOMAIN_URL}}
+      - VIRTUAL_PORT=443
+    depends_on:
+      - proxy
+
+  # Reverse Proxy
+  proxy:
+    image: jwilder/nginx-proxy:alpine
+    container_name: ${{PROJECT_NAME_CONTAINER}}-proxy
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ${{VOLUME_PROXY_CERTS}}:/etc/nginx/certs:ro
+      - ${{VOLUME_PROXY_CONFIG}}:/etc/nginx/conf.d
+      - ${{VOLUME_PROXY_VHOSTS}}:/etc/nginx/vhost.d:ro
+      - ${{VOLUME_PROXY_HTML}}:/usr/share/nginx/html
+    networks:
+      - ${{PROJECT_NAME_CONTAINER}}
+    ports:
+      - 80:80
+      - 443:443
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+
+  # LetsEncrypt plugin
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion:v1.13.1
+    container_name: ${{PROJECT_NAME_CONTAINER}}-letsencrypt
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${{VOLUME_PROXY_CERTS}}:/etc/nginx/certs
+      - ${{VOLUME_PROXY_VHOSTS}}:/etc/nginx/vhost.d
+      - ${{VOLUME_PROXY_HTML}}:/usr/share/nginx/html
+    networks:
+      - ${{PROJECT_NAME_CONTAINER}}
+    environment:
+      - DEFAULT_EMAIL=${{DOMAIN_EMAIL}}
+      - NGINX_PROXY_CONTAINER=proxy
+    depends_on:
+      - proxy
+    
+networks:
+  ${{PROJECT_NAME_CONTAINER}}:
+    ipam:
+      driver: default

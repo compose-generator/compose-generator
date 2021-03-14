@@ -128,7 +128,7 @@ $ compose-generator
 *Note for Windows users: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
 
 ```sh
-$ docker run --rm -it -v ${pwd}:/compose-generator/out chillibits/compose-generator
+$ docker run --rm -it -v ${pwd}:/cg/out chillibits/compose-generator
 ```
 
 ## Supported host systems & file downloads
