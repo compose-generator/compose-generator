@@ -246,7 +246,7 @@ func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) 
 	// Generate compose file
 	utils.P("Generating compose file ... ")
 	composeFile := model.ComposeFile{}
-	composeFile.Version = "3.8"
+	composeFile.Version = "3.9"
 	composeFile.Services = services
 	utils.Done()
 

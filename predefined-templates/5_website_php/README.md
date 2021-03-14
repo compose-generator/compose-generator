@@ -1,11 +1,12 @@
-# Common Website
-This is the manual document for the `3_website` stack.
+# Common Website with PHP support
+This is the manual document for the `5_website_php` stack.
 
 ## Description
-This stack deploys a one-container website with a secure wrapper. This means, that it has support for communication over HTTPS.
+This stack deploys a one-container website with php support and a secure wrapper. This means, that it has support for communication over HTTPS.
 
 ## Usage instructions
 In the most cases, you want the website to be visible to anyone on the global web. See below for the deployment in home or company networks without access to the web.
+Just deploy it with Docker Compose by executing `$ docker-compose up`. After that, your website should be exposed to port 443. The generation of the TLS certificate might take a while for the first start. Please watch the log output of `$ docker-compose up` for possible error messages.
 
 ### Custom routing
 You can customize your routing configuration by adding a vhost configuration file to the `proxy-vhosts` volume. This file must named like your domain (If your domain is `example.com`, the file has to be `example.com`). There you can define custom path configurations like this:
