@@ -10,7 +10,7 @@ class Restaurant extends Component {
                 <h2>{name}</h2>
                 <p>Address: {address}</p>
                 <p><em>Owner: {ownerLastName}, {ownerFirstName}</em></p>
-                <p>Prices from {priceRangeMin}$ to {priceRangeMax}</p>
+                <p>Prices from {priceRangeMin}$ to {priceRangeMax}$</p>
             </Fragment>
         )
     }

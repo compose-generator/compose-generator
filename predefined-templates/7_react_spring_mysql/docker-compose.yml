@@ -13,7 +13,7 @@ services:
     networks:
       - react-spring
     ports:
-      - 3000:3000
+      - ${{HOST_FRONTEND_PORT}}:80
     depends_on:
       - backend
 
@@ -25,6 +25,8 @@ services:
     networks:
       - react-spring
       - spring-mysql
+    ports:
+      - ${{HOST_BACKEND_PORT}}:8080
     env_file:
       - environment.env
     depends_on:
@@ -40,6 +42,7 @@ services:
       - ${{VOLUME_MYSQL_LOGS}}:/var/log/mysql
     networks:
       - spring-mysql
+      - mysql-phpmyadmin
     env_file:
       - environment.env
 
@@ -47,15 +50,18 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:${{PMA_VERSION}}
     container_name: ${{PROJECT_NAME_CONTAINER}}-phpmyadmin
-    depends_on:
-      - database
-    env_file:
-      - environment.env
+    networks:
+      - mysql-phpmyadmin
     ports:
       - ${{HOST_PMA_PORT}}:80
     volumes:
       - /sessions
+    env_file:
+      - environment.env
+    depends_on:
+      - database
 
 networks:
   react-spring: {}
   spring-mysql: {}
+  mysql-phpmyadmin: {}

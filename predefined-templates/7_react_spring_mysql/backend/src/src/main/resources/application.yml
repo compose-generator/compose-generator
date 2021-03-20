@@ -1,9 +1,12 @@
 spring:
   application.name: "Demo Application"
   datasource:
-    url: ${MYSQL_URL}
+    url: ${MYSQL_JDBC_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate.ddl-auto: update
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
 
 server:
   port: 8080

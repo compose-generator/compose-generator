@@ -25,7 +25,7 @@ class App extends Component {
   render() {
     return (
       <Fragment>
-        {this.state.loading && <p>Loading restaurants ...</p>}
+        {this.state.loading && <p><strong>Loading restaurants ...</strong></p>}
         {!this.state.loading && <Fragment>
           {this.state.restaurants.length > 0 && (<Fragment>
             {this.state.restaurants.map(restaurant => {

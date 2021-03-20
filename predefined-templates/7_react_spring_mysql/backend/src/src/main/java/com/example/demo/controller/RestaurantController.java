@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Restaurant;
 import com.example.demo.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,12 @@ public class RestaurantController {
     @Autowired
     private RestaurantRepository repository;
 
-    @GetMapping("/")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Restaurant> getAll() {
         return repository.findAll();
     }
 
-    @PostMapping("/")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Restaurant insertOne(@RequestBody Restaurant restaurant) {
         return repository.save(restaurant);
     }

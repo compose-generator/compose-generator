@@ -29,7 +29,14 @@
             "type": 2,
             "defaultValue": "80",
             "validator": "port",
-            "envVar": "HOST_APP_PORT"
+            "envVar": "HOST_FRONTEND_PORT"
+        },
+        {
+            "text": "On which port you want to expose your Spring API?",
+            "type": 2,
+            "defaultValue": "8080",
+            "validator": "port",
+            "envVar": "HOST_BACKEND_PORT"
         },
         {
             "text": "On which port you want to expose MySQL?",
