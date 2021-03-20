@@ -1,6 +1,28 @@
 {
     "label": "React / Spring / MySQL",
     "dir": "7_react_spring_mysql",
+    "files": [
+        {
+            "path": "docker-compose.yml",
+            "type": "compose"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        },
+        {
+            "path": "frontend/Dockerfile",
+            "type": "docker"
+        }
+    ],
     "questions": [
         {
             "text": "On which port you want to expose your app?",

@@ -1,6 +1,20 @@
 {
     "label": "Common website with PHP support",
     "dir": "5_website_php",
+    "files": [
+        {
+            "path": "docker-compose.yml",
+            "type": "compose"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "Dockerfile",
+            "type": "docker"
+        }
+    ],
     "questions": [
         {
             "text": "PHP version (e.g. 8 or 7.2):",

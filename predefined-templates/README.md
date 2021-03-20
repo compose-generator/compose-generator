@@ -19,6 +19,9 @@ It consists of following parts:
 
 - `label` - Specifies the display name of the template. This name is used in the list for template selection
 - `dir` - Name of the directory, the template is located in e.g.: `1_lamp`
+- `files` - List of important files the template comes with. For example the compose file or certain Dockerfiles.
+	- `path`: Path to a particular file
+	- `type`: Type of the file. Needs to be one of: `compose`, `env`, `docs`, `docker`
 - `questions` - Lists of quesions, which the cli will ask the user.
 	- `text` - Question itself (keep it as short as possible).
 	- `type` - 1 = Yes/No question, 2 = Text question

@@ -1,6 +1,20 @@
 {
     "label": "Common website with PHP support (insecure)",
     "dir": "6_website_php_insecure",
+    "files": [
+        {
+            "path": "docker-compose.yml",
+            "type": "compose"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "Dockerfile",
+            "type": "docker"
+        }
+    ],
     "questions": [
         {
             "text": "PHP version (e.g. 8 or 7.2):",

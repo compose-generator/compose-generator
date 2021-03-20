@@ -1,6 +1,20 @@
 {
     "label": "Common website",
     "dir": "3_website",
+    "files": [
+        {
+            "path": "docker-compose.yml",
+            "type": "compose"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "Dockerfile",
+            "type": "docker"
+        }
+    ],
     "questions": [
         {
             "text": "TLS Certificate Host (e.g. test.example.com):",

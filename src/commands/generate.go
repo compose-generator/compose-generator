@@ -137,32 +137,26 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	srcPath := utils.GetPredefinedTemplatesPath() + "/" + templateData[index].Dir
 	dstPath := "."
 
-	os.Remove(dstPath + "/docker-compose.yml")
-	os.Remove(dstPath + "/environment.env")
-	if flagWithInstructions {
-		os.Remove(dstPath + "/README.md")
+	var err error
+	for _, f := range templateData[index].Files {
+		switch f.Type {
+		case "compose", "env":
+			os.Remove(dstPath + "/" + f.Path)
+			if utils.FileExists(srcPath + "/" + f.Path) {
+				err = copy.Copy(srcPath+"/"+f.Path, dstPath+"/"+f.Path)
+			}
+		case "docs", "docker":
+			if (flagWithInstructions && f.Type == "docs") || (flagWithDockerfile && f.Type == "docker") {
+				os.Remove(dstPath + "/" + f.Path)
+				if utils.FileExists(srcPath + "/" + f.Path) {
+					err = copy.Copy(srcPath+"/"+f.Path, dstPath+"/"+f.Path)
+				}
+			}
+		}
 	}
-	if flagWithDockerfile {
-		os.Remove(dstPath + "/README.md")
-	}
-
-	err1 := copy.Copy(srcPath+"/docker-compose.yml", dstPath+"/docker-compose.yml")
-	var err2 error
-	if utils.FileExists(srcPath + "/environment.env") {
-		err2 = copy.Copy(srcPath+"/environment.env", dstPath+"/environment.env")
-	}
-	var err3 error
-	if flagWithInstructions && utils.FileExists(srcPath+"/README.md") {
-		err3 = copy.Copy(srcPath+"/README.md", dstPath+"/README.md")
-	}
-	var err4 error
-	if flagWithDockerfile && utils.FileExists(srcPath+"/Dockerfile") {
-		err4 = copy.Copy(srcPath+"/Dockerfile", dstPath+"/Dockerfile")
-	}
-	if err1 != nil || err2 != nil || err3 != nil || err4 != nil {
+	if err != nil {
 		utils.Error("Could not copy predefined template files.", true)
 	}
-
 	utils.Done()
 
 	// Create volumes

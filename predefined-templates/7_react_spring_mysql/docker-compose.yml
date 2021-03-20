@@ -55,3 +55,7 @@ services:
       - ${{HOST_PMA_PORT}}:80
     volumes:
       - /sessions
+
+networks:
+  react-spring: {}
+  spring-mysql: {}

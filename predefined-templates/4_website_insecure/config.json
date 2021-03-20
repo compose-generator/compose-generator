@@ -1,6 +1,20 @@
 {
     "label": "Common website (insecure)",
     "dir": "4_website_insecure",
+    "files": [
+        {
+            "path": "docker-compose.yml",
+            "type": "compose"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "Dockerfile",
+            "type": "docker"
+        }
+    ],
     "questions": [
         {
             "question": "On which port do you want to expose your website?",

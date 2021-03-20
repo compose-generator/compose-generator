@@ -1,6 +1,24 @@
 {
     "label": "LAMP (Linux, Apache, MySQL, PHP)",
     "dir": "1_lamp",
+    "files": [
+        {
+            "path": "docker-compose.yml",
+            "type": "compose"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "Dockerfile",
+            "type": "docker"
+        }
+    ],
     "questions": [
         {
             "text": "On which port you want to expose your app?",

@@ -4,9 +4,16 @@ package model
 type TemplateConfig struct {
 	Label     string
 	Dir       string
+	Files     []File
 	Questions []Question
 	Volumes   []Volume
 	Secrets   []Secret
+}
+
+// File represents an important file and holds the path and the type of this file
+type File struct {
+	Path string
+	Type    string
 }
 
 // Question represents the JSON structure of a question of a predefined template
