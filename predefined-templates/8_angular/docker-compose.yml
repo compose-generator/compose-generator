@@ -1,0 +1,11 @@
+# Docker compose file for ${{PROJECT_NAME}}
+version: '3.9'
+
+services:
+  # ${{PROJECT_NAME}} Angular frontend
+  frontend:
+    build: .
+    container_name: ${{PROJECT_NAME_CONTAINER}}-app
+    restart: always
+    ports:
+      - ${{HOST_APP_PORT}}:80
