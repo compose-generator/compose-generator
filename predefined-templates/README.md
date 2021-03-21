@@ -10,7 +10,8 @@
 │ └─...
 ├─config.json
 ├─docker-compose.yml
-└─environment.env
+├─environment.env
+└─README.md
 ```
 
 ## Configuration file ([example file](1_lamp/config.json))
