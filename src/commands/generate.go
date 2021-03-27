@@ -1,17 +1,11 @@
 package commands
 
 import (
-	"errors"
-	"fmt"
 	"io/ioutil"
-	"os"
 	"strconv"
 	"strings"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/fatih/color"
-	"github.com/go-playground/validator"
-	"github.com/otiai10/copy"
 	yaml "gopkg.in/yaml.v3"
 
 	"compose-generator/model"
@@ -69,13 +63,64 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	utils.ClearScreen()
 
 	// Load stacks from templates
-	templateData := parser.ParsePredefinedTemplates()
+	templateData := parser.ParsePredefinedServices()
 	// Predefined stack menu
-	var items []string
+	var proxy_items []string
+	var tls_helper_items []string
+	var frontend_items []string
+	var backend_items []string
+	var database_items []string
+	var db_admin_items []string
 	for _, t := range templateData {
-		items = append(items, t.Label)
+		switch t.Type {
+		case "proxy":
+			proxy_items = append(proxy_items, t.Label)
+		case "tls-helper":
+			tls_helper_items = append(tls_helper_items, t.Label)
+		case "frontend":
+			frontend_items = append(frontend_items, t.Label)
+		case "backend":
+			backend_items = append(backend_items, t.Label)
+		case "database":
+			database_items = append(database_items, t.Label)
+		case "db-admin-tool":
+			db_admin_items = append(db_admin_items, t.Label)
+		}
 	}
-	index := utils.MenuQuestionIndex("Predefined software stack templates", items)
+
+	// Ask for production environment
+	//production := utils.YesNoQuestion("Are you generating this for a production environment?", false)
+
+	// Ask for compose file version
+	compose_version := "3.9"
+	if flagAdvanced {
+		/*compose_version = */ utils.TextQuestionWithDefault("Docker compose file version:", compose_version)
+	}
+
+	// Ask for proxies
+	/*proxy_selection := */
+	utils.MenuQuestion("Which proxy do you want to use?", proxy_items)
+
+	// Ask for proxy tls helpers
+	/*tls_helper_selections := */
+	utils.MenuQuestion("Which TLS helper do you want to use?", tls_helper_items)
+
+	// Ask for frontends
+	/*frontend_selections := */
+	utils.MultiSelectMenuQuestion("Which frontend framework do you want to use?", frontend_items)
+
+	// Ask for backends
+	/*backend_selections := */
+	utils.MultiSelectMenuQuestion("Which backend framework do you want to use?", backend_items)
+
+	// Ask for databases
+	/*database_selections := */
+	utils.MultiSelectMenuQuestion("Which database engine do you want to use?", database_items)
+
+	// Ask for db admin tools
+	/*db_admin_selections := */
+	utils.MultiSelectMenuQuestion("Which database admin tool do you want to use?", db_admin_items)
+
 	utils.Pel()
 
 	// Ask configured questions to the user
@@ -83,7 +128,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 	envMap["PROJECT_NAME"] = projectName
 	envMap["PROJECT_NAME_CONTAINER"] = strings.ReplaceAll(strings.ToLower(projectName), " ", "-")
 
-	for _, q := range templateData[index].Questions {
+	/*for _, q := range templateData[index].Questions {
 		if !q.Advanced || (q.Advanced && flagAdvanced) {
 			switch q.Type {
 			case 1: // Yes/No
@@ -134,7 +179,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 
 	// Copy template files
 	fmt.Print("Copying predefined template ... ")
-	srcPath := utils.GetPredefinedTemplatesPath() + "/" + templateData[index].Dir
+	srcPath := utils.GetPredefinedServicesPath() + "/" + templateData[index].Dir
 	dstPath := "."
 
 	var err error
@@ -203,7 +248,7 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 			fmt.Print("   " + key + ": ")
 			color.Yellow(secret)
 		}
-	}
+	}*/
 }
 
 func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {

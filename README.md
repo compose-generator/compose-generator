@@ -148,7 +148,7 @@ There are also downloadable packages available for all supported platforms:
 | **Windows Portable (zip)**  | [download](../../releases/download/0.4.0/compose-generator_0.4.0_windows_amd64.zip)    | [download](../../releases/download/0.4.0/compose-generator_0.4.0_windows_386.zip)    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
 
 ## Contribute by providing predefined templates
-If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-templates/README.md). Fork the repository, create the template and open a pr.
+If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-services/README.md). Fork the repository, create the template and open a pr.
 The community is thankful for every predefined template!
 
 ## Contribute otherwise to the project

@@ -2,7 +2,7 @@ FROM alpine:3.13
 WORKDIR /cg/out
 
 COPY compose-generator /cg/compose-generator
-COPY predefined-templates/ /cg/predefined-templates/
+COPY predefined-services/ /cg/predefined-services/
 
 ENV PATH="/cg:${PATH}"
 ENV TERM="xterm-256color"

@@ -72,18 +72,18 @@ func GetTemplatesPath() string {
 	return "../templates" // Dev
 }
 
-// GetPredefinedTemplatesPath returns the path to the predefined templates directory
-func GetPredefinedTemplatesPath() string {
-	if FileExists("/usr/lib/compose-generator/predefined-templates") {
-		return "/usr/lib/compose-generator/predefined-templates" // Linux
+// GetPredefinedServicesPath returns the path to the predefined services directory
+func GetPredefinedServicesPath() string {
+	if FileExists("/usr/lib/compose-generator/predefined-services") {
+		return "/usr/lib/compose-generator/predefined-services" // Linux
 	}
 	filename, _ := osext.Executable()
 	filename = strings.ReplaceAll(filename, "\\", "/")
 	filename = filename[:strings.LastIndex(filename, "/")]
-	if FileExists(filename + "/predefined-templates") {
-		return filename + "/predefined-templates" // Windows + Docker
+	if FileExists(filename + "/predefined-services") {
+		return filename + "/predefined-services" // Windows + Docker
 	}
-	return "../predefined-templates" // Dev
+	return "../predefined-services" // Dev
 }
 
 // ReplaceVarsInFile replaces all variables in the stated file with the contents of the map

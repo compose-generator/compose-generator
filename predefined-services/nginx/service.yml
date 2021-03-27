@@ -1,0 +1,18 @@
+image: jwilder/nginx-proxy:alpine
+container_name: ${{PROJECT_NAME_CONTAINER}}-proxy
+restart: always
+volumes:
+  - /var/run/docker.sock:/tmp/docker.sock:ro
+  - ${{VOLUME_PROXY_CERTS}}:/etc/nginx/certs:ro
+  - ${{VOLUME_PROXY_CONFIG}}:/etc/nginx/conf.d
+  - ${{VOLUME_PROXY_VHOSTS}}:/etc/nginx/vhost.d:ro
+  - ${{VOLUME_PROXY_HTML}}:/usr/share/nginx/html
+networks:
+  - ${{PROJECT_NAME_CONTAINER}}
+ports:
+  - 80:80
+  - 443:443
+labels:
+#! if letsencrypt {
+#!   - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+#! }

@@ -1,0 +1,15 @@
+image: jrcs/letsencrypt-nginx-proxy-companion:v1.13.1
+container_name: ${{PROJECT_NAME_CONTAINER}}-letsencrypt
+restart: always
+volumes:
+  - /var/run/docker.sock:/var/run/docker.sock:ro
+  - ${{VOLUME_PROXY_CERTS}}:/etc/nginx/certs
+  - ${{VOLUME_PROXY_VHOSTS}}:/etc/nginx/vhost.d
+  - ${{VOLUME_PROXY_HTML}}:/usr/share/nginx/html
+networks:
+  - ${{PROJECT_NAME_CONTAINER}}
+environment:
+  - DEFAULT_EMAIL=${{DOMAIN_EMAIL}}
+  - NGINX_PROXY_CONTAINER=proxy
+depends_on:
+  - proxy

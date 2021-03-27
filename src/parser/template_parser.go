@@ -13,9 +13,9 @@ import (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// ParsePredefinedTemplates returns a list of all predefined templates
-func ParsePredefinedTemplates() (configs []model.TemplateConfig) {
-	templatesPath := utils.GetPredefinedTemplatesPath()
+// ParsePredefinedServices returns a list of all predefined templates
+func ParsePredefinedServices() (configs []model.TemplateConfig) {
+	templatesPath := utils.GetPredefinedServicesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
 		utils.Error("Internal error - could not load templates.", true)
