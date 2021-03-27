@@ -1,11 +1,15 @@
 package commands
 
 import (
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"strconv"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/fatih/color"
+	"github.com/go-playground/validator"
 	yaml "gopkg.in/yaml.v3"
 
 	"compose-generator/model"
@@ -64,69 +68,122 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 
 	// Load stacks from templates
 	templateData := parser.ParsePredefinedServices()
-	// Predefined stack menu
-	var proxy_items []string
-	var tls_helper_items []string
+
+	var frontend_templates []model.ServiceTemplateConfig
 	var frontend_items []string
+	var backend_templates []model.ServiceTemplateConfig
 	var backend_items []string
+	var database_templates []model.ServiceTemplateConfig
 	var database_items []string
+	var db_admin_templates []model.ServiceTemplateConfig
 	var db_admin_items []string
+	var proxy_templates []model.ServiceTemplateConfig
+	var proxy_items []string
+	var tls_helper_templates []model.ServiceTemplateConfig
+	var tls_helper_items []string
+
 	for _, t := range templateData {
 		switch t.Type {
-		case "proxy":
-			proxy_items = append(proxy_items, t.Label)
-		case "tls-helper":
-			tls_helper_items = append(tls_helper_items, t.Label)
 		case "frontend":
+			frontend_templates = append(frontend_templates, t)
 			frontend_items = append(frontend_items, t.Label)
 		case "backend":
+			backend_templates = append(backend_templates, t)
 			backend_items = append(backend_items, t.Label)
 		case "database":
+			database_templates = append(database_templates, t)
 			database_items = append(database_items, t.Label)
 		case "db-admin-tool":
+			db_admin_templates = append(db_admin_templates, t)
 			db_admin_items = append(db_admin_items, t.Label)
+		case "proxy":
+			proxy_templates = append(proxy_templates, t)
+			proxy_items = append(proxy_items, t.Label)
+		case "tls-helper":
+			tls_helper_templates = append(tls_helper_templates, t)
+			tls_helper_items = append(tls_helper_items, t.Label)
 		}
 	}
 
 	// Ask for production environment
-	//production := utils.YesNoQuestion("Are you generating this for a production environment?", false)
+	production := utils.YesNoQuestion("Are you generating this for a production environment?", false)
 
 	// Ask for compose file version
 	compose_version := "3.9"
 	if flagAdvanced {
-		/*compose_version = */ utils.TextQuestionWithDefault("Docker compose file version:", compose_version)
+		compose_version = utils.TextQuestionWithDefault("Docker compose file version:", compose_version)
 	}
 
-	// Ask for proxies
-	/*proxy_selection := */
-	utils.MenuQuestion("Which proxy do you want to use?", proxy_items)
+	// Initialize varMap
+	varMap := make(map[string]string)
+	varMap["PROJECT_NAME"] = projectName
+	varMap["PROJECT_NAME_CONTAINER"] = strings.ReplaceAll(strings.ToLower(projectName), " ", "-")
 
-	// Ask for proxy tls helpers
-	/*tls_helper_selections := */
-	utils.MenuQuestion("Which TLS helper do you want to use?", tls_helper_items)
+	// Initialize volumeMap
+	volumeMap := make(map[string]string)
 
 	// Ask for frontends
-	/*frontend_selections := */
-	utils.MultiSelectMenuQuestion("Which frontend framework do you want to use?", frontend_items)
-
-	// Ask for backends
-	/*backend_selections := */
-	utils.MultiSelectMenuQuestion("Which backend framework do you want to use?", backend_items)
-
-	// Ask for databases
-	/*database_selections := */
-	utils.MultiSelectMenuQuestion("Which database engine do you want to use?", database_items)
-
-	// Ask for db admin tools
-	/*db_admin_selections := */
-	utils.MultiSelectMenuQuestion("Which database admin tool do you want to use?", db_admin_items)
-
+	frontend_selections := utils.MultiSelectMenuQuestionIndex("Which frontend framework do you want to use?", frontend_items)
+	for _, index := range frontend_selections {
+		utils.Pel()
+		varMap = getVarMapFromQuestions(varMap, frontend_templates[index].Questions, flagAdvanced)
+		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, frontend_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
+	}
 	utils.Pel()
 
-	// Ask configured questions to the user
-	envMap := make(map[string]string)
-	envMap["PROJECT_NAME"] = projectName
-	envMap["PROJECT_NAME_CONTAINER"] = strings.ReplaceAll(strings.ToLower(projectName), " ", "-")
+	// Ask for backends
+	backend_selections := utils.MultiSelectMenuQuestionIndex("Which backend framework do you want to use?", backend_items)
+	for _, index := range backend_selections {
+		utils.Pel()
+		varMap = getVarMapFromQuestions(varMap, backend_templates[index].Questions, flagAdvanced)
+		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, backend_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
+	}
+	utils.Pel()
+
+	// Ask for databases
+	database_selections := utils.MultiSelectMenuQuestionIndex("Which database engine do you want to use?", database_items)
+	for _, index := range database_selections {
+		utils.Pel()
+		varMap = getVarMapFromQuestions(varMap, database_templates[index].Questions, flagAdvanced)
+		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, database_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
+	}
+	utils.Pel()
+
+	// Ask for db admin tools
+	db_admin_selections := utils.MultiSelectMenuQuestionIndex("Which database admin tool do you want to use?", db_admin_items)
+	for _, index := range db_admin_selections {
+		utils.Pel()
+		varMap = getVarMapFromQuestions(varMap, db_admin_templates[index].Questions, flagAdvanced)
+		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, db_admin_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
+	}
+	utils.Pel()
+
+	var proxy_selection int
+	var tls_helper_selection int
+	if production {
+		// Ask for proxies
+		proxy_selection = utils.MenuQuestionIndex("Which proxy do you want to use?", proxy_items)
+		utils.Pel()
+		varMap = getVarMapFromQuestions(varMap, proxy_templates[proxy_selection].Questions, flagAdvanced)
+		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, proxy_templates[proxy_selection].Volumes, flagAdvanced, flagWithDockerfile)
+		utils.Pel()
+
+		// Ask for proxy tls helpers
+		tls_helper_selection = utils.MenuQuestionIndex("Which TLS helper do you want to use?", tls_helper_items)
+		utils.Pel()
+		varMap = getVarMapFromQuestions(varMap, tls_helper_templates[tls_helper_selection].Questions, flagAdvanced)
+		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, tls_helper_templates[tls_helper_selection].Volumes, flagAdvanced, flagWithDockerfile)
+		utils.Pel()
+	}
+
+	// Test
+	for k, v := range varMap {
+		fmt.Printf("%s value is %v\n", k, v)
+	}
+	utils.Pel()
+	for k, v := range volumeMap {
+		fmt.Printf("%s value is %v\n", k, v)
+	}
 
 	/*for _, q := range templateData[index].Questions {
 		if !q.Advanced || (q.Advanced && flagAdvanced) {
@@ -249,6 +306,56 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 			color.Yellow(secret)
 		}
 	}*/
+}
+
+func getVarMapFromQuestions(varMap map[string]string, questions []model.Question, flagAdvanced bool) map[string]string {
+	for _, q := range questions {
+		if !q.Advanced || (q.Advanced && flagAdvanced) {
+			switch q.Type {
+			case 1: // Yes/No
+				defaultValue, _ := strconv.ParseBool(q.DefaultValue)
+				varMap[q.Variable] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
+			case 2: // Text
+				if q.Validator != "" {
+					var customValidator survey.Validator
+					switch q.Validator {
+					case "port":
+						customValidator = utils.PortValidator
+					default:
+						customValidator = func(val interface{}) error {
+							validate := validator.New()
+							if validate.Var(val.(string), "required,"+q.Validator) != nil {
+								return errors.New("please provide a valid input")
+							}
+							return nil
+						}
+					}
+					varMap[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, customValidator)
+				} else {
+					varMap[q.Variable] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
+				}
+			}
+		} else {
+			varMap[q.Variable] = q.DefaultValue
+		}
+	}
+	return varMap
+}
+
+func getVolumeMapFromVolumes(varMap map[string]string, volumeMap map[string]string, volumes []model.Volume, flagAdvanced bool, flagWithDockerfile bool) (map[string]string, map[string]string) {
+	for _, v := range volumes {
+		if !v.Advanced || (v.Advanced && flagAdvanced) {
+			if !v.WithDockerfile || (v.WithDockerfile && flagWithDockerfile) {
+				varMap[v.Variable] = utils.TextQuestionWithDefault(v.Text, v.DefaultValue)
+			} else {
+				varMap[v.Variable] = v.DefaultValue
+			}
+		} else {
+			varMap[v.Variable] = v.DefaultValue
+		}
+		volumeMap[v.DefaultValue] = varMap[v.Variable]
+	}
+	return varMap, volumeMap
 }
 
 func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {

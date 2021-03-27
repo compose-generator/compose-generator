@@ -123,7 +123,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 		if err != nil {
 			Error("Password generation failed.", true)
 		}
-		newContent = strings.ReplaceAll(newContent, "${{"+s.Var+"}}", res)
+		newContent = strings.ReplaceAll(newContent, "${{"+s.Variable+"}}", res)
 		secretsMap[s.Name] = res
 	}
 

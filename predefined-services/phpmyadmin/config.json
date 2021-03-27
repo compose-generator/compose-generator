@@ -23,14 +23,14 @@
             "type": 2,
             "defaultValue": "81",
             "validator": "port",
-            "envVar": "HOST_PMA_PORT"
+            "variable": "HOST_PMA_PORT"
         },
         {
             "text": "Which version of PHPMyAdmin do you want to use?",
             "type": 2,
             "defaultValue": "latest",
             "validator": "alphanum",
-            "envVar": "PMA_VERSION",
+            "variable": "PMA_VERSION",
             "advanced": true
         }
     ]

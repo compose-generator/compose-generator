@@ -27,14 +27,14 @@
             "type": 2,
             "defaultValue": "8080",
             "validator": "port",
-            "envVar": "HOST_BACKEND_PORT"
+            "variable": "HOST_BACKEND_PORT"
         }
     ],
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
             "defaultValue": "./backend/src",
-            "envVar": "SOURCE_DIRECTORY_BACKEND",
+            "variable": "SOURCE_DIRECTORY_BACKEND",
             "withDockerfile": true
         }
     ]

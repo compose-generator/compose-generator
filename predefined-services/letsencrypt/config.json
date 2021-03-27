@@ -18,38 +18,38 @@
             "text": "TLS Certificate Host (e.g. test.example.com):",
             "type": 2,
             "validator": "hostname",
-            "var": "DOMAIN_URL"
+            "variable": "DOMAIN_URL"
         },
         {
             "text": "TLS Certificate E-Mail Adress (e.g. admin@example.com):",
             "type": 2,
             "validator": "email",
-            "var": "DOMAIN_EMAIL"
+            "variable": "DOMAIN_EMAIL"
         }
     ],
     "volumes": [
         {
             "text": "Custom path for proxy config volume?",
             "defaultValue": "./volumes/proxy-config",
-            "var": "VOLUME_PROXY_CONFIG",
+            "variable": "VOLUME_PROXY_CONFIG",
             "advanced": true
         },
         {
             "text": "Custom path for proxy certificates volume?",
             "defaultValue": "./volumes/proxy-certs",
-            "var": "VOLUME_PROXY_CERTS",
+            "variable": "VOLUME_PROXY_CERTS",
             "advanced": true
         },
         {
             "text": "Custom path for proxy virtual hosts volume?",
             "defaultValue": "./volumes/proxy-vhosts",
-            "var": "VOLUME_PROXY_VHOSTS",
+            "variable": "VOLUME_PROXY_VHOSTS",
             "advanced": true
         },
         {
             "text": "Custom path for proxy HTML volume?",
             "defaultValue": "./volumes/proxy-html",
-            "var": "VOLUME_PROXY_HTML",
+            "variable": "VOLUME_PROXY_HTML",
             "advanced": true
         }
     ]

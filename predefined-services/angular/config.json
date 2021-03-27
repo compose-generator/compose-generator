@@ -23,14 +23,14 @@
             "type": 2,
             "defaultValue": "80",
             "validator": "port",
-            "envVar": "HOST_APP_PORT"
+            "variable": "HOST_APP_PORT"
         }
     ],
     "volumes": [
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./src",
-            "envVar": "SOURCE_DIRECTORY",
+            "variable": "SOURCE_DIRECTORY",
             "withDockerfile": true
         }
     ]

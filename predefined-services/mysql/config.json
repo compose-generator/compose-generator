@@ -23,28 +23,28 @@
             "type": 2,
             "defaultValue": "3306",
             "validator": "port",
-            "envVar": "HOST_MYSQL_PORT"
+            "variable": "HOST_MYSQL_PORT"
         },
         {
             "text": "How do you want to call the MySQL user for your application?",
             "type": 2,
             "defaultValue": "application",
             "validator": "alphanum",
-            "envVar": "MYSQL_USER"
+            "variable": "MYSQL_USER"
         },
         {
             "text": "How do you want to call the database for your application?",
             "type": 2,
             "defaultValue": "main",
             "validator": "alphanum",
-            "envVar": "MYSQL_DATABASE"
+            "variable": "MYSQL_DATABASE"
         },
         {
             "text": "Which MySQL version do you want to use?",
             "type": 2,
             "defaultValue": "latest",
             "validator": "alphanum",
-            "envVar": "MYSQL_VERSION",
+            "variable": "MYSQL_VERSION",
             "advanced": true
         }
     ],
@@ -52,25 +52,25 @@
         {
             "text": "Custom path for MySQL data volume?",
             "defaultValue": "./volumes/mysql-data",
-            "envVar": "VOLUME_MYSQL_DATA",
+            "variable": "VOLUME_MYSQL_DATA",
             "advanced": true
         },
         {
             "text": "Custom path for MySQL logs volume?",
             "defaultValue": "./volumes/mysql-logs",
-            "envVar": "VOLUME_MYSQL_LOGS",
+            "variable": "VOLUME_MYSQL_LOGS",
             "advanced": true
         }
     ],
     "secrets": [
         {
             "name": "MySQL password for user 'root'",
-            "var": "_PW_MYSQL_ROOT",
+            "variable": "_PW_MYSQL_ROOT",
             "length": 50
         },
         {
             "name": "MySQL password for the application user",
-            "var": "_PW_MYSQL_USER",
+            "variable": "_PW_MYSQL_USER",
             "length": 30
         }
     ]

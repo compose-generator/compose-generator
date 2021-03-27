@@ -129,7 +129,7 @@ func MenuQuestion(label string, items []string) (result string) {
 	return
 }
 
-// MenuQuestionIndex prints a selection of predefined items and return the selected index
+// MenuQuestionIndex prints a selection of predefined items and returns the selected index
 func MenuQuestionIndex(label string, items []string) (result int) {
 	prompt := &survey.Select{
 		Message: label,
@@ -141,6 +141,16 @@ func MenuQuestionIndex(label string, items []string) (result int) {
 
 // MultiSelectMenuQuestion prints a multi selection of predefined items
 func MultiSelectMenuQuestion(label string, items []string) (result []string) {
+	prompt := &survey.MultiSelect{
+		Message: label,
+		Options: items,
+	}
+	handleInterrupt(survey.AskOne(prompt, &result))
+	return
+}
+
+// MultiSelectMenuQuestionIndex prints a multi selection of predefined items and returns the selected indices
+func MultiSelectMenuQuestionIndex(label string, items []string) (result []int) {
 	prompt := &survey.MultiSelect{
 		Message: label,
 		Options: items,

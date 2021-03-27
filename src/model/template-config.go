@@ -24,7 +24,7 @@ type Question struct {
 	Type           int // 1 = Yes/No; 2 = Text
 	DefaultValue   string
 	Validator      string
-	Var            string
+	Variable       string
 	Advanced       bool
 	WithDockerfile bool
 }
@@ -33,14 +33,14 @@ type Question struct {
 type Volume struct {
 	Text           string
 	DefaultValue   string
-	Var            string
+	Variable       string
 	Advanced       bool
 	WithDockerfile bool
 }
 
 // Secret represents the JSON structure of a secret of a predefined template
 type Secret struct {
-	Name   string
-	Var    string
-	Length int
+	Name     string
+	Variable string
+	Length   int
 }
