@@ -3,14 +3,11 @@ package commands
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"strconv"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/fatih/color"
 	"github.com/go-playground/validator"
-	yaml "gopkg.in/yaml.v3"
 
 	"compose-generator/model"
 	"compose-generator/parser"
@@ -44,12 +41,13 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 	//utils.Pl(dockerSwarm)
 
 	// Predefined stack (default: yes)
-	usePredefinedStack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
+	/*usePredefinedStack := utils.YesNoQuestion("Do you want to use a predefined stack?", true)
 	if usePredefinedStack {
 		generateFromPredefinedTemplate(projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
 	} else {
 		generateFromScratch(projectName, flagAdvanced, flagForce)
-	}
+	}*/
+	generateDynamicStack(projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -63,7 +61,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
+func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
 	utils.ClearScreen()
 
 	// Load stacks from templates
@@ -176,14 +174,12 @@ func generateFromPredefinedTemplate(projectName string, flagAdvanced bool, flagW
 		utils.Pel()
 	}
 
-	// Test
-	for k, v := range varMap {
-		fmt.Printf("%s value is %v\n", k, v)
-	}
-	utils.Pel()
-	for k, v := range volumeMap {
-		fmt.Printf("%s value is %v\n", k, v)
-	}
+	// Generate docker-compose.yml
+	fmt.Print("Generating compose file ... ")
+	var compose_file model.ComposeFile
+	compose_file.Version = compose_version
+
+	utils.Done()
 
 	/*for _, q := range templateData[index].Questions {
 		if !q.Advanced || (q.Advanced && flagAdvanced) {
@@ -358,7 +354,7 @@ func getVolumeMapFromVolumes(varMap map[string]string, volumeMap map[string]stri
 	return varMap, volumeMap
 }
 
-func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {
+/*func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) {
 	utils.ClearScreen()
 
 	// Create custom stack
@@ -404,4 +400,4 @@ func generateFromScratch(projectName string, flagAdvanced bool, flagForce bool) 
 		utils.Error("Could not write yaml to compose file.", true)
 	}
 	utils.Done()
-}
+}*/
