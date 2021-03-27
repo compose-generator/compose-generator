@@ -1,25 +1,27 @@
-# Predefined stack templates
+# Predefined service templates
 
-## Stack template structure
+## Service template structure
 ```
-<no>_<template-name>
+<template-name>
 ├─volumes
 │ ├─volume1
 │ ├─volume2
 │ ├─volume3
 │ └─...
 ├─config.json
-├─docker-compose.yml
+├─service.yml
 ├─environment.env
 └─README.md
 ```
 
-## Configuration file ([example file](1_lamp/config.json))
+## Configuration file ([example file](angular/config.json))
 A template must contain a file called `config.json`, which holds metadata about the template.<br>
 It consists of following parts:
 
 - `label` - Specifies the display name of the template. This name is used in the list for template selection
 - `dir` - Name of the directory, the template is located in e.g.: `1_lamp`
+- `type` - Type of the service. One of: `proxy`, `tls-helper`, `frontend`, `backend`, `database` or `db-admin-tool`
+- `preselected` - Conditional string which defines, whether a service is initially selected in the list or not.
 - `files` - List of important files the template comes with. For example the compose file or certain Dockerfiles.
 	- `path`: Path to a particular file
 	- `type`: Type of the file. Needs to be one of: `compose`, `env`, `docs`, `docker`
@@ -42,8 +44,8 @@ It consists of following parts:
 	- `var` - Name of the variable, which the generated password will be assigned to (Must start with an underscore).
 	- `length` - Length of the secret in characters
 
-## Compose file ([example file](1_lamp/docker-compose.yml))
-A template also must contain the main compose file `docker-compose.yml`, which contains the container configuration for the stack.<br>
+## Service file ([example file](angular/service.yml))
+A template also must contain the main service template file `service.yml`, which contains the container configuration for the stack.<br>
 Within the configuration, you can make use of the defined variables in the configuration file with doubled curly braces and a leading dollar sign like so: `${{VARIABLE_NAME}}`.<br>
 An example:
 
@@ -61,7 +63,10 @@ There are two predefined variables, which the cli will provide:
 
 *Note: This configuration will use an environment variable from the host system: `${VARIABLE_NAME}`. Don't confuse the notations*
 
-## Environment file ([example file](1_lamp/environment.env))
+### Use of conditional sections
+*To be extended ...*
+
+## Environment file ([example file](angular/environment.env))
 This file consists of key-value pares, and is not mandatory and should only be used for secrets, usernames, configurable paths, urls, etc.
 The `environment.env` file is the only one where the secret variables (the ones starting with an underscore) from the configuration file will be applied by the cli.<br>
 The environment file can be attached to a container by including it into the compose file like this:
@@ -74,7 +79,7 @@ services:
 ...
 ```
 
-## README file ([example file](1_lamp/README.md))
+## README file ([example file](angular/README.md))
 This file contains instructions about using the predefined template.
 
 ## Input validators

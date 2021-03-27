@@ -1,7 +1,7 @@
 package model
 
-// TemplateConfig represents the JSON structure of predefined template configuration file
-type TemplateConfig struct {
+// ServiceTemplateConfig represents the JSON structure of predefined template configuration file
+type ServiceTemplateConfig struct {
 	Label       string
 	Dir         string
 	Type        string

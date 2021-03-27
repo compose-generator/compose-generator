@@ -1,0 +1,41 @@
+{
+    "label": "Spring",
+    "dir": "spring",
+    "type": "backend",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Spring API?",
+            "type": 2,
+            "defaultValue": "8080",
+            "validator": "port",
+            "envVar": "HOST_BACKEND_PORT"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend/src",
+            "envVar": "SOURCE_DIRECTORY_BACKEND",
+            "withDockerfile": true
+        }
+    ]
+}

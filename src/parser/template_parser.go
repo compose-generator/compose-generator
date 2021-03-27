@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"compose-generator/model"
 	"compose-generator/utils"
@@ -14,13 +13,13 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // ParsePredefinedServices returns a list of all predefined templates
-func ParsePredefinedServices() (configs []model.TemplateConfig) {
+func ParsePredefinedServices() (configs []model.ServiceTemplateConfig) {
 	templatesPath := utils.GetPredefinedServicesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
-		utils.Error("Internal error - could not load templates.", true)
+		utils.Error("Internal error - could not load service templates.", true)
 	}
-	filterFunc := func(s string) bool { return strings.Contains(s, "_") && !strings.Contains(s, ".") }
+	filterFunc := func(s string) bool { return s != "README.md" }
 	fileNames := filterFilenames(files, filterFunc)
 
 	for _, f := range fileNames {
@@ -51,7 +50,7 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func getConfigFromFile(dirPath string) (config model.TemplateConfig) {
+func getConfigFromFile(dirPath string) (config model.ServiceTemplateConfig) {
 	// Read JSON file
 	jsonFile, err := os.Open(dirPath + "/config.json")
 	if err != nil {

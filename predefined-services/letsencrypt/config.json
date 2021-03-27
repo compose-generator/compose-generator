@@ -2,7 +2,7 @@
     "label": "Lets Encrypt Companion",
     "dir": "letsencrypt",
     "type": "tls-helper",
-    "preselected": true,
+    "preselected": "true",
     "files": [
         {
             "path": "service.yml",

@@ -2,7 +2,7 @@
     "label": "Nginx Reverse Proxy",
     "dir": "nginx",
     "type": "proxy",
-    "preselected": true,
+    "preselected": "true",
     "files": [
         {
             "path": "service.yml",
