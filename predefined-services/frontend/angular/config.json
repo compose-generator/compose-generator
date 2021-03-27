@@ -27,7 +27,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./src",
+            "defaultValue": "./frontend/src",
             "variable": "SOURCE_DIRECTORY",
             "withDockerfile": true
         }

@@ -1,0 +1,18 @@
+build: backend
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend
+restart: always
+networks:
+#! if frontend {
+#!  - frontend-backend
+#! }
+#! if database {
+#!  - backend-database
+#! }
+ports:
+  - ${{HOST_BACKEND_PORT}}:8080
+env_file:
+  - environment.env
+depends_on:
+#! if database {
+#!  - database
+#! }
