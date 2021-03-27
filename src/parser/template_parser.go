@@ -13,20 +13,33 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // ParsePredefinedServices returns a list of all predefined templates
-func ParsePredefinedServices() (configs []model.ServiceTemplateConfig) {
+func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 	templatesPath := utils.GetPredefinedServicesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
 		utils.Error("Internal error - could not load service templates.", true)
 	}
 	filterFunc := func(s string) bool { return s != "README.md" }
-	fileNames := filterFilenames(files, filterFunc)
 
-	for _, f := range fileNames {
-		config := getConfigFromFile(filepath.Join(templatesPath, f))
-		configs = append(configs, config)
+	configs := make(map[string][]model.ServiceTemplateConfig)
+	for _, templateType := range filterFilenames(files, filterFunc) {
+		files, err := ioutil.ReadDir(filepath.Join(templatesPath, templateType))
+		if err != nil {
+			utils.Error("Internal error - could not load service templates.", true)
+		}
+		for _, f := range filterFilenames(files, filterFunc) {
+			templatePath := filepath.Join(templatesPath, templateType, f)
+			config := getConfigFromFile(templatePath)
+			config.Type = templateType
+			config.Dir = templatePath
+			if configs[templateType] != nil {
+				configs[templateType] = append(configs[templateType], config)
+			} else {
+				configs[templateType] = []model.ServiceTemplateConfig{config}
+			}
+		}
 	}
-	return
+	return configs
 }
 
 // ParseTemplates returns a list of all custom templates
@@ -44,6 +57,14 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	for _, f := range fileNames {
 		metadata := getMetadataFromFile(filepath.Join(templatesPath, f))
 		metadatas = append(metadatas, metadata)
+	}
+	return
+}
+
+// TemplateListToTemplateNameList converts a list of service templates to a list of labels
+func TemplateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
+	for _, t := range templates {
+		labels = append(labels, t.Label)
 	}
 	return
 }

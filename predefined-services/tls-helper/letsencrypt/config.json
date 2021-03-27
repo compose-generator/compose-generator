@@ -1,7 +1,5 @@
 {
-    "label": "Nginx Reverse Proxy",
-    "dir": "nginx",
-    "type": "proxy",
+    "label": "Lets Encrypt Companion",
     "preselected": "true",
     "files": [
         {
@@ -11,6 +9,20 @@
         {
             "path": "README.md",
             "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "TLS Certificate Host (e.g. test.example.com):",
+            "type": 2,
+            "validator": "hostname",
+            "variable": "DOMAIN_URL"
+        },
+        {
+            "text": "TLS Certificate E-Mail Adress (e.g. admin@example.com):",
+            "type": 2,
+            "validator": "email",
+            "variable": "DOMAIN_EMAIL"
         }
     ],
     "volumes": [

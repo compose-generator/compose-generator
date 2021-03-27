@@ -1,7 +1,5 @@
 {
     "label": "Spring",
-    "dir": "spring",
-    "type": "backend",
     "preselected": "false",
     "files": [
         {

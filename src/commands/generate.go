@@ -3,11 +3,16 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/go-playground/validator"
+	"github.com/otiai10/copy"
+	yaml "gopkg.in/yaml.v3"
 
 	"compose-generator/model"
 	"compose-generator/parser"
@@ -67,44 +72,8 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	// Load stacks from templates
 	templateData := parser.ParsePredefinedServices()
 
-	var frontend_templates []model.ServiceTemplateConfig
-	var frontend_items []string
-	var backend_templates []model.ServiceTemplateConfig
-	var backend_items []string
-	var database_templates []model.ServiceTemplateConfig
-	var database_items []string
-	var db_admin_templates []model.ServiceTemplateConfig
-	var db_admin_items []string
-	var proxy_templates []model.ServiceTemplateConfig
-	var proxy_items []string
-	var tls_helper_templates []model.ServiceTemplateConfig
-	var tls_helper_items []string
-
-	for _, t := range templateData {
-		switch t.Type {
-		case "frontend":
-			frontend_templates = append(frontend_templates, t)
-			frontend_items = append(frontend_items, t.Label)
-		case "backend":
-			backend_templates = append(backend_templates, t)
-			backend_items = append(backend_items, t.Label)
-		case "database":
-			database_templates = append(database_templates, t)
-			database_items = append(database_items, t.Label)
-		case "db-admin-tool":
-			db_admin_templates = append(db_admin_templates, t)
-			db_admin_items = append(db_admin_items, t.Label)
-		case "proxy":
-			proxy_templates = append(proxy_templates, t)
-			proxy_items = append(proxy_items, t.Label)
-		case "tls-helper":
-			tls_helper_templates = append(tls_helper_templates, t)
-			tls_helper_items = append(tls_helper_items, t.Label)
-		}
-	}
-
-	// Ask for production environment
-	production := utils.YesNoQuestion("Are you generating this for a production environment?", false)
+	// Ask for production
+	alsoProduction := utils.YesNoQuestion("Also generate production configuration?", false)
 
 	// Ask for compose file version
 	compose_version := "3.9"
@@ -112,73 +81,118 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 		compose_version = utils.TextQuestionWithDefault("Docker compose file version:", compose_version)
 	}
 
-	// Initialize varMap
+	// Initialize varMap and volumeMap
 	varMap := make(map[string]string)
 	varMap["PROJECT_NAME"] = projectName
 	varMap["PROJECT_NAME_CONTAINER"] = strings.ReplaceAll(strings.ToLower(projectName), " ", "-")
-
-	// Initialize volumeMap
 	volumeMap := make(map[string]string)
 
 	// Ask for frontends
-	frontend_selections := utils.MultiSelectMenuQuestionIndex("Which frontend framework do you want to use?", frontend_items)
-	for _, index := range frontend_selections {
-		utils.Pel()
-		varMap = getVarMapFromQuestions(varMap, frontend_templates[index].Questions, flagAdvanced)
-		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, frontend_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
-	}
-	utils.Pel()
+	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for backends
-	backend_selections := utils.MultiSelectMenuQuestionIndex("Which backend framework do you want to use?", backend_items)
-	for _, index := range backend_selections {
-		utils.Pel()
-		varMap = getVarMapFromQuestions(varMap, backend_templates[index].Questions, flagAdvanced)
-		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, backend_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
-	}
-	utils.Pel()
+	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for databases
-	database_selections := utils.MultiSelectMenuQuestionIndex("Which database engine do you want to use?", database_items)
-	for _, index := range database_selections {
-		utils.Pel()
-		varMap = getVarMapFromQuestions(varMap, database_templates[index].Questions, flagAdvanced)
-		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, database_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
-	}
-	utils.Pel()
+	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for db admin tools
-	db_admin_selections := utils.MultiSelectMenuQuestionIndex("Which database admin tool do you want to use?", db_admin_items)
-	for _, index := range db_admin_selections {
-		utils.Pel()
-		varMap = getVarMapFromQuestions(varMap, db_admin_templates[index].Questions, flagAdvanced)
-		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, db_admin_templates[index].Volumes, flagAdvanced, flagWithDockerfile)
-	}
-	utils.Pel()
+	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
 
-	var proxy_selection int
-	var tls_helper_selection int
-	if production {
+	if alsoProduction {
 		// Ask for proxies
-		proxy_selection = utils.MenuQuestionIndex("Which proxy do you want to use?", proxy_items)
-		utils.Pel()
-		varMap = getVarMapFromQuestions(varMap, proxy_templates[proxy_selection].Questions, flagAdvanced)
-		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, proxy_templates[proxy_selection].Volumes, flagAdvanced, flagWithDockerfile)
-		utils.Pel()
+		templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
 
 		// Ask for proxy tls helpers
-		tls_helper_selection = utils.MenuQuestionIndex("Which TLS helper do you want to use?", tls_helper_items)
-		utils.Pel()
-		varMap = getVarMapFromQuestions(varMap, tls_helper_templates[tls_helper_selection].Questions, flagAdvanced)
-		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, tls_helper_templates[tls_helper_selection].Volumes, flagAdvanced, flagWithDockerfile)
-		utils.Pel()
+		templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
 	}
 
-	// Generate docker-compose.yml
-	fmt.Print("Generating compose file ... ")
-	var compose_file model.ComposeFile
-	compose_file.Version = compose_version
+	// Generate configuration
+	fmt.Print("Generating configuration ... ")
+	var composeFileDev model.ComposeFile
+	composeFileDev.Version = compose_version
+	composeFileDev.Services = make(map[string]model.Service)
+	var composeFileProd model.ComposeFile
+	composeFileProd.Version = compose_version
+	composeFileProd.Services = make(map[string]model.Service)
 
+	// Delete old files
+	dstPath := "."
+	if flagWithInstructions {
+		os.Remove(dstPath + "/README.md")
+	}
+	os.Remove(dstPath + "/environment.env")
+	for templateType, templates := range templateData {
+		for _, template := range templates {
+			srcPath := utils.GetPredefinedServicesPath() + "/" + template.Dir
+			// Apply all existing files of service template
+			for _, f := range template.Files {
+				switch f.Type {
+				case "docs", "env":
+					if (f.Type == "docs" && flagWithInstructions) || f.Type == "env" {
+						// Append to existing file
+						file_out, err1 := os.OpenFile(filepath.Join(dstPath, f.Path), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+						file_in, err2 := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
+						if err1 == nil && err2 == nil {
+							file_out.WriteString(string(file_in) + "\n\n")
+						}
+						defer file_out.Close()
+					}
+				case "docker":
+					if flagWithDockerfile {
+						// Copy dockerfile
+						os.Remove(filepath.Join(dstPath, f.Path))
+						copy.Copy(filepath.Join(srcPath, f.Path), filepath.Join(dstPath, f.Path))
+						utils.ReplaceVarsInFile(filepath.Join(dstPath, f.Path), varMap)
+					}
+				case "service":
+					// Load service file
+					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
+					bytes, _ := ioutil.ReadAll(yamlFile)
+					replaced := utils.ReplaceVarsInString(string(bytes), varMap)
+					service := model.Service{}
+					yaml.Unmarshal([]byte(replaced), &service)
+					// Add service to compose files
+					if templateType != "proxy" && templateType != "tls-helper" {
+						composeFileDev.Services[templateType] = service
+					}
+					composeFileProd.Services[templateType] = service
+				}
+			}
+			// Generate / copy volumes
+		}
+	}
+	utils.Done()
+
+	// Write dev compose file
+	utils.P("Saving dev configuration ... ")
+	output, err1 := yaml.Marshal(&composeFileDev)
+	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
+	if err1 != nil || err2 != nil {
+		utils.Error("Could not write yaml to compose file.", true)
+	}
+	utils.Done()
+
+	if alsoProduction {
+		// Write prod compose file
+		utils.P("Saving prod configuration ... ")
+		output, err1 := yaml.Marshal(&composeFileProd)
+		err2 := ioutil.WriteFile("./docker-compose-prod.yml", output, 0777)
+		if err1 != nil || err2 != nil {
+			utils.Error("Could not write yaml to compose file.", true)
+		}
+		utils.Done()
+	}
+
+	// Replace variables
+	fmt.Print("Applying customizations ... ")
+	utils.ReplaceVarsInFile("./docker-compose.yml", varMap)
+	if alsoProduction {
+		utils.ReplaceVarsInFile("./docker-compose-prod.yml", varMap)
+	}
+	if utils.FileExists("./environment.env") {
+		utils.ReplaceVarsInFile("./environment.env", varMap)
+	}
 	utils.Done()
 
 	/*for _, q := range templateData[index].Questions {
@@ -302,6 +316,37 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 			color.Yellow(secret)
 		}
 	}*/
+}
+
+func askForStackComponent(
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap map[string]string,
+	volumeMap map[string]string,
+	component string,
+	multiSelect bool,
+	question string,
+	flagAdvanced bool,
+	flagWithDockerfile bool,
+) (map[string][]model.ServiceTemplateConfig, map[string]string, map[string]string) {
+	templates := templateData[component]
+	items := parser.TemplateListToTemplateLabelList(templates)
+	templateData[component] = []model.ServiceTemplateConfig{}
+	if multiSelect {
+		templateSelections := utils.MultiSelectMenuQuestionIndex(question, items)
+		for _, index := range templateSelections {
+			utils.Pel()
+			templateData[component] = append(templateData[component], templates[index])
+			varMap = getVarMapFromQuestions(varMap, templates[index].Questions, flagAdvanced)
+			varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, templates[index].Volumes, flagAdvanced, flagWithDockerfile)
+		}
+	} else {
+		templateSelection := utils.MenuQuestionIndex(question, items)
+		templateData[component] = append(templateData[component], templates[templateSelection])
+		varMap = getVarMapFromQuestions(varMap, templates[templateSelection].Questions, flagAdvanced)
+		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, templates[templateSelection].Volumes, flagAdvanced, flagWithDockerfile)
+	}
+	utils.Pel()
+	return templateData, varMap, volumeMap
 }
 
 func getVarMapFromQuestions(varMap map[string]string, questions []model.Question, flagAdvanced bool) map[string]string {

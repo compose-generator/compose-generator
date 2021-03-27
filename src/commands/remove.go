@@ -25,11 +25,11 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 
 	fmt.Print("Parsing compose file ... ")
 	// Load compose file
-	jsonFile, err := os.Open(path)
+	yamlFile, err := os.Open(path)
 	if err != nil {
 		utils.Error("Internal error - unable to load compose file", true)
 	}
-	bytes, _ := ioutil.ReadAll(jsonFile)
+	bytes, _ := ioutil.ReadAll(yamlFile)
 
 	// Parse YAML
 	composeFile := model.ComposeFile{}

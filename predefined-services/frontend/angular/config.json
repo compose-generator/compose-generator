@@ -1,7 +1,5 @@
 {
     "label": "Angular",
-    "dir": "angular",
-    "type": "frontend",
     "preselected": "false",
     "files": [
         {

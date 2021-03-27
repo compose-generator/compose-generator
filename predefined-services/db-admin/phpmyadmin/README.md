@@ -1,0 +1,2 @@
+## PhpMyAdmin
+*To be extended ...*

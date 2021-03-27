@@ -1,7 +1,5 @@
 {
     "label": "MySQL",
-    "dir": "mysql",
-    "type": "database",
     "preselected": "false",
     "files": [
         {

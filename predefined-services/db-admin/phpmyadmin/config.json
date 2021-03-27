@@ -1,7 +1,5 @@
 {
     "label": "PhpMyAdmin",
-    "dir": "phpmyadmin",
-    "type": "db-admin-tool",
     "preselected": "mysql",
     "files": [
         {

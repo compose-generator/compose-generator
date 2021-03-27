@@ -14,7 +14,7 @@
 └─README.md
 ```
 
-## Configuration file ([example file](angular/config.json))
+## Configuration file ([example file](frontend/angular/config.json))
 A template must contain a file called `config.json`, which holds metadata about the template.<br>
 It consists of following parts:
 
@@ -24,7 +24,7 @@ It consists of following parts:
 - `preselected` - Conditional string which defines, whether a service is initially selected in the list or not.
 - `files` - List of important files the template comes with. For example the compose file or certain Dockerfiles.
 	- `path`: Path to a particular file
-	- `type`: Type of the file. Needs to be one of: `compose`, `env`, `docs`, `docker`
+	- `type`: Type of the file. Needs to be one of: `service`, `env`, `docs`, `docker`
 - `questions` - Lists of quesions, which the cli will ask the user.
 	- `text` - Question itself (keep it as short as possible).
 	- `type` - 1 = Yes/No question, 2 = Text question
@@ -44,7 +44,7 @@ It consists of following parts:
 	- `var` - Name of the variable, which the generated password will be assigned to (Must start with an underscore).
 	- `length` - Length of the secret in characters
 
-## Service file ([example file](angular/service.yml))
+## Service file ([example file](frontend/angular/service.yml))
 A template also must contain the main service template file `service.yml`, which contains the container configuration for the stack.<br>
 Within the configuration, you can make use of the defined variables in the configuration file with doubled curly braces and a leading dollar sign like so: `${{VARIABLE_NAME}}`.<br>
 An example:
@@ -66,7 +66,7 @@ There are two predefined variables, which the cli will provide:
 ### Use of conditional sections
 *To be extended ...*
 
-## Environment file ([example file](angular/environment.env))
+## Environment file ([example file](frontend/angular/environment.env))
 This file consists of key-value pares, and is not mandatory and should only be used for secrets, usernames, configurable paths, urls, etc.
 The `environment.env` file is the only one where the secret variables (the ones starting with an underscore) from the configuration file will be applied by the cli.<br>
 The environment file can be attached to a container by including it into the compose file like this:
@@ -79,7 +79,7 @@ services:
 ...
 ```
 
-## README file ([example file](angular/README.md))
+## README file ([example file](frontend/angular/README.md))
 This file contains instructions about using the predefined template.
 
 ## Input validators

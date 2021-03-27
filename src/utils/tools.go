@@ -87,7 +87,7 @@ func GetPredefinedServicesPath() string {
 }
 
 // ReplaceVarsInFile replaces all variables in the stated file with the contents of the map
-func ReplaceVarsInFile(path string, envMap map[string]string) {
+func ReplaceVarsInFile(path string, varMap map[string]string) {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -95,16 +95,21 @@ func ReplaceVarsInFile(path string, envMap map[string]string) {
 	}
 
 	// Replace variables
-	newContent := string(content)
-	for key, value := range envMap {
-		newContent = strings.ReplaceAll(newContent, "${{"+key+"}}", value)
-	}
+	content = []byte(ReplaceVarsInString(string(content), varMap))
 
 	// Write content back
-	err = ioutil.WriteFile(path, []byte(newContent), 0777)
+	err = ioutil.WriteFile(path, []byte(content), 0777)
 	if err != nil {
 		Error("Could not write to "+path, true)
 	}
+}
+
+// ReplaceVarsInString replaces all variables in the stated string with the contents of the map
+func ReplaceVarsInString(content string, varMap map[string]string) string {
+	for key, value := range varMap {
+		content = strings.ReplaceAll(content, "${{"+key+"}}", value)
+	}
+	return content
 }
 
 // GenerateSecrets generates random strings as secrets and replaces them in the stated file
