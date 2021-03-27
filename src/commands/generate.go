@@ -115,7 +115,9 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 		os.Remove(dstPath + "/README.md")
 	}
 	os.Remove(dstPath + "/environment.env")
+
 	var secrets []model.Secret
+	var networks []string
 	for templateType, templates := range templateData {
 		for _, template := range templates {
 			srcPath := utils.GetPredefinedServicesPath() + "/" + template.Dir
@@ -147,6 +149,8 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 					replaced := utils.ReplaceVarsInString(string(bytes), varMap)
 					service := model.Service{}
 					yaml.Unmarshal([]byte(replaced), &service)
+					// Get networks
+					networks = append(networks, service.Networks...)
 					// Add service to compose files
 					if templateType != "proxy" && templateType != "tls-helper" {
 						composeFileDev.Services[templateType] = service
@@ -156,6 +160,15 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 			}
 			// Get secrets
 			secrets = append(secrets, template.Secrets...)
+		}
+	}
+	// Add networks
+	if len(networks) > 0 {
+		composeFileDev.Networks = make(map[string]model.Network)
+		composeFileProd.Networks = make(map[string]model.Network)
+		for _, n := range networks {
+			composeFileDev.Networks[n] = model.Network{}
+			composeFileProd.Networks[n] = model.Network{}
 		}
 	}
 	utils.Done()
@@ -192,7 +205,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	utils.Done()
 
 	// Create / copy volumes
-	fmt.Print("Create volumes ... ")
+	fmt.Print("Creating volumes ... ")
 	for src, dst := range volumeMap {
 		os.RemoveAll(dst)
 		if utils.FileExists(src) {
@@ -212,6 +225,15 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 		} else {
 			// Create empty volume
 			os.MkdirAll(dst, 0777)
+		}
+	}
+	utils.Done()
+
+	// Create demo applications
+	fmt.Print("Generating demo applications (may take a while) ... ")
+	for _, templates := range templateData {
+		for _, template := range templates {
+			utils.ExecuteAndWait(strings.Split(template.DemoAppInitCmd, " ")...)
 		}
 	}
 	utils.Done()

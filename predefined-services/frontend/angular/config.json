@@ -1,6 +1,7 @@
 {
     "label": "Angular",
     "preselected": "false",
+    "demoAppInitCmd": "touch ./frontend/src/test.txt",
     "files": [
         {
             "path": "service.yml",
