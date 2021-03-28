@@ -2,16 +2,16 @@ package model
 
 // ServiceTemplateConfig represents the JSON structure of predefined template configuration file
 type ServiceTemplateConfig struct {
-	Label          string
-	Name           string
-	Dir            string
-	Type           string
-	Preselected    string
-	DemoAppInitCmd string
-	Files          []File
-	Questions      []Question
-	Volumes        []Volume
-	Secrets        []Secret
+	Label             string
+	Name              string
+	Dir               string
+	Type              string
+	Preselected       string
+	ExampleAppInitCmd []string
+	Files             []File
+	Questions         []Question
+	Volumes           []Volume
+	Secrets           []Secret
 }
 
 // File represents an important file and holds the path and the type of this file

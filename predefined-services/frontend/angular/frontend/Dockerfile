@@ -4,11 +4,10 @@ FROM node:lts AS development
 RUN npm i -g @angular/cli
 
 WORKDIR /code
-COPY src/package.json /code/package.json
-COPY src/package-lock.json /code/package-lock.json
+COPY package.json /code/package.json
 RUN npm i
 
-COPY ./src /code
+COPY . /code
 
 CMD ["ng", "serve", "--host", "0.0.0.0"]
 

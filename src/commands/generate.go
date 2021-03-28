@@ -256,11 +256,13 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	}
 	utils.Done()
 
-	// Create demo applications
+	// Create example applications
 	fmt.Print("Generating demo applications (may take a while) ... ")
 	for _, templates := range templateData {
 		for _, template := range templates {
-			utils.ExecuteAndWait(strings.Split(template.DemoAppInitCmd, " ")...)
+			for _, cmd := range template.ExampleAppInitCmd {
+				utils.ExecuteAndWait(strings.Split(cmd, " ")...)
+			}
 		}
 	}
 	utils.Done()

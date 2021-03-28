@@ -1,7 +1,9 @@
 {
     "label": "Angular",
     "preselected": "false",
-    "demoAppInitCmd": "touch ./frontend/src/test.txt",
+    "exampleAppInitCmd": [
+        "npx -p @angular/cli ng new demo-app --directory ./frontend --style=less --skip-git --skip-tests --skip-install"
+    ],
     "files": [
         {
             "path": "service.yml",
@@ -28,7 +30,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./frontend/src",
+            "defaultValue": "./frontend",
             "variable": "SOURCE_DIRECTORY",
             "withDockerfile": true
         }
