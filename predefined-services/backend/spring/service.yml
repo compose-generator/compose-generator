@@ -2,10 +2,10 @@ build: backend
 container_name: ${{PROJECT_NAME_CONTAINER}}-backend
 restart: always
 networks:
-#! if frontend {
+#! if has frontend {
 #!  - frontend-backend
 #! }
-#! if database {
+#! if has database {
 #!  - backend-database
 #! }
 ports:
@@ -13,6 +13,6 @@ ports:
 env_file:
   - environment.env
 depends_on:
-#! if database {
+#! if has database {
 #!  - database
 #! }

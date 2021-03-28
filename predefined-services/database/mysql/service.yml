@@ -2,7 +2,7 @@ image: mysql:${{MYSQL_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db
 restart: always
 networks:
-#! if phpmyadmin {
+#! if has service phpmyadmin {
 #!  - mysql-phpmyadmin
 #! }
 ports:

@@ -3,6 +3,7 @@ package model
 // ServiceTemplateConfig represents the JSON structure of predefined template configuration file
 type ServiceTemplateConfig struct {
 	Label          string
+	Name           string
 	Dir            string
 	Type           string
 	Preselected    string

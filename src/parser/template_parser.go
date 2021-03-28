@@ -30,6 +30,7 @@ func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 		for _, f := range filterFilenames(files, filterFunc) {
 			templatePath := filepath.Join(templatesPath, templateType, f)
 			config := getConfigFromFile(templatePath)
+			config.Name = f
 			config.Type = templateType
 			config.Dir = templatePath
 			if configs[templateType] != nil {

@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/Knetic/govaluate"
 	"github.com/fatih/color"
 	"github.com/go-playground/validator"
 	"github.com/otiai10/copy"
@@ -102,6 +103,8 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 
 	// Generate configuration
 	fmt.Print("Generating configuration ... ")
+
+	// Prepare compose files
 	var composeFileDev model.ComposeFile
 	composeFileDev.Version = compose_version
 	composeFileDev.Services = make(map[string]model.Service)
@@ -116,6 +119,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	}
 	os.Remove(dstPath + "/environment.env")
 
+	// Loop through selected templates
 	var secrets []model.Secret
 	var networks []string
 	for templateType, templates := range templateData {
@@ -126,14 +130,14 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 				switch f.Type {
 				case "docs", "env":
 					if (f.Type == "docs" && flagWithInstructions) || f.Type == "env" {
-						// Append to existing file
-						file_out, err1 := os.OpenFile(filepath.Join(dstPath, f.Path), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-						file_in, err2 := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-						replaced := utils.ReplaceVarsInString(string(file_in), varMap)
+						// Append content to existing file
+						fileOut, err1 := os.OpenFile(filepath.Join(dstPath, f.Path), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+						fileIn, err2 := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
+						replaced := utils.ReplaceVarsInString(string(fileIn), varMap)
 						if err1 == nil && err2 == nil {
-							file_out.WriteString(replaced + "\n\n")
+							fileOut.WriteString(replaced + "\n\n")
 						}
-						defer file_out.Close()
+						defer fileOut.Close()
 					}
 				case "docker":
 					if flagWithDockerfile {
@@ -145,12 +149,35 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 				case "service":
 					// Load service file
 					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
-					bytes, _ := ioutil.ReadAll(yamlFile)
-					replaced := utils.ReplaceVarsInString(string(bytes), varMap)
+					contentBytes, _ := ioutil.ReadAll(yamlFile)
+					// Evaluate conditional sections
+					content := evaluateConditionalSections(string(contentBytes), templateData, varMap)
+					// Replace variables
+					content = utils.ReplaceVarsInString(content, varMap)
+					// Parse yaml
 					service := model.Service{}
-					yaml.Unmarshal([]byte(replaced), &service)
+					yaml.Unmarshal([]byte(content), &service)
 					// Get networks
 					networks = append(networks, service.Networks...)
+					// Add depends on
+					switch templateType {
+					case "frontend":
+						if len(templateData["backend"]) > 0 {
+							service.DependsOn = []string{"backend"}
+						}
+					case "backend":
+						if len(templateData["database"]) > 0 {
+							service.DependsOn = []string{"database"}
+						}
+					case "db-admin":
+						if len(templateData["database"]) > 0 {
+							service.DependsOn = []string{"database"}
+						}
+					case "tls-helper":
+						if len(templateData["proxy"]) > 0 {
+							service.DependsOn = []string{"proxy"}
+						}
+					}
 					// Add service to compose files
 					if templateType != "proxy" && templateType != "tls-helper" {
 						composeFileDev.Services[templateType] = service
@@ -343,4 +370,55 @@ func getVolumeMapFromVolumes(
 		volumeMap[filepath.Join(srcPath, v.DefaultValue)] = varMap[v.Variable]
 	}
 	return varMap, volumeMap
+}
+
+func evaluateConditionalSections(
+	content string,
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap map[string]string,
+) string {
+	rows := strings.Split(content, "\n")
+	uncommenting := false
+	for i, row := range rows {
+		if strings.HasPrefix(row, "#! if ") {
+			// Conditional section found -> check condition
+			condition := row[6:strings.Index(row, " {")]
+			uncommenting = evaluateCondition(condition, templateData, varMap)
+		} else if strings.HasPrefix(row, "#! }") {
+			uncommenting = false
+		} else if uncommenting {
+			rows[i] = row[3:]
+		}
+	}
+	return strings.Join(rows, "\n")
+}
+
+func evaluateCondition(
+	condition string,
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap map[string]string,
+) bool {
+	if strings.HasPrefix(condition, "has service ") {
+		for _, templates := range templateData {
+			for _, template := range templates {
+				fmt.Println("Name: '" + template.Name + "'")
+				fmt.Println("t: '" + condition[12:] + "'")
+				if template.Name == condition[12:] {
+					return true
+				}
+			}
+		}
+	} else if strings.HasPrefix(condition, "has ") {
+		return len(templateData[condition[4:]]) > 0
+	} else if strings.HasPrefix(condition, "var.") {
+		condition = condition[4:]
+		expr, err1 := govaluate.NewEvaluableExpression(condition)
+		parameters := make(map[string]interface{}, 8)
+		for varName, varValue := range varMap {
+			parameters[varName] = varValue
+		}
+		result, err2 := expr.Evaluate(parameters)
+		return result.(bool) && err1 != nil && err2 != nil
+	}
+	return false
 }

@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.2.9
+	github.com/Knetic/govaluate v3.0.0+incompatible
 	github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7
 	github.com/fatih/color v1.10.0
 	github.com/go-playground/validator v9.31.0+incompatible
