@@ -31,7 +31,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend/src",
+            "defaultValue": "./backend",
             "variable": "SOURCE_DIRECTORY_BACKEND",
             "withDockerfile": true
         }
