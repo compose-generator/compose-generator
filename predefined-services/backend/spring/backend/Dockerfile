@@ -1,11 +1,11 @@
 # Maven build instructions
 FROM maven:3.6.3-jdk-11 AS builder
 WORKDIR /workdir/server
-COPY src/pom.xml /workdir/server/pom.xml
+COPY pom.xml /workdir/server/pom.xml
 RUN mvn dependency:go-offline
 
-COPY src/src /workdir/server/src
-RUN mvn install
+COPY src /workdir/server/src
+RUN mvn install -q
 RUN mkdir  -p target/depency
 WORKDIR /workdir/server/target/dependency
 RUN jar -xf ../*.jar
