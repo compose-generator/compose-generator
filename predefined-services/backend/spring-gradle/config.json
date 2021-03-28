@@ -1,11 +1,6 @@
 {
-    "label": "Spring Maven",
+    "label": "Spring Gradle",
     "preselected": "false",
-    "exampleAppInitCmd": [
-        "curl https://start.spring.io/starter.zip -d dependencies=web,devtools -d bootVersion=2.4.4.RELEASE -o ./backend/demo-app.zip",
-        "unzip -q ./backend/demo-app.zip -d ./backend",
-        "rm ./backend/demo-app.zip"
-    ],
     "files": [
         {
             "path": "service.yml",
@@ -36,7 +31,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend/src",
             "variable": "SOURCE_DIRECTORY_BACKEND",
             "withDockerfile": true
         }
