@@ -241,12 +241,7 @@ func ExecuteOnLinux(c string) {
 	// Build docker image
 	ExecuteAndWaitWithOutput("docker", "build", "-t", "compose-generator-toolbox", getToolboxPath())
 	// Start docker container
-	var absolutePath string
-	if runtime.GOOS == "windows" {
-		absolutePath = ExecuteAndWaitWithOutput("echo %cd%")
-	} else {
-		absolutePath = ExecuteAndWaitWithOutput("pwd")
-	}
+	absolutePath, _ := os.Getwd()
 	ExecuteAndWait(strings.Split("docker run -i -v "+absolutePath+":/toolbox compose-generator-toolbox "+c, " ")...)
 }
 

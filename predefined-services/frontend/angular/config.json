@@ -2,7 +2,7 @@
     "label": "Angular",
     "preselected": "false",
     "exampleAppInitCmd": [
-        "npx -p @angular/cli ng new demo-app --directory ./frontend --style=less --skip-git --skip-tests --skip-install"
+        "ng new demo-app --directory ./frontend --style=less --skip-git --skip-tests --skip-install"
     ],
     "files": [
         {
