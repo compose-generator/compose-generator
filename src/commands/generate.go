@@ -43,6 +43,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 		utils.Error("Error. You must specify a project name!", true)
 	}
 
+	// Generate dynamic stack
 	generateDynamicStack(projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
 
 	// Run if the corresponding flag is set
@@ -60,66 +61,172 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
 	utils.ClearScreen()
 
-	// Load stacks from templates
-	templateData := parser.ParsePredefinedServices()
-
-	// Ask for production
-	alsoProduction := utils.YesNoQuestion("Also generate production configuration?", false)
-
-	// Ask for compose file version
-	compose_version := "3.9"
-	if flagAdvanced {
-		compose_version = utils.TextQuestionWithDefault("Docker compose file version:", compose_version)
-	}
-
 	// Initialize varMap and volumeMap
 	varMap := make(map[string]string)
 	varMap["PROJECT_NAME"] = projectName
 	varMap["PROJECT_NAME_CONTAINER"] = strings.ReplaceAll(strings.ToLower(projectName), " ", "-")
-	volumeMap := make(map[string]string)
+	volMap := make(map[string]string)
+
+	// Load configurations of service templates
+	templateData := parser.ParsePredefinedServices()
+
+	// Ask user decisions
+	templateData, varMap, volMap, composeVersion, alsoProduction := askForUserInput(templateData, varMap, volMap, flagAdvanced, flagWithDockerfile)
+
+	// Delete old files
+	fmt.Print("Cleaning up ... ")
+	if flagWithInstructions {
+		os.Remove("./README.md")
+	}
+	os.Remove("./environment.env")
+	utils.Done()
+
+	// Generate configuration
+	fmt.Print("Generating configuration ... ")
+	composeFileDev, composeFileProd, secrets := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	utils.Done()
+
+	// Write dev compose file
+	utils.P("Saving dev configuration ... ")
+	output, err1 := yaml.Marshal(&composeFileDev)
+	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
+	if err1 != nil || err2 != nil {
+		utils.Error("Could not write yaml to compose file.", true)
+	}
+	utils.Done()
+
+	// Write prod compose file
+	if alsoProduction {
+		utils.P("Saving prod configuration ... ")
+		output, err1 := yaml.Marshal(&composeFileProd)
+		err2 := ioutil.WriteFile("./docker-compose-prod.yml", output, 0777)
+		if err1 != nil || err2 != nil {
+			utils.Error("Could not write yaml to compose file.", true)
+		}
+		utils.Done()
+	}
+
+	// Replace variables
+	fmt.Print("Applying customizations ... ")
+	utils.ReplaceVarsInFile("./docker-compose.yml", varMap)
+	if alsoProduction {
+		utils.ReplaceVarsInFile("./docker-compose-prod.yml", varMap)
+	}
+	if utils.FileExists("./environment.env") {
+		utils.ReplaceVarsInFile("./environment.env", varMap)
+	}
+	utils.Done()
+
+	// Create / copy volumes
+	fmt.Print("Creating volumes ... ")
+	for src, dst := range volMap {
+		os.RemoveAll(dst)
+		if utils.FileExists(src) {
+			// Copy contents of volume
+			opt := copy.Options{
+				Skip: func(src string) (bool, error) {
+					return strings.HasSuffix(src, ".gitkeep"), nil
+				},
+				OnDirExists: func(src string, dst string) copy.DirExistsAction {
+					return copy.Replace
+				},
+			}
+			err := copy.Copy(src, dst, opt)
+			if err != nil {
+				utils.Error("Could not copy volume files.", true)
+			}
+		} else {
+			// Create empty volume
+			os.MkdirAll(dst, 0777)
+		}
+	}
+	utils.Done()
+
+	// Create example applications
+	fmt.Print("Generating demo applications (may take a while) ... ")
+	for _, templates := range templateData {
+		for _, template := range templates {
+			for _, cmd := range template.ExampleAppInitCmd {
+				utils.ExecuteAndWait(strings.Split(cmd, " ")...)
+			}
+		}
+	}
+	utils.Done()
+
+	if utils.FileExists("./environment.env") {
+		// Generate secrets
+		fmt.Print("Generating secrets ... ")
+		secretsMap := utils.GenerateSecrets("./environment.env", secrets)
+		utils.Done()
+		// Print secrets to console
+		utils.Pel()
+		utils.Pl("Following secrets were automatically generated:")
+		for key, secret := range secretsMap {
+			fmt.Print("   " + key + ": ")
+			color.Yellow(secret)
+		}
+	}
+}
+
+func askForUserInput(
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap map[string]string,
+	volMap map[string]string,
+	flagAdvanced bool,
+	flagWithDockerfile bool,
+) (map[string][]model.ServiceTemplateConfig, map[string]string, map[string]string, string, bool) {
+	// Ask for production
+	alsoProduction := utils.YesNoQuestion("Also generate production configuration?", false)
+
+	// Ask for compose file version
+	composeVersion := "3.9"
+	if flagAdvanced {
+		composeVersion = utils.TextQuestionWithDefault("Docker compose file version:", composeVersion)
+	}
 
 	// Ask for frontends
-	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for backends
-	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for databases
-	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for db admin tools
-	templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	if alsoProduction {
 		// Ask for proxies
-		templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
+		templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
 
 		// Ask for proxy tls helpers
-		templateData, varMap, volumeMap = askForStackComponent(templateData, varMap, volumeMap, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
+		templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
 	} else {
 		templateData["proxy"] = []model.ServiceTemplateConfig{}
 		templateData["tls-helper"] = []model.ServiceTemplateConfig{}
 	}
+	return templateData, varMap, volMap, composeVersion, alsoProduction
+}
 
-	// Generate configuration
-	fmt.Print("Generating configuration ... ")
-
+func processUserInput(
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap map[string]string,
+	volumeMap map[string]string,
+	composeVersion string,
+	flagWithInstructions bool,
+	flagWithDockerfile bool,
+) (model.ComposeFile, model.ComposeFile, []model.Secret) {
 	// Prepare compose files
 	var composeFileDev model.ComposeFile
-	composeFileDev.Version = compose_version
+	composeFileDev.Version = composeVersion
 	composeFileDev.Services = make(map[string]model.Service)
 	var composeFileProd model.ComposeFile
-	composeFileProd.Version = compose_version
+	composeFileProd.Version = composeVersion
 	composeFileProd.Services = make(map[string]model.Service)
 
-	// Delete old files
-	dstPath := "."
-	if flagWithInstructions {
-		os.Remove(dstPath + "/README.md")
-	}
-	os.Remove(dstPath + "/environment.env")
-
 	// Loop through selected templates
+	dstPath := "."
 	var secrets []model.Secret
 	var networks []string
 	for templateType, templates := range templateData {
@@ -189,7 +296,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 			secrets = append(secrets, template.Secrets...)
 		}
 	}
-	// Add networks
+	// Apply networks
 	if len(networks) > 0 {
 		composeFileDev.Networks = make(map[string]model.Network)
 		composeFileProd.Networks = make(map[string]model.Network)
@@ -198,88 +305,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 			composeFileProd.Networks[n] = model.Network{}
 		}
 	}
-	utils.Done()
-
-	// Write dev compose file
-	utils.P("Saving dev configuration ... ")
-	output, err1 := yaml.Marshal(&composeFileDev)
-	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
-	if err1 != nil || err2 != nil {
-		utils.Error("Could not write yaml to compose file.", true)
-	}
-	utils.Done()
-
-	if alsoProduction {
-		// Write prod compose file
-		utils.P("Saving prod configuration ... ")
-		output, err1 := yaml.Marshal(&composeFileProd)
-		err2 := ioutil.WriteFile("./docker-compose-prod.yml", output, 0777)
-		if err1 != nil || err2 != nil {
-			utils.Error("Could not write yaml to compose file.", true)
-		}
-		utils.Done()
-	}
-
-	// Replace variables
-	fmt.Print("Applying customizations ... ")
-	utils.ReplaceVarsInFile("./docker-compose.yml", varMap)
-	if alsoProduction {
-		utils.ReplaceVarsInFile("./docker-compose-prod.yml", varMap)
-	}
-	if utils.FileExists("./environment.env") {
-		utils.ReplaceVarsInFile("./environment.env", varMap)
-	}
-	utils.Done()
-
-	// Create / copy volumes
-	fmt.Print("Creating volumes ... ")
-	for src, dst := range volumeMap {
-		os.RemoveAll(dst)
-		if utils.FileExists(src) {
-			// Copy contents of volume
-			opt := copy.Options{
-				Skip: func(src string) (bool, error) {
-					return strings.HasSuffix(src, ".gitkeep"), nil
-				},
-				OnDirExists: func(src string, dst string) copy.DirExistsAction {
-					return copy.Replace
-				},
-			}
-			err := copy.Copy(src, dst, opt)
-			if err != nil {
-				utils.Error("Could not copy volume files.", true)
-			}
-		} else {
-			// Create empty volume
-			os.MkdirAll(dst, 0777)
-		}
-	}
-	utils.Done()
-
-	// Create example applications
-	fmt.Print("Generating demo applications (may take a while) ... ")
-	for _, templates := range templateData {
-		for _, template := range templates {
-			for _, cmd := range template.ExampleAppInitCmd {
-				utils.ExecuteAndWait(strings.Split(cmd, " ")...)
-			}
-		}
-	}
-	utils.Done()
-
-	if utils.FileExists("./environment.env") {
-		// Generate secrets
-		fmt.Print("Generating secrets ... ")
-		secretsMap := utils.GenerateSecrets("./environment.env", secrets)
-		utils.Done()
-		// Print secrets to console
-		utils.Pel()
-		utils.Pl("Following secrets were automatically generated:")
-		for key, secret := range secretsMap {
-			fmt.Print("   " + key + ": ")
-			color.Yellow(secret)
-		}
-	}
+	return composeFileDev, composeFileProd, secrets
 }
 
 func askForStackComponent(
