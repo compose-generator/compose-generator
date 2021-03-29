@@ -1,6 +1,11 @@
 {
     "label": "Spring Gradle",
     "preselected": "false",
+    "exampleAppInitCmd": [
+        "curl https://start.spring.io/starter.zip -d dependencies=web,devtools -d type=gradle-project -d language=${{SPRING_LANGUAGE}} -d bootVersion=2.4.4.RELEASE -o ./backend/demo-app.zip",
+        "unzip -q ./backend/demo-app.zip -d ./backend",
+        "rm ./backend/demo-app.zip"
+    ],
     "files": [
         {
             "path": "service.yml",
@@ -26,6 +31,12 @@
             "defaultValue": "8080",
             "validator": "port",
             "variable": "HOST_BACKEND_PORT"
+        },
+        {
+            "text": "Programming language (java/kotlin/groovy)",
+            "type": 2,
+            "defaultValue": "java",
+            "variable": "SPRING_LANGUAGE"
         }
     ],
     "volumes": [
