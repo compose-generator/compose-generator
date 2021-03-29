@@ -71,7 +71,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	templateData := parser.ParsePredefinedServices()
 
 	// Ask user decisions
-	templateData, varMap, volMap, composeVersion, alsoProduction := askForUserInput(templateData, varMap, volMap, flagAdvanced, flagWithDockerfile)
+	composeVersion, alsoProduction := askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
 
 	// Delete old files
 	fmt.Print("Cleaning up ... ")
@@ -169,12 +169,12 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 }
 
 func askForUserInput(
-	templateData map[string][]model.ServiceTemplateConfig,
-	varMap map[string]string,
-	volMap map[string]string,
+	templateData *map[string][]model.ServiceTemplateConfig,
+	varMap *map[string]string,
+	volMap *map[string]string,
 	flagAdvanced bool,
 	flagWithDockerfile bool,
-) (map[string][]model.ServiceTemplateConfig, map[string]string, map[string]string, string, bool) {
+) (string, bool) {
 	// Ask for production
 	alsoProduction := utils.YesNoQuestion("Also generate production configuration?", false)
 
@@ -185,28 +185,28 @@ func askForUserInput(
 	}
 
 	// Ask for frontends
-	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for backends
-	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for databases
-	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for db admin tools
-	templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	if alsoProduction {
 		// Ask for proxies
-		templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
 
 		// Ask for proxy tls helpers
-		templateData, varMap, volMap = askForStackComponent(templateData, varMap, volMap, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
 	} else {
-		templateData["proxy"] = []model.ServiceTemplateConfig{}
-		templateData["tls-helper"] = []model.ServiceTemplateConfig{}
+		(*templateData)["proxy"] = []model.ServiceTemplateConfig{}
+		(*templateData)["tls-helper"] = []model.ServiceTemplateConfig{}
 	}
-	return templateData, varMap, volMap, composeVersion, alsoProduction
+	return composeVersion, alsoProduction
 }
 
 func processUserInput(
@@ -309,47 +309,46 @@ func processUserInput(
 }
 
 func askForStackComponent(
-	templateData map[string][]model.ServiceTemplateConfig,
-	varMap map[string]string,
-	volumeMap map[string]string,
+	templateData *map[string][]model.ServiceTemplateConfig,
+	varMap *map[string]string,
+	volMap *map[string]string,
 	component string,
 	multiSelect bool,
 	question string,
 	flagAdvanced bool,
 	flagWithDockerfile bool,
-) (map[string][]model.ServiceTemplateConfig, map[string]string, map[string]string) {
-	templates := templateData[component]
+) {
+	templates := (*templateData)[component]
 	items := parser.TemplateListToTemplateLabelList(templates)
-	templateData[component] = []model.ServiceTemplateConfig{}
+	(*templateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
 		templateSelections := utils.MultiSelectMenuQuestionIndex(question, items)
 		for _, index := range templateSelections {
 			utils.Pel()
-			templateData[component] = append(templateData[component], templates[index])
-			varMap = getVarMapFromQuestions(varMap, templates[index].Questions, flagAdvanced)
-			varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, templates[index], flagAdvanced, flagWithDockerfile)
+			(*templateData)[component] = append((*templateData)[component], templates[index])
+			getVarMapFromQuestions(varMap, templates[index].Questions, flagAdvanced)
+			getVolumeMapFromVolumes(varMap, volMap, templates[index], flagAdvanced, flagWithDockerfile)
 		}
 	} else {
 		templateSelection := utils.MenuQuestionIndex(question, items)
-		templateData[component] = append(templateData[component], templates[templateSelection])
-		varMap = getVarMapFromQuestions(varMap, templates[templateSelection].Questions, flagAdvanced)
-		varMap, volumeMap = getVolumeMapFromVolumes(varMap, volumeMap, templates[templateSelection], flagAdvanced, flagWithDockerfile)
+		(*templateData)[component] = append((*templateData)[component], templates[templateSelection])
+		getVarMapFromQuestions(varMap, templates[templateSelection].Questions, flagAdvanced)
+		getVolumeMapFromVolumes(varMap, volMap, templates[templateSelection], flagAdvanced, flagWithDockerfile)
 	}
 	utils.Pel()
-	return templateData, varMap, volumeMap
 }
 
 func getVarMapFromQuestions(
-	varMap map[string]string,
+	varMap *map[string]string,
 	questions []model.Question,
 	flagAdvanced bool,
-) map[string]string {
+) {
 	for _, q := range questions {
 		if !q.Advanced || (q.Advanced && flagAdvanced) {
 			switch q.Type {
 			case 1: // Yes/No
 				defaultValue, _ := strconv.ParseBool(q.DefaultValue)
-				varMap[q.Variable] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
+				(*varMap)[q.Variable] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
 			case 2: // Text
 				if q.Validator != "" {
 					var customValidator survey.Validator
@@ -365,39 +364,37 @@ func getVarMapFromQuestions(
 							return nil
 						}
 					}
-					varMap[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, customValidator)
+					(*varMap)[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, customValidator)
 				} else {
-					varMap[q.Variable] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
+					(*varMap)[q.Variable] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
 				}
 			}
 		} else {
-			varMap[q.Variable] = q.DefaultValue
+			(*varMap)[q.Variable] = q.DefaultValue
 		}
 	}
-	return varMap
 }
 
 func getVolumeMapFromVolumes(
-	varMap map[string]string,
-	volumeMap map[string]string,
+	varMap *map[string]string,
+	volMap *map[string]string,
 	template model.ServiceTemplateConfig,
 	flagAdvanced bool,
 	flagWithDockerfile bool,
-) (map[string]string, map[string]string) {
+) {
 	srcPath := filepath.Join(utils.GetPredefinedServicesPath(), template.Dir)
 	for _, v := range template.Volumes {
 		if !v.Advanced || (v.Advanced && flagAdvanced) {
 			if !v.WithDockerfile || (v.WithDockerfile && flagWithDockerfile) {
-				varMap[v.Variable] = utils.TextQuestionWithDefault(v.Text, v.DefaultValue)
+				(*varMap)[v.Variable] = utils.TextQuestionWithDefault(v.Text, v.DefaultValue)
 			} else {
-				varMap[v.Variable] = v.DefaultValue
+				(*varMap)[v.Variable] = v.DefaultValue
 			}
 		} else {
-			varMap[v.Variable] = v.DefaultValue
+			(*varMap)[v.Variable] = v.DefaultValue
 		}
-		volumeMap[filepath.Join(srcPath, v.DefaultValue)] = varMap[v.Variable]
+		(*volMap)[filepath.Join(srcPath, v.DefaultValue)] = (*varMap)[v.Variable]
 	}
-	return varMap, volumeMap
 }
 
 func evaluateConditionalSections(
