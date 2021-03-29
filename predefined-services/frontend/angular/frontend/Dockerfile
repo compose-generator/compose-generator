@@ -1,11 +1,11 @@
 # NodeJS build instructions
 FROM node:lts AS development
 
-RUN npm i -g @angular/cli
+RUN npm i -g --loglevel=error @angular/cli
 
 WORKDIR /code
 COPY package.json /code/package.json
-RUN npm i
+RUN npm i --loglevel=error
 
 COPY . /code
 

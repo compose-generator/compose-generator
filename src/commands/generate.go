@@ -154,7 +154,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	}
 	utils.Done()
 
-	if utils.FileExists("./environment.env") {
+	if len(secrets) > 0 {
 		// Generate secrets
 		fmt.Print("Generating secrets ... ")
 		secretsMap := utils.GenerateSecrets("./environment.env", secrets)
@@ -192,10 +192,12 @@ func askForUserInput(
 	askForStackComponent(templateData, varMap, volMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for databases
-	askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	databaseCount := askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
 
-	// Ask for db admin tools
-	askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+	if databaseCount > 0 {
+		// Ask for db admin tools
+		askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+	}
 
 	if alsoProduction {
 		// Ask for proxies
@@ -318,7 +320,7 @@ func askForStackComponent(
 	question string,
 	flagAdvanced bool,
 	flagWithDockerfile bool,
-) {
+) (componentCount int) {
 	templates := (*templateData)[component]
 	items := parser.TemplateListToTemplateLabelList(templates)
 	(*templateData)[component] = []model.ServiceTemplateConfig{}
@@ -329,14 +331,17 @@ func askForStackComponent(
 			(*templateData)[component] = append((*templateData)[component], templates[index])
 			getVarMapFromQuestions(varMap, templates[index].Questions, flagAdvanced)
 			getVolumeMapFromVolumes(varMap, volMap, templates[index], flagAdvanced, flagWithDockerfile)
+			componentCount++
 		}
 	} else {
 		templateSelection := utils.MenuQuestionIndex(question, items)
 		(*templateData)[component] = append((*templateData)[component], templates[templateSelection])
 		getVarMapFromQuestions(varMap, templates[templateSelection].Questions, flagAdvanced)
 		getVolumeMapFromVolumes(varMap, volMap, templates[templateSelection], flagAdvanced, flagWithDockerfile)
+		componentCount = 1
 	}
 	utils.Pel()
+	return
 }
 
 func getVarMapFromQuestions(
@@ -427,8 +432,6 @@ func evaluateCondition(
 	if strings.HasPrefix(condition, "has service ") {
 		for _, templates := range templateData {
 			for _, template := range templates {
-				fmt.Println("Name: '" + template.Name + "'")
-				fmt.Println("t: '" + condition[12:] + "'")
 				if template.Name == condition[12:] {
 					return true
 				}
