@@ -1,6 +1,11 @@
 {
     "label": "Spring Gradle",
     "preselected": "false",
+    "exampleAppInitCmd": [
+        "curl https://start.spring.io/starter.zip -d applicationName=${{PROJECT_NAME}} -d packageName=${{SPRING_PACKAGE_NAME}} -d dependencies=${{SPRING_DEPENDENCIES}} -d type=gradle-project -d language=${{SPRING_LANGUAGE}} -d bootVersion=${{SPRING_VERSION}} -o ./backend/${{PROJECT_NAME_CONTAINER}}.zip",
+        "unzip -q ./backend/${{PROJECT_NAME_CONTAINER}}.zip -d ./backend",
+        "rm ./backend/${{PROJECT_NAME_CONTAINER}}.zip"
+    ],
     "files": [
         {
             "path": "service.yml",
@@ -26,6 +31,30 @@
             "defaultValue": "8080",
             "validator": "port",
             "variable": "HOST_BACKEND_PORT"
+        },
+        {
+            "text": "Spring version",
+            "type": 2,
+            "defaultValue": "2.4.4.RELEASE",
+            "variable": "SPRING_VERSION"
+        },
+        {
+            "text": "Programming language (java/kotlin/groovy)",
+            "type": 2,
+            "defaultValue": "java",
+            "variable": "SPRING_LANGUAGE"
+        },
+        {
+            "text": "Dependencies (lower-cased, comma-separated)",
+            "type": 2,
+            "defaultValue": "web,devtools",
+            "variable": "SPRING_DEPENDENCIES"
+        },
+        {
+            "text": "Package name for your project",
+            "type": 2,
+            "defaultValue": "com.example.demo",
+            "variable": "SPRING_PACKAGE_NAME"
         }
     ],
     "volumes": [

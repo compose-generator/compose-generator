@@ -30,6 +30,7 @@ dockers:
     use_buildx: true
     extra_files:
       - predefined-services
+      - toolbox
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
@@ -45,6 +46,7 @@ archives:
       - README.md
       - LICENSE
       - predefined-services/*
+      - toolbox/*
     format_overrides:
       - goos: windows
         format: zip
@@ -64,14 +66,16 @@ nfpms:
     overrides:
       rpm:
         dependencies:
-          - redhat-lsb
           - curl
+          - redhat-lsb
       apk:
         dependencies:
           - curl
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
+        - src: toolbox/*
+        dst: /usr/lib/compose-generator/toolbox/
     empty_folders:
       - /usr/lib/compose-generator/templates
 release:

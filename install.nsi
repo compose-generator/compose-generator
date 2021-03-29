@@ -54,6 +54,7 @@ Section "install" Installation
   SetOutPath "$INSTDIR"
   File /oname=compose-generator.exe dist/compose-generator_windows_${ARCH}/compose-generator.exe
   File /r predefined-services
+  File /r toolbox
 
 ;create start-menu items
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"

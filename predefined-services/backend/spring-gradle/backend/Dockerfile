@@ -1,11 +1,10 @@
 FROM gradle:6.8.3-jdk15 AS build
 WORKDIR /workdir/server
-COPY build.gradle.kts build.gradle.kts
-COPY settings.gradle.kts settings.gradle.kts
-RUN gradle build || return 0
+COPY *.gradle *.kts ./
+RUN gradle build -q || return 0
 
 COPY src src
-RUN gradle build
+RUN gradle build -w
 RUN java -Djarmode=layertools -jar build/libs/*.jar extract
 
 

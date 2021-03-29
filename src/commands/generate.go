@@ -83,7 +83,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 
 	// Generate configuration
 	fmt.Print("Generating configuration ... ")
-	composeFileDev, composeFileProd, secrets := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	composeFileDev, composeFileProd, varFiles, secrets := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
 	utils.Done()
 
 	// Write dev compose file
@@ -105,17 +105,6 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 		}
 		utils.Done()
 	}
-
-	// Replace variables
-	fmt.Print("Applying customizations ... ")
-	utils.ReplaceVarsInFile("./docker-compose.yml", varMap)
-	if alsoProduction {
-		utils.ReplaceVarsInFile("./docker-compose-prod.yml", varMap)
-	}
-	if utils.FileExists("./environment.env") {
-		utils.ReplaceVarsInFile("./environment.env", varMap)
-	}
-	utils.Done()
 
 	// Create / copy volumes
 	fmt.Print("Creating volumes ... ")
@@ -142,18 +131,29 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	}
 	utils.Done()
 
+	// Replace variables
+	fmt.Print("Applying customizations ... ")
+	varFiles = append(varFiles, "docker-compose.yml")
+	if alsoProduction {
+		varFiles = append(varFiles, "docker-compose-prod.yml")
+	}
+	for _, path := range varFiles {
+		utils.ReplaceVarsInFile(path, varMap)
+	}
+	utils.Done()
+
 	// Create example applications
 	fmt.Print("Generating demo applications (may take a while) ... ")
 	for _, templates := range templateData {
 		for _, template := range templates {
 			for _, cmd := range template.ExampleAppInitCmd {
-				utils.ExecuteAndWait(strings.Split(cmd, " ")...)
+				utils.ExecuteOnLinux(utils.ReplaceVarsInString(cmd, varMap))
 			}
 		}
 	}
 	utils.Done()
 
-	if utils.FileExists("./environment.env") {
+	if len(secrets) > 0 {
 		// Generate secrets
 		fmt.Print("Generating secrets ... ")
 		secretsMap := utils.GenerateSecrets("./environment.env", secrets)
@@ -191,10 +191,14 @@ func askForUserInput(
 	askForStackComponent(templateData, varMap, volMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for databases
-	askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	databaseCount := askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
 
-	// Ask for db admin tools
-	askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+	if databaseCount > 0 {
+		// Ask for db admin tools
+		askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+	} else {
+		(*templateData)["db-admin"] = []model.ServiceTemplateConfig{}
+	}
 
 	if alsoProduction {
 		// Ask for proxies
@@ -216,7 +220,7 @@ func processUserInput(
 	composeVersion string,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
-) (model.ComposeFile, model.ComposeFile, []model.Secret) {
+) (model.ComposeFile, model.ComposeFile, []string, []model.Secret) {
 	// Prepare compose files
 	var composeFileDev model.ComposeFile
 	composeFileDev.Version = composeVersion
@@ -228,6 +232,7 @@ func processUserInput(
 	// Loop through selected templates
 	dstPath := "."
 	var secrets []model.Secret
+	var varFiles []string
 	var networks []string
 	for templateType, templates := range templateData {
 		for _, template := range templates {
@@ -240,18 +245,18 @@ func processUserInput(
 						// Append content to existing file
 						fileOut, err1 := os.OpenFile(filepath.Join(dstPath, f.Path), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 						fileIn, err2 := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-						replaced := utils.ReplaceVarsInString(string(fileIn), varMap)
 						if err1 == nil && err2 == nil {
-							fileOut.WriteString(replaced + "\n\n")
+							fileOut.WriteString(string(fileIn) + "\n\n")
 						}
 						defer fileOut.Close()
+						varFiles = append(varFiles, filepath.Join(dstPath, f.Path))
 					}
 				case "docker":
 					if flagWithDockerfile {
 						// Copy dockerfile
 						os.Remove(filepath.Join(dstPath, f.Path))
 						copy.Copy(filepath.Join(srcPath, f.Path), filepath.Join(dstPath, f.Path))
-						utils.ReplaceVarsInFile(filepath.Join(dstPath, f.Path), varMap)
+						varFiles = append(varFiles, filepath.Join(dstPath, f.Path))
 					}
 				case "service":
 					// Load service file
@@ -305,7 +310,7 @@ func processUserInput(
 			composeFileProd.Networks[n] = model.Network{}
 		}
 	}
-	return composeFileDev, composeFileProd, secrets
+	return composeFileDev, composeFileProd, varFiles, secrets
 }
 
 func askForStackComponent(
@@ -317,7 +322,7 @@ func askForStackComponent(
 	question string,
 	flagAdvanced bool,
 	flagWithDockerfile bool,
-) {
+) (componentCount int) {
 	templates := (*templateData)[component]
 	items := parser.TemplateListToTemplateLabelList(templates)
 	(*templateData)[component] = []model.ServiceTemplateConfig{}
@@ -328,14 +333,17 @@ func askForStackComponent(
 			(*templateData)[component] = append((*templateData)[component], templates[index])
 			getVarMapFromQuestions(varMap, templates[index].Questions, flagAdvanced)
 			getVolumeMapFromVolumes(varMap, volMap, templates[index], flagAdvanced, flagWithDockerfile)
+			componentCount++
 		}
 	} else {
 		templateSelection := utils.MenuQuestionIndex(question, items)
 		(*templateData)[component] = append((*templateData)[component], templates[templateSelection])
 		getVarMapFromQuestions(varMap, templates[templateSelection].Questions, flagAdvanced)
 		getVolumeMapFromVolumes(varMap, volMap, templates[templateSelection], flagAdvanced, flagWithDockerfile)
+		componentCount = 1
 	}
 	utils.Pel()
+	return
 }
 
 func getVarMapFromQuestions(
@@ -426,8 +434,6 @@ func evaluateCondition(
 	if strings.HasPrefix(condition, "has service ") {
 		for _, templates := range templateData {
 			for _, template := range templates {
-				fmt.Println("Name: '" + template.Name + "'")
-				fmt.Println("t: '" + condition[12:] + "'")
 				if template.Name == condition[12:] {
 					return true
 				}

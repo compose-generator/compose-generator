@@ -86,6 +86,19 @@ func GetPredefinedServicesPath() string {
 	return "../predefined-services" // Dev
 }
 
+func getToolboxPath() string {
+	if FileExists("/usr/lib/compose-generator/toolbox") {
+		return "/usr/lib/compose-generator/toolbox" // Linux
+	}
+	filename, _ := osext.Executable()
+	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filename[:strings.LastIndex(filename, "/")]
+	if FileExists(filename + "/toolbox") {
+		return filename + "/toolbox" // Windows + Docker
+	}
+	return "../toolbox" // Dev
+}
+
 // ReplaceVarsInFile replaces all variables in the stated file with the contents of the map
 func ReplaceVarsInFile(path string, varMap map[string]string) {
 	// Read file content
@@ -98,7 +111,7 @@ func ReplaceVarsInFile(path string, varMap map[string]string) {
 	content = []byte(ReplaceVarsInString(string(content), varMap))
 
 	// Write content back
-	err = ioutil.WriteFile(path, []byte(content), 0777)
+	err = ioutil.WriteFile(path, content, 0777)
 	if err != nil {
 		Error("Could not write to "+path, true)
 	}
@@ -222,6 +235,14 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 	cmd := exec.Command(c[0], c[1:]...)
 	output, _ := cmd.CombinedOutput()
 	return strings.TrimRight(string(output), "\r\n")
+}
+
+func ExecuteOnLinux(c string) {
+	// Build docker image
+	ExecuteAndWaitWithOutput("docker", "build", "-t", "compose-generator-toolbox", getToolboxPath())
+	// Start docker container
+	absolutePath, _ := os.Getwd()
+	ExecuteAndWait(strings.Split("docker run -i -v "+absolutePath+":/toolbox compose-generator-toolbox "+c, " ")...)
 }
 
 // ClearScreen errases the console contents
