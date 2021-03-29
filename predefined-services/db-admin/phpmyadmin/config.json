@@ -1,6 +1,6 @@
 {
     "label": "PhpMyAdmin",
-    "preselected": "mysql",
+    "preselected": "has service mysql",
     "files": [
         {
             "path": "service.yml",

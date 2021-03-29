@@ -98,7 +98,7 @@ func ReplaceVarsInFile(path string, varMap map[string]string) {
 	content = []byte(ReplaceVarsInString(string(content), varMap))
 
 	// Write content back
-	err = ioutil.WriteFile(path, []byte(content), 0777)
+	err = ioutil.WriteFile(path, content, 0777)
 	if err != nil {
 		Error("Could not write to "+path, true)
 	}

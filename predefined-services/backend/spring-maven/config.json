@@ -2,9 +2,9 @@
     "label": "Spring Maven",
     "preselected": "false",
     "exampleAppInitCmd": [
-        "curl https://start.spring.io/starter.zip -d applicationName=${{PROJECT_NAME}} -d packageName=${{SPRING_PACKAGE_NAME}} -d dependencies=${{SPRING_DEPENDENCIES}} -d language=${{SPRING_LANGUAGE}} -d bootVersion=${{SPRING_VERSION}} -o ./backend/${{PROJECT_CONTAINER}}.zip",
-        "unzip -q ./backend/${{PROJECT_CONTAINER}}.zip -d ./backend",
-        "rm ./backend/${{PROJECT_CONTAINER}}.zip"
+        "curl https://start.spring.io/starter.zip -d applicationName=${{PROJECT_NAME}} -d packageName=${{SPRING_PACKAGE_NAME}} -d dependencies=${{SPRING_DEPENDENCIES}} -d language=${{SPRING_LANGUAGE}} -d bootVersion=${{SPRING_VERSION}} -o ./backend/${{PROJECT_NAME_CONTAINER}}.zip",
+        "unzip -q ./backend/${{PROJECT_NAME_CONTAINER}}.zip -d ./backend",
+        "rm ./backend/${{PROJECT_NAME_CONTAINER}}.zip"
     ],
     "files": [
         {
