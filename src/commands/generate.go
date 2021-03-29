@@ -147,8 +147,7 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	for _, templates := range templateData {
 		for _, template := range templates {
 			for _, cmd := range template.ExampleAppInitCmd {
-				command := utils.ReplaceVarsInString(cmd, varMap)
-				utils.ExecuteAndWait(strings.Split("npx -p shx "+command, " ")...)
+				utils.ExecuteOnLinux(utils.ReplaceVarsInString(cmd, varMap))
 			}
 		}
 	}
