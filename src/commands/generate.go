@@ -24,8 +24,11 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Generate a docker compose configuration
-func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
-	utils.ClearScreen()
+func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
+	// Clear screen if in interactive mode
+	if configPath == "" {
+		utils.ClearScreen()
+	}
 
 	// Execute SafetyFileChecks
 	if !flagForce {
@@ -37,14 +40,32 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 	utils.Pl("Please continue by answering a few questions:")
 	utils.Pel()
 
-	// Project name
-	projectName := utils.TextQuestion("What is the name of your project:")
-	if projectName == "" {
-		utils.Error("Error. You must specify a project name!", true)
+	// Load config file if available
+	var configFile model.GenerateConfig
+	projectName := "Example Project"
+	if configPath != "" {
+		if utils.FileExists(configPath) {
+			yamlFile, err1 := os.Open(configPath)
+			content, err2 := ioutil.ReadAll(yamlFile)
+			if err1 != nil || err2 != nil {
+				utils.Error("Could not load config file. Permissions granted?", true)
+			}
+			// Parse yaml
+			yaml.Unmarshal(content, &configFile)
+			projectName = configFile.ProjectName
+		} else {
+			utils.Error("Config file could not be found", true)
+		}
+	} else {
+		// Ask for project name
+		projectName = utils.TextQuestion("What is the name of your project:")
+		if projectName == "" {
+			utils.Error("Error. You must specify a project name!", true)
+		}
 	}
 
 	// Generate dynamic stack
-	generateDynamicStack(projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
+	generateDynamicStack(configFile, projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -58,8 +79,17 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
-	utils.ClearScreen()
+func generateDynamicStack(
+	configFile model.GenerateConfig,
+	projectName string,
+	flagAdvanced bool,
+	flagWithInstructions bool,
+	flagWithDockerfile bool,
+) {
+	// Clear screen if in interactive mode
+	if configFile.ProjectName == "" {
+		utils.ClearScreen()
+	}
 
 	// Initialize varMap and volumeMap
 	varMap := make(map[string]string)
@@ -70,8 +100,45 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	// Load configurations of service templates
 	templateData := parser.ParsePredefinedServices()
 
-	// Ask user decisions
-	composeVersion, alsoProduction := askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
+	composeVersion := configFile.ComposeVersion
+	alsoProduction := configFile.AlsoProduction
+	if configFile.ProjectName != "" {
+		// Provide selected template data from config file
+		serviceConfig := configFile.ServiceConfig
+		selectedTemplateData := map[string][]model.ServiceTemplateConfig{}
+		for templateType, templates := range templateData {
+			selectedTemplateData[templateType] = []model.ServiceTemplateConfig{}
+			for _, template := range templates {
+				// Loop through services
+				for _, service := range serviceConfig {
+					if service.Type == templateType && strings.HasSuffix(template.Dir, service.Service) {
+						selectedTemplateData[templateType] = append(selectedTemplateData[templateType], template)
+						// Loop through questions and add default values to varMap
+						for _, question := range template.Questions {
+							varMap[question.Variable] = question.DefaultValue
+						}
+						// Override with params
+						for varName, varValue := range service.Params {
+							varMap[varName] = varValue
+							// Loop through volumes
+							for _, volume := range template.Volumes {
+								if volume.Variable == varName {
+									volMap[filepath.Join(template.Dir, volume.DefaultValue)] = varValue
+									break
+								}
+							}
+						}
+						break
+					}
+				}
+			}
+		}
+		templateData = selectedTemplateData
+	} else {
+		// Ask user decisions
+		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
+	}
+	fmt.Println(volMap)
 
 	// Delete old files
 	fmt.Print("Cleaning up ... ")
@@ -142,18 +209,20 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	}
 	utils.Done()
 
-	// Create example applications
-	fmt.Print("Generating demo applications (may take a while) ... ")
-	for _, templates := range templateData {
-		for _, template := range templates {
-			var commands []string
-			for _, cmd := range template.ExampleAppInitCmd {
-				commands = append(commands, utils.ReplaceVarsInString(cmd, varMap))
+	if flagWithDockerfile {
+		// Create example applications
+		fmt.Print("Generating demo applications (may take a while) ... ")
+		for _, templates := range templateData {
+			for _, template := range templates {
+				var commands []string
+				for _, cmd := range template.ExampleAppInitCmd {
+					commands = append(commands, utils.ReplaceVarsInString(cmd, varMap))
+				}
+				utils.ExecuteOnLinux(strings.Join(commands, "; "))
 			}
-			utils.ExecuteOnLinux(strings.Join(commands, "; "))
 		}
+		utils.Done()
 	}
-	utils.Done()
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -218,7 +287,7 @@ func askForUserInput(
 func processUserInput(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
-	volumeMap map[string]string,
+	volMap map[string]string,
 	composeVersion string,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
@@ -255,10 +324,19 @@ func processUserInput(
 					}
 				case "docker":
 					if flagWithDockerfile {
-						// Copy dockerfile
-						os.Remove(filepath.Join(dstPath, f.Path))
-						copy.Copy(filepath.Join(srcPath, f.Path), filepath.Join(dstPath, f.Path))
-						varFiles = append(varFiles, filepath.Join(dstPath, f.Path))
+						// Check if Dockerfile is inside of a volume
+						absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
+						dockerfileDst := filepath.Join(dstPath, f.Path)
+						for volSrc, volDst := range volMap {
+							absVolSrc, _ := filepath.Abs(volSrc)
+							if strings.Contains(absDockerfileSrc, absVolSrc) {
+								dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
+							}
+						}
+						// Copy Dockerfile
+						os.Remove(dockerfileDst)
+						copy.Copy(absDockerfileSrc, dockerfileDst)
+						varFiles = append(varFiles, dockerfileDst)
 					}
 				case "service":
 					// Load service file
@@ -354,10 +432,11 @@ func getVarMapFromQuestions(
 	flagAdvanced bool,
 ) {
 	for _, q := range questions {
+		defaultValue := utils.ReplaceVarsInString(q.DefaultValue, *varMap)
 		if !q.Advanced || (q.Advanced && flagAdvanced) {
 			switch q.Type {
 			case 1: // Yes/No
-				defaultValue, _ := strconv.ParseBool(q.DefaultValue)
+				defaultValue, _ := strconv.ParseBool(defaultValue)
 				(*varMap)[q.Variable] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
 			case 2: // Text
 				if q.Validator != "" {
@@ -374,13 +453,13 @@ func getVarMapFromQuestions(
 							return nil
 						}
 					}
-					(*varMap)[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, customValidator)
+					(*varMap)[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, defaultValue, customValidator)
 				} else {
-					(*varMap)[q.Variable] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
+					(*varMap)[q.Variable] = utils.TextQuestionWithDefault(q.Text, defaultValue)
 				}
 			}
 		} else {
-			(*varMap)[q.Variable] = q.DefaultValue
+			(*varMap)[q.Variable] = defaultValue
 		}
 	}
 }

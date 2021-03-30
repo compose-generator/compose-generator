@@ -9,7 +9,7 @@ volumes:
 networks:
   - ${{PROJECT_NAME_CONTAINER}}
 environment:
-  - DEFAULT_EMAIL=${{DOMAIN_EMAIL}}
+  - DEFAULT_EMAIL=${{TLS_DOMAIN_EMAIL}}
   - NGINX_PROXY_CONTAINER=proxy
 depends_on:
   - proxy

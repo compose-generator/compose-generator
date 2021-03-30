@@ -6,7 +6,7 @@ networks:
 #!  - mysql-phpmyadmin
 #! }
 ports:
-  - ${{HOST_MYSQL_PORT}}:3306
+  - ${{MYSQL_PORT}}:3306
 volumes: 
   - ${{VOLUME_MYSQL_DATA}}:/var/lib/mysql
   - ${{VOLUME_MYSQL_LOGS}}:/var/log/mysql

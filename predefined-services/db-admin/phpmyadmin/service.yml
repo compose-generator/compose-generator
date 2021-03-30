@@ -5,7 +5,7 @@ networks:
 #!   - mysql-phpmyadmin
 #! }
 ports:
-  - ${{HOST_PMA_PORT}}:80
+  - ${{PMA_PORT}}:80
 volumes:
   - /sessions
 env_file:

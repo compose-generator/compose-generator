@@ -16,13 +16,14 @@
             "text": "TLS Certificate Host (e.g. test.example.com):",
             "type": 2,
             "validator": "hostname",
-            "variable": "DOMAIN_URL"
+            "variable": "TLS_DOMAIN_URL"
         },
         {
             "text": "TLS Certificate E-Mail Adress (e.g. admin@example.com):",
+            "defaultValue": "webmaster@${{TLS_DOMAIN_URL}}",
             "type": 2,
             "validator": "email",
-            "variable": "DOMAIN_EMAIL"
+            "variable": "TLS_DOMAIN_EMAIL"
         }
     ],
     "volumes": [

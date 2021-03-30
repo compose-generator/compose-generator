@@ -2,7 +2,7 @@
     "label": "Angular",
     "preselected": "false",
     "exampleAppInitCmd": [
-        "ng new demo-app --directory ./frontend --style=less --skip-git --skip-tests --skip-install"
+        "ng new demo-app --directory ${{ANGULAR_SOURCE_DIRECTORY}} --style=less --skip-git --skip-tests --skip-install"
     ],
     "files": [
         {
@@ -20,18 +20,18 @@
     ],
     "questions": [
         {
-            "text": "On which port you want to expose your app?",
+            "text": "On which port you want to expose your Angular app?",
             "type": 2,
             "defaultValue": "80",
             "validator": "port",
-            "variable": "HOST_APP_PORT"
+            "variable": "ANGULAR_PORT"
         }
     ],
     "volumes": [
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./frontend",
-            "variable": "SOURCE_DIRECTORY",
+            "variable": "ANGULAR_SOURCE_DIRECTORY",
             "withDockerfile": true
         }
     ]
