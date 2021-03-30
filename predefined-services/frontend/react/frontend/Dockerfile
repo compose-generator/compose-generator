@@ -3,7 +3,8 @@ FROM node:lts AS development
 
 WORKDIR /code
 COPY yarn.lock /code/yarn.lock
-RUN yarn install --frozen-lockfile
+COPY package.json /code/package.json
+RUN yarn install --production
 
 COPY . /code
 

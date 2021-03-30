@@ -6,7 +6,8 @@
         "mv ./frontend/* ./tmp",
         "npx create-react-app ./frontend",
         "mv ./tmp/* ./frontend",
-        "rm -rf ./tmp"
+        "rm -rf ./tmp",
+        "rm -rf ./frontend/node_modules"
     ],
     "files": [
         {
