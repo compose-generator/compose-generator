@@ -7,7 +7,7 @@ on:
     paths:
       - 'src/**'
   pull_request:
-    branches: [ main, dev ]
+    branches: [ main, dev, feature/* ]
 
 jobs:
   build:

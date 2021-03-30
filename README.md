@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Compose Generator Logo" src="./docs/docs/static/avatar.png" height="200" />
+  <img alt="Compose Generator Logo" src="./docs/docs/static/avatar.png" height="220" />
   <h3 align="center">Compose Generator</h3>
   <p align="center">Easy to use cli to generate Docker Compose YAML configuration files.</p>
   <p align="center">
@@ -16,7 +16,7 @@
 ---
 
 ## Documentation
-Please visit the documentation on [https://compose-generator.com](https://www.compose-generator.com).
+Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).
 
 ## Usage
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
