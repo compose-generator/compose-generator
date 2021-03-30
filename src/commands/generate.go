@@ -24,7 +24,7 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Generate a docker compose configuration
-func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
+func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
 	utils.ClearScreen()
 
 	// Execute SafetyFileChecks
@@ -37,14 +37,32 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 	utils.Pl("Please continue by answering a few questions:")
 	utils.Pel()
 
-	// Project name
-	projectName := utils.TextQuestion("What is the name of your project:")
-	if projectName == "" {
-		utils.Error("Error. You must specify a project name!", true)
+	// Load config file if available
+	var configFile model.GenerateConfig
+	projectName := "Example Project"
+	if configPath != "" {
+		if utils.FileExists(configPath) {
+			yamlFile, err1 := os.Open(configPath)
+			content, err2 := ioutil.ReadAll(yamlFile)
+			if err1 != nil || err2 != nil {
+				utils.Error("Could not load config file. Permissions granted?", true)
+			}
+			// Parse yaml
+			yaml.Unmarshal(content, &configFile)
+			projectName = configFile.ProjectName
+		} else {
+			utils.Error("Config file could not be found", true)
+		}
+	} else {
+		// Ask for project name
+		projectName = utils.TextQuestion("What is the name of your project:")
+		if projectName == "" {
+			utils.Error("Error. You must specify a project name!", true)
+		}
 	}
 
 	// Generate dynamic stack
-	generateDynamicStack(projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
+	generateDynamicStack(configFile, projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -58,7 +76,7 @@ func Generate(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
+func generateDynamicStack(configFile model.GenerateConfig, projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
 	utils.ClearScreen()
 
 	// Initialize varMap and volumeMap
@@ -70,8 +88,45 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	// Load configurations of service templates
 	templateData := parser.ParsePredefinedServices()
 
-	// Ask user decisions
-	composeVersion, alsoProduction := askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
+	composeVersion := configFile.ComposeVersion
+	alsoProduction := configFile.AlsoProduction
+	if configFile.ProjectName != "" {
+		// Provide selected template data from config file
+		serviceConfig := configFile.ServiceConfig
+		selectedTemplateData := map[string][]model.ServiceTemplateConfig{}
+		srcPath := utils.GetPredefinedServicesPath()
+		for templateType, templates := range templateData {
+			selectedTemplateData[templateType] = []model.ServiceTemplateConfig{}
+			for _, template := range templates {
+				// Loop through services
+				for _, service := range serviceConfig {
+					if service.Type == templateType && strings.HasSuffix(template.Dir, service.Service) {
+						selectedTemplateData[templateType] = append(selectedTemplateData[templateType], template)
+						// Loop through questions and add default values to varMap
+						for _, question := range template.Questions {
+							varMap[question.Variable] = question.DefaultValue
+						}
+						// Override with params
+						for varName, varValue := range service.Params {
+							varMap[varName] = varValue
+							// Loop through volumes
+							for _, volume := range template.Volumes {
+								if volume.Variable == varName {
+									volMap[filepath.Join(srcPath, volume.DefaultValue)] = varValue
+									break
+								}
+							}
+						}
+						break
+					}
+				}
+			}
+		}
+		templateData = selectedTemplateData
+	} else {
+		// Ask user decisions
+		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
+	}
 
 	// Delete old files
 	fmt.Print("Cleaning up ... ")
