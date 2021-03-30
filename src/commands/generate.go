@@ -197,18 +197,20 @@ func generateDynamicStack(configFile model.GenerateConfig, projectName string, f
 	}
 	utils.Done()
 
-	// Create example applications
-	fmt.Print("Generating demo applications (may take a while) ... ")
-	for _, templates := range templateData {
-		for _, template := range templates {
-			var commands []string
-			for _, cmd := range template.ExampleAppInitCmd {
-				commands = append(commands, utils.ReplaceVarsInString(cmd, varMap))
+	if flagWithDockerfile {
+		// Create example applications
+		fmt.Print("Generating demo applications (may take a while) ... ")
+		for _, templates := range templateData {
+			for _, template := range templates {
+				var commands []string
+				for _, cmd := range template.ExampleAppInitCmd {
+					commands = append(commands, utils.ReplaceVarsInString(cmd, varMap))
+				}
+				utils.ExecuteOnLinux(strings.Join(commands, "; "))
 			}
-			utils.ExecuteOnLinux(strings.Join(commands, "; "))
 		}
+		utils.Done()
 	}
-	utils.Done()
 
 	if len(secrets) > 0 {
 		// Generate secrets
