@@ -25,7 +25,10 @@ import (
 
 // Generate a docker compose configuration
 func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
-	utils.ClearScreen()
+	// Clear screen if in interactive mode
+	if configPath == "" {
+		utils.ClearScreen()
+	}
 
 	// Execute SafetyFileChecks
 	if !flagForce {
@@ -76,8 +79,17 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateDynamicStack(configFile model.GenerateConfig, projectName string, flagAdvanced bool, flagWithInstructions bool, flagWithDockerfile bool) {
-	utils.ClearScreen()
+func generateDynamicStack(
+	configFile model.GenerateConfig,
+	projectName string,
+	flagAdvanced bool,
+	flagWithInstructions bool,
+	flagWithDockerfile bool,
+) {
+	// Clear screen if in interactive mode
+	if configFile.ProjectName == "" {
+		utils.ClearScreen()
+	}
 
 	// Initialize varMap and volumeMap
 	varMap := make(map[string]string)
@@ -94,7 +106,6 @@ func generateDynamicStack(configFile model.GenerateConfig, projectName string, f
 		// Provide selected template data from config file
 		serviceConfig := configFile.ServiceConfig
 		selectedTemplateData := map[string][]model.ServiceTemplateConfig{}
-		srcPath := utils.GetPredefinedServicesPath()
 		for templateType, templates := range templateData {
 			selectedTemplateData[templateType] = []model.ServiceTemplateConfig{}
 			for _, template := range templates {
@@ -112,7 +123,7 @@ func generateDynamicStack(configFile model.GenerateConfig, projectName string, f
 							// Loop through volumes
 							for _, volume := range template.Volumes {
 								if volume.Variable == varName {
-									volMap[filepath.Join(srcPath, volume.DefaultValue)] = varValue
+									volMap[filepath.Join(template.Dir, volume.DefaultValue)] = varValue
 									break
 								}
 							}
@@ -127,6 +138,7 @@ func generateDynamicStack(configFile model.GenerateConfig, projectName string, f
 		// Ask user decisions
 		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
 	}
+	fmt.Println(volMap)
 
 	// Delete old files
 	fmt.Print("Cleaning up ... ")
