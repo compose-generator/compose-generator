@@ -1,0 +1,5 @@
+build: frontend
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend
+restart: always
+ports:
+  - ${{HOST_APP_PORT}}:80

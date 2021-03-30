@@ -146,9 +146,11 @@ func generateDynamicStack(projectName string, flagAdvanced bool, flagWithInstruc
 	fmt.Print("Generating demo applications (may take a while) ... ")
 	for _, templates := range templateData {
 		for _, template := range templates {
+			var commands []string
 			for _, cmd := range template.ExampleAppInitCmd {
-				utils.ExecuteOnLinux(utils.ReplaceVarsInString(cmd, varMap))
+				commands = append(commands, utils.ReplaceVarsInString(cmd, varMap))
 			}
+			utils.ExecuteOnLinux(strings.Join(commands, "; "))
 		}
 	}
 	utils.Done()
