@@ -3,11 +3,11 @@
     "preselected": "false",
     "exampleAppInitCmd": [
         "mkdir tmp",
-        "mv ./frontend/* ./tmp",
-        "npx create-react-app ./frontend",
-        "mv ./tmp/* ./frontend",
+        "mv ${{REACT_SOURCE_DIRECTORY}}/* ./tmp",
+        "npx create-react-app ${{REACT_SOURCE_DIRECTORY}}",
+        "mv ./tmp/* ${{REACT_SOURCE_DIRECTORY}}",
         "rm -rf ./tmp",
-        "rm -rf ./frontend/node_modules"
+        "rm -rf ${{REACT_SOURCE_DIRECTORY}}/node_modules"
     ],
     "files": [
         {
@@ -25,18 +25,18 @@
     ],
     "questions": [
         {
-            "text": "On which port you want to expose your app?",
+            "text": "On which port you want to expose your React app?",
             "type": 2,
             "defaultValue": "80",
             "validator": "port",
-            "variable": "HOST_APP_PORT"
+            "variable": "REACT_PORT"
         }
     ],
     "volumes": [
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./frontend",
-            "variable": "SOURCE_DIRECTORY",
+            "variable": "REACT_SOURCE_DIRECTORY",
             "withDockerfile": true
         }
     ]

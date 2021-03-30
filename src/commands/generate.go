@@ -218,7 +218,7 @@ func askForUserInput(
 func processUserInput(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
-	volumeMap map[string]string,
+	volMap map[string]string,
 	composeVersion string,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
@@ -255,10 +255,19 @@ func processUserInput(
 					}
 				case "docker":
 					if flagWithDockerfile {
-						// Copy dockerfile
-						os.Remove(filepath.Join(dstPath, f.Path))
-						copy.Copy(filepath.Join(srcPath, f.Path), filepath.Join(dstPath, f.Path))
-						varFiles = append(varFiles, filepath.Join(dstPath, f.Path))
+						// Check if Dockerfile is inside of a volume
+						absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
+						dockerfileDst := filepath.Join(dstPath, f.Path)
+						for volSrc, volDst := range volMap {
+							absVolSrc, _ := filepath.Abs(volSrc)
+							if strings.Contains(absDockerfileSrc, absVolSrc) {
+								dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
+							}
+						}
+						// Copy Dockerfile
+						os.Remove(dockerfileDst)
+						copy.Copy(absDockerfileSrc, dockerfileDst)
+						varFiles = append(varFiles, dockerfileDst)
 					}
 				case "service":
 					// Load service file
@@ -354,10 +363,11 @@ func getVarMapFromQuestions(
 	flagAdvanced bool,
 ) {
 	for _, q := range questions {
+		defaultValue := utils.ReplaceVarsInString(q.DefaultValue, *varMap)
 		if !q.Advanced || (q.Advanced && flagAdvanced) {
 			switch q.Type {
 			case 1: // Yes/No
-				defaultValue, _ := strconv.ParseBool(q.DefaultValue)
+				defaultValue, _ := strconv.ParseBool(defaultValue)
 				(*varMap)[q.Variable] = strconv.FormatBool(utils.YesNoQuestion(q.Text, defaultValue))
 			case 2: // Text
 				if q.Validator != "" {
@@ -374,13 +384,13 @@ func getVarMapFromQuestions(
 							return nil
 						}
 					}
-					(*varMap)[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, q.DefaultValue, customValidator)
+					(*varMap)[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, defaultValue, customValidator)
 				} else {
-					(*varMap)[q.Variable] = utils.TextQuestionWithDefault(q.Text, q.DefaultValue)
+					(*varMap)[q.Variable] = utils.TextQuestionWithDefault(q.Text, defaultValue)
 				}
 			}
 		} else {
-			(*varMap)[q.Variable] = q.DefaultValue
+			(*varMap)[q.Variable] = defaultValue
 		}
 	}
 }

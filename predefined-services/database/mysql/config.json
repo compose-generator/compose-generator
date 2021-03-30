@@ -21,7 +21,7 @@
             "type": 2,
             "defaultValue": "3306",
             "validator": "port",
-            "variable": "HOST_MYSQL_PORT"
+            "variable": "MYSQL_PORT"
         },
         {
             "text": "How do you want to call the MySQL user for your application?",

@@ -21,7 +21,7 @@
             "type": 2,
             "defaultValue": "81",
             "validator": "port",
-            "variable": "HOST_PMA_PORT"
+            "variable": "PMA_PORT"
         },
         {
             "text": "Which version of PHPMyAdmin do you want to use?",
