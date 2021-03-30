@@ -239,10 +239,10 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 
 func ExecuteOnLinux(c string) {
 	// Build docker image
-	ExecuteAndWaitWithOutput("docker", "build", "-t", "compose-generator-toolbox", getToolboxPath())
+	ExecuteAndWait("docker", "build", "-t", "compose-generator-toolbox", getToolboxPath())
 	// Start docker container
 	absolutePath, _ := os.Getwd()
-	ExecuteAndWait(strings.Split("docker run -i -v "+absolutePath+":/toolbox compose-generator-toolbox "+c, " ")...)
+	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "compose-generator-toolbox", c)
 }
 
 // ClearScreen errases the console contents
