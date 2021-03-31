@@ -29,7 +29,8 @@ dockers:
     dockerfile: Dockerfile
     use_buildx: true
     extra_files:
-      - predefined-templates
+      - predefined-services
+      - toolbox
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
@@ -44,7 +45,8 @@ archives:
   - files:
       - README.md
       - LICENSE
-      - predefined-templates/*
+      - predefined-services/*
+      - toolbox/*
     format_overrides:
       - goos: windows
         format: zip
@@ -59,19 +61,17 @@ nfpms:
       - deb
       - rpm
     dependencies:
-      - curl
       - lsb-release
     overrides:
       rpm:
         dependencies:
           - redhat-lsb
-          - curl
-      apk:
-        dependencies:
-          - curl
+      apk.dependencies: []
     contents:
-      - src: predefined-templates/*
-        dst: /usr/lib/compose-generator/predefined-templates/
+      - src: predefined-services/*
+        dst: /usr/lib/compose-generator/predefined-services/
+        - src: toolbox/*
+        dst: /usr/lib/compose-generator/toolbox/
     empty_folders:
       - /usr/lib/compose-generator/templates
 release:

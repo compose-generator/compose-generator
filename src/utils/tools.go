@@ -1,11 +1,13 @@
 package utils
 
 import (
+	"crypto/tls"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -16,26 +18,15 @@ import (
 	"compose-generator/model"
 )
 
-// ExecuteSafetyFileChecks checks if commonly used files are already existing and warns the user about it
-func ExecuteSafetyFileChecks(flagWithInstructions bool, flagWithDockerfile bool) {
-	isNotSafe := FileExists("docker-compose.yml") || FileExists("environment.env")
-	if IsDockerized() {
-		isNotSafe = FileExists("/compose-generator/out/docker-compose.yml") || FileExists("/compose-generator/out/environment.env")
+// PrintSafetyWarning checks if commonly used files are already existing and warns the user about it
+func PrintSafetyWarning(existingCount int) {
+	Pel()
+	Warning(strconv.Itoa(existingCount) + " output files already exist. By continuing, those files will be overwritten!")
+	result := YesNoQuestion("Do you want to continue?", true)
+	if !result {
+		os.Exit(0)
 	}
-	if flagWithInstructions && !isNotSafe {
-		isNotSafe = FileExists("README.md")
-	}
-	if flagWithDockerfile && !isNotSafe {
-		isNotSafe = FileExists("Dockerfile")
-	}
-	if isNotSafe {
-		Warning("One or more output files already exist at the target path. By continuing, this files could potentally get overwritten.")
-		result := YesNoQuestion("Do you want to continue?", true)
-		if !result {
-			os.Exit(0)
-		}
-		ClearScreen()
-	}
+	Pel()
 }
 
 // IsDockerized checks if Compose Generator runs within a dockerized environment
@@ -72,22 +63,35 @@ func GetTemplatesPath() string {
 	return "../templates" // Dev
 }
 
-// GetPredefinedTemplatesPath returns the path to the predefined templates directory
-func GetPredefinedTemplatesPath() string {
-	if FileExists("/usr/lib/compose-generator/predefined-templates") {
-		return "/usr/lib/compose-generator/predefined-templates" // Linux
+// GetPredefinedServicesPath returns the path to the predefined services directory
+func GetPredefinedServicesPath() string {
+	if FileExists("/usr/lib/compose-generator/predefined-services") {
+		return "/usr/lib/compose-generator/predefined-services" // Linux
 	}
 	filename, _ := osext.Executable()
 	filename = strings.ReplaceAll(filename, "\\", "/")
 	filename = filename[:strings.LastIndex(filename, "/")]
-	if FileExists(filename + "/predefined-templates") {
-		return filename + "/predefined-templates" // Windows + Docker
+	if FileExists(filename + "/predefined-services") {
+		return filename + "/predefined-services" // Windows + Docker
 	}
-	return "../predefined-templates" // Dev
+	return "../predefined-services" // Dev
+}
+
+func getToolboxPath() string {
+	if FileExists("/usr/lib/compose-generator/toolbox") {
+		return "/usr/lib/compose-generator/toolbox" // Linux
+	}
+	filename, _ := osext.Executable()
+	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filename[:strings.LastIndex(filename, "/")]
+	if FileExists(filename + "/toolbox") {
+		return filename + "/toolbox" // Windows + Docker
+	}
+	return "../toolbox" // Dev
 }
 
 // ReplaceVarsInFile replaces all variables in the stated file with the contents of the map
-func ReplaceVarsInFile(path string, envMap map[string]string) {
+func ReplaceVarsInFile(path string, varMap map[string]string) {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -95,16 +99,21 @@ func ReplaceVarsInFile(path string, envMap map[string]string) {
 	}
 
 	// Replace variables
-	newContent := string(content)
-	for key, value := range envMap {
-		newContent = strings.ReplaceAll(newContent, "${{"+key+"}}", value)
-	}
+	content = []byte(ReplaceVarsInString(string(content), varMap))
 
 	// Write content back
-	err = ioutil.WriteFile(path, []byte(newContent), 0777)
+	err = ioutil.WriteFile(path, content, 0777)
 	if err != nil {
 		Error("Could not write to "+path, true)
 	}
+}
+
+// ReplaceVarsInString replaces all variables in the stated string with the contents of the map
+func ReplaceVarsInString(content string, varMap map[string]string) string {
+	for key, value := range varMap {
+		content = strings.ReplaceAll(content, "${{"+key+"}}", value)
+	}
+	return content
 }
 
 // GenerateSecrets generates random strings as secrets and replaces them in the stated file
@@ -123,7 +132,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 		if err != nil {
 			Error("Password generation failed.", true)
 		}
-		newContent = strings.ReplaceAll(newContent, "${{"+s.Var+"}}", res)
+		newContent = strings.ReplaceAll(newContent, "${{"+s.Variable+"}}", res)
 		secretsMap[s.Name] = res
 	}
 
@@ -138,7 +147,14 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 
 // DownloadFile downloads a file by its url
 func DownloadFile(url string, filepath string) error {
-	resp, err := http.Get(url)
+	// Ignore untrusted authorities
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
+
+	// Download file
+	resp, err := client.Get(url)
 	if err != nil {
 		return err
 	}
@@ -190,6 +206,15 @@ func RemoveStringFromSlice(s []string, r string) []string {
 	return s
 }
 
+func AppendStringToSliceIfMissing(slice []string, i string) []string {
+	for _, ele := range slice {
+		if ele == i {
+			return slice
+		}
+	}
+	return append(slice, i)
+}
+
 // DockerComposeUp executes 'docker compose up' in the current directory
 func DockerComposeUp(detached bool) {
 	Pel()
@@ -217,6 +242,30 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 	cmd := exec.Command(c[0], c[1:]...)
 	output, _ := cmd.CombinedOutput()
 	return strings.TrimRight(string(output), "\r\n")
+}
+
+func ExecuteOnLinux(c string) {
+	ensureToolbox()
+	// Start docker container
+	absolutePath, _ := os.Getwd()
+	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "compose-generator-toolbox", c)
+}
+
+func ensureToolbox() {
+	// Check if toolbox image exists locally
+	imageInspect := ExecuteAndWaitWithOutput("docker", "image", "inspect", "compose-generator-toolbox")
+	if !strings.HasPrefix(imageInspect, "[]") { // Image exists locally -> return
+		return
+	}
+	if FileExists(filepath.Join(getToolboxPath(), "toolbox.img")) { // Image exists as file
+		// Load iamge
+		ExecuteAndWait("docker", "load", "-i", filepath.Join(getToolboxPath(), "toolbox.img"))
+	} else { // Image has to be built
+		// Build docker image
+		ExecuteAndWait("docker", "build", "-t", "compose-generator-toolbox", getToolboxPath())
+		// Save docker image as file
+		ExecuteAndWait("docker", "save", "-o", filepath.Join(getToolboxPath(), "toolbox.img"), "compose-generator-toolbox")
+	}
 }
 
 // ClearScreen errases the console contents

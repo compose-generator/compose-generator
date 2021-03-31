@@ -3,7 +3,6 @@ package commands
 import (
 	"compose-generator/model"
 	"compose-generator/utils"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -27,7 +26,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 		path = utils.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
 	}
 
-	fmt.Print("Parsing compose file ... ")
+	utils.P("Parsing compose file ... ")
 	// Load compose file
 	jsonFile, err := os.Open(path)
 	if err != nil {
@@ -53,12 +52,12 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	}
 
 	// Add service
-	fmt.Print("Adding service ... ")
+	utils.P("Adding service ... ")
 	composeFile.Services[serviceName] = service
 	utils.Done()
 
 	// Write to file
-	fmt.Print("Saving compose file ... ")
+	utils.P("Saving compose file ... ")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
 	if err1 != nil || err2 != nil {
@@ -173,7 +172,7 @@ func askForImage(build bool) string {
 }
 
 func searchRemoteImage(registry string, image string) {
-	fmt.Print("\nSearching image ... ")
+	utils.P("\nSearching image ... ")
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err == nil {
 		color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")

@@ -1,0 +1,35 @@
+{
+    "label": "PhpMyAdmin",
+    "preselected": "has service mysql",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose PHPMyAdmin?",
+            "type": 2,
+            "defaultValue": "81",
+            "validator": "port",
+            "variable": "PMA_PORT"
+        },
+        {
+            "text": "Which version of PHPMyAdmin do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "validator": "alphanum",
+            "variable": "PMA_VERSION",
+            "advanced": true
+        }
+    ]
+}

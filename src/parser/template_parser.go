@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"compose-generator/model"
 	"compose-generator/utils"
@@ -13,21 +12,35 @@ import (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// ParsePredefinedTemplates returns a list of all predefined templates
-func ParsePredefinedTemplates() (configs []model.TemplateConfig) {
-	templatesPath := utils.GetPredefinedTemplatesPath()
+// ParsePredefinedServices returns a list of all predefined templates
+func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
+	templatesPath := utils.GetPredefinedServicesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
-		utils.Error("Internal error - could not load templates.", true)
+		utils.Error("Internal error - could not load service templates.", true)
 	}
-	filterFunc := func(s string) bool { return strings.Contains(s, "_") && !strings.Contains(s, ".") }
-	fileNames := filterFilenames(files, filterFunc)
+	filterFunc := func(s string) bool { return s != "README.md" }
 
-	for _, f := range fileNames {
-		config := getConfigFromFile(filepath.Join(templatesPath, f))
-		configs = append(configs, config)
+	configs := make(map[string][]model.ServiceTemplateConfig)
+	for _, templateType := range filterFilenames(files, filterFunc) {
+		files, err := ioutil.ReadDir(filepath.Join(templatesPath, templateType))
+		if err != nil {
+			utils.Error("Internal error - could not load service templates.", true)
+		}
+		for _, f := range filterFilenames(files, filterFunc) {
+			templatePath := filepath.Join(templatesPath, templateType, f)
+			config := getConfigFromFile(templatePath)
+			config.Name = f
+			config.Type = templateType
+			config.Dir = templatePath
+			if configs[templateType] != nil {
+				configs[templateType] = append(configs[templateType], config)
+			} else {
+				configs[templateType] = []model.ServiceTemplateConfig{config}
+			}
+		}
 	}
-	return
+	return configs
 }
 
 // ParseTemplates returns a list of all custom templates
@@ -49,9 +62,17 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	return
 }
 
+// TemplateListToTemplateNameList converts a list of service templates to a list of labels
+func TemplateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
+	for _, t := range templates {
+		labels = append(labels, t.Label)
+	}
+	return
+}
+
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func getConfigFromFile(dirPath string) (config model.TemplateConfig) {
+func getConfigFromFile(dirPath string) (config model.ServiceTemplateConfig) {
 	// Read JSON file
 	jsonFile, err := os.Open(dirPath + "/config.json")
 	if err != nil {

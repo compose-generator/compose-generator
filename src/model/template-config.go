@@ -1,19 +1,23 @@
 package model
 
-// TemplateConfig represents the JSON structure of predefined template configuration file
-type TemplateConfig struct {
-	Label     string
-	Dir       string
-	Files     []File
-	Questions []Question
-	Volumes   []Volume
-	Secrets   []Secret
+// ServiceTemplateConfig represents the JSON structure of predefined template configuration file
+type ServiceTemplateConfig struct {
+	Label             string
+	Name              string
+	Dir               string
+	Type              string
+	Preselected       string
+	ExampleAppInitCmd []string
+	Files             []File
+	Questions         []Question
+	Volumes           []Volume
+	Secrets           []Secret
 }
 
 // File represents an important file and holds the path and the type of this file
 type File struct {
 	Path string
-	Type    string
+	Type string
 }
 
 // Question represents the JSON structure of a question of a predefined template
@@ -22,7 +26,7 @@ type Question struct {
 	Type           int // 1 = Yes/No; 2 = Text
 	DefaultValue   string
 	Validator      string
-	EnvVar         string
+	Variable       string
 	Advanced       bool
 	WithDockerfile bool
 }
@@ -31,14 +35,14 @@ type Question struct {
 type Volume struct {
 	Text           string
 	DefaultValue   string
-	EnvVar         string
+	Variable       string
 	Advanced       bool
 	WithDockerfile bool
 }
 
 // Secret represents the JSON structure of a secret of a predefined template
 type Secret struct {
-	Name   string
-	Var    string
-	Length int
+	Name     string
+	Variable string
+	Length   int
 }

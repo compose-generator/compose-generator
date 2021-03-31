@@ -1,0 +1,5 @@
+build: ${{REACT_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend
+restart: always
+ports:
+  - ${{REACT_PORT}}:80

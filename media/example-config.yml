@@ -1,0 +1,17 @@
+project_name: Test
+compose_version: 3.8
+also_production: true
+services:
+  - type: frontend
+    service: angular
+    params:
+      ANGULAR_SOURCE_DIRECTORY: ./frontend-angular
+      ANGULAR_PORT: 81
+  - type: backend
+    service: spring-maven
+    params:
+      SPRING_MAVEN_SOURCE_DIRECTORY: ./backend-spring
+      SPRING_MAVEN_PORT: 8081
+      SPRING_MAVEN_VERSION: 2.4.3.RELEASE
+      SPRING_MAVEN_LANGUAGE: groovy
+      SPRING_MAVEN_PACKAGE_NAME: com.chillibits.test

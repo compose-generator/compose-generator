@@ -1,0 +1,14 @@
+image: mysql:${{MYSQL_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db
+restart: always
+networks:
+#! if has service phpmyadmin {
+#!  - mysql-phpmyadmin
+#! }
+ports:
+  - ${{MYSQL_PORT}}:3306
+volumes: 
+  - ${{VOLUME_MYSQL_DATA}}:/var/lib/mysql
+  - ${{VOLUME_MYSQL_LOGS}}:/var/log/mysql
+env_file:
+  - environment.env

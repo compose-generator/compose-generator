@@ -1,0 +1,18 @@
+build: ${{SPRING_MAVEN_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend
+restart: always
+networks:
+#! if has frontend {
+#!  - frontend-backend
+#! }
+#! if has database {
+#!  - backend-database
+#! }
+ports:
+  - ${{SPRING_MAVEN_PORT}}:8080
+env_file:
+  - environment.env
+depends_on:
+#! if has database {
+#!  - database
+#! }

@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Compose Generator Logo" src="./docs/docs/static/avatar.png" height="200" />
+  <img alt="Compose Generator Logo" src="./docs/docs/static/avatar.png" height="220" />
   <h3 align="center">Compose Generator</h3>
   <p align="center">Easy to use cli to generate Docker Compose YAML configuration files.</p>
   <p align="center">
@@ -16,7 +16,7 @@
 ---
 
 ## Documentation
-Please visit the documentation on [https://compose-generator.com](https://www.compose-generator.com).
+Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).
 
 ## Usage
 You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
@@ -148,7 +148,7 @@ There are also downloadable packages available for all supported platforms:
 | **Windows Portable (zip)**  | [download](../../releases/download/0.4.0/compose-generator_0.4.0_windows_amd64.zip)    | [download](../../releases/download/0.4.0/compose-generator_0.4.0_windows_386.zip)    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
 
 ## Contribute by providing predefined templates
-If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-templates/README.md). Fork the repository, create the template and open a pr.
+If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-services/README.md). Fork the repository, create the template and open a pr.
 The community is thankful for every predefined template!
 
 ## Contribute otherwise to the project

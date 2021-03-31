@@ -1,0 +1,43 @@
+{
+    "label": "React",
+    "preselected": "false",
+    "exampleAppInitCmd": [
+        "mkdir tmp",
+        "mv ${{REACT_SOURCE_DIRECTORY}}/* ./tmp",
+        "npx create-react-app ${{REACT_SOURCE_DIRECTORY}}",
+        "mv ./tmp/* ${{REACT_SOURCE_DIRECTORY}}",
+        "rm -rf ./tmp",
+        "rm -rf ${{REACT_SOURCE_DIRECTORY}}/node_modules"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "frontend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your React app?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "REACT_PORT"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for source directory?",
+            "defaultValue": "./frontend",
+            "variable": "REACT_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}

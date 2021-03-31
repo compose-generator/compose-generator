@@ -3,7 +3,6 @@ package commands
 import (
 	"compose-generator/model"
 	"compose-generator/utils"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -23,13 +22,13 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		path = utils.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 	}
 
-	fmt.Print("Parsing compose file ... ")
+	utils.P("Parsing compose file ... ")
 	// Load compose file
-	jsonFile, err := os.Open(path)
+	yamlFile, err := os.Open(path)
 	if err != nil {
 		utils.Error("Internal error - unable to load compose file", true)
 	}
-	bytes, _ := ioutil.ReadAll(jsonFile)
+	bytes, _ := ioutil.ReadAll(yamlFile)
 
 	// Parse YAML
 	composeFile := model.ComposeFile{}
@@ -56,7 +55,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 				reallyDeleteVolumes = utils.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
 			}
 			if reallyDeleteVolumes {
-				fmt.Print("Removing volumes of '" + serviceName + "' ... ")
+				utils.P("Removing volumes of '" + serviceName + "' ... ")
 				volumes := composeFile.Services[serviceName].Volumes
 				for _, paths := range volumes {
 					path := paths
@@ -89,7 +88,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		}
 
 		// Remove service
-		fmt.Print("Removing service '" + serviceName + "' ... ")
+		utils.P("Removing service '" + serviceName + "' ... ")
 		delete(composeFile.Services, serviceName) // Remove service itself
 		for k, s := range composeFile.Services {
 			s.DependsOn = utils.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
@@ -100,7 +99,7 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	}
 
 	// Write to file
-	fmt.Print("Saving compose file ... ")
+	utils.P("Saving compose file ... ")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
 	if err1 != nil || err2 != nil {

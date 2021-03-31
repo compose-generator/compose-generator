@@ -1,0 +1,40 @@
+{
+    "label": "Nginx Reverse Proxy",
+    "preselected": "true",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for proxy config volume?",
+            "defaultValue": "./volumes/proxy-config",
+            "variable": "VOLUME_PROXY_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for proxy certificates volume?",
+            "defaultValue": "./volumes/proxy-certs",
+            "variable": "VOLUME_PROXY_CERTS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for proxy virtual hosts volume?",
+            "defaultValue": "./volumes/proxy-vhosts",
+            "variable": "VOLUME_PROXY_VHOSTS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for proxy HTML volume?",
+            "defaultValue": "./volumes/proxy-html",
+            "variable": "VOLUME_PROXY_HTML",
+            "advanced": true
+        }
+    ]
+}
