@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
@@ -54,7 +53,7 @@ func installForWindows() {
 	const WindowsInstallerURL = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
 
 	// Download Docker installer
-	fmt.Print("Downloading Docker installer ... ")
+	utils.P("Downloading Docker installer ... ")
 	filePath := os.TempDir() + "/DockerInstaller.exe"
 	err := utils.DownloadFile(WindowsInstallerURL, filePath)
 	if err != nil {
@@ -80,11 +79,10 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 
 		// Install Docker
 		if !flagOnlyCompose {
-			fmt.Print("Installing Docker ... ")
+			utils.P("Installing Docker ... ")
 			filePath := os.TempDir() + "/install-docker.sh"
 			err := utils.DownloadFile(LinuxDockerInstallScriptURL, filePath)
 			if err != nil {
-				fmt.Println(err)
 				utils.Error("Download of Docker install script failed", true)
 			}
 			utils.ExecuteAndWait("chmod", "+x", filePath)
@@ -94,7 +92,7 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 
 		// Install Docker Compose
 		if !flagOnlyDocker {
-			fmt.Print("Installing Docker Compose ... ")
+			utils.P("Installing Docker Compose ... ")
 			cmd := exec.Command("uname", "-s")
 			output, _ := cmd.CombinedOutput()
 			unameS := strings.TrimRight(string(output), "\r\n")

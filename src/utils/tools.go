@@ -18,26 +18,15 @@ import (
 	"compose-generator/model"
 )
 
-// ExecuteSafetyFileChecks checks if commonly used files are already existing and warns the user about it
-func ExecuteSafetyFileChecks(flagWithInstructions bool, flagWithDockerfile bool) {
-	isNotSafe := FileExists("docker-compose.yml") || FileExists("environment.env")
-	if IsDockerized() {
-		isNotSafe = FileExists("/compose-generator/out/docker-compose.yml") || FileExists("/compose-generator/out/environment.env")
+// PrintSafetyWarning checks if commonly used files are already existing and warns the user about it
+func PrintSafetyWarning(existingCount int) {
+	Pel()
+	Warning(strconv.Itoa(existingCount) + " output files already exist. By continuing, those files will be overwritten!")
+	result := YesNoQuestion("Do you want to continue?", true)
+	if !result {
+		os.Exit(0)
 	}
-	if flagWithInstructions && !isNotSafe {
-		isNotSafe = FileExists("README.md")
-	}
-	if flagWithDockerfile && !isNotSafe {
-		isNotSafe = FileExists("Dockerfile")
-	}
-	if isNotSafe {
-		Warning("One or more output files already exist at the target path. By continuing, this files could potentally get overwritten.")
-		result := YesNoQuestion("Do you want to continue?", true)
-		if !result {
-			os.Exit(0)
-		}
-		ClearScreen()
-	}
+	Pel()
 }
 
 // IsDockerized checks if Compose Generator runs within a dockerized environment
@@ -215,6 +204,15 @@ func RemoveStringFromSlice(s []string, r string) []string {
 		}
 	}
 	return s
+}
+
+func AppendStringToSliceIfMissing(slice []string, i string) []string {
+	for _, ele := range slice {
+		if ele == i {
+			return slice
+		}
+	}
+	return append(slice, i)
 }
 
 // DockerComposeUp executes 'docker compose up' in the current directory

@@ -134,23 +134,48 @@ func generateDynamicStack(
 		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
 	}
 
-	// Execute safety checks
-	if !flagForce {
-		//utils.ExecuteSafetyFileChecks()
-	}
-
-	// Delete old files
-	utils.P("Cleaning up ... ")
-	if flagWithInstructions {
-		os.Remove("./README.md")
-	}
-	os.Remove("./environment.env")
-	utils.Done()
-
 	// Generate configuration
 	utils.P("Generating configuration ... ")
-	composeFileDev, composeFileProd, varFiles, secrets := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	varFiles = append(varFiles, "docker-compose.yml")
+	if alsoProduction {
+		varFiles = append(varFiles, "docker-compose-prod.yml")
+	}
 	utils.Done()
+
+	// Execute safety checks
+	if !flagForce {
+		var existingFiles []string
+		// Check files
+		for _, file := range varFiles {
+			if utils.FileExists(file) {
+				existingFiles = utils.AppendStringToSliceIfMissing(existingFiles, file)
+			}
+		}
+		// Check volumes
+		for _, vol := range volMap {
+			if utils.FileExists(vol) {
+				existingFiles = utils.AppendStringToSliceIfMissing(existingFiles, vol)
+			}
+		}
+		if len(existingFiles) > 0 {
+			utils.PrintSafetyWarning(len(existingFiles))
+		}
+	}
+
+	// Write README & environment file
+	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
+		utils.Error("Could not write yaml to README file.", true)
+	}
+	if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
+		utils.Error("Could not write yaml to environment file.", true)
+	}
+
+	// Copy dockerfiles
+	for src, dst := range dockerfileMap {
+		os.Remove(dst)
+		copy.Copy(src, dst)
+	}
 
 	// Write dev compose file
 	utils.P("Saving dev configuration ... ")
@@ -199,10 +224,6 @@ func generateDynamicStack(
 
 	// Replace variables
 	utils.P("Applying customizations ... ")
-	varFiles = append(varFiles, "docker-compose.yml")
-	if alsoProduction {
-		varFiles = append(varFiles, "docker-compose-prod.yml")
-	}
 	for _, path := range varFiles {
 		utils.ReplaceVarsInFile(path, varMap)
 	}
@@ -290,7 +311,7 @@ func processUserInput(
 	composeVersion string,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
-) (model.ComposeFile, model.ComposeFile, []string, []model.Secret) {
+) (model.ComposeFile, model.ComposeFile, []string, []model.Secret, map[string]string, string, string) {
 	// Prepare compose files
 	var composeFileDev model.ComposeFile
 	composeFileDev.Version = composeVersion
@@ -304,23 +325,35 @@ func processUserInput(
 	var secrets []model.Secret
 	var varFiles []string
 	var networks []string
+	dockerfileMap := make(map[string]string)
+	var instString string
+	var envString string
 	for templateType, templates := range templateData {
 		for _, template := range templates {
 			srcPath := utils.GetPredefinedServicesPath() + "/" + template.Dir
 			// Apply all existing files of service template
 			for _, f := range template.Files {
 				switch f.Type {
-				case "docs", "env":
-					if (f.Type == "docs" && flagWithInstructions) || f.Type == "env" {
+				case "docs":
+					if flagWithInstructions {
 						// Append content to existing file
-						fileOut, err1 := os.OpenFile(filepath.Join(dstPath, f.Path), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-						fileIn, err2 := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-						if err1 == nil && err2 == nil {
-							fileOut.WriteString(string(fileIn) + "\n\n")
+						outPath := filepath.Join(dstPath, f.Path)
+						fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
+						if err != nil {
+							utils.Error("Cannot read instructions file for template: "+template.Label, false)
 						}
-						defer fileOut.Close()
-						varFiles = append(varFiles, filepath.Join(dstPath, f.Path))
+						instString = instString + string(fileIn) + "\n\n"
+						varFiles = utils.AppendStringToSliceIfMissing(varFiles, outPath)
 					}
+				case "env":
+					// Append content to existing file
+					outPath := filepath.Join(dstPath, f.Path)
+					fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
+					if err != nil {
+						utils.Error("Cannot read environment file for template: "+template.Label, false)
+					}
+					envString = envString + string(fileIn) + "\n\n"
+					varFiles = utils.AppendStringToSliceIfMissing(varFiles, outPath)
 				case "docker":
 					if flagWithDockerfile {
 						// Check if Dockerfile is inside of a volume
@@ -332,9 +365,7 @@ func processUserInput(
 								dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
 							}
 						}
-						// Copy Dockerfile
-						os.Remove(dockerfileDst)
-						copy.Copy(absDockerfileSrc, dockerfileDst)
+						dockerfileMap[absDockerfileSrc] = dockerfileDst
 						varFiles = append(varFiles, dockerfileDst)
 					}
 				case "service":
@@ -389,7 +420,7 @@ func processUserInput(
 			composeFileProd.Networks[n] = model.Network{}
 		}
 	}
-	return composeFileDev, composeFileProd, varFiles, secrets
+	return composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString
 }
 
 func askForStackComponent(
