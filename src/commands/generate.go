@@ -29,11 +29,6 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 		utils.ClearScreen()
 	}
 
-	// Execute SafetyFileChecks
-	if !flagForce {
-		utils.ExecuteSafetyFileChecks(flagWithInstructions, flagWithDockerfile)
-	}
-
 	// Load config file if available
 	var configFile model.GenerateConfig
 	projectName := "Example Project"
@@ -64,7 +59,7 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 	}
 
 	// Generate dynamic stack
-	generateDynamicStack(configFile, projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
+	generateDynamicStack(configFile, projectName, flagAdvanced, flagForce, flagWithInstructions, flagWithDockerfile)
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -82,6 +77,7 @@ func generateDynamicStack(
 	configFile model.GenerateConfig,
 	projectName string,
 	flagAdvanced bool,
+	flagForce bool,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
 ) {
@@ -136,6 +132,11 @@ func generateDynamicStack(
 	} else {
 		// Ask user decisions
 		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
+	}
+
+	// Execute safety checks
+	if !flagForce {
+		//utils.ExecuteSafetyFileChecks()
 	}
 
 	// Delete old files
