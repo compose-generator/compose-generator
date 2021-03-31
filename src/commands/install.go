@@ -47,7 +47,10 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 
 			// Install Docker
 			if !flagOnlyCompose {
-				utils.ExecuteAndWait("curl", "-fsSL", "https://get.docker.com", "|", "sh")
+				utils.ExecuteAndWait("wget", "https://get.docker.com", "-O", "install-docker.sh")
+				utils.ExecuteAndWait("chmod", "+x", "install-docker.sh")
+				utils.ExecuteAndWait("sh", "install-docker.sh")
+				utils.ExecuteAndWait("rm", "install-docker.sh")
 			}
 
 			// Install Docker Compose
@@ -60,7 +63,7 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 				output, _ = cmd.CombinedOutput()
 				unameM := strings.TrimRight(string(output), "\r\n")
 
-				utils.ExecuteAndWaitWithOutput("curl", "-L", "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-"+unameS+"-"+unameM, "-o", "/usr/local/bin/docker-compose")
+				utils.ExecuteAndWaitWithOutput("wget", "-O", "/usr/local/bin/docker-compose", "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-"+unameS+"-"+unameM)
 				utils.ExecuteAndWaitWithOutput("chmod", "+x", "/usr/local/bin/docker-compose")
 			}
 		} else {
