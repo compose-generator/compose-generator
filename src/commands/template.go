@@ -5,7 +5,6 @@ import (
 	"compose-generator/parser"
 	"compose-generator/utils"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -35,7 +34,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 		utils.Pel()
 	}
 	// Create metadata
-	fmt.Print("Creating metadata file ... ")
+	utils.P("Creating metadata file ... ")
 	os.MkdirAll(targetDir, os.ModePerm)
 	var metadata model.TemplateMetadata
 	metadata.Label = name
@@ -47,7 +46,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 	}
 	utils.Done()
 	// Save template
-	fmt.Print("Saving template ... ")
+	utils.P("Saving template ... ")
 	var savedFiles []string
 	opt := copy.Options{
 		Skip: func(src string) (bool, error) {
@@ -68,7 +67,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 	utils.Done()
 	// Delete files from source dir if stash flag is set
 	if flagStash {
-		fmt.Print("Stashing ... ")
+		utils.P("Stashing ... ")
 		for _, f := range savedFiles {
 			os.RemoveAll(f)
 		}
@@ -79,9 +78,9 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 // LoadTemplate copies a template from the central templates directory to the working directory
 func LoadTemplate(name string, flagForce bool, withDockerfile bool) {
 	// Execute safety checks
-	if !flagForce {
-		utils.ExecuteSafetyFileChecks(false, withDockerfile)
-	}
+	/*if !flagForce {
+		utils.PrintSafetyWarning(false, withDockerfile)
+	}*/
 	// Check if the template exists
 	targetDir := utils.GetTemplatesPath() + "/" + name
 	if name != "" && !utils.FileExists(targetDir) {
@@ -100,7 +99,7 @@ func LoadTemplate(name string, flagForce bool, withDockerfile bool) {
 		utils.Pel()
 	}
 	// Load template
-	fmt.Print("Loading template ... ")
+	utils.P("Loading template ... ")
 	srcPath := targetDir
 	dstPath := "."
 

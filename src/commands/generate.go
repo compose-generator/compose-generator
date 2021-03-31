@@ -2,7 +2,6 @@ package commands
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -30,16 +29,6 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 		utils.ClearScreen()
 	}
 
-	// Execute SafetyFileChecks
-	if !flagForce {
-		utils.ExecuteSafetyFileChecks(flagWithInstructions, flagWithDockerfile)
-	}
-
-	// Welcome Message
-	utils.Heading("Welcome to Compose Generator!")
-	utils.Pl("Please continue by answering a few questions:")
-	utils.Pel()
-
 	// Load config file if available
 	var configFile model.GenerateConfig
 	projectName := "Example Project"
@@ -57,6 +46,11 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 			utils.Error("Config file could not be found", true)
 		}
 	} else {
+		// Welcome Message
+		utils.Heading("Welcome to Compose Generator! 👋")
+		utils.Pl("Please continue by answering a few questions:")
+		utils.Pel()
+
 		// Ask for project name
 		projectName = utils.TextQuestion("What is the name of your project:")
 		if projectName == "" {
@@ -65,7 +59,7 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 	}
 
 	// Generate dynamic stack
-	generateDynamicStack(configFile, projectName, flagAdvanced, flagWithInstructions, flagWithDockerfile)
+	generateDynamicStack(configFile, projectName, flagAdvanced, flagForce, flagWithInstructions, flagWithDockerfile)
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -83,6 +77,7 @@ func generateDynamicStack(
 	configFile model.GenerateConfig,
 	projectName string,
 	flagAdvanced bool,
+	flagForce bool,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
 ) {
@@ -138,20 +133,49 @@ func generateDynamicStack(
 		// Ask user decisions
 		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
 	}
-	fmt.Println(volMap)
-
-	// Delete old files
-	fmt.Print("Cleaning up ... ")
-	if flagWithInstructions {
-		os.Remove("./README.md")
-	}
-	os.Remove("./environment.env")
-	utils.Done()
 
 	// Generate configuration
-	fmt.Print("Generating configuration ... ")
-	composeFileDev, composeFileProd, varFiles, secrets := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	utils.P("Generating configuration ... ")
+	composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	varFiles = append(varFiles, "docker-compose.yml")
+	if alsoProduction {
+		varFiles = append(varFiles, "docker-compose-prod.yml")
+	}
 	utils.Done()
+
+	// Execute safety checks
+	if !flagForce {
+		var existingFiles []string
+		// Check files
+		for _, file := range varFiles {
+			if utils.FileExists(file) {
+				existingFiles = utils.AppendStringToSliceIfMissing(existingFiles, file)
+			}
+		}
+		// Check volumes
+		for _, vol := range volMap {
+			if utils.FileExists(vol) {
+				existingFiles = utils.AppendStringToSliceIfMissing(existingFiles, vol)
+			}
+		}
+		if len(existingFiles) > 0 {
+			utils.PrintSafetyWarning(len(existingFiles))
+		}
+	}
+
+	// Write README & environment file
+	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
+		utils.Error("Could not write yaml to README file.", true)
+	}
+	if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
+		utils.Error("Could not write yaml to environment file.", true)
+	}
+
+	// Copy dockerfiles
+	for src, dst := range dockerfileMap {
+		os.Remove(dst)
+		copy.Copy(src, dst)
+	}
 
 	// Write dev compose file
 	utils.P("Saving dev configuration ... ")
@@ -174,7 +198,7 @@ func generateDynamicStack(
 	}
 
 	// Create / copy volumes
-	fmt.Print("Creating volumes ... ")
+	utils.P("Creating volumes ... ")
 	for src, dst := range volMap {
 		os.RemoveAll(dst)
 		if utils.FileExists(src) {
@@ -199,11 +223,7 @@ func generateDynamicStack(
 	utils.Done()
 
 	// Replace variables
-	fmt.Print("Applying customizations ... ")
-	varFiles = append(varFiles, "docker-compose.yml")
-	if alsoProduction {
-		varFiles = append(varFiles, "docker-compose-prod.yml")
-	}
+	utils.P("Applying customizations ... ")
 	for _, path := range varFiles {
 		utils.ReplaceVarsInFile(path, varMap)
 	}
@@ -211,7 +231,7 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create example applications
-		fmt.Print("Generating demo applications (may take a while) ... ")
+		utils.P("Generating demo applications (may take a while) ... ")
 		for _, templates := range templateData {
 			for _, template := range templates {
 				var commands []string
@@ -226,14 +246,14 @@ func generateDynamicStack(
 
 	if len(secrets) > 0 {
 		// Generate secrets
-		fmt.Print("Generating secrets ... ")
+		utils.P("Generating secrets ... ")
 		secretsMap := utils.GenerateSecrets("./environment.env", secrets)
 		utils.Done()
 		// Print secrets to console
 		utils.Pel()
 		utils.Pl("Following secrets were automatically generated:")
 		for key, secret := range secretsMap {
-			fmt.Print("   " + key + ": ")
+			utils.P("🔑   " + key + ": ")
 			color.Yellow(secret)
 		}
 	}
@@ -291,7 +311,7 @@ func processUserInput(
 	composeVersion string,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
-) (model.ComposeFile, model.ComposeFile, []string, []model.Secret) {
+) (model.ComposeFile, model.ComposeFile, []string, []model.Secret, map[string]string, string, string) {
 	// Prepare compose files
 	var composeFileDev model.ComposeFile
 	composeFileDev.Version = composeVersion
@@ -305,23 +325,35 @@ func processUserInput(
 	var secrets []model.Secret
 	var varFiles []string
 	var networks []string
+	dockerfileMap := make(map[string]string)
+	var instString string
+	var envString string
 	for templateType, templates := range templateData {
 		for _, template := range templates {
 			srcPath := utils.GetPredefinedServicesPath() + "/" + template.Dir
 			// Apply all existing files of service template
 			for _, f := range template.Files {
 				switch f.Type {
-				case "docs", "env":
-					if (f.Type == "docs" && flagWithInstructions) || f.Type == "env" {
+				case "docs":
+					if flagWithInstructions {
 						// Append content to existing file
-						fileOut, err1 := os.OpenFile(filepath.Join(dstPath, f.Path), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-						fileIn, err2 := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-						if err1 == nil && err2 == nil {
-							fileOut.WriteString(string(fileIn) + "\n\n")
+						outPath := filepath.Join(dstPath, f.Path)
+						fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
+						if err != nil {
+							utils.Error("Cannot read instructions file for template: "+template.Label, false)
 						}
-						defer fileOut.Close()
-						varFiles = append(varFiles, filepath.Join(dstPath, f.Path))
+						instString = instString + string(fileIn) + "\n\n"
+						varFiles = utils.AppendStringToSliceIfMissing(varFiles, outPath)
 					}
+				case "env":
+					// Append content to existing file
+					outPath := filepath.Join(dstPath, f.Path)
+					fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
+					if err != nil {
+						utils.Error("Cannot read environment file for template: "+template.Label, false)
+					}
+					envString = envString + string(fileIn) + "\n\n"
+					varFiles = utils.AppendStringToSliceIfMissing(varFiles, outPath)
 				case "docker":
 					if flagWithDockerfile {
 						// Check if Dockerfile is inside of a volume
@@ -333,9 +365,7 @@ func processUserInput(
 								dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
 							}
 						}
-						// Copy Dockerfile
-						os.Remove(dockerfileDst)
-						copy.Copy(absDockerfileSrc, dockerfileDst)
+						dockerfileMap[absDockerfileSrc] = dockerfileDst
 						varFiles = append(varFiles, dockerfileDst)
 					}
 				case "service":
@@ -390,7 +420,7 @@ func processUserInput(
 			composeFileProd.Networks[n] = model.Network{}
 		}
 	}
-	return composeFileDev, composeFileProd, varFiles, secrets
+	return composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString
 }
 
 func askForStackComponent(
