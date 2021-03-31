@@ -2,7 +2,6 @@ package commands
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -35,11 +34,6 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 		utils.ExecuteSafetyFileChecks(flagWithInstructions, flagWithDockerfile)
 	}
 
-	// Welcome Message
-	utils.Heading("Welcome to Compose Generator!")
-	utils.Pl("Please continue by answering a few questions:")
-	utils.Pel()
-
 	// Load config file if available
 	var configFile model.GenerateConfig
 	projectName := "Example Project"
@@ -57,6 +51,11 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 			utils.Error("Config file could not be found", true)
 		}
 	} else {
+		// Welcome Message
+		utils.Heading("Welcome to Compose Generator! 👋")
+		utils.Pl("Please continue by answering a few questions:")
+		utils.Pel()
+
 		// Ask for project name
 		projectName = utils.TextQuestion("What is the name of your project:")
 		if projectName == "" {
@@ -138,10 +137,9 @@ func generateDynamicStack(
 		// Ask user decisions
 		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
 	}
-	fmt.Println(volMap)
 
 	// Delete old files
-	fmt.Print("Cleaning up ... ")
+	utils.P("Cleaning up ... ")
 	if flagWithInstructions {
 		os.Remove("./README.md")
 	}
@@ -149,7 +147,7 @@ func generateDynamicStack(
 	utils.Done()
 
 	// Generate configuration
-	fmt.Print("Generating configuration ... ")
+	utils.P("Generating configuration ... ")
 	composeFileDev, composeFileProd, varFiles, secrets := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
 	utils.Done()
 
@@ -174,7 +172,7 @@ func generateDynamicStack(
 	}
 
 	// Create / copy volumes
-	fmt.Print("Creating volumes ... ")
+	utils.P("Creating volumes ... ")
 	for src, dst := range volMap {
 		os.RemoveAll(dst)
 		if utils.FileExists(src) {
@@ -199,7 +197,7 @@ func generateDynamicStack(
 	utils.Done()
 
 	// Replace variables
-	fmt.Print("Applying customizations ... ")
+	utils.P("Applying customizations ... ")
 	varFiles = append(varFiles, "docker-compose.yml")
 	if alsoProduction {
 		varFiles = append(varFiles, "docker-compose-prod.yml")
@@ -211,7 +209,7 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create example applications
-		fmt.Print("Generating demo applications (may take a while) ... ")
+		utils.P("Generating demo applications (may take a while) ... ")
 		for _, templates := range templateData {
 			for _, template := range templates {
 				var commands []string
@@ -226,14 +224,14 @@ func generateDynamicStack(
 
 	if len(secrets) > 0 {
 		// Generate secrets
-		fmt.Print("Generating secrets ... ")
+		utils.P("Generating secrets ... ")
 		secretsMap := utils.GenerateSecrets("./environment.env", secrets)
 		utils.Done()
 		// Print secrets to console
 		utils.Pel()
 		utils.Pl("Following secrets were automatically generated:")
 		for key, secret := range secretsMap {
-			fmt.Print("   " + key + ": ")
+			utils.P("🔑   " + key + ": ")
 			color.Yellow(secret)
 		}
 	}
