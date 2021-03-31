@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -238,11 +239,27 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 }
 
 func ExecuteOnLinux(c string) {
-	// Build docker image
-	ExecuteAndWait("docker", "build", "-t", "compose-generator-toolbox", getToolboxPath())
+	ensureToolbox()
 	// Start docker container
 	absolutePath, _ := os.Getwd()
 	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "compose-generator-toolbox", c)
+}
+
+func ensureToolbox() {
+	// Check if toolbox image exists locally
+	imageInspect := ExecuteAndWaitWithOutput("docker", "image", "inspect", "compose-generator-toolbox")
+	if !strings.HasPrefix(imageInspect, "[]") { // Image exists locally -> return
+		return
+	}
+	if FileExists(filepath.Join(getToolboxPath(), "toolbox.img")) { // Image exists as file
+		// Load iamge
+		ExecuteAndWait("docker", "load", "-i", filepath.Join(getToolboxPath(), "toolbox.img"))
+	} else { // Image has to be built
+		// Build docker image
+		ExecuteAndWait("docker", "build", "-t", "compose-generator-toolbox", getToolboxPath())
+		// Save docker image as file
+		ExecuteAndWait("docker", "save", "-o", filepath.Join(getToolboxPath(), "toolbox.img"), "compose-generator-toolbox")
+	}
 }
 
 // ClearScreen errases the console contents
