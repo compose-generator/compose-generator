@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"crypto/tls"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -157,7 +158,14 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 
 // DownloadFile downloads a file by its url
 func DownloadFile(url string, filepath string) error {
-	resp, err := http.Get(url)
+	// Ignore untrusted authorities
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
+
+	// Download file
+	resp, err := client.Get(url)
 	if err != nil {
 		return err
 	}

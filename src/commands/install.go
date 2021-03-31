@@ -22,6 +22,7 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 	}
 
 	const WindowsInstallerURL = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
+	const LinuxDockerInstallScriptURL = "https://get.docker.com"
 
 	if runtime.GOOS == "windows" { // Running on windows
 		// Download Docker installer
@@ -29,7 +30,7 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 		filePath := os.TempDir() + "/DockerInstaller.exe"
 		err := utils.DownloadFile(WindowsInstallerURL, filePath)
 		if err != nil {
-			panic(err)
+			utils.Error("Download of Docker installer failed", true)
 		}
 		utils.Done()
 		// Run Docker installer
@@ -47,14 +48,21 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 
 			// Install Docker
 			if !flagOnlyCompose {
-				utils.ExecuteAndWait("wget", "https://get.docker.com", "-O", "install-docker.sh")
-				utils.ExecuteAndWait("chmod", "+x", "install-docker.sh")
-				utils.ExecuteAndWait("sh", "install-docker.sh")
-				utils.ExecuteAndWait("rm", "install-docker.sh")
+				fmt.Print("Installing Docker ... ")
+				filePath := os.TempDir() + "/install-docker.sh"
+				err := utils.DownloadFile(LinuxDockerInstallScriptURL, filePath)
+				if err != nil {
+					fmt.Println(err)
+					utils.Error("Download of Docker install script failed", true)
+				}
+				utils.ExecuteAndWait("chmod", "+x", filePath)
+				utils.ExecuteAndWait("sh", filePath)
+				utils.Done()
 			}
 
 			// Install Docker Compose
 			if !flagOnlyDocker {
+				fmt.Print("Installing Docker Compose ... ")
 				cmd := exec.Command("uname", "-s")
 				output, _ := cmd.CombinedOutput()
 				unameS := strings.TrimRight(string(output), "\r\n")
@@ -63,8 +71,12 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 				output, _ = cmd.CombinedOutput()
 				unameM := strings.TrimRight(string(output), "\r\n")
 
-				utils.ExecuteAndWaitWithOutput("wget", "-O", "/usr/local/bin/docker-compose", "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-"+unameS+"-"+unameM)
+				err := utils.DownloadFile("https://github.com/docker/compose/releases/download/1.28.2/docker-compose-"+unameS+"-"+unameM, "/usr/local/bin/docker-compose")
+				if err != nil {
+					utils.Error("Download of Docker Compose failed", true)
+				}
 				utils.ExecuteAndWaitWithOutput("chmod", "+x", "/usr/local/bin/docker-compose")
+				utils.Done()
 			}
 		} else {
 			color.Red("Please execute this command with root privileges. The cli is not able to install Docker and Docker Compose without those privileges.")
@@ -76,6 +88,7 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 
 	// Check if installation was successful
 	if utils.CommandExists("docker") {
+		utils.Pel()
 		cmd := exec.Command("docker", "-v")
 		dockerVersion, _ := cmd.CombinedOutput()
 		cmd = exec.Command("docker-compose", "-v")
