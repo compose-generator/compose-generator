@@ -61,16 +61,12 @@ nfpms:
       - deb
       - rpm
     dependencies:
-      - curl
       - lsb-release
     overrides:
       rpm:
         dependencies:
-          - curl
           - redhat-lsb
-      apk:
-        dependencies:
-          - curl
+      apk.dependencies: []
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
