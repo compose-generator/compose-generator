@@ -206,6 +206,7 @@ func RemoveStringFromSlice(s []string, r string) []string {
 	return s
 }
 
+// AppendStringToSliceIfMissing checks if a slice contains a string and adds it if its not existing already
 func AppendStringToSliceIfMissing(slice []string, i string) []string {
 	for _, ele := range slice {
 		if ele == i {
@@ -244,6 +245,7 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 	return strings.TrimRight(string(output), "\r\n")
 }
 
+// Run a command in an isolated Linux environment
 func ExecuteOnLinux(c string) {
 	ensureToolbox()
 	// Start docker container

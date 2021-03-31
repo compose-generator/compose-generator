@@ -1,6 +1,7 @@
 project_name: compose-generator
 builds:
-  - env: [CGO_ENABLED=0]
+  - env:
+      - CGO_ENABLED=0
     dir: src
     main: ./compose-generator.go
     goos:
@@ -66,11 +67,12 @@ nfpms:
       rpm:
         dependencies:
           - redhat-lsb
-      apk.dependencies: []
+      apk:
+        dependencies: []
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
-        - src: toolbox/*
+      - src: toolbox/*
         dst: /usr/lib/compose-generator/toolbox/
     empty_folders:
       - /usr/lib/compose-generator/templates

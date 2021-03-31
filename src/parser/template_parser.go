@@ -32,7 +32,7 @@ func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 			config := getConfigFromFile(templatePath)
 			config.Name = f
 			config.Type = templateType
-			config.Dir = templatePath
+			config.Dir = filepath.Join(templateType, f)
 			if configs[templateType] != nil {
 				configs[templateType] = append(configs[templateType], config)
 			} else {
@@ -62,7 +62,7 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	return
 }
 
-// TemplateListToTemplateNameList converts a list of service templates to a list of labels
+// TemplateListToTemplateLabelList converts a list of service templates to a list of labels
 func TemplateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
 	for _, t := range templates {
 		labels = append(labels, t.Label)

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	const VERSION = "0.4.0"
+	const VERSION = "0.5.0"
 
 	// Version flag
 	cli.VersionFlag = &cli.BoolFlag{
