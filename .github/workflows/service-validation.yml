@@ -10,10 +10,21 @@ on:
     branches: [ main, dev, feature/* ]
 
 jobs:
-  validate:
+  file-existence:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Check file existance
-      
+    - name: Check for file existence
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "predefined-services/**/**/config.json, predefined-services/**/**/service.yml, predefined-services/**/**/README.md"
+  yaml-linter:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Run YAML linter
+      uses: ibiqlik/action-yamllint@v3
+      with:
+        file_or_dir: predefined-services/**/*.yml
