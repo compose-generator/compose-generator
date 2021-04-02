@@ -1,7 +1,10 @@
 image: mysql:${{MYSQL_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-db
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-mysql
 restart: always
 networks:
+#! if has backend {
+#!  - backend-database
+#! }
 #! if has service phpmyadmin {
 #!  - mysql-phpmyadmin
 #! }

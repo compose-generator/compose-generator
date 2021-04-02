@@ -384,27 +384,31 @@ func processUserInput(
 					// Add depends on
 					switch templateType {
 					case "frontend":
-						if len(templateData["backend"]) > 0 {
-							service.DependsOn = []string{"backend"}
+						service.DependsOn = []string{}
+						for _, template := range templateData["backend"] {
+							service.DependsOn = append(service.DependsOn, "backend-"+template.Name)
 						}
 					case "backend":
-						if len(templateData["database"]) > 0 {
-							service.DependsOn = []string{"database"}
+						service.DependsOn = []string{}
+						for _, template := range templateData["database"] {
+							service.DependsOn = append(service.DependsOn, "database-"+template.Name)
 						}
 					case "db-admin":
-						if len(templateData["database"]) > 0 {
-							service.DependsOn = []string{"database"}
+						service.DependsOn = []string{}
+						for _, template := range templateData["database"] {
+							service.DependsOn = append(service.DependsOn, "database-"+template.Name)
 						}
 					case "tls-helper":
-						if len(templateData["proxy"]) > 0 {
-							service.DependsOn = []string{"proxy"}
+						service.DependsOn = []string{}
+						for _, template := range templateData["proxy"] {
+							service.DependsOn = append(service.DependsOn, "proxy-"+template.Name)
 						}
 					}
 					// Add service to compose files
 					if templateType != "proxy" && templateType != "tls-helper" {
-						composeFileDev.Services[templateType] = service
+						composeFileDev.Services[templateType+"-"+template.Name] = service
 					}
-					composeFileProd.Services[templateType] = service
+					composeFileProd.Services[templateType+"-"+template.Name] = service
 				}
 			}
 			// Get secrets

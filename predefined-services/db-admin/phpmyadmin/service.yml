@@ -1,5 +1,5 @@
 image: phpmyadmin/phpmyadmin:${{PMA_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-phpmyadmin
+container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-phpmyadmin
 networks:
 #! if has service mysql {
 #!   - mysql-phpmyadmin
