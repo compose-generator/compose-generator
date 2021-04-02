@@ -1,5 +1,5 @@
 build: ${{SPRING_GRADLE_SOURCE_DIRECTORY}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-backend
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-spring-gradle
 restart: always
 networks:
 #! if has frontend {
@@ -12,7 +12,3 @@ ports:
   - ${{SPRING_GRADLE_PORT}}:8080
 env_file:
   - environment.env
-depends_on:
-#! if has database {
-#!  - database
-#! }
