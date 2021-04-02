@@ -13,3 +13,9 @@ docs/site/*
 
 # Toolbox image
 toolbox/toolbox.img
+
+# Node modules
+node_modules/*
+
+# Ignore python venv, installed by GH codespaces
+.venv/*
