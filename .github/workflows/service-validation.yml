@@ -1,0 +1,19 @@
+# Predefined service validation
+
+name: Service validation
+
+on:
+  push:
+#    paths:
+#      - 'predefined-services/**'
+  pull_request:
+    branches: [ main, dev, feature/* ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Check file existance
+      
