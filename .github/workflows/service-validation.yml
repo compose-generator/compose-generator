@@ -1,0 +1,27 @@
+# Predefined service validation
+
+name: Service validation
+
+on:
+  push:
+    paths:
+      - 'predefined-services/**'
+  pull_request:
+    branches: [ main, dev, feature/* ]
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Prepare environment.env
+      run: pip install -r ./.github/scripts/service-validator/requirements.txt
+    - name: Run validation script
+      run: |
+        cd ./.github/scripts/service-validator
+        python predefined-service-validator.py

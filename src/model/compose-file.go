@@ -21,6 +21,7 @@ type Service struct {
 	DependsOn     []string `yaml:"depends_on,omitempty"`
 	Links         []string `yaml:"links,omitempty"`
 	Labels        []string `yaml:"labels,omitempty"`
+	Command       string   `yaml:"command,omitempty"`
 }
 
 // Network represents the YAML structure of a network configuration in a docker compose file
