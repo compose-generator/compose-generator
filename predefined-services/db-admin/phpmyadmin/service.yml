@@ -4,6 +4,9 @@ networks:
 #! if has service mysql {
 #!   - mysql-phpmyadmin
 #! }
+#! if has service mariadb {
+#!   - mariadb-phpmyadmin
+#! }
 ports:
   - ${{PMA_PORT}}:80
 volumes:

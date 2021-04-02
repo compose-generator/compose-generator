@@ -5,6 +5,9 @@ networks:
 #! if has backend {
 #!  - backend-database
 #! }
+#! if has service nextcloud {
+#!  - frontend-database
+#! }
 #! if has service phpmyadmin {
 #!  - mysql-phpmyadmin
 #! }

@@ -1,0 +1,67 @@
+{
+    "label": "Nextcloud",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Nextcloud instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "NEXTCLOUD_PORT"
+        },
+        {
+            "text": "Which version of Nextcloud do you want to use?",
+            "type": 2,
+            "defaultValue": "21.0",
+            "variable": "NEXTCLOUD_VERSION"
+        },
+        {
+            "text": "Which database engine do you want to use? (mariadb/mysql/postgres)",
+            "type": 2,
+            "defaultValue": "mariadb",
+            "variable": "NEXTCLOUD_DB_ENGINE"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Nextcloud HTML volume?",
+            "defaultValue": "./volumes/nextcloud-html",
+            "variable": "VOLUME_NEXTCLOUD_HTML",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Nextcloud apps volume?",
+            "defaultValue": "./volumes/nextcloud-apps",
+            "variable": "VOLUME_NEXTCLOUD_APPS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Nextcloud config volume?",
+            "defaultValue": "./volumes/nextcloud-config",
+            "variable": "VOLUME_NEXTCLOUD_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Nextcloud data volume?",
+            "defaultValue": "./volumes/nextcloud-data",
+            "variable": "VOLUME_NEXTCLOUD_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Nextcloud theme volume?",
+            "defaultValue": "./volumes/nextcloud-theme",
+            "variable": "VOLUME_NEXTCLOUD_THEME",
+            "advanced": true
+        }
+    ]
+}
