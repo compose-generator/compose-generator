@@ -1,8 +1,7 @@
 image: nextcloud:${{NEXTCLOUD_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-db-nextcloud
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-nextcloud
 restart: always
 volumes:
-  - ${{VOLUME_NEXTCLOUD_HTML}}:/var/www/html
   - ${{VOLUME_NEXTCLOUD_APPS}}:/var/www/html/custom_apps
   - ${{VOLUME_NEXTCLOUD_CONFIG}}:/var/www/html/config
   - ${{VOLUME_NEXTCLOUD_DATA}}:/var/www/html/data
