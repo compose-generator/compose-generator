@@ -11,6 +11,9 @@ networks:
 #! if has service owncloud {
 #!  - frontend-database
 #! }
+#! if has service wordpress {
+#!  - frontend-database
+#! }
 #! if has service phpmyadmin {
 #!  - mysql-phpmyadmin
 #! }

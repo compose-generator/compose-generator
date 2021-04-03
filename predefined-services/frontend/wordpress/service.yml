@@ -1,0 +1,11 @@
+image: wordpress:${{WORDPRESS_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-wordpress
+restart: always
+volumes:
+  - ${{VOLUME_WORDPRESS_HTML}}:/var/www/html
+networks:
+  - frontend-database
+ports:
+  - ${{WORDPRESS_PORT}}:80
+env_file:
+  - environment.env
