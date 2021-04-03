@@ -1,5 +1,5 @@
-image: mysql:${{MYSQL_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-db-mysql
+image: mariadb:${{MARIADB_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-mariadb
 restart: always
 networks:
 #! if has backend {
@@ -12,12 +12,12 @@ networks:
 #!  - frontend-database
 #! }
 #! if has service phpmyadmin {
-#!  - mysql-phpmyadmin
+#!  - mariadb-phpmyadmin
 #! }
 ports:
-  - ${{MYSQL_PORT}}:3306
+  - ${{MARIADB_PORT}}:3306
 volumes: 
-  - ${{VOLUME_MYSQL_DATA}}:/var/lib/mysql
-  - ${{VOLUME_MYSQL_LOGS}}:/var/log/mysql
+  - ${{VOLUME_MARIADB_DATA}}:/var/lib/mysql
+  - ${{VOLUME_MARIADB_LOGS}}:/var/log/mysql
 env_file:
   - environment.env

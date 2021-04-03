@@ -368,6 +368,17 @@ func processUserInput(
 						dockerfileMap[absDockerfileSrc] = dockerfileDst
 						varFiles = append(varFiles, dockerfileDst)
 					}
+				case "config":
+					// Check if config file is inside of a volume
+					absConfigSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
+					configDst := filepath.Join(dstPath, f.Path)
+					for volSrc, volDst := range volMap {
+						absVolSrc, _ := filepath.Abs(volSrc)
+						if strings.Contains(absConfigSrc, absVolSrc) {
+							configDst = volDst + absConfigSrc[len(absVolSrc):]
+						}
+					}
+					varFiles = append(varFiles, configDst)
 				case "service":
 					// Load service file
 					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
