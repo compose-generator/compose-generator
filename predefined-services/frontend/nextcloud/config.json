@@ -30,12 +30,6 @@
             "variable": "NEXTCLOUD_VERSION"
         },
         {
-            "text": "Which database engine do you want to use? (mariadb/mysql/postgres)",
-            "type": 2,
-            "defaultValue": "mariadb",
-            "variable": "NEXTCLOUD_DB_ENGINE"
-        },
-        {
             "text": "On which host is your instance accessible from outside?",
             "type": 2,
             "defaultValue": "localhost",

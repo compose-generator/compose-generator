@@ -1,0 +1,49 @@
+{
+    "label": "Owncloud",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Owncloud instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "OWNCLOUD_PORT"
+        },
+        {
+            "text": "Which version of Owncloud do you want to use?",
+            "type": 2,
+            "defaultValue": "10.0",
+            "variable": "OWNCLOUD_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Owncloud apps volume?",
+            "defaultValue": "./volumes/owncloud-apps",
+            "variable": "VOLUME_OWNCLOUD_APPS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Owncloud config volume?",
+            "defaultValue": "./volumes/owncloud-config",
+            "variable": "VOLUME_OWNCLOUD_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Owncloud data volume?",
+            "defaultValue": "./volumes/owncloud-data",
+            "variable": "VOLUME_OWNCLOUD_DATA",
+            "advanced": true
+        }
+    ]
+}

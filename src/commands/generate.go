@@ -225,7 +225,6 @@ func generateDynamicStack(
 	// Replace variables
 	utils.P("Applying customizations ... ")
 	for _, path := range varFiles {
-		utils.Pl(path)
 		utils.ReplaceVarsInFile(path, varMap)
 	}
 	utils.Done()
