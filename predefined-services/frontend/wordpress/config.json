@@ -1,0 +1,53 @@
+{
+    "label": "Wordpress",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Wordpress page?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "WORDPRESS_PORT"
+        },
+        {
+            "text": "Which version of Wordpress do you want to use?",
+            "type": 2,
+            "defaultValue": "5.7",
+            "variable": "WORDPRESS_VERSION"
+        },
+        {
+            "text": "On which host is your instance accessible from outside?",
+            "type": 2,
+            "defaultValue": "localhost",
+            "variable": "WORDPRESS_OUTSIDE_HOST"
+        },
+        {
+            "text": "On which protocol is your instance accessible from outside? (https/http)",
+            "type": 2,
+            "defaultValue": "http",
+            "variable": "WORDPRESS_OUTSIDE_PROTOCOL"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Wordpress HTML volume?",
+            "defaultValue": "./volumes/wordpress",
+            "variable": "VOLUME_WORDPRESS_HTML",
+            "advanced": true
+        }
+    ]
+}
