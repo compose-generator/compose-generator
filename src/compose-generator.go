@@ -6,7 +6,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"compose-generator/commands"
+	"compose-generator/cmd"
 )
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 		},
 		Action: func(c *cli.Context) error {
-			commands.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
+			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 			return nil
 		},
 		Commands: []*cli.Command{
@@ -56,7 +56,7 @@ func main() {
 					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
+					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 					return nil
 				},
 			},
@@ -71,7 +71,7 @@ func main() {
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
+					cmd.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 					return nil
 				},
 			},
@@ -88,7 +88,7 @@ func main() {
 				},
 				Action: func(c *cli.Context) error {
 					serviceNames := c.Args().Slice()
-					commands.Remove(serviceNames, c.Bool("run"), c.Bool("detached"), c.Bool("with-volumes"), c.Bool("force"), c.Bool("advanced"))
+					cmd.Remove(serviceNames, c.Bool("run"), c.Bool("detached"), c.Bool("with-volumes"), c.Bool("force"), c.Bool("advanced"))
 					return nil
 				},
 			},
@@ -108,7 +108,7 @@ func main() {
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							commands.SaveTemplate(name, c.Bool("stash"), c.Bool("force"), c.Bool("with-dockerfile"))
+							cmd.SaveTemplate(name, c.Bool("stash"), c.Bool("force"), c.Bool("with-dockerfile"))
 							return nil
 						},
 					},
@@ -122,7 +122,7 @@ func main() {
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							commands.LoadTemplate(name, c.Bool("force"), c.Bool("with-dockerfile"))
+							cmd.LoadTemplate(name, c.Bool("force"), c.Bool("with-dockerfile"))
 							return nil
 						},
 					},
@@ -137,7 +137,7 @@ func main() {
 					&cli.BoolFlag{Name: "only-docker", Aliases: []string{"d"}, Usage: "Only install Docker"},
 				},
 				Action: func(c *cli.Context) error {
-					commands.Install(c.Bool("only-compose"), c.Bool("only-docker"))
+					cmd.Install(c.Bool("only-compose"), c.Bool("only-docker"))
 					return nil
 				},
 			},

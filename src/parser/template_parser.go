@@ -62,14 +62,6 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	return
 }
 
-// TemplateListToTemplateLabelList converts a list of service templates to a list of labels
-func TemplateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		labels = append(labels, t.Label)
-	}
-	return
-}
-
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func getConfigFromFile(dirPath string) (config model.ServiceTemplateConfig) {

@@ -150,10 +150,12 @@ func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 }
 
 // MultiSelectMenuQuestionIndex prints a multi selection of predefined items and returns the selected indices
-func MultiSelectMenuQuestionIndex(label string, items []string) (result []int) {
+func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []string) (result []int) {
 	prompt := &survey.MultiSelect{
-		Message: label,
-		Options: items,
+		Message:  label,
+		Options:  items,
+		Default:  defaultItems,
+		PageSize: 15,
 	}
 	handleInterrupt(survey.AskOne(prompt, &result))
 	return

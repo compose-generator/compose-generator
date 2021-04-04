@@ -1,4 +1,4 @@
-package commands
+package cmd
 
 import (
 	"errors"
@@ -451,10 +451,11 @@ func askForStackComponent(
 	flagWithDockerfile bool,
 ) (componentCount int) {
 	templates := (*templateData)[component]
-	items := parser.TemplateListToTemplateLabelList(templates)
+	items := templateListToTemplateLabelList(templates)
+	itemsPreselected := templateListToPreselectedLabelList(templates, templateData)
 	(*templateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
-		templateSelections := utils.MultiSelectMenuQuestionIndex(question, items)
+		templateSelections := utils.MultiSelectMenuQuestionIndex(question, items, itemsPreselected)
 		for _, index := range templateSelections {
 			utils.Pel()
 			(*templateData)[component] = append((*templateData)[component], templates[index])
@@ -580,4 +581,20 @@ func evaluateCondition(
 		return result.(bool) && err1 != nil && err2 != nil
 	}
 	return false
+}
+
+func templateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
+	for _, t := range templates {
+		labels = append(labels, t.Label)
+	}
+	return
+}
+
+func templateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
+	for _, t := range templates {
+		if evaluateCondition(t.Preselected, *templateData, nil) {
+			labels = append(labels, t.Label)
+		}
+	}
+	return
 }
