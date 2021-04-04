@@ -213,7 +213,7 @@ func generateDynamicStack(
 			}
 			err := copy.Copy(src, dst, opt)
 			if err != nil {
-				utils.Error("Could not copy volume files.", true)
+				utils.Error("Could not copy volume files: "+err.Error(), true)
 			}
 		} else {
 			// Create empty volume
@@ -231,17 +231,19 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create example applications
-		utils.P("Generating demo applications (may take a while) ... ")
 		for _, templates := range templateData {
 			for _, template := range templates {
 				var commands []string
 				for _, cmd := range template.ExampleAppInitCmd {
 					commands = append(commands, utils.ReplaceVarsInString(cmd, varMap))
 				}
-				utils.ExecuteOnLinux(strings.Join(commands, "; "))
+				if len(commands) > 0 {
+					utils.P("Generating demo applications (may take a while) ... ")
+					utils.ExecuteOnLinux(strings.Join(commands, "; "))
+					utils.Done()
+				}
 			}
 		}
-		utils.Done()
 	}
 
 	if len(secrets) > 0 {
@@ -253,7 +255,7 @@ func generateDynamicStack(
 		utils.Pel()
 		utils.Pl("Following secrets were automatically generated:")
 		for key, secret := range secretsMap {
-			utils.P("🔑   " + key + ": ")
+			utils.P("🔑   " + utils.ReplaceVarsInString(key, varMap) + ": ")
 			color.Yellow(secret)
 		}
 	}

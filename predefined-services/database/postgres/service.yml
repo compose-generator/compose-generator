@@ -1,0 +1,26 @@
+image: postgres:${{POSTGRES_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-postgres
+restart: always
+networks:
+#! if has backend {
+#!  - backend-database
+#! }
+#! if has service nextcloud {
+#!  - frontend-database
+#! }
+#! if has service owncloud {
+#!  - frontend-database
+#! }
+#! if has service pgadmin {
+#!  - postgres-pgadmin
+#! }
+#! if has service adminer {
+#!  - postgres-adminer
+#! }
+ports:
+  - ${{POSTGRES_PORT}}:5432
+volumes: 
+  - ${{VOLUME_POSTGRES_DATA}}:/var/lib/postgresql/data
+  - ${{VOLUME_POSTGRES_INIT}}:/docker-entrypoint-initdb.d/
+env_file:
+  - environment.env
