@@ -14,6 +14,9 @@ networks:
 #! if has service phpmyadmin {
 #!  - mariadb-phpmyadmin
 #! }
+#! if has service adminer {
+#!  - mariadb-adminer
+#! }
 ports:
   - ${{MARIADB_PORT}}:3306
 volumes: 
