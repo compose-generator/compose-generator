@@ -592,7 +592,14 @@ func templateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (l
 
 func templateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
 	for _, t := range templates {
-		if evaluateCondition(t.Preselected, *templateData, nil) {
+		conditions := strings.Split(t.Preselected, "|")
+		fulfilled := false
+		for _, c := range conditions {
+			if evaluateCondition(c, *templateData, nil) {
+				fulfilled = true
+			}
+		}
+		if fulfilled {
 			labels = append(labels, t.Label)
 		}
 	}
