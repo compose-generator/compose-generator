@@ -17,6 +17,9 @@ networks:
 #! if has service phpmyadmin {
 #!  - mysql-phpmyadmin
 #! }
+#! if has service adminer {
+#!  - mysql-adminer
+#! }
 ports:
   - ${{MYSQL_PORT}}:3306
 volumes: 

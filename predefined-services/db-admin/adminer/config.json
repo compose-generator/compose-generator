@@ -1,6 +1,6 @@
 {
-    "label": "PhpMyAdmin",
-    "preselected": "has service mysql",
+    "label": "Adminer",
+    "preselected": "has service postgres",
     "files": [
         {
             "path": "service.yml",
@@ -17,17 +17,24 @@
     ],
     "questions": [
         {
-            "text": "On which port you want to expose PHPMyAdmin?",
+            "text": "On which port you want to expose Adminer?",
             "type": 2,
             "defaultValue": "81",
             "validator": "port",
-            "variable": "PMA_PORT"
+            "variable": "ADMINER_PORT"
         },
         {
             "text": "Which version of PHPMyAdmin do you want to use?",
             "type": 2,
             "defaultValue": "latest",
-            "variable": "PMA_VERSION",
+            "variable": "ADMINER_VERSION",
+            "advanced": true
+        },
+        {
+            "text": "Which Adminer theme do you want to use?",
+            "type": 2,
+            "defaultValue": "dracula",
+            "variable": "ADMINER_THEME",
             "advanced": true
         }
     ]

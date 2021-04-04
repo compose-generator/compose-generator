@@ -1,2 +1,2 @@
-## Wordpress
+## Adminer
 *To be extended ...*
