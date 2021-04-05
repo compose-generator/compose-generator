@@ -13,10 +13,6 @@
         {
             "path": "environment.env",
             "type": "env"
-        },
-        {
-            "path": "volumes/sonarqube-conf/sonar.properties",
-            "type": "config"
         }
     ],
     "questions": [

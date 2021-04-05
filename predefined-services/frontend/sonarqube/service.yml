@@ -1,4 +1,6 @@
 image: sonarqube:${{SONARQUBE_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-sonarqube
+restart: always
 volumes:
   - ${{VOLUME_SONARQUBE_CONF}}:/opt/sonarqube/conf
   - ${{VOLUME_SONARQUBE_DATA}}:/opt/sonarqube/data
