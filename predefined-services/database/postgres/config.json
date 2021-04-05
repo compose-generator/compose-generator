@@ -1,6 +1,6 @@
 {
     "label": "PostgreSQL",
-    "preselected": "false",
+    "preselected": "has service gitea",
     "files": [
         {
             "path": "service.yml",

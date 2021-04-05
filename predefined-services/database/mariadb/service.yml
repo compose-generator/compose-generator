@@ -5,10 +5,7 @@ networks:
 #! if has backend {
 #!  - backend-database
 #! }
-#! if has service nextcloud {
-#!  - frontend-database
-#! }
-#! if has service owncloud {
+#! if has service nextcloud|has service owncloud|has service gitea {
 #!  - frontend-database
 #! }
 #! if has service phpmyadmin {

@@ -577,8 +577,13 @@ func evaluateConditionalSections(
 	for i, row := range rows {
 		if strings.HasPrefix(row, "#! if ") {
 			// Conditional section found -> check condition
-			condition := row[6:strings.Index(row, " {")]
-			uncommenting = evaluateCondition(condition, templateData, varMap)
+			conditions := strings.Split(row[6:strings.Index(row, " {")], "|")
+			for _, c := range conditions {
+				if evaluateCondition(c, templateData, varMap) {
+					uncommenting = true
+					break
+				}
+			}
 		} else if strings.HasPrefix(row, "#! }") {
 			uncommenting = false
 		} else if uncommenting {

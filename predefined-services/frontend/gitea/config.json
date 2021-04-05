@@ -1,0 +1,37 @@
+{
+    "label": "Gitea",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Gitea instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "GITEA_PORT"
+        },
+        {
+            "text": "Which version of Gitea do you want to use?",
+            "type": 2,
+            "defaultValue": "1.13.6",
+            "variable": "GITEA_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Gitea data volume?",
+            "defaultValue": "./volumes/gitea-data",
+            "variable": "VOLUME_GITEA_DATA",
+            "advanced": true
+        }
+    ]
+}
