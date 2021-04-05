@@ -247,7 +247,7 @@ func generateDynamicStack(
 					commands = append(commands, utils.ReplaceVarsInString(cmd, varMap))
 				}
 				if len(commands) > 0 {
-					utils.P("Generating demo applications (may take a while) ... ")
+					utils.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
 					utils.ExecuteOnLinux(strings.Join(commands, "; "))
 					utils.Done()
 				}
@@ -286,31 +286,32 @@ func askForUserInput(
 		composeVersion = utils.TextQuestionWithDefault("Docker compose file version:", composeVersion)
 	}
 
-	// Initialized ports list
+	// Initialized port and volume lists
 	usedPorts := []int{}
+	usedVolumes := []string{}
 
 	// Ask for frontends
-	askForStackComponent(templateData, varMap, volMap, &usedPorts, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for backends
-	askForStackComponent(templateData, varMap, volMap, &usedPorts, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for databases
-	databaseCount := askForStackComponent(templateData, varMap, volMap, &usedPorts, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	databaseCount := askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	if databaseCount > 0 {
 		// Ask for db admin tools
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
 	} else {
 		(*templateData)["db-admin"] = []model.ServiceTemplateConfig{}
 	}
 
 	if alsoProduction {
 		// Ask for proxies
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
 
 		// Ask for proxy tls helpers
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
 	} else {
 		(*templateData)["proxy"] = []model.ServiceTemplateConfig{}
 		(*templateData)["tls-helper"] = []model.ServiceTemplateConfig{}
@@ -457,6 +458,7 @@ func askForStackComponent(
 	varMap *map[string]string,
 	volMap *map[string]string,
 	usedPorts *[]int,
+	usedVolumes *[]string,
 	component string,
 	multiSelect bool,
 	question string,
@@ -473,14 +475,14 @@ func askForStackComponent(
 			utils.Pel()
 			(*templateData)[component] = append((*templateData)[component], templates[index])
 			getVarMapFromQuestions(varMap, usedPorts, templates[index].Questions, flagAdvanced)
-			getVolumeMapFromVolumes(varMap, volMap, templates[index], flagAdvanced, flagWithDockerfile)
+			getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[index], flagAdvanced, flagWithDockerfile)
 			componentCount++
 		}
 	} else {
 		templateSelection := utils.MenuQuestionIndex(question, items)
 		(*templateData)[component] = append((*templateData)[component], templates[templateSelection])
 		getVarMapFromQuestions(varMap, usedPorts, templates[templateSelection].Questions, flagAdvanced)
-		getVolumeMapFromVolumes(varMap, volMap, templates[templateSelection], flagAdvanced, flagWithDockerfile)
+		getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[templateSelection], flagAdvanced, flagWithDockerfile)
 		componentCount = 1
 	}
 	utils.Pel()
@@ -540,21 +542,27 @@ func getVarMapFromQuestions(
 func getVolumeMapFromVolumes(
 	varMap *map[string]string,
 	volMap *map[string]string,
+	usedVolumes *[]string,
 	template model.ServiceTemplateConfig,
 	flagAdvanced bool,
 	flagWithDockerfile bool,
 ) {
 	srcPath := filepath.Join(utils.GetPredefinedServicesPath(), template.Dir)
 	for _, v := range template.Volumes {
+		defaultValue := v.DefaultValue
+		if utils.SliceContainsString(*usedVolumes, defaultValue) {
+			defaultValue = defaultValue + "-" + template.Name
+		}
 		if !v.Advanced || (v.Advanced && flagAdvanced) {
 			if !v.WithDockerfile || (v.WithDockerfile && flagWithDockerfile) {
-				(*varMap)[v.Variable] = utils.TextQuestionWithDefault(v.Text, v.DefaultValue)
+				(*varMap)[v.Variable] = utils.TextQuestionWithDefault(v.Text, defaultValue)
 			} else {
-				(*varMap)[v.Variable] = v.DefaultValue
+				(*varMap)[v.Variable] = defaultValue
 			}
 		} else {
-			(*varMap)[v.Variable] = v.DefaultValue
+			(*varMap)[v.Variable] = defaultValue
 		}
+		*usedVolumes = append(*usedVolumes, defaultValue)
 		(*volMap)[filepath.Join(srcPath, v.DefaultValue)] = (*varMap)[v.Variable]
 	}
 }
