@@ -19,7 +19,7 @@ func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 	if err != nil {
 		utils.Error("Internal error - could not load service templates.", err, true)
 	}
-	filterFunc := func(s string) bool { return s != "README.md" }
+	filterFunc := func(s string) bool { return s != "README.md" && s != "INSTRUCTIONS_HEADER.md" }
 
 	configs := make(map[string][]model.ServiceTemplateConfig)
 	for _, templateType := range filterFilenames(files, filterFunc) {

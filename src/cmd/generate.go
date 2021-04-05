@@ -343,6 +343,15 @@ func processUserInput(
 	dockerfileMap := make(map[string]string)
 	var instString string
 	var envString string
+
+	// Read instructions header
+	fileIn, err := ioutil.ReadFile(filepath.Join(utils.GetPredefinedServicesPath(), "INSTRUCTIONS_HEADER.md"))
+	if err != nil {
+		utils.Error("Cannot load instructions header file", err, true)
+	}
+	instString = instString + string(fileIn) + "\n\n"
+
+	// Loop through templates
 	for templateType, templates := range templateData {
 		for _, template := range templates {
 			srcPath := utils.GetPredefinedServicesPath() + "/" + template.Dir
@@ -577,8 +586,13 @@ func evaluateConditionalSections(
 	for i, row := range rows {
 		if strings.HasPrefix(row, "#! if ") {
 			// Conditional section found -> check condition
-			condition := row[6:strings.Index(row, " {")]
-			uncommenting = evaluateCondition(condition, templateData, varMap)
+			conditions := strings.Split(row[6:strings.Index(row, " {")], "|")
+			for _, c := range conditions {
+				if evaluateCondition(c, templateData, varMap) {
+					uncommenting = true
+					break
+				}
+			}
 		} else if strings.HasPrefix(row, "#! }") {
 			uncommenting = false
 		} else if uncommenting {

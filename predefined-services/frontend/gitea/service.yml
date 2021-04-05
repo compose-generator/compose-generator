@@ -1,0 +1,12 @@
+image: gitea/gitea:${{GITEA_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-gitea
+restart: always
+volumes:
+  - ${{VOLUME_GITEA_DATA}}:/data
+networks:
+#! if has database {
+#!  - frontend-database
+#! }
+ports:
+  - ${{GITEA_PORT}}:3000
+  - 22:22
