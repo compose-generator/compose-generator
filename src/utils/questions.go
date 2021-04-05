@@ -145,7 +145,9 @@ func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 		Message: label,
 		Options: items,
 	}
-	handleInterrupt(survey.AskOne(prompt, &result))
+	handleInterrupt(survey.AskOne(prompt, &result, survey.WithIcons(func(icons *survey.IconSet) {
+		icons.Question.Format = "yellow+hb"
+	})))
 	return
 }
 
@@ -157,7 +159,9 @@ func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []s
 		Default:  defaultItems,
 		PageSize: 15,
 	}
-	handleInterrupt(survey.AskOne(prompt, &result))
+	handleInterrupt(survey.AskOne(prompt, &result, survey.WithIcons(func(icons *survey.IconSet) {
+		icons.Question.Format = "yellow+hb"
+	})))
 	return
 }
 
