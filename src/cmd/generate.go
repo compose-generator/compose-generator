@@ -277,28 +277,31 @@ func askForUserInput(
 		composeVersion = utils.TextQuestionWithDefault("Docker compose file version:", composeVersion)
 	}
 
+	// Initialized ports list
+	usedPorts := []int{}
+
 	// Ask for frontends
-	askForStackComponent(templateData, varMap, volMap, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, &usedPorts, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for backends
-	askForStackComponent(templateData, varMap, volMap, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(templateData, varMap, volMap, &usedPorts, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	// Ask for databases
-	databaseCount := askForStackComponent(templateData, varMap, volMap, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	databaseCount := askForStackComponent(templateData, varMap, volMap, &usedPorts, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
 
 	if databaseCount > 0 {
 		// Ask for db admin tools
-		askForStackComponent(templateData, varMap, volMap, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, &usedPorts, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
 	} else {
 		(*templateData)["db-admin"] = []model.ServiceTemplateConfig{}
 	}
 
 	if alsoProduction {
 		// Ask for proxies
-		askForStackComponent(templateData, varMap, volMap, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, &usedPorts, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
 
 		// Ask for proxy tls helpers
-		askForStackComponent(templateData, varMap, volMap, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(templateData, varMap, volMap, &usedPorts, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
 	} else {
 		(*templateData)["proxy"] = []model.ServiceTemplateConfig{}
 		(*templateData)["tls-helper"] = []model.ServiceTemplateConfig{}
@@ -444,6 +447,7 @@ func askForStackComponent(
 	templateData *map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	volMap *map[string]string,
+	usedPorts *[]int,
 	component string,
 	multiSelect bool,
 	question string,
@@ -459,14 +463,14 @@ func askForStackComponent(
 		for _, index := range templateSelections {
 			utils.Pel()
 			(*templateData)[component] = append((*templateData)[component], templates[index])
-			getVarMapFromQuestions(varMap, templates[index].Questions, flagAdvanced)
+			getVarMapFromQuestions(varMap, usedPorts, templates[index].Questions, flagAdvanced)
 			getVolumeMapFromVolumes(varMap, volMap, templates[index], flagAdvanced, flagWithDockerfile)
 			componentCount++
 		}
 	} else {
 		templateSelection := utils.MenuQuestionIndex(question, items)
 		(*templateData)[component] = append((*templateData)[component], templates[templateSelection])
-		getVarMapFromQuestions(varMap, templates[templateSelection].Questions, flagAdvanced)
+		getVarMapFromQuestions(varMap, usedPorts, templates[templateSelection].Questions, flagAdvanced)
 		getVolumeMapFromVolumes(varMap, volMap, templates[templateSelection], flagAdvanced, flagWithDockerfile)
 		componentCount = 1
 	}
@@ -476,6 +480,7 @@ func askForStackComponent(
 
 func getVarMapFromQuestions(
 	varMap *map[string]string,
+	usedPorts *[]int,
 	questions []model.Question,
 	flagAdvanced bool,
 ) {
@@ -492,6 +497,12 @@ func getVarMapFromQuestions(
 					switch q.Validator {
 					case "port":
 						customValidator = utils.PortValidator
+						// Check if port was already assigned
+						port, _ := strconv.Atoi(defaultValue)
+						for utils.SliceContainsInt(*usedPorts, port) {
+							port = port + 1
+						}
+						defaultValue = strconv.Itoa(port)
 					default:
 						customValidator = func(val interface{}) error {
 							validate := validator.New()
@@ -501,7 +512,12 @@ func getVarMapFromQuestions(
 							return nil
 						}
 					}
-					(*varMap)[q.Variable] = utils.TextQuestionWithDefaultAndValidator(q.Text, defaultValue, customValidator)
+					answer := utils.TextQuestionWithDefaultAndValidator(q.Text, defaultValue, customValidator)
+					(*varMap)[q.Variable] = answer
+					if q.Validator == "port" {
+						port, _ := strconv.Atoi(answer)
+						*usedPorts = append(*usedPorts, port)
+					}
 				} else {
 					(*varMap)[q.Variable] = utils.TextQuestionWithDefault(q.Text, defaultValue)
 				}

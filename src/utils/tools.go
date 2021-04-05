@@ -206,12 +206,30 @@ func RemoveStringFromSlice(s []string, r string) []string {
 	return s
 }
 
-// AppendStringToSliceIfMissing checks if a slice contains a string and adds it if its not existing already
-func AppendStringToSliceIfMissing(slice []string, i string) []string {
+// SliceContainsString checks if a slice contains a certain element
+func SliceContainsString(slice []string, i string) bool {
 	for _, ele := range slice {
 		if ele == i {
-			return slice
+			return true
 		}
+	}
+	return false
+}
+
+// SliceContainsInt checks if a slice contains a certain element
+func SliceContainsInt(slice []int, i int) bool {
+	for _, ele := range slice {
+		if ele == i {
+			return true
+		}
+	}
+	return false
+}
+
+// AppendStringToSliceIfMissing checks if a slice contains a string and adds it if its not existing already
+func AppendStringToSliceIfMissing(slice []string, i string) []string {
+	if SliceContainsString(slice, i) {
+		return slice
 	}
 	return append(slice, i)
 }
@@ -245,7 +263,7 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 	return strings.TrimRight(string(output), "\r\n")
 }
 
-// Run a command in an isolated Linux environment
+// ExecuteOnLinux runs a command in an isolated Linux environment
 func ExecuteOnLinux(c string) {
 	ensureToolbox()
 	// Start docker container
