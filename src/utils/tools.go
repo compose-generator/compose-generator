@@ -95,7 +95,7 @@ func ReplaceVarsInFile(path string, varMap map[string]string) {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		Error("Could not read from "+path, true)
+		Error("Could not read from "+path, err, true)
 	}
 
 	// Replace variables
@@ -104,7 +104,7 @@ func ReplaceVarsInFile(path string, varMap map[string]string) {
 	// Write content back
 	err = ioutil.WriteFile(path, content, 0777)
 	if err != nil {
-		Error("Could not write to "+path, true)
+		Error("Could not write to "+path, err, true)
 	}
 }
 
@@ -121,7 +121,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		Error("Could not read from "+path, true)
+		Error("Could not read from "+path, err, true)
 	}
 
 	// Generate a password for each occurrence of _GENERATE_PW
@@ -130,7 +130,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	for _, s := range secrets {
 		res, err := password.Generate(s.Length, 10, 0, false, false)
 		if err != nil {
-			Error("Password generation failed.", true)
+			Error("Password generation failed.", err, true)
 		}
 		newContent = strings.ReplaceAll(newContent, "${{"+s.Variable+"}}", res)
 		secretsMap[s.Name] = res
@@ -139,7 +139,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	// Write content back
 	err = ioutil.WriteFile(path, []byte(newContent), 0777)
 	if err != nil {
-		Error("Could not write to "+path+" - "+err.Error(), true)
+		Error("Could not write to "+path, err, true)
 	}
 
 	return secretsMap

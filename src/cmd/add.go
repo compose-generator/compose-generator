@@ -30,14 +30,14 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Load compose file
 	jsonFile, err := os.Open(path)
 	if err != nil {
-		utils.Error("Internal error - unable to load compose file", true)
+		utils.Error("Internal error - unable to load compose file", err, true)
 	}
 	bytes, _ := ioutil.ReadAll(jsonFile)
 
 	// Parse YAML
 	composeFile := model.ComposeFile{}
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
-		utils.Error("Internal error - unable to parse compose file", true)
+		utils.Error("Internal error - unable to parse compose file", err, true)
 	}
 	utils.Done()
 	utils.Pel()
@@ -60,8 +60,11 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	utils.P("Saving compose file ... ")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
-	if err1 != nil || err2 != nil {
-		utils.Error("Could not write yaml to compose file.", true)
+	if err1 != nil {
+		utils.Error("Could not marshal yaml", err1, true)
+	}
+	if err2 != nil {
+		utils.Error("Could not write yaml to compose file", err2, true)
 	}
 	utils.Done()
 
@@ -150,7 +153,7 @@ func askBuildFromSource() (build bool, buildPath string, registry string) {
 		buildPath = utils.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
 		// Check if Dockerfile exists
 		if !utils.FileExists(buildPath+"/Dockerfile") && !utils.FileExists(buildPath+"Dockerfile") {
-			utils.Error("Aborting. The Dockerfile cannot be found.", true)
+			utils.Error("Aborting. The Dockerfile cannot be found.", nil, true)
 		}
 	} else {
 		// Ask for registry
@@ -236,7 +239,7 @@ func askForVolumes(flagAdvanced bool) (volumes []string) {
 						utils.ExecuteAndWait("docker", "volume", "create", volumeOuter)
 					}
 				} else {
-					utils.Error("Error parsing global volumes.", false)
+					utils.Error("Error parsing global volumes.", err, false)
 					continue
 				}
 			} else {
@@ -292,7 +295,7 @@ func askForNetworks() (networks []string) {
 						utils.ExecuteAndWait("docker", "network", "create", networkName)
 					}
 				} else {
-					utils.Error("Error parsing external networks.", false)
+					utils.Error("Error parsing external networks.", err, false)
 					continue
 				}
 			} else {
@@ -343,7 +346,7 @@ func askForEnvFiles() (envFiles []string) {
 			})
 			// Check if the selected file is valid
 			if !utils.FileExists(envFile) || utils.IsDirectory(envFile) {
-				utils.Error("File is not valid. Please select another file", false)
+				utils.Error("File is not valid. Please select another file", nil, false)
 				continue
 			}
 			envFiles = append(envFiles, envFile)

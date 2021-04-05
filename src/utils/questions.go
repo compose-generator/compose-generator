@@ -166,8 +166,12 @@ func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []s
 }
 
 // Error prints an error message
-func Error(description string, exit bool) {
-	color.Red("Error: " + description)
+func Error(description string, err error, exit bool) {
+	if err != nil {
+		color.Red("Error: " + description + ": " + err.Error())
+	} else {
+		color.Red("Error: " + description)
+	}
 	if exit {
 		os.Exit(1)
 	}
