@@ -17,7 +17,7 @@ import (
 func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 	// Check if Compose Generator runs in dockerized environment
 	if utils.IsDockerized() {
-		utils.Error("You are currently using the Docker container of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", true)
+		utils.Error("You are currently using the Docker container of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", nil, true)
 	}
 
 	if runtime.GOOS == "windows" { // Running on windows
@@ -25,7 +25,7 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 	} else if runtime.GOOS == "linux" { // Running on linux
 		installForLinux(flagOnlyCompose, flagOnlyDocker)
 	} else { // Unknown OS
-		utils.Error("Compose Generator does not support your host system yet, sorry for that.", true)
+		utils.Error("Compose Generator does not support your host system yet, sorry for that.", nil, true)
 	}
 
 	// Check if installation was successful
@@ -57,7 +57,7 @@ func installForWindows() {
 	filePath := os.TempDir() + "/DockerInstaller.exe"
 	err := utils.DownloadFile(WindowsInstallerURL, filePath)
 	if err != nil {
-		utils.Error("Download of Docker installer failed", true)
+		utils.Error("Download of Docker installer failed", err, true)
 	}
 	utils.Done()
 	// Run Docker installer
@@ -83,7 +83,7 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 			filePath := os.TempDir() + "/install-docker.sh"
 			err := utils.DownloadFile(LinuxDockerInstallScriptURL, filePath)
 			if err != nil {
-				utils.Error("Download of Docker install script failed", true)
+				utils.Error("Download of Docker install script failed", err, true)
 			}
 			utils.ExecuteAndWait("chmod", "+x", filePath)
 			utils.ExecuteAndWait("sh", filePath)
@@ -103,7 +103,7 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 
 			err := utils.DownloadFile("https://github.com/docker/compose/releases/download/1.28.2/docker-compose-"+unameS+"-"+unameM, "/usr/local/bin/docker-compose")
 			if err != nil {
-				utils.Error("Download of Docker Compose failed", true)
+				utils.Error("Download of Docker Compose failed", err, true)
 			}
 			utils.ExecuteAndWaitWithOutput("chmod", "+x", "/usr/local/bin/docker-compose")
 			utils.Done()

@@ -42,7 +42,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 	metadataJSON, _ := json.MarshalIndent(metadata, "", " ")
 	err := ioutil.WriteFile(targetDir+"/metadata.json", metadataJSON, 0777)
 	if err != nil {
-		utils.Error("Could not write metadata.", true)
+		utils.Error("Could not write metadata.", err, true)
 	}
 	utils.Done()
 	// Save template
@@ -62,7 +62,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 	}
 	err = copy.Copy(".", targetDir, opt)
 	if err != nil {
-		utils.Error("Could not copy files. Is the permission granted?", true)
+		utils.Error("Could not copy files. Is the permission granted?", err, true)
 	}
 	utils.Done()
 	// Delete files from source dir if stash flag is set
@@ -84,7 +84,7 @@ func LoadTemplate(name string, flagForce bool, withDockerfile bool) {
 	// Check if the template exists
 	targetDir := utils.GetTemplatesPath() + "/" + name
 	if name != "" && !utils.FileExists(targetDir) {
-		utils.Error("Template with the name '"+name+"' could not be found. You can query a list of the templates by executing 'compose-generator template load'.", true)
+		utils.Error("Template with the name '"+name+"' could not be found. You can query a list of the templates by executing 'compose-generator template load'.", nil, true)
 	} else if name == "" {
 		// Load stacks from templates
 		templateData := parser.ParseTemplates()
@@ -121,7 +121,7 @@ func LoadTemplate(name string, flagForce bool, withDockerfile bool) {
 	}
 	err := copy.Copy(srcPath, dstPath, opt)
 	if err != nil {
-		utils.Error("Could not load template files.", true)
+		utils.Error("Could not load template files.", err, true)
 	}
 	utils.Done()
 }

@@ -36,14 +36,17 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 		if utils.FileExists(configPath) {
 			yamlFile, err1 := os.Open(configPath)
 			content, err2 := ioutil.ReadAll(yamlFile)
-			if err1 != nil || err2 != nil {
-				utils.Error("Could not load config file. Permissions granted?", true)
+			if err1 != nil {
+				utils.Error("Could not load config file. Permissions granted?", err1, true)
+			}
+			if err2 != nil {
+				utils.Error("Could not load config file. Permissions granted?", err2, true)
 			}
 			// Parse yaml
 			yaml.Unmarshal(content, &configFile)
 			projectName = configFile.ProjectName
 		} else {
-			utils.Error("Config file could not be found", true)
+			utils.Error("Config file could not be found", nil, true)
 		}
 	} else {
 		// Welcome Message
@@ -54,7 +57,7 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 		// Ask for project name
 		projectName = utils.TextQuestion("What is the name of your project:")
 		if projectName == "" {
-			utils.Error("Error. You must specify a project name!", true)
+			utils.Error("Error. You must specify a project name!", nil, true)
 		}
 	}
 
@@ -165,10 +168,10 @@ func generateDynamicStack(
 
 	// Write README & environment file
 	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
-		utils.Error("Could not write yaml to README file.", true)
+		utils.Error("Could not write yaml to README file.", nil, true)
 	}
 	if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
-		utils.Error("Could not write yaml to environment file.", true)
+		utils.Error("Could not write yaml to environment file.", nil, true)
 	}
 
 	// Copy dockerfiles
@@ -181,8 +184,11 @@ func generateDynamicStack(
 	utils.P("Saving dev configuration ... ")
 	output, err1 := yaml.Marshal(&composeFileDev)
 	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
-	if err1 != nil || err2 != nil {
-		utils.Error("Could not write yaml to compose file.", true)
+	if err1 != nil {
+		utils.Error("Could not write yaml to compose file.", err1, true)
+	}
+	if err2 != nil {
+		utils.Error("Could not write yaml to compose file.", err2, true)
 	}
 	utils.Done()
 
@@ -191,8 +197,11 @@ func generateDynamicStack(
 		utils.P("Saving prod configuration ... ")
 		output, err1 := yaml.Marshal(&composeFileProd)
 		err2 := ioutil.WriteFile("./docker-compose-prod.yml", output, 0777)
-		if err1 != nil || err2 != nil {
-			utils.Error("Could not write yaml to compose file.", true)
+		if err1 != nil {
+			utils.Error("Could not write yaml to compose file.", err1, true)
+		}
+		if err2 != nil {
+			utils.Error("Could not write yaml to compose file.", err2, true)
 		}
 		utils.Done()
 	}
@@ -213,7 +222,7 @@ func generateDynamicStack(
 			}
 			err := copy.Copy(src, dst, opt)
 			if err != nil {
-				utils.Error("Could not copy volume files: "+err.Error(), true)
+				utils.Error("Could not copy volume files", err, true)
 			}
 		} else {
 			// Create empty volume
@@ -345,7 +354,7 @@ func processUserInput(
 						outPath := filepath.Join(dstPath, f.Path)
 						fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
 						if err != nil {
-							utils.Error("Cannot read instructions file for template: "+template.Label, false)
+							utils.Error("Cannot read instructions file for template: "+template.Label, err, false)
 						}
 						instString = instString + string(fileIn) + "\n\n"
 						varFiles = utils.AppendStringToSliceIfMissing(varFiles, outPath)
@@ -355,7 +364,7 @@ func processUserInput(
 					outPath := filepath.Join(dstPath, f.Path)
 					fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
 					if err != nil {
-						utils.Error("Cannot read environment file for template: "+template.Label, false)
+						utils.Error("Cannot read environment file for template: "+template.Label, err, false)
 					}
 					envString = envString + string(fileIn) + "\n\n"
 					varFiles = utils.AppendStringToSliceIfMissing(varFiles, outPath)

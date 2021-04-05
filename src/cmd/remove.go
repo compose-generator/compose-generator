@@ -26,14 +26,14 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	// Load compose file
 	yamlFile, err := os.Open(path)
 	if err != nil {
-		utils.Error("Internal error - unable to load compose file", true)
+		utils.Error("Internal error - unable to load compose file", err, true)
 	}
 	bytes, _ := ioutil.ReadAll(yamlFile)
 
 	// Parse YAML
 	composeFile := model.ComposeFile{}
 	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
-		utils.Error("Internal error - unable to parse compose file", true)
+		utils.Error("Internal error - unable to parse compose file", err, true)
 	}
 	utils.Done()
 
@@ -102,8 +102,11 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 	utils.P("Saving compose file ... ")
 	output, err1 := yaml.Marshal(&composeFile)
 	err2 := ioutil.WriteFile(path, output, 0777)
-	if err1 != nil || err2 != nil {
-		utils.Error("Could not write yaml to compose file.", true)
+	if err1 != nil {
+		utils.Error("Could not marshal yaml", err1, true)
+	}
+	if err2 != nil {
+		utils.Error("Could not write yaml to compose file", err2, true)
 	}
 	utils.Done()
 
