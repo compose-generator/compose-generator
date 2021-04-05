@@ -343,6 +343,15 @@ func processUserInput(
 	dockerfileMap := make(map[string]string)
 	var instString string
 	var envString string
+
+	// Read instructions header
+	fileIn, err := ioutil.ReadFile(filepath.Join(utils.GetPredefinedServicesPath(), "INSTRUCTIONS_HEADER.md"))
+	if err != nil {
+		utils.Error("Cannot load instructions header file", err, true)
+	}
+	instString = instString + string(fileIn) + "\n\n"
+
+	// Loop through templates
 	for templateType, templates := range templateData {
 		for _, template := range templates {
 			srcPath := utils.GetPredefinedServicesPath() + "/" + template.Dir
