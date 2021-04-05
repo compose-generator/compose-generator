@@ -1,0 +1,75 @@
+{
+    "label": "SonarQube",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "volumes/sonarqube-conf/sonar.properties",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your SonarQube instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "SONARQUBE_PORT"
+        },
+        {
+            "text": "Which version of SonarQube do you want to use?",
+            "type": 2,
+            "defaultValue": "8.8-community",
+            "variable": "SONARQUBE_VERSION"
+        },
+        {
+            "text": "On which host is your instance accessible from outside?",
+            "type": 2,
+            "defaultValue": "localhost",
+            "variable": "SONARQUBE_OUTSIDE_HOST"
+        },
+        {
+            "text": "On which protocol is your instance accessible from outside? (https/http)",
+            "type": 2,
+            "defaultValue": "http",
+            "variable": "SONARQUBE_OUTSIDE_PROTOCOL"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for SonarQube configuration volume?",
+            "defaultValue": "./volumes/sonarqube-conf",
+            "variable": "VOLUME_SONARQUBE_CONF",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for SonarQube data volume?",
+            "defaultValue": "./volumes/sonarqube-data",
+            "variable": "VOLUME_SONARQUBE_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for SonarQube logs volume?",
+            "defaultValue": "./volumes/sonarqube-logs",
+            "variable": "VOLUME_SONARQUBE_LOGS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for SonarQube extensions volume?",
+            "defaultValue": "./volumes/sonarqube-extensions",
+            "variable": "VOLUME_SONARQUBE_EXTENSIONS",
+            "advanced": true
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+image: sonarqube:${{SONARQUBE_VERSION}}
+volumes:
+  - ${{VOLUME_SONARQUBE_CONF}}:/opt/sonarqube/conf
+  - ${{VOLUME_SONARQUBE_DATA}}:/opt/sonarqube/data
+  - ${{VOLUME_SONARQUBE_LOGS}}:/opt/sonarqube/logs
+  - ${{VOLUME_SONARQUBE_EXTENSIONS}}:/opt/sonarqube/extensions
+networks:
+  - frontend-database
+ports:
+  - ${{SONARQUBE_PORT}}:9000
+env_file:
+  - environment.env

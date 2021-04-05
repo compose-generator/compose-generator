@@ -1,6 +1,6 @@
 {
     "label": "PostgreSQL",
-    "preselected": "has service gitea",
+    "preselected": "has service gitea|has service sonarqube",
     "files": [
         {
             "path": "service.yml",
