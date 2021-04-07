@@ -1,0 +1,5 @@
+build: ${{PHP_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-php
+restart: always
+ports:
+  - ${{PHP_PORT}}:80

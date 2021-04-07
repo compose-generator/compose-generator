@@ -1,0 +1,41 @@
+{
+    "label": "PHP",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "frontend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your PHP application?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "PHP_PORT"
+        },
+        {
+            "text": "Which version of PHP do you want to use?",
+            "type": 2,
+            "defaultValue": "8.0",
+            "variable": "PHP_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for source directory?",
+            "defaultValue": "./frontend",
+            "variable": "PHP_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}
