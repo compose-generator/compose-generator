@@ -1,0 +1,5 @@
+build: ${{CW_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-nginx
+restart: always
+ports:
+  - ${{CW_PORT}}:80
