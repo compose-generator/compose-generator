@@ -9,6 +9,10 @@ edit_uri: edit/main/docs/docs/
 theme:
   name: material
   language: en
+  logo: static/avatar.png
+  favicon: static/favicon-48x48.ico
+  include_search_page: false
+  search_index_only: true
   features:
     - navigation.instant
   palette:
@@ -27,13 +31,8 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  logo: static/avatar.png
-  favicon: static/favicon-48x48.ico
-  include_search_page: false
-  search_index_only: true
 
 plugins:
-  # disable temporarely because its freezing the page
   - search:
       prebuild_index: python
       lang:
@@ -43,7 +42,7 @@ plugins:
 
 extra:
   social:
-    - icon: fontawesome/brands/github-alt
+    - icon: fontawesome/brands/github
       link: https://github.com/compose-generator/compose-generator
     - icon: fontawesome/brands/medium
       link: https://medium.com/p/d4356d38922d
@@ -51,7 +50,8 @@ extra:
       link: https://hub.docker.com/r/chillibits/compose-generator
 
 nav:
-- Introduction: index.md
+- Home: index.md
+- Introduction: intro.md
 - Install:
   - install/docker.md
   - install/linux.md
