@@ -1,0 +1,49 @@
+{
+    "label": "Minecraft Server",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Minecraft server?",
+            "type": 2,
+            "defaultValue": "25565",
+            "validator": "port",
+            "variable": "MINECRAFT_PORT"
+        },
+        {
+            "text": "Which version of Minecraft do you want to use?",
+            "type": 2,
+            "defaultValue": "1.16",
+            "variable": "MINECRAFT_VERSION"
+        },
+        {
+            "text": "How much memory to you want to assign the Minecraft server (in GB)?",
+            "type": 2,
+            "defaultValue": "2",
+            "variable": "MINECRAFT_MEM"
+        },
+        {
+            "text": "Accept Minecraft Eula (TRUE/FALSE)?",
+            "type": 2,
+            "defaultValue": "TRUE",
+            "variable": "MINECRAFT_EULA"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Minecraft data volume?",
+            "defaultValue": "./volumes/minecraft-data",
+            "variable": "VOLUME_MINECRAFT_DATA",
+            "withDockerfile": true
+        }
+    ]
+}
