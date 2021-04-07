@@ -1,13 +1,15 @@
 site_name: Compose Generator
-site_description: Deliver Go binaries as fast and easily as possible
+site_url: https://www.compose-generator.com
+site_description: Setup your application in a matter of seconds
 site_author: Marc Auberer
 copyright: Made with ❤️ by Compose Generator contributors.
 repo_name: compose-generator/compose-generator
 repo_url: https://github.com/compose-generator/compose-generator
-edit_uri: edit/main/docs/docs/
+edit_uri: edit/dev/docs/docs/
 
 theme:
   name: material
+  custom_dir: docs/overrides
   language: en
   logo: static/avatar.png
   favicon: static/favicon-48x48.ico
@@ -15,6 +17,7 @@ theme:
   search_index_only: true
   features:
     - navigation.instant
+    - navigation.tabs
   palette:
     - scheme: default # Light mode
       primary: teal
@@ -28,9 +31,6 @@ theme:
       toggle:
         icon: material/toggle-switch
         name: Switch to dark mode
-  font:
-    text: Roboto
-    code: Roboto Mono
 
 plugins:
   - search:
@@ -44,29 +44,31 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/compose-generator/compose-generator
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/composegen
     - icon: fontawesome/brands/medium
       link: https://medium.com/p/d4356d38922d
     - icon: fontawesome/brands/docker
       link: https://hub.docker.com/r/chillibits/compose-generator
 
 nav:
-- Home: index.md
-- Introduction: intro.md
-- Install:
-  - install/docker.md
-  - install/linux.md
-  - install/windows.md
-- quick-start.md
-- Usage:
-  - usage/generate.md
-  - usage/add.md
-  - usage/remove.md
-  - usage/template.md
-  - usage/install.md
-- contributing.md
+  - Home: index.md
+  - intro.md
+  - Install:
+    - install/docker.md
+    - install/linux.md
+    - install/windows.md
+    - install/npm.md
+  - quick-start.md
+  - Usage:
+    - usage/generate.md
+    - usage/add.md
+    - usage/remove.md
+    - usage/template.md
+    - usage/install.md
+  - contributing.md
 
 markdown_extensions:
-  - admonition
   - codehilite
   - meta
   - footnotes

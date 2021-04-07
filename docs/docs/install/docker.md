@@ -1,8 +1,8 @@
 ---
-title: Install for Docker
+title: Use with Docker
 ---
 
-### Install
+### Download
 You don't have to pull the image first. You also can skip this step.
 === "Docker Hub"
     ```sh
