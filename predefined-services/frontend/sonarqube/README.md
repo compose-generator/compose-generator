@@ -7,8 +7,8 @@ SonarQube needs some extra configuration on the Docker host system to grant more
 ```sh
 sudo sysctl -w vm.max_map_count=262144
 sudo sysctl -w fs.file-max=65536
-sudo ulimit -n 65536
-sudo ulimit -u 4096
+ulimit -n 65536
+ulimit -u 4096
 ```
 
 #### Install SonarQube
