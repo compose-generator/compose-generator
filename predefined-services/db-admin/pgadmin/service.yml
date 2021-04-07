@@ -1,0 +1,14 @@
+image: dpage/pgadmin4:${{PGADMIN_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-pgadmin
+volumes:
+  - ${{VOLUME_PGADMIN_DATA}}:/var/lib/pgadmin
+networks:
+#! if has service postgres {
+#!   - postgres-pgadmin
+#! }
+ports:
+  - ${{PGADMIN_PORT}}:80
+env_file:
+  - environment.env
+depends_on:
+  - database

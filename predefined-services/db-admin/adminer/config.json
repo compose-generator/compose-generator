@@ -24,7 +24,7 @@
             "variable": "ADMINER_PORT"
         },
         {
-            "text": "Which version of PHPMyAdmin do you want to use?",
+            "text": "Which version of Adminer do you want to use?",
             "type": 2,
             "defaultValue": "latest",
             "variable": "ADMINER_VERSION",
