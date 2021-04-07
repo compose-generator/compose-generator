@@ -1,0 +1,17 @@
+image: itzg/minecraft-server
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-minecraft
+restart: always
+volumes:
+  - ${{VOLUME_MINECRAFT_DATA}}:/data
+ports:
+  - ${{MINECRAFT_PORT}}:25565
+environment:
+  - EULA=${{MINECRAFT_EULA}}
+  - VERSION=${{MINECRAFT_VERSION}}
+  - MEMORY=${{MINECRAFT_MEM}}G
+  - SERVER_NAME=${{MINECRAFT_SERVER_NAME}}
+  - MAX_PLAYERS=${{MINECRAFT_MAX_PLAYERS}}
+  - DIFFICULTY=${{MINECRAFT_DIFFICULTY}}
+  - MOTD=${{MINECRAFT_MOTD}}
+  - GAMEMODE=${{MINECRAFT_GAMEMODE}}
+  - ONLINE_MODE=${{MINECRAFT_ONLINE_MODE}}

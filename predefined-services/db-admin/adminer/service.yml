@@ -1,0 +1,18 @@
+image: adminer:${{ADMINER_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-adminer
+networks:
+#! if has service postgres {
+#!   - postgres-adminer
+#! }
+#! if has service mysql {
+#!   - mysql-adminer
+#! }
+#! if has service mariadb {
+#!   - mariadb-adminer
+#! }
+ports:
+  - ${{ADMINER_PORT}}:8080
+env_file:
+  - environment.env
+depends_on:
+  - database

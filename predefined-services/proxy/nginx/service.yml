@@ -1,5 +1,5 @@
 image: jwilder/nginx-proxy:alpine
-container_name: ${{PROJECT_NAME_CONTAINER}}-proxy
+container_name: ${{PROJECT_NAME_CONTAINER}}-proxy-nginx
 restart: always
 volumes:
   - /var/run/docker.sock:/tmp/docker.sock:ro

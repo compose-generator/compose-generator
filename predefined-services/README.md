@@ -24,7 +24,7 @@ It consists of following parts:
 - `preselected` - Conditional string which defines, whether a service is initially selected in the list or not.
 - `files` - List of important files the template comes with. For example the compose file or certain Dockerfiles.
 	- `path`: Path to a particular file
-	- `type`: Type of the file. Needs to be one of: `service`, `env`, `docs`, `docker`
+	- `type`: Type of the file. Needs to be one of: `service`, `env`, `docs`, `docker`, `config`
 - `questions` - Lists of quesions, which the cli will ask the user.
 	- `text` - Question itself (keep it as short as possible).
 	- `type` - 1 = Yes/No question, 2 = Text question

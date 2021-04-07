@@ -1,6 +1,6 @@
 {
     "label": "MySQL",
-    "preselected": "false",
+    "preselected": "has service wordpress|has service nextcloud|has service owncloud",
     "files": [
         {
             "path": "service.yml",
@@ -40,8 +40,7 @@
         {
             "text": "Which MySQL version do you want to use?",
             "type": 2,
-            "defaultValue": "latest",
-            "validator": "alphanum",
+            "defaultValue": "8.0",
             "variable": "MYSQL_VERSION",
             "advanced": true
         }

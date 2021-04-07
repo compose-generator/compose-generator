@@ -95,7 +95,7 @@ func ReplaceVarsInFile(path string, varMap map[string]string) {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		Error("Could not read from "+path, true)
+		Error("Could not read from "+path, err, true)
 	}
 
 	// Replace variables
@@ -104,7 +104,7 @@ func ReplaceVarsInFile(path string, varMap map[string]string) {
 	// Write content back
 	err = ioutil.WriteFile(path, content, 0777)
 	if err != nil {
-		Error("Could not write to "+path, true)
+		Error("Could not write to "+path, err, true)
 	}
 }
 
@@ -121,7 +121,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	// Read file content
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		Error("Could not read from "+path, true)
+		Error("Could not read from "+path, err, true)
 	}
 
 	// Generate a password for each occurrence of _GENERATE_PW
@@ -130,7 +130,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	for _, s := range secrets {
 		res, err := password.Generate(s.Length, 10, 0, false, false)
 		if err != nil {
-			Error("Password generation failed.", true)
+			Error("Password generation failed.", err, true)
 		}
 		newContent = strings.ReplaceAll(newContent, "${{"+s.Variable+"}}", res)
 		secretsMap[s.Name] = res
@@ -139,7 +139,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	// Write content back
 	err = ioutil.WriteFile(path, []byte(newContent), 0777)
 	if err != nil {
-		Error("Could not write to "+path+" - "+err.Error(), true)
+		Error("Could not write to "+path, err, true)
 	}
 
 	return secretsMap
@@ -206,12 +206,30 @@ func RemoveStringFromSlice(s []string, r string) []string {
 	return s
 }
 
-// AppendStringToSliceIfMissing checks if a slice contains a string and adds it if its not existing already
-func AppendStringToSliceIfMissing(slice []string, i string) []string {
+// SliceContainsString checks if a slice contains a certain element
+func SliceContainsString(slice []string, i string) bool {
 	for _, ele := range slice {
 		if ele == i {
-			return slice
+			return true
 		}
+	}
+	return false
+}
+
+// SliceContainsInt checks if a slice contains a certain element
+func SliceContainsInt(slice []int, i int) bool {
+	for _, ele := range slice {
+		if ele == i {
+			return true
+		}
+	}
+	return false
+}
+
+// AppendStringToSliceIfMissing checks if a slice contains a string and adds it if its not existing already
+func AppendStringToSliceIfMissing(slice []string, i string) []string {
+	if SliceContainsString(slice, i) {
+		return slice
 	}
 	return append(slice, i)
 }
@@ -245,7 +263,7 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 	return strings.TrimRight(string(output), "\r\n")
 }
 
-// Run a command in an isolated Linux environment
+// ExecuteOnLinux runs a command in an isolated Linux environment
 func ExecuteOnLinux(c string) {
 	ensureToolbox()
 	// Start docker container

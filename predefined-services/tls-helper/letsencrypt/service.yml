@@ -1,5 +1,5 @@
 image: jrcs/letsencrypt-nginx-proxy-companion:v1.13.1
-container_name: ${{PROJECT_NAME_CONTAINER}}-letsencrypt
+container_name: ${{PROJECT_NAME_CONTAINER}}-tlshelper-letsencrypt
 restart: always
 volumes:
   - /var/run/docker.sock:/var/run/docker.sock:ro

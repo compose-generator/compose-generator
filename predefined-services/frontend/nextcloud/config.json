@@ -1,0 +1,71 @@
+{
+    "label": "Nextcloud",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "volumes/nextcloud-config/config.php",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Nextcloud instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "NEXTCLOUD_PORT"
+        },
+        {
+            "text": "Which version of Nextcloud do you want to use?",
+            "type": 2,
+            "defaultValue": "21.0",
+            "variable": "NEXTCLOUD_VERSION"
+        },
+        {
+            "text": "On which host is your instance accessible from outside?",
+            "type": 2,
+            "defaultValue": "localhost",
+            "variable": "NEXTCLOUD_OUTSIDE_HOST"
+        },
+        {
+            "text": "On which protocol is your instance accessible from outside? (https/http)",
+            "type": 2,
+            "defaultValue": "http",
+            "variable": "NEXTCLOUD_OUTSIDE_PROTOCOL"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Nextcloud apps volume?",
+            "defaultValue": "./volumes/nextcloud-apps",
+            "variable": "VOLUME_NEXTCLOUD_APPS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Nextcloud config volume?",
+            "defaultValue": "./volumes/nextcloud-config",
+            "variable": "VOLUME_NEXTCLOUD_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Nextcloud data volume?",
+            "defaultValue": "./volumes/nextcloud-data",
+            "variable": "VOLUME_NEXTCLOUD_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Nextcloud theme volume?",
+            "defaultValue": "./volumes/nextcloud-theme",
+            "variable": "VOLUME_NEXTCLOUD_THEME",
+            "advanced": true
+        }
+    ]
+}

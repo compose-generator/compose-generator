@@ -1,0 +1,2 @@
+## Adminer
+*To be extended ...*

@@ -1,0 +1,41 @@
+{
+    "label": "Adminer",
+    "preselected": "has service postgres",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose Adminer?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "ADMINER_PORT"
+        },
+        {
+            "text": "Which version of Adminer do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "ADMINER_VERSION",
+            "advanced": true
+        },
+        {
+            "text": "Which Adminer theme do you want to use?",
+            "type": 2,
+            "defaultValue": "dracula",
+            "variable": "ADMINER_THEME",
+            "advanced": true
+        }
+    ]
+}

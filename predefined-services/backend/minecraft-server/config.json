@@ -1,0 +1,89 @@
+{
+    "label": "Minecraft Server",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Minecraft server?",
+            "type": 2,
+            "defaultValue": "25565",
+            "validator": "port",
+            "variable": "MINECRAFT_PORT",
+            "advanced": true
+        },
+        {
+            "text": "Which version of Minecraft do you want to use?",
+            "type": 2,
+            "defaultValue": "1.16.5",
+            "variable": "MINECRAFT_VERSION"
+        },
+        {
+            "text": "How much memory to you want to assign the Minecraft server (in GB)?",
+            "type": 2,
+            "defaultValue": "2",
+            "validator": "numeric",
+            "variable": "MINECRAFT_MEM",
+            "advanced": true
+        },
+        {
+            "text": "Accept Minecraft Eula (TRUE/FALSE)?",
+            "type": 2,
+            "defaultValue": "TRUE",
+            "variable": "MINECRAFT_EULA"
+        },
+        {
+            "text": "Server name?",
+            "type": 2,
+            "defaultValue": "My Minecraft Server",
+            "variable": "MINECRAFT_SERVER_NAME"
+        },
+        {
+            "text": "Max number of players?",
+            "type": 2,
+            "validator": "numeric",
+            "defaultValue": "20",
+            "variable": "MINECRAFT_MAX_PLAYERS"
+        },{
+            "text": "Game difficulty? (peaceful, easy, normal, hard)",
+            "type": 2,
+            "defaultValue": "normal",
+            "variable": "MINECRAFT_DIFFICULTY"
+        },
+        {
+            "text": "Server MOTD?",
+            "type": 2,
+            "defaultValue": "This server is proudly hosted with Docker & Compose Generator",
+            "variable": "MINECRAFT_MOTD"
+        },
+        {
+            "text": "Gamemode? (creative/survival/adventure/spectator)",
+            "type": 2,
+            "defaultValue": "20",
+            "variable": "MINECRAFT_GAMEMODE"
+        },
+        {
+            "text": "Online mode? (TRUE/FALSE)",
+            "type": 2,
+            "defaultValue": "TRUE",
+            "variable": "MINECRAFT_ONLINE_MODE",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Minecraft data volume?",
+            "defaultValue": "./volumes/minecraft-data",
+            "variable": "VOLUME_MINECRAFT_DATA",
+            "withDockerfile": true
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 {
     "label": "PhpMyAdmin",
-    "preselected": "has service mysql",
+    "preselected": "has service mysql|has service mariadb",
     "files": [
         {
             "path": "service.yml",
@@ -19,7 +19,7 @@
         {
             "text": "On which port you want to expose PHPMyAdmin?",
             "type": 2,
-            "defaultValue": "81",
+            "defaultValue": "80",
             "validator": "port",
             "variable": "PMA_PORT"
         },
@@ -27,7 +27,6 @@
             "text": "Which version of PHPMyAdmin do you want to use?",
             "type": 2,
             "defaultValue": "latest",
-            "validator": "alphanum",
             "variable": "PMA_VERSION",
             "advanced": true
         }

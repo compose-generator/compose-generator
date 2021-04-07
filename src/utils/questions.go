@@ -145,23 +145,33 @@ func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 		Message: label,
 		Options: items,
 	}
-	handleInterrupt(survey.AskOne(prompt, &result))
+	handleInterrupt(survey.AskOne(prompt, &result, survey.WithIcons(func(icons *survey.IconSet) {
+		icons.Question.Format = "yellow+hb"
+	})))
 	return
 }
 
 // MultiSelectMenuQuestionIndex prints a multi selection of predefined items and returns the selected indices
-func MultiSelectMenuQuestionIndex(label string, items []string) (result []int) {
+func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []string) (result []int) {
 	prompt := &survey.MultiSelect{
-		Message: label,
-		Options: items,
+		Message:  label,
+		Options:  items,
+		Default:  defaultItems,
+		PageSize: 15,
 	}
-	handleInterrupt(survey.AskOne(prompt, &result))
+	handleInterrupt(survey.AskOne(prompt, &result, survey.WithIcons(func(icons *survey.IconSet) {
+		icons.Question.Format = "yellow+hb"
+	})))
 	return
 }
 
 // Error prints an error message
-func Error(description string, exit bool) {
-	color.Red("Error: " + description)
+func Error(description string, err error, exit bool) {
+	if err != nil {
+		color.Red("Error: " + description + ": " + err.Error())
+	} else {
+		color.Red("Error: " + description)
+	}
 	if exit {
 		os.Exit(1)
 	}

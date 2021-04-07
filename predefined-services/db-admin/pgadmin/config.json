@@ -1,0 +1,61 @@
+{
+    "label": "pgAdmin",
+    "preselected": "has service postgres",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose pgAdmin?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "PGADMIN_PORT"
+        },
+        {
+            "text": "Which version of pgAdmin do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "PGADMIN_VERSION",
+            "advanced": true
+        },
+        {
+            "text": "Which email do you want to use for pgAdmin?",
+            "type": 2,
+            "validator": "email",
+            "variable": "PGADMIN_EMAIL"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for pgAdmin data volume?",
+            "defaultValue": "./volumes/pgadmin-data",
+            "variable": "VOLUME_PGADMIN_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for pgAdmin config volume?",
+            "defaultValue": "./volumes/pgadmin-config",
+            "variable": "VOLUME_PGADMIN_CONFIG",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Default password for pgAdmin",
+            "variable": "_PW_PGADMIN_DEFAULT",
+            "length": 30
+        }
+    ]
+}

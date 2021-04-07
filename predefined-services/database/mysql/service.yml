@@ -1,9 +1,18 @@
 image: mysql:${{MYSQL_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-db
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-mysql
 restart: always
 networks:
+#! if has backend {
+#!  - backend-database
+#! }
+#! if has service nextcloud|has service owncloud|has service wordpress|has service gitea {
+#!  - frontend-database
+#! }
 #! if has service phpmyadmin {
 #!  - mysql-phpmyadmin
+#! }
+#! if has service adminer {
+#!  - mysql-adminer
 #! }
 ports:
   - ${{MYSQL_PORT}}:3306

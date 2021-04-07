@@ -1,0 +1,13 @@
+image: owncloud:${{OWNCLOUD_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-owncloud
+restart: always
+volumes:
+  - ${{VOLUME_OWNCLOUD_APPS}}:/var/www/html/custom_apps
+  - ${{VOLUME_OWNCLOUD_CONFIG}}:/var/www/html/config
+  - ${{VOLUME_OWNCLOUD_DATA}}:/var/www/html/data
+networks:
+  - frontend-database
+ports:
+  - ${{OWNCLOUD_PORT}}:80
+env_file:
+  - environment.env

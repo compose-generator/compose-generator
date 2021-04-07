@@ -1,5 +1,9 @@
 build: ${{ANGULAR_SOURCE_DIRECTORY}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-frontend
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-angular
 restart: always
+networks:
+#! if has backend {
+#!  - frontend-backend
+#! }
 ports:
   - ${{ANGULAR_PORT}}:80

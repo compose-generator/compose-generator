@@ -1,0 +1,85 @@
+{
+    "label": "PostgreSQL",
+    "preselected": "has service gitea|has service sonarqube",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "volumes/postgres-init/init-user-db.sh",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose Postgres DB?",
+            "type": 2,
+            "defaultValue": "5432",
+            "validator": "port",
+            "variable": "POSTGRES_PORT"
+        },
+        {
+            "text": "How do you want to call the superuser?",
+            "type": 2,
+            "defaultValue": "root",
+            "variable": "POSTGRES_SUPERUSER",
+            "advanced": true
+        },
+        {
+            "text": "How do you want to call the Postgres user for your application?",
+            "type": 2,
+            "defaultValue": "application",
+            "validator": "alphanum",
+            "variable": "POSTGRES_USER"
+        },
+        {
+            "text": "How do you want to call the database for your application?",
+            "type": 2,
+            "defaultValue": "main",
+            "validator": "alphanum",
+            "variable": "POSTGRES_DATABASE"
+        },
+        {
+            "text": "Which Postgres version do you want to use?",
+            "type": 2,
+            "defaultValue": "13.2-alpine",
+            "variable": "POSTGRES_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Postgres data volume?",
+            "defaultValue": "./volumes/postgres-data",
+            "variable": "VOLUME_POSTGRES_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Postgres entrypoint volume?",
+            "defaultValue": "./volumes/postgres-init",
+            "variable": "VOLUME_POSTGRES_INIT",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Postgres password for user '${{POSTGRES_SUPERUSER}}'",
+            "variable": "_PW_POSTGRES_SUPERUSER",
+            "length": 50
+        },
+        {
+            "name": "Postgres password for the application user",
+            "variable": "_PW_POSTGRES_USER",
+            "length": 30
+        }
+    ]
+}

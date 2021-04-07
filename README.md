@@ -19,9 +19,28 @@
 Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).
 
 ## Usage
-You can use the Compose Generator CLI by directly installing it on your Docker host system or by generating your compose file with the Compose Generator Docker container.
+You can use the Compose Generator CLI by directly installing it on your Docker host system, install it via npm or by generating your compose file with the Compose Generator Docker container on the fly.
 
 ### Install Compose Generator CLI
+<details><summary><b>Install via NPM (all supported platforms)</b></summary>
+<p>
+
+### Install
+If you haven't installed npm yet, please do so by following the [installation guide on nodejs.org](https://nodejs.org/en/download/).
+
+Install Compose Generator by executing:
+```sh
+npm i -g @compose-generator/cli
+```
+
+### Use
+```sh
+compose-generator
+```
+
+</p>
+</details>
+
 <details><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
 <p>
 

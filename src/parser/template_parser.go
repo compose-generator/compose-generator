@@ -17,15 +17,15 @@ func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 	templatesPath := utils.GetPredefinedServicesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
-		utils.Error("Internal error - could not load service templates.", true)
+		utils.Error("Internal error - could not load service templates.", err, true)
 	}
-	filterFunc := func(s string) bool { return s != "README.md" }
+	filterFunc := func(s string) bool { return s != "README.md" && s != "INSTRUCTIONS_HEADER.md" }
 
 	configs := make(map[string][]model.ServiceTemplateConfig)
 	for _, templateType := range filterFilenames(files, filterFunc) {
 		files, err := ioutil.ReadDir(filepath.Join(templatesPath, templateType))
 		if err != nil {
-			utils.Error("Internal error - could not load service templates.", true)
+			utils.Error("Internal error - could not load service templates.", err, true)
 		}
 		for _, f := range filterFilenames(files, filterFunc) {
 			templatePath := filepath.Join(templatesPath, templateType, f)
@@ -48,7 +48,7 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	templatesPath := utils.GetTemplatesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
-		utils.Error("Internal error - could not load templates.", true)
+		utils.Error("Internal error - could not load templates.", err, true)
 	}
 	var fileNames []string
 	for _, n := range files {
@@ -62,21 +62,13 @@ func ParseTemplates() (metadatas []model.TemplateMetadata) {
 	return
 }
 
-// TemplateListToTemplateLabelList converts a list of service templates to a list of labels
-func TemplateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		labels = append(labels, t.Label)
-	}
-	return
-}
-
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func getConfigFromFile(dirPath string) (config model.ServiceTemplateConfig) {
 	// Read JSON file
 	jsonFile, err := os.Open(dirPath + "/config.json")
 	if err != nil {
-		utils.Error("Internal error - unable to load config file of template "+dirPath, true)
+		utils.Error("Internal error - unable to load config file of template "+dirPath, err, true)
 	}
 
 	// Parse json to TemplateConfig struct
@@ -92,7 +84,7 @@ func getMetadataFromFile(dirPath string) (metadata model.TemplateMetadata) {
 	// Read JSON file
 	jsonFile, err := os.Open(dirPath + "/metadata.json")
 	if err != nil {
-		utils.Error("Internal error - unable to load metadata file of template "+dirPath, true)
+		utils.Error("Internal error - unable to load metadata file of template "+dirPath, err, true)
 	}
 
 	// Parse json to TemplateMetadata struct

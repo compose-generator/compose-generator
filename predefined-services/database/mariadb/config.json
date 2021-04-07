@@ -1,0 +1,74 @@
+{
+    "label": "MariaDB",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose MariaDB?",
+            "type": 2,
+            "defaultValue": "3306",
+            "validator": "port",
+            "variable": "MARIADB_PORT"
+        },
+        {
+            "text": "How do you want to call the MariaDB user for your application?",
+            "type": 2,
+            "defaultValue": "application",
+            "validator": "alphanum",
+            "variable": "MARIADB_USER"
+        },
+        {
+            "text": "How do you want to call the database for your application?",
+            "type": 2,
+            "defaultValue": "main",
+            "validator": "alphanum",
+            "variable": "MARIADB_DATABASE"
+        },
+        {
+            "text": "Which MariaDB version do you want to use?",
+            "type": 2,
+            "defaultValue": "10.5",
+            "variable": "MARIADB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for MariaDB data volume?",
+            "defaultValue": "./volumes/mariadb-data",
+            "variable": "VOLUME_MARIADB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for MariaDB logs volume?",
+            "defaultValue": "./volumes/mariadb-logs",
+            "variable": "VOLUME_MARIADB_LOGS",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "MariaDB password for user 'root'",
+            "variable": "_PW_MARIADB_ROOT",
+            "length": 50
+        },
+        {
+            "name": "MariaDB password for the application user",
+            "variable": "_PW_MARIADB_USER",
+            "length": 30
+        }
+    ]
+}
