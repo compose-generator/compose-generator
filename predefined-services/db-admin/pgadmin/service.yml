@@ -2,10 +2,9 @@ image: dpage/pgadmin4:${{PGADMIN_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-pgadmin
 volumes:
   - ${{VOLUME_PGADMIN_DATA}}:/var/lib/pgadmin
-  - ${{VOLUME_PGADMIN_CONFIG}}/config_local.py:/pgadmin4/config_local.py
 networks:
 #! if has service postgres {
-#!   - postgres-adminer
+#!   - postgres-pgadmin
 #! }
 ports:
   - ${{PGADMIN_PORT}}:80

@@ -19,7 +19,7 @@
         {
             "text": "On which port you want to expose pgAdmin?",
             "type": 2,
-            "defaultValue": "81",
+            "defaultValue": "80",
             "validator": "port",
             "variable": "PGADMIN_PORT"
         },
@@ -35,12 +35,6 @@
             "type": 2,
             "validator": "email",
             "variable": "PGADMIN_EMAIL"
-        },
-        {
-            "text": "On which host is your instance accessible from outside?",
-            "type": 2,
-            "defaultValue": "localhost",
-            "variable": "PGADMIN_OUTSIDE_HOST"
         }
     ],
     "volumes": [

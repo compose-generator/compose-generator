@@ -1,1 +1,0 @@
-DEFAULT_SERVER = '0.0.0.0'
