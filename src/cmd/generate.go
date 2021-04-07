@@ -141,6 +141,7 @@ func generateDynamicStack(
 	utils.P("Generating configuration ... ")
 	composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
 	varFiles = append(varFiles, "docker-compose.yml")
+	varFiles = append(varFiles, "README.md")
 	if alsoProduction {
 		varFiles = append(varFiles, "docker-compose-prod.yml")
 	}
@@ -170,7 +171,7 @@ func generateDynamicStack(
 	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
 		utils.Error("Could not write yaml to README file.", nil, true)
 	}
-	if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
+	if len(envString) > 0 && ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
 		utils.Error("Could not write yaml to environment file.", nil, true)
 	}
 
@@ -361,13 +362,11 @@ func processUserInput(
 				case "docs":
 					if flagWithInstructions {
 						// Append content to existing file
-						outPath := filepath.Join(dstPath, f.Path)
 						fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
 						if err != nil {
 							utils.Error("Cannot read instructions file for template: "+template.Label, err, false)
 						}
 						instString = instString + string(fileIn) + "\n\n"
-						varFiles = utils.AppendStringToSliceIfMissing(varFiles, outPath)
 					}
 				case "env":
 					// Append content to existing file
