@@ -5,7 +5,7 @@ networks:
 #! if has backend {
 #!  - backend-database
 #! }
-#! if has service nextcloud|has service owncloud|has service gitea {
+#! if has service nextcloud|has service owncloud|has service gitea|has service sonarqube {
 #!  - frontend-database
 #! }
 #! if has service pgadmin {
