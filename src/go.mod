@@ -13,7 +13,7 @@ require (
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
-	github.com/otiai10/copy v1.5.0
+	github.com/otiai10/copy v1.5.1
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/urfave/cli/v2 v2.3.0
