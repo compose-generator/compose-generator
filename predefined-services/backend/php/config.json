@@ -11,7 +11,7 @@
             "type": "docs"
         },
         {
-            "path": "frontend/Dockerfile",
+            "path": "backend/Dockerfile",
             "type": "docker"
         }
     ],
@@ -33,7 +33,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./frontend",
+            "defaultValue": "./backend",
             "variable": "PHP_SOURCE_DIRECTORY",
             "withDockerfile": true
         }
