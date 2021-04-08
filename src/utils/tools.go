@@ -240,9 +240,9 @@ func DockerComposeUp(detached bool) {
 	Pl("Running docker-compose ... ")
 	Pel()
 
-	cmd := exec.Command("docker-compose", "up")
+	cmd := exec.Command("docker-compose", "up", "--remove-orphans")
 	if detached {
-		cmd = exec.Command("docker-compose", "up", "-d")
+		cmd = exec.Command("docker-compose", "up", "-d", "--remove-orphans")
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
