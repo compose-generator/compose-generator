@@ -1,17 +1,16 @@
 package cmd
 
 import (
-	"compose-generator/model"
 	"compose-generator/utils"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
+	dcu "github.com/compose-generator/dcu"
+	model "github.com/compose-generator/dcu/model"
 	"github.com/compose-generator/diu"
 	"github.com/fatih/color"
-	yaml "gopkg.in/yaml.v3"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -28,16 +27,9 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 
 	utils.P("Parsing compose file ... ")
 	// Load compose file
-	jsonFile, err := os.Open(path)
+	composeFile, err := dcu.DeserializeFromFile(path)
 	if err != nil {
 		utils.Error("Internal error - unable to load compose file", err, true)
-	}
-	bytes, _ := ioutil.ReadAll(jsonFile)
-
-	// Parse YAML
-	composeFile := model.ComposeFile{}
-	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
-		utils.Error("Internal error - unable to parse compose file", err, true)
 	}
 	utils.Done()
 	utils.Pel()
@@ -58,13 +50,8 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 
 	// Write to file
 	utils.P("Saving compose file ... ")
-	output, err1 := yaml.Marshal(&composeFile)
-	err2 := ioutil.WriteFile(path, output, 0777)
-	if err1 != nil {
-		utils.Error("Could not marshal yaml", err1, true)
-	}
-	if err2 != nil {
-		utils.Error("Could not write yaml to compose file", err2, true)
+	if dcu.SerializeToFile(composeFile, path) != nil {
+		utils.Error("Could not write yaml to compose file", err, true)
 	}
 	utils.Done()
 

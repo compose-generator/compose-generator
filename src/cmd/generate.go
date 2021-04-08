@@ -10,6 +10,8 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/Knetic/govaluate"
+	dcu "github.com/compose-generator/dcu"
+	dcu_model "github.com/compose-generator/dcu/model"
 	"github.com/fatih/color"
 	"github.com/go-playground/validator"
 	"github.com/otiai10/copy"
@@ -183,26 +185,17 @@ func generateDynamicStack(
 
 	// Write dev compose file
 	utils.P("Saving dev configuration ... ")
-	output, err1 := yaml.Marshal(&composeFileDev)
-	err2 := ioutil.WriteFile("./docker-compose.yml", output, 0777)
-	if err1 != nil {
-		utils.Error("Could not write yaml to compose file.", err1, true)
-	}
-	if err2 != nil {
-		utils.Error("Could not write yaml to compose file.", err2, true)
+
+	if err := dcu.SerializeToFile(composeFileDev, "./docker-compose.yml"); err != nil {
+		utils.Error("Could not write yaml to compose file.", err, true)
 	}
 	utils.Done()
 
 	// Write prod compose file
 	if alsoProduction {
 		utils.P("Saving prod configuration ... ")
-		output, err1 := yaml.Marshal(&composeFileProd)
-		err2 := ioutil.WriteFile("./docker-compose-prod.yml", output, 0777)
-		if err1 != nil {
-			utils.Error("Could not write yaml to compose file.", err1, true)
-		}
-		if err2 != nil {
-			utils.Error("Could not write yaml to compose file.", err2, true)
+		if err := dcu.SerializeToFile(composeFileProd, "./docker-compose-prod.yml"); err != nil {
+			utils.Error("Could not write yaml to compose file.", err, true)
 		}
 		utils.Done()
 	}
@@ -327,14 +320,14 @@ func processUserInput(
 	composeVersion string,
 	flagWithInstructions bool,
 	flagWithDockerfile bool,
-) (model.ComposeFile, model.ComposeFile, []string, []model.Secret, map[string]string, string, string) {
+) (dcu_model.ComposeFile, dcu_model.ComposeFile, []string, []model.Secret, map[string]string, string, string) {
 	// Prepare compose files
-	var composeFileDev model.ComposeFile
+	var composeFileDev dcu_model.ComposeFile
 	composeFileDev.Version = composeVersion
-	composeFileDev.Services = make(map[string]model.Service)
-	var composeFileProd model.ComposeFile
+	composeFileDev.Services = make(map[string]dcu_model.Service)
+	var composeFileProd dcu_model.ComposeFile
 	composeFileProd.Version = composeVersion
-	composeFileProd.Services = make(map[string]model.Service)
+	composeFileProd.Services = make(map[string]dcu_model.Service)
 
 	// Loop through selected templates
 	dstPath := "."
@@ -411,7 +404,7 @@ func processUserInput(
 					// Replace variables
 					content = utils.ReplaceVarsInString(content, varMap)
 					// Parse yaml
-					service := model.Service{}
+					service := dcu_model.Service{}
 					yaml.Unmarshal([]byte(content), &service)
 					// Get networks
 					networks = append(networks, service.Networks...)
@@ -451,11 +444,11 @@ func processUserInput(
 	}
 	// Apply networks
 	if len(networks) > 0 {
-		composeFileDev.Networks = make(map[string]model.Network)
-		composeFileProd.Networks = make(map[string]model.Network)
+		composeFileDev.Networks = make(map[string]dcu_model.Network)
+		composeFileProd.Networks = make(map[string]dcu_model.Network)
 		for _, n := range networks {
-			composeFileDev.Networks[n] = model.Network{}
-			composeFileProd.Networks[n] = model.Network{}
+			composeFileDev.Networks[n] = dcu_model.Network{}
+			composeFileProd.Networks[n] = dcu_model.Network{}
 		}
 	}
 	return composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString

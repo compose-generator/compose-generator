@@ -1,13 +1,11 @@
 package cmd
 
 import (
-	"compose-generator/model"
 	"compose-generator/utils"
-	"io/ioutil"
 	"os"
 	"strings"
 
-	yaml "gopkg.in/yaml.v3"
+	dcu "github.com/compose-generator/dcu"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -24,15 +22,8 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 
 	utils.P("Parsing compose file ... ")
 	// Load compose file
-	yamlFile, err := os.Open(path)
+	composeFile, err := dcu.DeserializeFromFile(path)
 	if err != nil {
-		utils.Error("Internal error - unable to load compose file", err, true)
-	}
-	bytes, _ := ioutil.ReadAll(yamlFile)
-
-	// Parse YAML
-	composeFile := model.ComposeFile{}
-	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
 		utils.Error("Internal error - unable to parse compose file", err, true)
 	}
 	utils.Done()
@@ -100,13 +91,8 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 
 	// Write to file
 	utils.P("Saving compose file ... ")
-	output, err1 := yaml.Marshal(&composeFile)
-	err2 := ioutil.WriteFile(path, output, 0777)
-	if err1 != nil {
-		utils.Error("Could not marshal yaml", err1, true)
-	}
-	if err2 != nil {
-		utils.Error("Could not write yaml to compose file", err2, true)
+	if err := dcu.SerializeToFile(composeFile, "./docker-compose.yml"); err != nil {
+		utils.Error("Could not write yaml to compose file", err, true)
 	}
 	utils.Done()
 
