@@ -18,3 +18,6 @@ Gitea HTTP Listen Port: Port you've set
 Gitea Base URL: Host on which Gitea is accessible from outside
 
 You also can add an admin user. All other settings can be left as default.
+
+#### Extra
+Gitea offers an installable Progressive Web App.
