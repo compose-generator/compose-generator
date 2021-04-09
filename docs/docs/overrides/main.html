@@ -1,7 +1,28 @@
 {% extends "base.html" %}
 
 {% block announce %}
-<a href="https://twitter.com/@composegen" target="_blank">For updates follow <strong>@composegen</strong> on <span class="twemoji twitter">_</span> <strong>Twitter</strong></a>
+<style>
+  @keyframes pulse {
+    0%, 40%, 80%, 100% {
+      transform: scale(1);
+    }
+    20%, 60% {
+      transform: scale(0.9);
+    }
+  }
+
+  .twitter {
+    color: #1DA1F2;
+    animation: pulse 1000ms infinite;
+  }
+
+  .twitter-link {
+    color: white;
+  }
+</style>
+<a href="https://twitter.com/@composegen" target="_blank" class="twitter-link">
+  For updates follow <strong>@composegen</strong> on <span class="twemoji twitter"> {% include ".icons/fontawesome/brands/twitter.svg" %} </span> <strong>Twitter</strong>
+</a>
 {% endblock %}
 
 {% block extrahead %}

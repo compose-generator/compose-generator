@@ -7,7 +7,13 @@ If you haven't installed npm yet, please do so by following the [guide on nodejs
 
 Install Compose Generator by executing:
 ```sh
-npm i -g @compose-generator/cli
+npm install -g @compose-generator/cli
+```
+
+### Update
+If you have Compose Generator already installed via NPM, you have to upgrade it by using this command:
+```sh
+npm update -g @compose-generator/cli
 ```
 
 ### Use

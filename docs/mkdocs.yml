@@ -18,7 +18,6 @@ theme:
   features:
     - navigation.instant
     - navigation.tabs
-    - header.autohide
   palette:
     - media: "(prefers-color-scheme: light)"  # Light mode
       scheme: default
@@ -75,7 +74,12 @@ markdown_extensions:
   - codehilite
   - meta
   - footnotes
+  - admonition
   - toc:
       permalink: true
   - pymdownx.tabbed
   - pymdownx.superfences
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
