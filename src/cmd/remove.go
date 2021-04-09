@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"compose-generator/utils"
+	"compose-generator/util"
 	"os"
 	"strings"
 
@@ -12,21 +12,21 @@ import (
 
 // Remove services from an existing compose file
 func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
-	utils.ClearScreen()
+	util.ClearScreen()
 
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
 	if flagAdvanced {
-		path = utils.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
+		path = util.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 	}
 
-	utils.P("Parsing compose file ... ")
+	util.P("Parsing compose file ... ")
 	// Load compose file
 	composeFile, err := dcu.DeserializeFromFile(path)
 	if err != nil {
-		utils.Error("Internal error - unable to parse compose file", err, true)
+		util.Error("Internal error - unable to parse compose file", err, true)
 	}
-	utils.Done()
+	util.Done()
 
 	// Ask for service
 	if len(serviceNames) == 0 {
@@ -34,8 +34,8 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		for k := range composeFile.Services {
 			items = append(items, k)
 		}
-		serviceNames = utils.MultiSelectMenuQuestion("Which services do you want to remove?", items)
-		utils.Pel()
+		serviceNames = util.MultiSelectMenuQuestion("Which services do you want to remove?", items)
+		util.Pel()
 	}
 
 	for _, serviceName := range serviceNames {
@@ -43,10 +43,10 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		if flagWithVolumes {
 			reallyDeleteVolumes := true
 			if !flagForce {
-				reallyDeleteVolumes = utils.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
+				reallyDeleteVolumes = util.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
 			}
 			if reallyDeleteVolumes {
-				utils.P("Removing volumes of '" + serviceName + "' ... ")
+				util.P("Removing volumes of '" + serviceName + "' ... ")
 				volumes := composeFile.Services[serviceName].Volumes
 				for _, paths := range volumes {
 					path := paths
@@ -70,34 +70,34 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 							}
 						}
 					}
-					if canBeDeleted && utils.FileExists(path) {
+					if canBeDeleted && util.FileExists(path) {
 						os.RemoveAll(path)
 					}
 				}
-				utils.Done()
+				util.Done()
 			}
 		}
 
 		// Remove service
-		utils.P("Removing service '" + serviceName + "' ... ")
+		util.P("Removing service '" + serviceName + "' ... ")
 		delete(composeFile.Services, serviceName) // Remove service itself
 		for k, s := range composeFile.Services {
-			s.DependsOn = utils.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
-			s.Links = utils.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
+			s.DependsOn = util.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
+			s.Links = util.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
 			composeFile.Services[k] = s
 		}
-		utils.Done()
+		util.Done()
 	}
 
 	// Write to file
-	utils.P("Saving compose file ... ")
+	util.P("Saving compose file ... ")
 	if err := dcu.SerializeToFile(composeFile, "./docker-compose.yml"); err != nil {
-		utils.Error("Could not write yaml to compose file", err, true)
+		util.Error("Could not write yaml to compose file", err, true)
 	}
-	utils.Done()
+	util.Done()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
-		utils.DockerComposeUp(flagDetached)
+		util.DockerComposeUp(flagDetached)
 	}
 }

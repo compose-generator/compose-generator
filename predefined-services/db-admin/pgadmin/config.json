@@ -1,6 +1,6 @@
 {
     "label": "pgAdmin",
-    "preselected": "has service postgres",
+    "preselected": "false",
     "files": [
         {
             "path": "service.yml",
