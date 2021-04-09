@@ -46,7 +46,8 @@ func DockerComposeUp(detached bool) {
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Run()
+	cmd.Start()
+	cmd.Wait()
 }
 
 // ExecuteAndWait executes a command and wait till the execution is complete
