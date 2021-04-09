@@ -18,18 +18,21 @@ theme:
   features:
     - navigation.instant
     - navigation.tabs
+    - header.autohide
   palette:
-    - scheme: default # Light mode
+    - media: "(prefers-color-scheme: light)"  # Light mode
+      scheme: default
       primary: teal
       accent: teal
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/weather-sunny
         name: Switch to light mode
-    - scheme: slate # Dark mode
+    - media: "(prefers-color-scheme: dark)"  # Dark mode
+      scheme: slate
       primary: teal
       accent: teal
       toggle:
-        icon: material/toggle-switch
+        icon: material/weather-night
         name: Switch to dark mode
 
 plugins:
