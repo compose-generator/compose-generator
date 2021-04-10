@@ -66,10 +66,9 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 
 // ExecuteOnLinux runs a command in an isolated Linux environment
 func ExecuteOnLinux(c string) {
-	ensureToolbox()
 	// Start docker container
 	absolutePath, _ := os.Getwd()
-	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "compose-generator-toolbox", c)
+	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox", c)
 }
 
 // ClearScreen errases the console contents

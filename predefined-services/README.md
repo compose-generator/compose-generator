@@ -1,4 +1,5 @@
 # Predefined service templates
+If you miss a predefined template and you want to create one for the public, please read the following guide. Fork the repository, create the template and open a pr to the `dev` branch. The community is thankful for every predefined template!
 
 ## Service template structure
 ```
@@ -52,11 +53,11 @@ An example:
 ```
 ...
 ports:
-  - "${{HOST_APP_PORT}}:80"
+  - ${{HOST_APP_PORT}}:80
 ...
 ```
 
-There are two predefined variables, which the cli will provide:
+There are two variables, which the cli will provide automatically:
 
 - `${{PROJECT_NAME}}` = Name of the project, which is a mandatory question of the cli
 - `${{PROJECT_NAME_CONTAINER}}` = Same as above, just in [kebab-case](https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841#a084).
