@@ -1,0 +1,85 @@
+{
+    "label": "MongoDB",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "volumes/mongodb-config/init-mongo.sh",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose MongoDB?",
+            "type": 2,
+            "defaultValue": "27017",
+            "validator": "port",
+            "variable": "MONGODB_PORT"
+        },
+        {
+            "text": "How do you want to call the MongoDB admin user?",
+            "type": 2,
+            "defaultValue": "admin",
+            "validator": "alphanum",
+            "variable": "MONGODB_ADMIN_USER"
+        },
+        {
+            "text": "How do you want to call the MongoDB user for your application?",
+            "type": 2,
+            "defaultValue": "application",
+            "validator": "alphanum",
+            "variable": "MONGODB_APPLICATION_USER"
+        },
+        {
+            "text": "How do you want to call the database for your application?",
+            "type": 2,
+            "defaultValue": "main",
+            "validator": "alphanum",
+            "variable": "MONGODB_DATABASE"
+        },
+        {
+            "text": "Which MongoDB version do you want to use?",
+            "type": 2,
+            "defaultValue": "4.4",
+            "variable": "MONGODB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for MongoDB data volume?",
+            "defaultValue": "./volumes/mongodb-data",
+            "variable": "VOLUME_MONGODB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for MongoDB config volume?",
+            "defaultValue": "./volumes/mongodb-config",
+            "variable": "VOLUME_MONGODB_CONFIG",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "MongoDB password for user '${{MONGODB_ADMIN_USER}}'",
+            "variable": "_PW_MONGODB_ADMIN",
+            "length": 50
+        },
+        {
+            "name": "MongoDB password for the application user",
+            "variable": "_PW_MONGODB_APPLICATION",
+            "length": 30
+        }
+    ]
+}
