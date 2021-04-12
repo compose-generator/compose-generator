@@ -1,9 +1,8 @@
-FROM alpine:3.13
+FROM alpine:3.13.4
 WORKDIR /cg/out
 
 COPY compose-generator /cg/compose-generator
 COPY predefined-services/ /cg/predefined-services/
-COPY toolbox/ /cg/toolbox/
 
 ENV PATH="/cg:${PATH}"
 ENV TERM="xterm-256color"

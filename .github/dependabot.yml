@@ -28,20 +28,6 @@ updates:
     assignees:
       - marcauberer
 
-  # Toolbox Dockerfile
-  - package-ecosystem: docker
-    directory: /toolbox
-    schedule:
-      interval: daily
-      time: "04:00"
-      timezone: Europe/Berlin
-    open-pull-requests-limit: 15
-    target-branch: dev
-    reviewers:
-      - marcauberer
-    assignees:
-      - marcauberer
-
   # Flask
   - package-ecosystem: docker
     directory: /predefined-services/backend/flask/backend

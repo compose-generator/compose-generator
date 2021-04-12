@@ -11,9 +11,6 @@ templates/*
 # Documentation build output
 docs/site/*
 
-# Toolbox image
-toolbox/toolbox.img
-
 # Node modules
 node_modules/*
 
