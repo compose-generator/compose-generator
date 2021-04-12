@@ -15,7 +15,7 @@
             "type": "docs"
         },
         {
-            "path": "volumes/mongodb-config/init-mongo.sh",
+            "path": "volumes/mongodb-init/init-mongo.sh",
             "type": "config"
         }
     ],
@@ -67,6 +67,12 @@
             "text": "Custom path for MongoDB config volume?",
             "defaultValue": "./volumes/mongodb-config",
             "variable": "VOLUME_MONGODB_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for MongoDB init volume?",
+            "defaultValue": "./volumes/mongodb-init",
+            "variable": "VOLUME_MONGODB_INIT",
             "advanced": true
         }
     ],

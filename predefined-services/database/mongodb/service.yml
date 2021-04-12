@@ -11,6 +11,6 @@ volumes:
   - ${{VOLUME_MONGODB_CONFIG}}:/data/configdb
   - ${{VOLUME_MONGODB_CONFIG}}:/var/lib/mongodb
   - ${{VOLUME_MONGODB_DATA}}:/data/db
-  - ${{VOLUME_MONGODB_CONFIG}}/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+  - ${{VOLUME_MONGODB_INIT}}/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
 env_file:
   - environment.env
