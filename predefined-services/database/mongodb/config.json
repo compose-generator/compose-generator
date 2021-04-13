@@ -1,6 +1,10 @@
 {
     "label": "MongoDB",
     "preselected": "false",
+    "exampleAppInitCmd": [
+        "cd ${{VOLUME_MONGODB_INIT}}",
+        "dos2unix init-mongo.sh"
+    ],
     "files": [
         {
             "path": "service.yml",

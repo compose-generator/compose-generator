@@ -6,6 +6,3 @@ Compose Generator will setup MongoDB so that an admin and an application databas
 
 ### Access manually
 To access the data manually, you can use [MongoDBCompass](https://www.mongodb.com/products/compass). It provides you an installable tool to access your local and remote MongoDB instances.
-
-### Known issues
-On Windows, please use Powershell instead of the legacy Commmand Shell. Due to some reason, the MongoDB init script does not work, when the container was started from a Command Shell session.
