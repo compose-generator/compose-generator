@@ -61,6 +61,7 @@ nav:
     - install/linux.md
     - install/windows.md
     - install/npm.md
+    - install/source.md
   - quick-start.md
   - Usage:
     - usage/generate.md
@@ -75,6 +76,7 @@ markdown_extensions:
   - meta
   - footnotes
   - admonition
+  - pymdownx.details
   - toc:
       permalink: true
   - pymdownx.tabbed

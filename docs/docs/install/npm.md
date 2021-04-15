@@ -11,7 +11,7 @@ npm install -g @compose-generator/cli
 ```
 
 ### Update
-If you have Compose Generator already installed via NPM, you have to upgrade it by using this command:
+If you have Compose Generator already installed via NPM, you need to update by using this command:
 ```sh
 npm update -g @compose-generator/cli
 ```

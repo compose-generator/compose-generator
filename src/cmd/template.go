@@ -25,7 +25,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 		name = util.TextQuestion("How would you like to call your template: ")
 	}
 	// Check if templated with that name exists already
-	targetDir := util.GetTemplatesPath() + "/" + name
+	targetDir := util.GetCustomTemplatesPath() + "/" + name
 	if !flagForce && util.FileExists(targetDir) {
 		result := util.YesNoQuestion("There is already a template called '"+name+"'. Do you want to replace it?", false)
 		if !result {
@@ -76,26 +76,39 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 }
 
 // LoadTemplate copies a template from the central templates directory to the working directory
-func LoadTemplate(name string, flagForce bool, withDockerfile bool) {
+func LoadTemplate(name string, flagForce bool, flagShow bool, withDockerfile bool) {
 	// Execute safety checks
 	/*if !flagForce {
 		util.PrintSafetyWarning(false, withDockerfile)
 	}*/
 	// Check if the template exists
-	targetDir := util.GetTemplatesPath() + "/" + name
+	targetDir := util.GetCustomTemplatesPath() + "/" + name
 	if name != "" && !util.FileExists(targetDir) {
 		util.Error("Template with the name '"+name+"' could not be found. You can query a list of the templates by executing 'compose-generator template load'.", nil, true)
-	} else if name == "" {
+	} else {
 		// Load stacks from templates
-		templateData := parser.ParseTemplates()
-		// Show list of saved templates
-		var items []string
-		for _, t := range templateData {
-			creationDate := time.Unix(0, t.CreationTime*int64(time.Millisecond)).Format(timeFormat)
-			items = append(items, t.Label+" (Saved at: "+creationDate+")")
+		if templateData := parser.ParseCustomTemplates(); len(templateData) > 0 {
+			// Show list of saved templates
+			var items []string
+			for _, t := range templateData {
+				creationDate := time.Unix(0, t.CreationTime*int64(time.Millisecond)).Format(timeFormat)
+				items = append(items, t.Label+" (Saved at: "+creationDate+")")
+			}
+			if flagShow {
+				util.Heading("List of all templates:")
+				util.Pel()
+				for _, item := range items {
+					util.Pl(item)
+				}
+				os.Exit(0)
+			} else {
+				index := util.MenuQuestionIndex("Saved templates", items)
+				targetDir = targetDir + templateData[index].Label
+			}
+		} else {
+			util.Warning("No templates found. Use \"$ compose-generator save <template-name>\" to save one.")
+			os.Exit(0)
 		}
-		index := util.MenuQuestionIndex("Saved templates", items)
-		targetDir = targetDir + templateData[index].Label
 		util.Pel()
 	}
 	// Load template

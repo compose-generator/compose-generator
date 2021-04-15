@@ -2,8 +2,7 @@
 title: Add command
 ---
 
-## Description
-Adds a service to an existing compose file.
+Sometimes you need to add one or more services to your Docker Compose configuration subsequently. For this you can use the `add` command of Compose Generator. It handles things like duplicate port assignments, service name collisions, Docker networking, etc. automatically for you.
 
 ## Usage
 === "Long form"

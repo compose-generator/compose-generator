@@ -43,18 +43,23 @@ func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 	return configs
 }
 
-// ParseTemplates returns a list of all custom templates
-func ParseTemplates() (metadatas []model.TemplateMetadata) {
-	templatesPath := util.GetTemplatesPath()
+// ParseCustomTemplates returns a list of all custom templates
+func ParseCustomTemplates() (metadatas []model.TemplateMetadata) {
+	templatesPath := util.GetCustomTemplatesPath()
+	// Create templates dir, if it not exists
+	if !util.FileExists(templatesPath) {
+		os.MkdirAll(templatesPath, 0777)
+	}
+	// Read template directory names
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
-		util.Error("Internal error - could not load templates.", err, true)
+		util.Error("Internal error - could not load templates", err, true)
 	}
 	var fileNames []string
 	for _, n := range files {
 		fileNames = append(fileNames, n.Name())
 	}
-
+	// Read template metadata
 	for _, f := range fileNames {
 		metadata := getMetadataFromFile(filepath.Join(templatesPath, f))
 		metadatas = append(metadatas, metadata)

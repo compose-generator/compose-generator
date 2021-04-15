@@ -26,8 +26,8 @@ func IsDockerized() bool {
 	return os.Getenv("COMPOSE_GENERATOR_DOCKERIZED") == "1"
 }
 
-// GetTemplatesPath returns the path to the custom templates directory
-func GetTemplatesPath() string {
+// GetCustomTemplatesPath returns the path to the custom templates directory
+func GetCustomTemplatesPath() string {
 	if FileExists("/usr/lib/compose-generator/templates") {
 		return "/usr/lib/compose-generator/templates" // Linux
 	}
