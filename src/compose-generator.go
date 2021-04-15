@@ -118,11 +118,12 @@ func main() {
 						Usage:   "Load a custom template.",
 						Flags: []cli.Flag{
 							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
+							&cli.BoolFlag{Name: "show", Aliases: []string{"s"}, Usage: "Do not load a template. Instead only list all templates and terminate"},
 							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also load the Dockerfile from the template (if existing)"},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							cmd.LoadTemplate(name, c.Bool("force"), c.Bool("with-dockerfile"))
+							cmd.LoadTemplate(name, c.Bool("force"), c.Bool("show"), c.Bool("with-dockerfile"))
 							return nil
 						},
 					},

@@ -2,19 +2,18 @@
 title: Remove command
 ---
 
-## Description
-Removes a service from an existing compose file. You also can remove multiple services at once.
+Compose Generator can you help to remove services from an existing Docker Compose configuration without leaving unused networks, service dependencies or other stuff, resulting in chaos. The `remove` command can help you to remove a single or multiple services at once from your configuration.
 
 ## Usage
 === "Long form"
     Use the `remove` command by executing:
     ```sh
-    $ compose-generator remove [service-name]
+    $ compose-generator remove [service-name]...
     ```
 === "Short form"
     Use the `remove` command by executing:
     ```sh
-    $ compose-generator r [service-name]
+    $ compose-generator r [service-name]...
     ```
 
 ## Options
