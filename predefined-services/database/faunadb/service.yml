@@ -7,11 +7,8 @@ networks:
 #! }
 ports:
   - ${{FAUNADB_PORT_API}}:8443
-  - ${{FAUNADB_PORT_WEB}}:8444
   - ${{FAUNADB_PORT_GRAPHQL}}:8084
 volumes: 
   - ${{VOLUME_FAUNADB_DATA}}:/var/lib/fauna
-  - ${{VOLUME_FAUNADB_CONFIG}}/config.yml:/etc/fauna.yml
+  - ${{VOLUME_FAUNADB_CONFIG}}/fauna.yml:/etc/fauna.yml
   - ${{VOLUME_FAUNADB_LOGS}}:/var/log/fauna
-env_file:
-  - environment.env

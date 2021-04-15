@@ -1,6 +1,0 @@
-auth_root_key: ${PW_FAUNADB_ADMIN}
-network_listen_address: 0.0.0.0
-network_broadcast_address: 0.0.0.0
-network_admin_http_address: 0.0.0.0
-network_coordinator_http_address: 0.0.0.0
-accelerate_indexes: true

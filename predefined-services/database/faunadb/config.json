@@ -9,26 +9,15 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "environment.env",
-            "type": "env"
         }
     ],
     "questions": [
         {
-            "text": "On which port you want to expose the FaunaDB API endpoint?",
+            "text": "On which port you want to expose the FaunaDB Fauna endpoint?",
             "type": 2,
             "defaultValue": "8443",
             "validator": "port",
             "variable": "FAUNADB_PORT_API"
-        },
-        {
-            "text": "On which port you want to expose the FaunaDB web endpoint?",
-            "type": 2,
-            "defaultValue": "8444",
-            "validator": "port",
-            "variable": "FAUNADB_PORT_WEB"
         },
         {
             "text": "On which port you want to expose the FaunaDB GraphQL endpoint?",
@@ -63,13 +52,6 @@
             "defaultValue": "./volumes/faunadb-logs",
             "variable": "VOLUME_FAUNADB_LOGS",
             "advanced": true
-        }
-    ],
-    "secrets": [
-        {
-            "name": "FaunaDB password for root user",
-            "variable": "_PW_FAUNADB_ADMIN",
-            "length": 50
         }
     ]
 }
