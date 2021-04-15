@@ -17,10 +17,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "volumes/mongodb-init/init-mongo.sh",
-            "type": "config"
         }
     ],
     "questions": [

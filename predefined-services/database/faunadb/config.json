@@ -1,0 +1,57 @@
+{
+    "label": "FaunaDB",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose the FaunaDB Fauna endpoint?",
+            "type": 2,
+            "defaultValue": "8443",
+            "validator": "port",
+            "variable": "FAUNADB_PORT_API"
+        },
+        {
+            "text": "On which port you want to expose the FaunaDB GraphQL endpoint?",
+            "type": 2,
+            "defaultValue": "8084",
+            "validator": "port",
+            "variable": "FAUNADB_PORT_GRAPHQL"
+        },
+        {
+            "text": "Which FaunaDB version do you want to use?",
+            "type": 2,
+            "defaultValue": "4.0.1",
+            "variable": "FAUNADB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for FaunaDB data volume?",
+            "defaultValue": "./volumes/faunadb-data",
+            "variable": "VOLUME_FAUNADB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for FaunaDB config volume?",
+            "defaultValue": "./volumes/faunadb-config",
+            "variable": "VOLUME_FAUNADB_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for FaunaDB logs volume?",
+            "defaultValue": "./volumes/faunadb-logs",
+            "variable": "VOLUME_FAUNADB_LOGS",
+            "advanced": true
+        }
+    ]
+}
