@@ -54,6 +54,7 @@ nfpms:
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.compose-generator.com
     license: Apache 2.0
+    bindir: /usr/bin
     formats:
       - apk
       - deb

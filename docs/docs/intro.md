@@ -5,4 +5,4 @@ The focus of Compose Generator is to increase productivity and efficiency of com
 
 Here you can see a demo, how fast you can setup a Compose configuration for a stack with Angular, Spring, MySQL and PhpMyAdmin:
 
-<script id="asciicast-mI4r7OhiHmo9urmhJXbupNgH1" src="https://asciinema.org/a/385826.js" async></script>
+<script id="asciicast-407484" src="https://asciinema.org/a/407484.js" async></script>
