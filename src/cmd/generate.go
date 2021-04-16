@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/Knetic/govaluate"
 	dcu "github.com/compose-generator/dcu"
 	dcu_model "github.com/compose-generator/dcu/model"
 	"github.com/fatih/color"
@@ -400,7 +399,7 @@ func processUserInput(
 					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
 					contentBytes, _ := ioutil.ReadAll(yamlFile)
 					// Evaluate conditional sections
-					content := evaluateConditionalSections(string(contentBytes), templateData, varMap)
+					content := util.EvaluateConditionalSections(string(contentBytes), templateData, varMap)
 					// Replace variables
 					content = util.ReplaceVarsInString(content, varMap)
 					// Parse yaml
@@ -467,7 +466,7 @@ func askForStackComponent(
 	flagWithDockerfile bool,
 ) (componentCount int) {
 	templates := (*templateData)[component]
-	items := templateListToTemplateLabelList(templates)
+	items := templateListToLabelList(templates)
 	itemsPreselected := templateListToPreselectedLabelList(templates, templateData)
 	(*templateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
@@ -568,61 +567,7 @@ func getVolumeMapFromVolumes(
 	}
 }
 
-func evaluateConditionalSections(
-	content string,
-	templateData map[string][]model.ServiceTemplateConfig,
-	varMap map[string]string,
-) string {
-	rows := strings.Split(content, "\n")
-	uncommenting := false
-	for i, row := range rows {
-		if strings.HasPrefix(row, "#! if ") {
-			// Conditional section found -> check condition
-			conditions := strings.Split(row[6:strings.Index(row, " {")], "|")
-			for _, c := range conditions {
-				if evaluateCondition(c, templateData, varMap) {
-					uncommenting = true
-					break
-				}
-			}
-		} else if strings.HasPrefix(row, "#! }") {
-			uncommenting = false
-		} else if uncommenting {
-			rows[i] = row[3:]
-		}
-	}
-	return strings.Join(rows, "\n")
-}
-
-func evaluateCondition(
-	condition string,
-	templateData map[string][]model.ServiceTemplateConfig,
-	varMap map[string]string,
-) bool {
-	if strings.HasPrefix(condition, "has service ") {
-		for _, templates := range templateData {
-			for _, template := range templates {
-				if template.Name == condition[12:] {
-					return true
-				}
-			}
-		}
-	} else if strings.HasPrefix(condition, "has ") {
-		return len(templateData[condition[4:]]) > 0
-	} else if strings.HasPrefix(condition, "var.") {
-		condition = condition[4:]
-		expr, err1 := govaluate.NewEvaluableExpression(condition)
-		parameters := make(map[string]interface{}, 8)
-		for varName, varValue := range varMap {
-			parameters[varName] = varValue
-		}
-		result, err2 := expr.Evaluate(parameters)
-		return result.(bool) && err1 != nil && err2 != nil
-	}
-	return false
-}
-
-func templateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
+func templateListToLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
 	for _, t := range templates {
 		labels = append(labels, t.Label)
 	}
@@ -634,7 +579,7 @@ func templateListToPreselectedLabelList(templates []model.ServiceTemplateConfig,
 		conditions := strings.Split(t.Preselected, "|")
 		fulfilled := false
 		for _, c := range conditions {
-			if evaluateCondition(c, *templateData, nil) {
+			if util.EvaluateCondition(c, *templateData, nil) {
 				fulfilled = true
 			}
 		}
