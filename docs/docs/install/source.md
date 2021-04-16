@@ -7,7 +7,7 @@ Before being able to compile the source code you first have to download it from 
 
 #### Clone from GitHub
 ```sh
-git clone https://github.com/compose-generator/compose-generator
+git clone https://github.com/compose-generator/compose-generator.git
 cd compose-generator
 ```
 
