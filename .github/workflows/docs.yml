@@ -8,8 +8,8 @@ on:
       - 'main'
       #- 'docs/**'
       - 'feature/**'
-    paths:
-      - 'docs/**'
+    #paths:
+    #  - 'docs/**'
 
 jobs:
   docs-deploy:

@@ -168,12 +168,19 @@ func generateDynamicStack(
 		}
 	}
 
-	// Write README & environment file
+	// Write README.md
 	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
 		util.Error("Could not write yaml to README file.", nil, true)
 	}
-	if len(envString) > 0 && ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
-		util.Error("Could not write yaml to environment file.", nil, true)
+
+	// Write environment.env file
+	if len(envString) > 0 {
+		if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
+			util.Error("Could not write yaml to environment file.", nil, true)
+		} else {
+			// Add environment.env file to .gitignore
+			util.AddFileToGitignore("./environment.env")
+		}
 	}
 
 	// Copy dockerfiles
