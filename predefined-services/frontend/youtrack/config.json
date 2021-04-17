@@ -20,31 +20,10 @@
             "variable": "YOUTRACK_PORT"
         },
         {
-            "text": "Which version of YouTack do you want to use?",
+            "text": "Which version of YouTack do you want to use (latest not available)?",
             "type": 2,
             "defaultValue": "2021.1.11513",
             "variable": "YOUTRACK_VERSION",
-            "advanced": true
-        },
-        {
-            "text": "How much memory do you want to assign to Jira at min.?",
-            "type": 2,
-            "defaultValue": "384m",
-            "variable": "JIRA_MIN_MEM",
-            "advanced": true
-        },
-        {
-            "text": "How much memory do you want to assign to Jira at max.?",
-            "type": 2,
-            "defaultValue": "768m",
-            "variable": "JIRA_MAX_MEM",
-            "advanced": true
-        },
-        {
-            "text": "How much space do you want to assign to the Jira code cache?",
-            "type": 2,
-            "defaultValue": "512m",
-            "variable": "JIRA_CACHE_SIZE",
             "advanced": true
         }
     ],
