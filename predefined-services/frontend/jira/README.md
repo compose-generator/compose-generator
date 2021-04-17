@@ -4,8 +4,8 @@ Jira is a tool for project management by Atlassian. It can be used by agile team
 ### Setup
 Jira is considered as frontend service and can therefore be found in frontends collection, when generating the compose configuration with Compose Generator.
 
-#### Generating a Gitea stack (can be skipped if already done)
-Execute `$ compose-generator -ir` and answer all questions. Please select `Gitea` as frontend and one of `PostgreSQL`, `MySQL`, `Oracle` or `MSSQL` as database.
+#### Generating a Jira stack (can be skipped if already done)
+Execute `$ compose-generator -ir` and answer all questions. Please select `Jira` as frontend and one of `PostgreSQL`, `MySQL`, `Oracle` or `MSSQL` as database.
 
 #### Install Jira
 After generating and starting the stack, you should be able to access Jira via the port, you've set.

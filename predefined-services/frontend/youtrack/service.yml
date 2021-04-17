@@ -1,0 +1,14 @@
+image: jetbrains/youtrack:${{YOUTRACK_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-youtrack
+restart: always
+volumes:
+  - ${{VOLUME_YOUTRACK_DATA}}:/opt/youtrack/data
+  - ${{VOLUME_YOUTRACK_CONF}}:/opt/youtrack/conf
+  - ${{VOLUME_YOUTRACK_LOGS}}:/opt/youtrack/logs
+  - ${{VOLUME_YOUTRACK_BACKUPS}}:/opt/youtrack/backups
+networks:
+#! if has database {
+#!  - frontend-database
+#! }
+ports:
+  - ${{YOUTRACK_PORT}}:8080
