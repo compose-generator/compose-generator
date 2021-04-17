@@ -1,20 +1,19 @@
 # Maven build instructions
-FROM maven:3.6.3-jdk-11 AS builder
-WORKDIR /workdir/server
-COPY pom.xml /workdir/server/pom.xml
+FROM maven:3.8-jdk-11 AS builder
+WORKDIR /server
+COPY pom.xml /server/pom.xml
 RUN mvn dependency:go-offline -q
 
-COPY src /workdir/server/src
+COPY src /server/src
 RUN mvn install -q
 RUN mkdir -p target/depency
-WORKDIR /workdir/server/target/dependency
+WORKDIR /server/target/dependency
 RUN jar -xf ../*.jar
 
 # JRE run instructions
 FROM openjdk:11-jre-slim
 EXPOSE 8080
-VOLUME /tmp
-ARG DEPENDENCY=/workdir/server/target/dependency
+ARG DEPENDENCY=/server/target/dependency
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=builder ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/classes /app
