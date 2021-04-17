@@ -1,0 +1,77 @@
+{
+    "label": "YouTrack",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your YouTrack instance?",
+            "type": 2,
+            "defaultValue": "8080",
+            "validator": "port",
+            "variable": "YOUTRACK_PORT"
+        },
+        {
+            "text": "Which version of YouTack do you want to use?",
+            "type": 2,
+            "defaultValue": "2021.1.11513",
+            "variable": "YOUTRACK_VERSION",
+            "advanced": true
+        },
+        {
+            "text": "How much memory do you want to assign to Jira at min.?",
+            "type": 2,
+            "defaultValue": "384m",
+            "variable": "JIRA_MIN_MEM",
+            "advanced": true
+        },
+        {
+            "text": "How much memory do you want to assign to Jira at max.?",
+            "type": 2,
+            "defaultValue": "768m",
+            "variable": "JIRA_MAX_MEM",
+            "advanced": true
+        },
+        {
+            "text": "How much space do you want to assign to the Jira code cache?",
+            "type": 2,
+            "defaultValue": "512m",
+            "variable": "JIRA_CACHE_SIZE",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for YouTrack data volume?",
+            "defaultValue": "./volumes/youtrack-data",
+            "variable": "VOLUME_YOUTRACK_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for YouTrack config volume?",
+            "defaultValue": "./volumes/youtrack-conf",
+            "variable": "VOLUME_YOUTRACK_CONF",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for YouTrack logs volume?",
+            "defaultValue": "./volumes/youtrack-logs",
+            "variable": "VOLUME_YOUTRACK_LOGS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for YouTrack backups volume?",
+            "defaultValue": "./volumes/youtrack-backups",
+            "variable": "VOLUME_YOUTRACK_BACKUPS",
+            "advanced": true
+        }
+    ]
+}
