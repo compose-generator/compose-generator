@@ -50,25 +50,6 @@
             "defaultValue": "512m",
             "variable": "JIRA_CACHE_SIZE",
             "advanced": true
-        },
-        {
-            "text": "On which host is your instance accessible from outside?",
-            "type": 2,
-            "defaultValue": "localhost",
-            "variable": "JIRA_OUTSIDE_HOST"
-        },
-        {
-            "text": "On which port is your instance accessible from outside?",
-            "type": 2,
-            "defaultValue": "80",
-            "validator": "port",
-            "variable": "JIRA_OUTSIDE_PORT"
-        },
-        {
-            "text": "On which protocol is your instance accessible from outside? (https/http)",
-            "type": 2,
-            "defaultValue": "http",
-            "variable": "JIRA_OUTSIDE_PROTOCOL"
         }
     ],
     "volumes": [

@@ -415,6 +415,9 @@ func processUserInput(
 						for _, template := range templateData["backend"] {
 							service.DependsOn = append(service.DependsOn, "backend-"+template.Name)
 						}
+						for _, template := range templateData["database"] {
+							service.DependsOn = append(service.DependsOn, "database-"+template.Name)
+						}
 					case "backend":
 						service.DependsOn = []string{}
 						for _, template := range templateData["database"] {
