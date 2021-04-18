@@ -1,7 +1,7 @@
 {
     "label": "React",
     "preselected": "false",
-    "exampleAppInitCmd": [
+    "demoAppInitCmd": [
         "mkdir tmp",
         "mv ${{REACT_SOURCE_DIRECTORY}}/* ./tmp",
         "npx create-react-app ${{REACT_SOURCE_DIRECTORY}}",

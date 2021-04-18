@@ -250,7 +250,7 @@ func generateDynamicStack(
 		for _, templates := range templateData {
 			for _, template := range templates {
 				var commands []string
-				for _, cmd := range template.ExampleAppInitCmd {
+				for _, cmd := range template.DemoAppInitCmd {
 					commands = append(commands, util.ReplaceVarsInString(cmd, varMap))
 				}
 				if len(commands) > 0 {

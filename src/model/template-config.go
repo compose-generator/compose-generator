@@ -7,7 +7,8 @@ type ServiceTemplateConfig struct {
 	Dir               string
 	Type              string
 	Preselected       string
-	ExampleAppInitCmd []string
+	DemoAppInitCmd []string
+	ServiceInitCmd    []string
 	Files             []File
 	Questions         []Question
 	Volumes           []Volume
