@@ -1,7 +1,7 @@
 {
     "label": "PostgreSQL",
     "preselected": "has service gitea|has service sonarqube|has service jira",
-    "exampleAppInitCmd": [
+    "serviceInitCmd": [
         "cd ${{VOLUME_POSTGRES_INIT}}",
         "dos2unix init-user-db.sh"
     ],
