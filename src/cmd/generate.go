@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/Knetic/govaluate"
 	dcu "github.com/compose-generator/dcu"
 	dcu_model "github.com/compose-generator/dcu/model"
 	"github.com/fatih/color"
@@ -169,18 +168,19 @@ func generateDynamicStack(
 		}
 	}
 
-	// Write README & environment file
+	// Write README.md
 	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
-		util.Error("Could not write yaml to README file.", nil, true)
-	}
-	if len(envString) > 0 && ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
-		util.Error("Could not write yaml to environment file.", nil, true)
+		util.Error("Could not write yaml to README file", nil, true)
 	}
 
-	// Copy dockerfiles
-	for src, dst := range dockerfileMap {
-		os.Remove(dst)
-		copy.Copy(src, dst)
+	// Write environment.env file
+	if len(envString) > 0 {
+		if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
+			util.Error("Could not write yaml to environment file", nil, true)
+		} else {
+			// Add environment.env file to .gitignore
+			util.AddFileToGitignore("./environment.env")
+		}
 	}
 
 	// Write dev compose file
@@ -225,6 +225,19 @@ func generateDynamicStack(
 	}
 	util.Done()
 
+	// Copy dockerfiles
+	for src, dst := range dockerfileMap {
+		content, err1 := ioutil.ReadFile(src)
+		if err1 != nil {
+			util.Error("Could not read Dockerfile "+src, err1, true)
+		}
+		newContent := util.EvaluateConditionalSections(string(content), templateData, varMap)
+		os.MkdirAll(filepath.Dir(dst), 0700)
+		if ioutil.WriteFile(dst, []byte(newContent), 0777) != nil {
+			util.Error("Could not write to Dockerfile "+dst, nil, true)
+		}
+	}
+
 	// Replace variables
 	util.P("Applying customizations ... ")
 	for _, path := range varFiles {
@@ -233,7 +246,7 @@ func generateDynamicStack(
 	util.Done()
 
 	if flagWithDockerfile {
-		// Create example applications
+		// Create demo applications
 		for _, templates := range templateData {
 			for _, template := range templates {
 				var commands []string
@@ -248,6 +261,9 @@ func generateDynamicStack(
 			}
 		}
 	}
+
+	// Intialize services
+	// TODO: Initialize services
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -400,7 +416,7 @@ func processUserInput(
 					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
 					contentBytes, _ := ioutil.ReadAll(yamlFile)
 					// Evaluate conditional sections
-					content := evaluateConditionalSections(string(contentBytes), templateData, varMap)
+					content := util.EvaluateConditionalSections(string(contentBytes), templateData, varMap)
 					// Replace variables
 					content = util.ReplaceVarsInString(content, varMap)
 					// Parse yaml
@@ -472,7 +488,7 @@ func askForStackComponent(
 	flagWithDockerfile bool,
 ) (componentCount int) {
 	templates := (*templateData)[component]
-	items := templateListToTemplateLabelList(templates)
+	items := templateListToLabelList(templates)
 	itemsPreselected := templateListToPreselectedLabelList(templates, templateData)
 	(*templateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
@@ -573,61 +589,7 @@ func getVolumeMapFromVolumes(
 	}
 }
 
-func evaluateConditionalSections(
-	content string,
-	templateData map[string][]model.ServiceTemplateConfig,
-	varMap map[string]string,
-) string {
-	rows := strings.Split(content, "\n")
-	uncommenting := false
-	for i, row := range rows {
-		if strings.HasPrefix(row, "#! if ") {
-			// Conditional section found -> check condition
-			conditions := strings.Split(row[6:strings.Index(row, " {")], "|")
-			for _, c := range conditions {
-				if evaluateCondition(c, templateData, varMap) {
-					uncommenting = true
-					break
-				}
-			}
-		} else if strings.HasPrefix(row, "#! }") {
-			uncommenting = false
-		} else if uncommenting {
-			rows[i] = row[3:]
-		}
-	}
-	return strings.Join(rows, "\n")
-}
-
-func evaluateCondition(
-	condition string,
-	templateData map[string][]model.ServiceTemplateConfig,
-	varMap map[string]string,
-) bool {
-	if strings.HasPrefix(condition, "has service ") {
-		for _, templates := range templateData {
-			for _, template := range templates {
-				if template.Name == condition[12:] {
-					return true
-				}
-			}
-		}
-	} else if strings.HasPrefix(condition, "has ") {
-		return len(templateData[condition[4:]]) > 0
-	} else if strings.HasPrefix(condition, "var.") {
-		condition = condition[4:]
-		expr, err1 := govaluate.NewEvaluableExpression(condition)
-		parameters := make(map[string]interface{}, 8)
-		for varName, varValue := range varMap {
-			parameters[varName] = varValue
-		}
-		result, err2 := expr.Evaluate(parameters)
-		return result.(bool) && err1 != nil && err2 != nil
-	}
-	return false
-}
-
-func templateListToTemplateLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
+func templateListToLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
 	for _, t := range templates {
 		labels = append(labels, t.Label)
 	}
@@ -639,7 +601,7 @@ func templateListToPreselectedLabelList(templates []model.ServiceTemplateConfig,
 		conditions := strings.Split(t.Preselected, "|")
 		fulfilled := false
 		for _, c := range conditions {
-			if evaluateCondition(c, *templateData, nil) {
+			if util.EvaluateCondition(c, *templateData, nil) {
 				fulfilled = true
 			}
 		}
