@@ -170,23 +170,17 @@ func generateDynamicStack(
 
 	// Write README.md
 	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
-		util.Error("Could not write yaml to README file.", nil, true)
+		util.Error("Could not write yaml to README file", nil, true)
 	}
 
 	// Write environment.env file
 	if len(envString) > 0 {
 		if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
-			util.Error("Could not write yaml to environment file.", nil, true)
+			util.Error("Could not write yaml to environment file", nil, true)
 		} else {
 			// Add environment.env file to .gitignore
 			util.AddFileToGitignore("./environment.env")
 		}
-	}
-
-	// Copy dockerfiles
-	for src, dst := range dockerfileMap {
-		os.Remove(dst)
-		copy.Copy(src, dst)
 	}
 
 	// Write dev compose file
@@ -231,6 +225,19 @@ func generateDynamicStack(
 	}
 	util.Done()
 
+	// Copy dockerfiles
+	for src, dst := range dockerfileMap {
+		content, err1 := ioutil.ReadFile(src)
+		if err1 != nil {
+			util.Error("Could not read Dockerfile "+src, err1, true)
+		}
+		newContent := util.EvaluateConditionalSections(string(content), templateData, varMap)
+		os.MkdirAll(filepath.Dir(dst), 0700)
+		if ioutil.WriteFile(dst, []byte(newContent), 0777) != nil {
+			util.Error("Could not write to Dockerfile "+dst, nil, true)
+		}
+	}
+
 	// Replace variables
 	util.P("Applying customizations ... ")
 	for _, path := range varFiles {
@@ -239,7 +246,7 @@ func generateDynamicStack(
 	util.Done()
 
 	if flagWithDockerfile {
-		// Create example applications
+		// Create demo applications
 		for _, templates := range templateData {
 			for _, template := range templates {
 				var commands []string
@@ -254,6 +261,9 @@ func generateDynamicStack(
 			}
 		}
 	}
+
+	// Intialize services
+	// TODO: Initialize services
 
 	if len(secrets) > 0 {
 		// Generate secrets

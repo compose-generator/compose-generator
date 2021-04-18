@@ -4,7 +4,7 @@ import (
 	"compose-generator/model"
 	"strings"
 
-	"github.com/Knetic/govaluate"
+	"github.com/PaesslerAG/gval"
 )
 
 // EvaluateConditionalSections takes in a string, searches for comments and uncomments it based on a condition
@@ -15,7 +15,9 @@ func EvaluateConditionalSections(
 ) string {
 	rows := strings.Split(content, "\n")
 	uncommenting := false
-	for i, row := range rows {
+	var cleanRows []string = []string{}
+	// Evaluate conditions and uncomment lines
+	for _, row := range rows {
 		if strings.HasPrefix(row, "#! if ") {
 			// Conditional section found -> check condition
 			conditions := strings.Split(row[6:strings.Index(row, " {")], "|")
@@ -28,10 +30,12 @@ func EvaluateConditionalSections(
 		} else if strings.HasPrefix(row, "#! }") {
 			uncommenting = false
 		} else if uncommenting {
-			rows[i] = row[3:]
+			cleanRows = append(cleanRows, row[3:])
+		} else if !strings.HasPrefix(row, "#! ") {
+			cleanRows = append(cleanRows, row)
 		}
 	}
-	return strings.Join(rows, "\n")
+	return strings.Join(cleanRows, "\n")
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
@@ -52,13 +56,12 @@ func EvaluateCondition(
 		return len(templateData[condition[4:]]) > 0
 	} else if strings.HasPrefix(condition, "var.") {
 		condition = condition[4:]
-		expr, err1 := govaluate.NewEvaluableExpression(condition)
-		parameters := make(map[string]interface{}, 8)
+		params := make(map[string]interface{})
 		for varName, varValue := range varMap {
-			parameters[varName] = varValue
+			params[varName] = varValue
 		}
-		result, err2 := expr.Evaluate(parameters)
-		return result.(bool) && err1 != nil && err2 != nil
+		result, err := gval.Evaluate(condition, params)
+		return result.(bool) && err == nil
 	}
 	return false
 }
