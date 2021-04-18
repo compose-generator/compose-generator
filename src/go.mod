@@ -5,15 +5,11 @@ go 1.16
 require (
 	github.com/AlecAivazis/survey/v2 v2.2.9
 	github.com/PaesslerAG/gval v1.1.0
-	github.com/codeclysm/extract v2.2.0+incompatible
-	github.com/codeclysm/extract/v3 v3.0.2
 	github.com/compose-generator/dcu v0.0.0-20210408124619-cfa3a75c0b0e
 	github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7
 	github.com/fatih/color v1.10.0
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-playground/validator/v10 v10.5.0
-	github.com/h2non/filetype v1.1.1 // indirect
-	github.com/juju/errors v0.0.0-20200330140219-3fe23663418f // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/otiai10/copy v1.5.1
 	github.com/sethvargo/go-password v0.2.0
