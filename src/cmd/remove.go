@@ -20,9 +20,20 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		path = util.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 	}
 
+	removeFromFile(path, serviceNames, flagWithVolumes, flagForce, flagAdvanced)
+
+	// Run if the corresponding flag is set
+	if flagRun || flagDetached {
+		util.DockerComposeUp(flagDetached)
+	}
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
 	util.P("Parsing compose file ... ")
 	// Load compose file
-	composeFile, err := dcu.DeserializeFromFile(path)
+	composeFile, err := dcu.DeserializeFromFile(filePath)
 	if err != nil {
 		util.Error("Internal error - unable to parse compose file", err, true)
 	}
@@ -95,9 +106,4 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 		util.Error("Could not write yaml to compose file", err, true)
 	}
 	util.Done()
-
-	// Run if the corresponding flag is set
-	if flagRun || flagDetached {
-		util.DockerComposeUp(flagDetached)
-	}
 }
