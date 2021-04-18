@@ -7,6 +7,7 @@ import (
 	"github.com/urfave/cli/v2"
 
 	"compose-generator/cmd"
+	"compose-generator/util"
 )
 
 func main() {
@@ -38,6 +39,7 @@ func main() {
 			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 		},
 		Action: func(c *cli.Context) error {
+			util.CheckForServiceTemplateUpdate(VERSION)
 			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 			return nil
 		},
@@ -56,6 +58,7 @@ func main() {
 					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 				},
 				Action: func(c *cli.Context) error {
+					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 					return nil
 				},
@@ -71,6 +74,7 @@ func main() {
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
+					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 					return nil
 				},

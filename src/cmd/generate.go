@@ -186,7 +186,6 @@ func generateDynamicStack(
 
 	// Write dev compose file
 	util.P("Saving dev configuration ... ")
-
 	if err := dcu.SerializeToFile(composeFileDev, "./docker-compose.yml"); err != nil {
 		util.Error("Could not write yaml to compose file.", err, true)
 	}

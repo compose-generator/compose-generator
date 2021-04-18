@@ -1,6 +1,9 @@
 # Ignore executables
 bin/*
 
+# Ignore predefined services archive
+predefined-services/*.tar.gz
+
 # Ignore custom templates
 templates/*
 
