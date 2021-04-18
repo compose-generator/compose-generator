@@ -1,0 +1,8 @@
+image: jenkins/jenkins:${{JENKINS_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-jenkins
+restart: always
+volumes:
+  - ${{VOLUME_JENKINS_HOME}}:/var/jenkins_home
+ports:
+  - ${{JENKINS_PORT_WEB}}:8080
+  - ${{JENKINS_PORT_SLAVE_AGENT}}:50000
