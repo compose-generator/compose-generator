@@ -1,14 +1,10 @@
 package util
 
 import (
-	"bytes"
-	"context"
-	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
-
-	"github.com/codeclysm/extract/v3"
 )
 
 // CheckForServiceTemplateUpdate checks if any updates are available for the predefined service templates
@@ -54,9 +50,11 @@ func CheckForServiceTemplateUpdate(version string) {
 	if shouldUpdate {
 		P("Downloading predefined services update ... ")
 		DownloadFile(fileUrl, outputPath)
-		data, _ := ioutil.ReadFile(outputPath)
-		buffer := bytes.NewBuffer(data)
-		extract.Gz(context.Background(), buffer, predefinedTemplatesDir, nil)
+		filepath, err := filepath.Abs(predefinedTemplatesDir)
+		if err != nil {
+			Error("Could not build path", err, true)
+		}
+		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
 		Done()
 	}
 }

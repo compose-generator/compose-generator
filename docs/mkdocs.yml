@@ -2,7 +2,7 @@ site_name: Compose Generator
 site_url: https://www.compose-generator.com
 site_description: Setup your application in a matter of seconds
 site_author: Marc Auberer
-copyright: Made with ❤️ by Compose Generator contributors.
+copyright: Made with ❤️ by Compose Generator contributors, powered by ChilliBits.
 repo_name: compose-generator/compose-generator
 repo_url: https://github.com/compose-generator/compose-generator
 edit_uri: edit/dev/docs/docs/

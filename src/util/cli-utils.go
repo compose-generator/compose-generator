@@ -71,6 +71,12 @@ func ExecuteOnLinux(c string) {
 	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox", c)
 }
 
+// ExecuteOnLinuxWithCustomVolume runs a command in an isolated Linux environment with a custom volume mount
+func ExecuteOnLinuxWithCustomVolume(c string, volumePath string) {
+	// Start docker container
+	ExecuteAndWait("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox", c)
+}
+
 // ClearScreen errases the console contents
 func ClearScreen() {
 	var cmd *exec.Cmd
