@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -247,23 +248,11 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create demo applications
-		for _, templates := range templateData {
-			for _, template := range templates {
-				var commands []string
-				for _, cmd := range template.DemoAppInitCmd {
-					commands = append(commands, util.ReplaceVarsInString(cmd, varMap))
-				}
-				if len(commands) > 0 {
-					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
-					util.ExecuteOnLinux(strings.Join(commands, "; "))
-					util.Done()
-				}
-			}
-		}
+		ExecuteListOfCommands(templateData, &varMap, "DemoAppInitCmd")
 	}
 
 	// Intialize services
-	// TODO: Initialize services
+	ExecuteListOfCommands(templateData, &varMap, "ServiceInitCmd")
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -586,6 +575,28 @@ func getVolumeMapFromVolumes(
 		}
 		*usedVolumes = append(*usedVolumes, defaultValue)
 		(*volMap)[filepath.Join(srcPath, v.DefaultValue)] = (*varMap)[v.Variable]
+	}
+}
+
+func ExecuteListOfCommands(
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap *map[string]string,
+	field string,
+) {
+	for _, templates := range templateData {
+		for _, template := range templates {
+			var commands []string
+			r := reflect.ValueOf(template)
+			f := reflect.Indirect(r).FieldByName(field)
+			for _, cmd := range f.Interface().([]string) {
+				commands = append(commands, util.ReplaceVarsInString(cmd, *varMap))
+			}
+			if len(commands) > 0 {
+				util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
+				util.ExecuteOnLinux(strings.Join(commands, "; "))
+				util.Done()
+			}
+		}
 	}
 }
 
