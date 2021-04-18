@@ -1,0 +1,75 @@
+{
+    "label": "Neo4j",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose the Neo4j web endpoint?",
+            "type": 2,
+            "defaultValue": "7474",
+            "validator": "port",
+            "variable": "NEO4J_PORT_WEB"
+        },
+        {
+            "text": "On which port you want to expose the Neo4j API?",
+            "type": 2,
+            "defaultValue": "7687",
+            "validator": "port",
+            "variable": "NEO4J_PORT_API"
+        },
+        {
+            "text": "How do you want to call the Neo4j user for your application?",
+            "type": 2,
+            "defaultValue": "application",
+            "validator": "alphanum",
+            "variable": "NEO4J_USER"
+        },
+        {
+            "text": "How do you want to call the database for your application?",
+            "type": 2,
+            "defaultValue": "main",
+            "validator": "alphanum",
+            "variable": "NEO4J_DATABASE"
+        },
+        {
+            "text": "Which Neo4j version do you want to use?",
+            "type": 2,
+            "defaultValue": "4.2",
+            "variable": "NEO4J_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Neo4j data volume?",
+            "defaultValue": "./volumes/neo4j-data",
+            "variable": "VOLUME_NEO4J_DATA",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Neo4j password for user 'root'",
+            "variable": "_PW_NEO4J_ROOT",
+            "length": 50
+        },
+        {
+            "name": "Neo4j password for the application user",
+            "variable": "_PW_NEO4J_USER",
+            "length": 30
+        }
+    ]
+}
