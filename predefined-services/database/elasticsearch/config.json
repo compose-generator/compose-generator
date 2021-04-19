@@ -1,0 +1,42 @@
+{
+    "label": "Elasticsearch",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose Elasticsearch?",
+            "type": 2,
+            "defaultValue": "9200",
+            "validator": "port",
+            "variable": "ELASTICSEARCH_PORT"
+        },
+        {
+            "text": "Which Elasticsearch version do you want to use?",
+            "type": 2,
+            "defaultValue": "7.12",
+            "variable": "ELASTICSEARCH_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Elasticsearch data volume?",
+            "defaultValue": "./volumes/elasticsearch-data",
+            "variable": "VOLUME_ELASTICSEARCH_DATA",
+            "advanced": true
+        }
+    ]
+}

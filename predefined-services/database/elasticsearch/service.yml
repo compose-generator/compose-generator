@@ -1,0 +1,13 @@
+image: elasticsearch:${{ELASTICSEARCH_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-elasticsearch
+restart: always
+networks:
+#! if has backend {
+#!  - backend-database
+#! }
+ports:
+  - ${{ELASTICSEARCH_PORT}}:9200
+volumes: 
+  - ${{VOLUME_ELASTICSEARCH_DATA}}:/usr/share/elasticsearch/data
+env_file:
+  - environment.env
