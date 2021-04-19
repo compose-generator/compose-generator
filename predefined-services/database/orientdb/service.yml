@@ -1,0 +1,16 @@
+image: orientdb:${{ORIENTDB_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-orientdb
+restart: always
+networks:
+#! if has backend {
+#!  - backend-database
+#! }
+ports:
+  - ${{ORIENTDB_PORT_WEB}}:2480
+  - ${{ORIENTDB_PORT_API}}:2424
+volumes: 
+  - ${{VOLUME_ORIENTDB_DATA}}:/orientdb/databases
+  - ${{VOLUME_ORIENTDB_CONFIG}}:/orientdb/config
+  - ${{VOLUME_ORIENTDB_BACKUP}}:/orientdb/backup
+env_file:
+  - environment.env
