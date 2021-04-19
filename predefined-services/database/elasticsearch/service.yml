@@ -5,10 +5,13 @@ networks:
 #! if has backend {
 #!  - backend-database
 #! }
+#! if has service elasticsearch-hq {
+#!  - elasticsearch-elasticsearchhq
+#! }
 ports:
   - ${{ELASTICSEARCH_PORT}}:9200
-  - 9300:9300
 volumes: 
   - ${{VOLUME_ELASTICSEARCH_DATA}}:/usr/share/elasticsearch/data
 environment:
-  - transport.host=localhost
+  #- transport.host=0.0.0.0
+  - discovery.type=single-node
