@@ -7,7 +7,6 @@ networks:
 #! }
 ports:
   - ${{ELASTICSEARCH_PORT}}:9200
+  - 9300:9300
 volumes: 
   - ${{VOLUME_ELASTICSEARCH_DATA}}:/usr/share/elasticsearch/data
-env_file:
-  - environment.env
