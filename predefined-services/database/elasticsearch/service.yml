@@ -10,3 +10,5 @@ ports:
   - 9300:9300
 volumes: 
   - ${{VOLUME_ELASTICSEARCH_DATA}}:/usr/share/elasticsearch/data
+environment:
+  - transport.host=localhost
