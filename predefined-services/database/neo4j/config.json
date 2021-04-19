@@ -31,20 +31,6 @@
             "variable": "NEO4J_PORT_API"
         },
         {
-            "text": "How do you want to call the Neo4j user for your application?",
-            "type": 2,
-            "defaultValue": "application",
-            "validator": "alphanum",
-            "variable": "NEO4J_USER"
-        },
-        {
-            "text": "How do you want to call the database for your application?",
-            "type": 2,
-            "defaultValue": "main",
-            "validator": "alphanum",
-            "variable": "NEO4J_DATABASE"
-        },
-        {
             "text": "Which Neo4j version do you want to use?",
             "type": 2,
             "defaultValue": "4.2",
@@ -58,6 +44,24 @@
             "defaultValue": "./volumes/neo4j-data",
             "variable": "VOLUME_NEO4J_DATA",
             "advanced": true
+        },
+        {
+            "text": "Custom path for Neo4j logs volume?",
+            "defaultValue": "./volumes/neo4j-logs",
+            "variable": "VOLUME_NEO4J_LOGS",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Neo4j import volume?",
+            "defaultValue": "./volumes/neo4j-import",
+            "variable": "VOLUME_NEO4J_IMPORT",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Neo4j plugins volume?",
+            "defaultValue": "./volumes/neo4j-plugins",
+            "variable": "VOLUME_NEO4J_PLUGINS",
+            "advanced": true
         }
     ],
     "secrets": [
@@ -65,11 +69,6 @@
             "name": "Neo4j password for user 'root'",
             "variable": "_PW_NEO4J_ROOT",
             "length": 50
-        },
-        {
-            "name": "Neo4j password for the application user",
-            "variable": "_PW_NEO4J_USER",
-            "length": 30
         }
     ]
 }
