@@ -1,0 +1,30 @@
+{
+    "label": "ElasticsearchHQ",
+    "preselected": "has service elasticsearch",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose ElasticsearchHQ?",
+            "type": 2,
+            "defaultValue": "5000",
+            "validator": "port",
+            "variable": "ELASTICSEARCH_HQ_PORT"
+        },
+        {
+            "text": "Which version of ElasticsearchHQ do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "ELASTICSEARCH_HQ_VERSION",
+            "advanced": true
+        }
+    ]
+}
