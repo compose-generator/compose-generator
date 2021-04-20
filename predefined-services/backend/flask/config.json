@@ -13,10 +13,6 @@
             "type": "service"
         },
         {
-            "path": "environment.env",
-            "type": "env"
-        },
-        {
             "path": "README.md",
             "type": "docs"
         },
