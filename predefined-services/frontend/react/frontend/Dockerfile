@@ -1,5 +1,5 @@
 # NodeJS build instructions
-FROM node:lts AS development
+FROM node:${{REACT_NODE_VERSION}} AS development
 
 WORKDIR /code
 COPY yarn.lock /code/yarn.lock

@@ -1,5 +1,5 @@
 # NodeJS build instructions
-FROM node:lts AS development
+FROM node:${{ANGULAR_NODE_VERSION}} AS development
 
 RUN npm i -g --loglevel=error @angular/cli
 
