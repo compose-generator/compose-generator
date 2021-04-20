@@ -1,0 +1,70 @@
+{
+    "label": "InfluxDB",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose InfluxDB?",
+            "type": 2,
+            "defaultValue": "8086",
+            "validator": "port",
+            "variable": "INFLUXDB_PORT"
+        },
+        {
+            "text": "How do you want to call the InfluxDB user for your application?",
+            "type": 2,
+            "defaultValue": "application",
+            "validator": "alphanum",
+            "variable": "INFLUXDB_USER"
+        },
+        {
+            "text": "How do you want to call your org?",
+            "type": 2,
+            "defaultValue": "my-org",
+            "validator": "alphanum",
+            "variable": "INFLUXDB_ORG"
+        },
+        {
+            "text": "How do you want to call your bucket?",
+            "type": 2,
+            "defaultValue": "my-bucket",
+            "validator": "alphanum",
+            "variable": "INFLUXDB_BUCKET"
+        },
+        {
+            "text": "Which InfluxDB version do you want to use?",
+            "type": 2,
+            "defaultValue": "2.0",
+            "variable": "INFLUXDB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for InfluxDB data volume?",
+            "defaultValue": "./volumes/influxdb-data",
+            "variable": "VOLUME_INFLUXDB_DATA",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "MariaDB password for user '${{INFLUXDB_USER}}'",
+            "variable": "_PW_INFLUXDB_USER",
+            "length": 40
+        }
+    ]
+}
