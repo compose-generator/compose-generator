@@ -33,14 +33,14 @@
         {
             "text": "How do you want to call your org?",
             "type": 2,
-            "defaultValue": "my-org",
+            "defaultValue": "org",
             "validator": "alphanum",
             "variable": "INFLUXDB_ORG"
         },
         {
             "text": "How do you want to call your bucket?",
             "type": 2,
-            "defaultValue": "my-bucket",
+            "defaultValue": "bucket",
             "validator": "alphanum",
             "variable": "INFLUXDB_BUCKET"
         },
@@ -62,7 +62,7 @@
     ],
     "secrets": [
         {
-            "name": "MariaDB password for user '${{INFLUXDB_USER}}'",
+            "name": "InfluxDB password for user '${{INFLUXDB_USER}}'",
             "variable": "_PW_INFLUXDB_USER",
             "length": 40
         }
