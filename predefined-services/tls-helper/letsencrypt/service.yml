@@ -1,4 +1,4 @@
-image: jrcs/letsencrypt-nginx-proxy-companion:v2.1
+image: jrcs/letsencrypt-nginx-proxy-companion:v1.13.1
 container_name: ${{PROJECT_NAME_CONTAINER}}-tlshelper-letsencrypt
 restart: always
 volumes:

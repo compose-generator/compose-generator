@@ -30,12 +30,6 @@
             "defaultValue": "80",
             "validator": "port",
             "variable": "REACT_PORT"
-        },
-        {
-            "text": "Which version of NodeJS do you want to use?",
-            "type": 2,
-            "defaultValue": "lts",
-            "variable": "REACT_NODE_VERSION"
         }
     ],
     "volumes": [

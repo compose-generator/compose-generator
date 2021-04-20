@@ -16,11 +16,11 @@ You don't have to pull the image first. You also can skip this step.
 ### Use
 === "Docker Hub"
     ```sh
-    docker run --rm -it -v ${pwd}:/cg/out chillibits/compose-generator
+    docker run --rm -it -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
     ```
 === "GitHub Container Registry"
     ```sh
-    docker run --rm -it -v ${pwd}:/cg/out ghcr.io/chillibits/compose-generator
+    docker run --rm -it -v ${pwd}:/cg/out ghcr.io/chillibits/compose-generator [<command>]
     ```
 
 ### Customize
