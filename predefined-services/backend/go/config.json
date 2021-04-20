@@ -1,0 +1,48 @@
+{
+    "label": "Go",
+    "preselected": "false",
+    "demoAppInitCmd": [],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Go app?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "GO_PORT"
+        },
+        {
+            "text": "Which Go version do you want to use?",
+            "type": 2,
+            "defaultValue": "1.16",
+            "variable": "GO_VERSION"
+        },
+        {
+            "text": "How do you want to call your Go app?",
+            "type": 2,
+            "defaultValue": "go-example",
+            "variable": "GO_APP_NAME"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend",
+            "variable": "GO_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}
