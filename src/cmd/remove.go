@@ -95,7 +95,7 @@ func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool
 func removeVolumesForService(composeFile dcu_model.ComposeFile, serviceName string, flagForce bool) {
 	reallyDeleteVolumes := true
 	if !flagForce {
-		reallyDeleteVolumes = util.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
+		reallyDeleteVolumes = util.YesNoQuestion("Do you really want to delete all attached volumes of service '"+serviceName+"'. All data will be lost.", false)
 	}
 	if reallyDeleteVolumes {
 		util.P("Removing volumes of '" + serviceName + "' ... ")
