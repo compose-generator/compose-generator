@@ -1,0 +1,17 @@
+image: neo4j:${{NEO4J_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-neo4j
+restart: always
+networks:
+#! if has backend {
+#!  - backend-database
+#! }
+ports:
+  - ${{NEO4J_PORT_WEB}}:7474
+  - ${{NEO4J_PORT_API}}:7687
+volumes: 
+  - ${{VOLUME_NEO4J_DATA}}:/data
+  - ${{VOLUME_NEO4J_LOGS}}:/logs
+  - ${{VOLUME_NEO4J_IMPORT}}:/var/lib/neo4j/import
+  - ${{VOLUME_NEO4J_PLUGINS}}:/plugins
+env_file:
+  - environment.env

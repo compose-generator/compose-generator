@@ -2,7 +2,7 @@ site_name: Compose Generator
 site_url: https://www.compose-generator.com
 site_description: Setup your application in a matter of seconds
 site_author: Marc Auberer
-copyright: Made with ❤️ by Compose Generator contributors.
+copyright: Made with ❤️ by Compose Generator contributors, powered by ChilliBits.
 repo_name: compose-generator/compose-generator
 repo_url: https://github.com/compose-generator/compose-generator
 edit_uri: edit/dev/docs/docs/
@@ -19,17 +19,19 @@ theme:
     - navigation.instant
     - navigation.tabs
   palette:
-    - scheme: default # Light mode
+    - media: "(prefers-color-scheme: light)"  # Light mode
+      scheme: default
       primary: teal
       accent: teal
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/weather-sunny
         name: Switch to light mode
-    - scheme: slate # Dark mode
+    - media: "(prefers-color-scheme: dark)"  # Dark mode
+      scheme: slate
       primary: teal
       accent: teal
       toggle:
-        icon: material/toggle-switch
+        icon: material/weather-night
         name: Switch to dark mode
 
 plugins:
@@ -59,6 +61,7 @@ nav:
     - install/linux.md
     - install/windows.md
     - install/npm.md
+    - install/source.md
   - quick-start.md
   - Usage:
     - usage/generate.md
@@ -72,7 +75,13 @@ markdown_extensions:
   - codehilite
   - meta
   - footnotes
+  - admonition
+  - pymdownx.details
   - toc:
       permalink: true
   - pymdownx.tabbed
   - pymdownx.superfences
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg

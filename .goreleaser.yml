@@ -18,20 +18,19 @@ builds:
       - 5
       - 6
       - 7
-    ignore:
-      - goos: darwin
-        goarch: arm64
+    #ignore:
+    #  - goos: darwin
+    #    goarch: arm64
 dockers:
   - image_templates:
-      - "ghcr.io/compose-generator/compose-generator:{{ .Version }}"
-      - "ghcr.io/compose-generator/compose-generator:latest"
-      - "chillibits/compose-generator:{{ .Version }}"
-      - "chillibits/compose-generator:latest"
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}
+      - ghcr.io/compose-generator/compose-generator:latest
+      - chillibits/compose-generator:{{ .Version }}
+      - chillibits/compose-generator:latest
     dockerfile: Dockerfile
     use_buildx: true
     extra_files:
       - predefined-services
-      - toolbox
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
@@ -44,10 +43,8 @@ dockers:
       - --platform=linux/amd64
 archives:
   - files:
-      - README.md
       - LICENSE
       - predefined-services/*
-      - toolbox/*
     format_overrides:
       - goos: windows
         format: zip
@@ -57,6 +54,7 @@ nfpms:
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.compose-generator.com
     license: Apache 2.0
+    bindir: /usr/bin
     formats:
       - apk
       - deb
@@ -72,12 +70,10 @@ nfpms:
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
-      - src: toolbox/*
-        dst: /usr/lib/compose-generator/toolbox/
     empty_folders:
       - /usr/lib/compose-generator/templates
 release:
-  name_template: "v{{.Tag}}"
+  name_template: v{{.Tag}}
   github:
     owner: compose-generator
     name: compose-generator

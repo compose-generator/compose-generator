@@ -1,7 +1,7 @@
 {
     "label": "Spring Maven",
     "preselected": "false",
-    "exampleAppInitCmd": [
+    "demoAppInitCmd": [
         "curl https://start.spring.io/starter.zip -d applicationName=${{PROJECT_NAME}} -d packageName=${{SPRING_MAVEN_PACKAGE_NAME}} -d dependencies=${{SPRING_MAVEN_DEPENDENCIES}} -d language=${{SPRING_MAVEN_LANGUAGE}} -d bootVersion=${{SPRING_MAVEN_VERSION}} -o ${{SPRING_MAVEN_SOURCE_DIRECTORY}}/${{PROJECT_NAME_CONTAINER}}.zip",
         "unzip -q ${{SPRING_MAVEN_SOURCE_DIRECTORY}}/${{PROJECT_NAME_CONTAINER}}.zip -d ${{SPRING_MAVEN_SOURCE_DIRECTORY}}",
         "rm ${{SPRING_MAVEN_SOURCE_DIRECTORY}}/${{PROJECT_NAME_CONTAINER}}.zip"
@@ -35,7 +35,7 @@
         {
             "text": "Spring version",
             "type": 2,
-            "defaultValue": "2.4.4.RELEASE",
+            "defaultValue": "2.4.5.RELEASE",
             "variable": "SPRING_MAVEN_VERSION"
         },
         {

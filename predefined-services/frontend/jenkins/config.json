@@ -1,0 +1,45 @@
+{
+    "label": "Jenkins",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Jenkins instance?",
+            "type": 2,
+            "defaultValue": "8080",
+            "validator": "port",
+            "variable": "JENKINS_PORT_WEB"
+        },
+        {
+            "text": "On which port you want to expose your Jenkins slave agent?",
+            "type": 2,
+            "defaultValue": "50000",
+            "validator": "port",
+            "variable": "JENKINS_PORT_SLAVE_AGENT",
+            "advanced": true
+        },
+        {
+            "text": "Which version of Gitea do you want to use?",
+            "type": 2,
+            "defaultValue": "lts",
+            "variable": "JENKINS_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Jenkins home volume?",
+            "defaultValue": "./volumes/jenkins-home",
+            "variable": "VOLUME_JENKINS_HOME",
+            "advanced": true
+        }
+    ]
+}

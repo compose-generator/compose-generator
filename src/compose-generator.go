@@ -7,10 +7,11 @@ import (
 	"github.com/urfave/cli/v2"
 
 	"compose-generator/cmd"
+	"compose-generator/util"
 )
 
 func main() {
-	const VERSION = "0.6.0"
+	const VERSION = "0.7.0"
 
 	// Version flag
 	cli.VersionFlag = &cli.BoolFlag{
@@ -38,6 +39,7 @@ func main() {
 			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 		},
 		Action: func(c *cli.Context) error {
+			util.CheckForServiceTemplateUpdate(VERSION)
 			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 			return nil
 		},
@@ -56,6 +58,7 @@ func main() {
 					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 				},
 				Action: func(c *cli.Context) error {
+					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 					return nil
 				},
@@ -71,6 +74,7 @@ func main() {
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
+					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 					return nil
 				},
@@ -118,11 +122,12 @@ func main() {
 						Usage:   "Load a custom template.",
 						Flags: []cli.Flag{
 							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
+							&cli.BoolFlag{Name: "show", Aliases: []string{"s"}, Usage: "Do not load a template. Instead only list all templates and terminate"},
 							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also load the Dockerfile from the template (if existing)"},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
-							cmd.LoadTemplate(name, c.Bool("force"), c.Bool("with-dockerfile"))
+							cmd.LoadTemplate(name, c.Bool("force"), c.Bool("show"), c.Bool("with-dockerfile"))
 							return nil
 						},
 					},

@@ -1,0 +1,75 @@
+{
+    "label": "OrientDB",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose the OrientDB web endpoint?",
+            "type": 2,
+            "defaultValue": "2480",
+            "validator": "port",
+            "variable": "ORIENTDB_PORT_WEB"
+        },
+        {
+            "text": "On which port you want to expose the OrientDB API?",
+            "type": 2,
+            "defaultValue": "2424",
+            "validator": "port",
+            "variable": "ORIENTDB_PORT_API"
+        },
+        {
+            "text": "How do you want to call the OrientDB node?",
+            "type": 2,
+            "defaultValue": "odb1",
+            "validator": "alphanum",
+            "variable": "ORIENTDB_NODE_NAME"
+        },
+        {
+            "text": "Which OrientDB version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.1",
+            "variable": "ORIENTDB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for OrientDB data volume?",
+            "defaultValue": "./volumes/orientdb-data",
+            "variable": "VOLUME_ORIENTDB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for OrientDB config volume?",
+            "defaultValue": "./volumes/orientdb-config",
+            "variable": "VOLUME_ORIENTDB_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for OrientDB backup volume?",
+            "defaultValue": "./volumes/orientdb-backup",
+            "variable": "VOLUME_ORIENTDB_BACKUP",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "OrientDB password for user 'root'",
+            "variable": "_PW_ORIENTDB_ROOT",
+            "length": 50
+        }
+    ]
+}

@@ -1,46 +1,38 @@
 package cmd
 
 import (
-	"compose-generator/model"
-	"compose-generator/utils"
-	"io/ioutil"
+	"compose-generator/util"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
+	dcu "github.com/compose-generator/dcu"
+	model "github.com/compose-generator/dcu/model"
 	"github.com/compose-generator/diu"
 	"github.com/fatih/color"
-	yaml "gopkg.in/yaml.v3"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Add a service to an existing compose file
 func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
-	utils.ClearScreen()
+	util.ClearScreen()
 
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
 	if flagAdvanced {
-		path = utils.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
+		path = util.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
 	}
 
-	utils.P("Parsing compose file ... ")
+	util.P("Parsing compose file ... ")
 	// Load compose file
-	jsonFile, err := os.Open(path)
+	composeFile, err := dcu.DeserializeFromFile(path)
 	if err != nil {
-		utils.Error("Internal error - unable to load compose file", err, true)
+		util.Error("Internal error - unable to load compose file", err, true)
 	}
-	bytes, _ := ioutil.ReadAll(jsonFile)
-
-	// Parse YAML
-	composeFile := model.ComposeFile{}
-	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
-		utils.Error("Internal error - unable to parse compose file", err, true)
-	}
-	utils.Done()
-	utils.Pel()
+	util.Done()
+	util.Pel()
 
 	service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce, false)
 
@@ -52,25 +44,20 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	}
 
 	// Add service
-	utils.P("Adding service ... ")
+	util.P("Adding service ... ")
 	composeFile.Services[serviceName] = service
-	utils.Done()
+	util.Done()
 
 	// Write to file
-	utils.P("Saving compose file ... ")
-	output, err1 := yaml.Marshal(&composeFile)
-	err2 := ioutil.WriteFile(path, output, 0777)
-	if err1 != nil {
-		utils.Error("Could not marshal yaml", err1, true)
+	util.P("Saving compose file ... ")
+	if dcu.SerializeToFile(composeFile, path) != nil {
+		util.Error("Could not write yaml to compose file", err, true)
 	}
-	if err2 != nil {
-		utils.Error("Could not write yaml to compose file", err2, true)
-	}
-	utils.Done()
+	util.Done()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
-		utils.DockerComposeUp(flagDetached)
+		util.DockerComposeUp(flagDetached)
 	}
 }
 
@@ -122,7 +109,7 @@ func AddService(existingServices map[string]model.Service, flagAdvanced bool, fl
 	// Ask for services, the new one should depend on
 	var dependsServices []string
 	if !modeGenerate {
-		dependsServices = askForDependsOn(utils.RemoveStringFromSlice(existingServiceNames, serviceName))
+		dependsServices = askForDependsOn(util.RemoveStringFromSlice(existingServiceNames, serviceName))
 	}
 
 	// Ask for restart mode
@@ -147,17 +134,17 @@ func AddService(existingServices map[string]model.Service, flagAdvanced bool, fl
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func askBuildFromSource() (build bool, buildPath string, registry string) {
-	build = utils.YesNoQuestion("Build from source?", false)
+	build = util.YesNoQuestion("Build from source?", false)
 	if build {
 		// Ask for build path
-		buildPath = utils.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
+		buildPath = util.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
 		// Check if Dockerfile exists
-		if !utils.FileExists(buildPath+"/Dockerfile") && !utils.FileExists(buildPath+"Dockerfile") {
-			utils.Error("Aborting. The Dockerfile cannot be found.", nil, true)
+		if !util.FileExists(buildPath+"/Dockerfile") && !util.FileExists(buildPath+"Dockerfile") {
+			util.Error("Aborting. The Dockerfile cannot be found.", nil, true)
 		}
 	} else {
 		// Ask for registry
-		registry = utils.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
+		registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
 		if registry == "docker.io" {
 			registry = ""
 		} else {
@@ -169,23 +156,23 @@ func askBuildFromSource() (build bool, buildPath string, registry string) {
 
 func askForImage(build bool) string {
 	if build {
-		return utils.TextQuestion("How do you want to call the built image?")
+		return util.TextQuestion("How do you want to call the built image?")
 	}
-	return utils.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
+	return util.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
 }
 
 func searchRemoteImage(registry string, image string) {
-	utils.P("\nSearching image ... ")
+	util.P("\nSearching image ... ")
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err == nil {
 		color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")
 	} else {
 		color.Red(" not found or no access\n")
-		proceed := utils.YesNoQuestion("Proceed anyway?", false)
+		proceed := util.YesNoQuestion("Proceed anyway?", false)
 		if !proceed {
 			os.Exit(0)
 		}
-		utils.Pel()
+		util.Pel()
 	}
 }
 
@@ -202,10 +189,10 @@ func askForServiceName(existingServices map[string]model.Service, imageName stri
 	}
 
 	// Ask for the service name
-	name = utils.TextQuestionWithDefault("How do you want to call your service (best practise: lower cased):", defaultName)
+	name = util.TextQuestionWithDefault("How do you want to call your service (best practise: lower cased):", defaultName)
 	if _, exists := existingServices[name]; exists {
 		// Service name already exists
-		if !utils.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
+		if !util.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
 			os.Exit(0)
 		}
 	}
@@ -213,16 +200,16 @@ func askForServiceName(existingServices map[string]model.Service, imageName stri
 }
 
 func askForContainerName(serviceName string) (name string) {
-	name = utils.TextQuestionWithDefault("How do you want to call your container (best practise: lower cased):", serviceName)
+	name = util.TextQuestionWithDefault("How do you want to call your container (best practise: lower cased):", serviceName)
 	return
 }
 
 func askForVolumes(flagAdvanced bool) (volumes []string) {
-	if utils.YesNoQuestion("Do you want to add volumes to your service?", false) {
-		utils.Pel()
-		for another := true; another; another = utils.YesNoQuestion("Share another volume?", true) {
+	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
+		util.Pel()
+		for another := true; another; another = util.YesNoQuestion("Share another volume?", true) {
 			// Ask user for volume attachments
-			globalVolume := utils.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
+			globalVolume := util.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
 			volumeOuter := ""
 			if globalVolume {
 				globalVolumes, err := diu.GetExistingVolumes()
@@ -232,18 +219,18 @@ func askForVolumes(flagAdvanced bool) (volumes []string) {
 						menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
 					}
 					if len(globalVolumes) >= 1 {
-						itemIndex := utils.MenuQuestionIndex("Which global volume?", menuItems)
+						itemIndex := util.MenuQuestionIndex("Which global volume?", menuItems)
 						volumeOuter = globalVolumes[itemIndex].Name
-					} else if utils.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
-						volumeOuter = utils.TextQuestion("How do you want to call the new global volume?")
-						utils.ExecuteAndWait("docker", "volume", "create", volumeOuter)
+					} else if util.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
+						volumeOuter = util.TextQuestion("How do you want to call the new global volume?")
+						util.ExecuteAndWait("docker", "volume", "create", volumeOuter)
 					}
 				} else {
-					utils.Error("Error parsing global volumes.", err, false)
+					util.Error("Error parsing global volumes.", err, false)
 					continue
 				}
 			} else {
-				volumeOuter = utils.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
+				volumeOuter = util.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
 					files, _ = filepath.Glob(toComplete + "*")
 					return
 				})
@@ -254,12 +241,12 @@ func askForVolumes(flagAdvanced bool) (volumes []string) {
 			}
 
 			// Ask for inner path
-			volumeInner := utils.TextQuestion("Directory / file inside the container:")
+			volumeInner := util.TextQuestion("Directory / file inside the container:")
 
 			// Ask for volume priviledges if advanced more is enabled
 			priviledges := "rw"
 			if flagAdvanced {
-				result := utils.MenuQuestionIndex("Which priviledges does the container has on the volume?", []string{"Read + Write", "Read-only"})
+				result := util.MenuQuestionIndex("Which priviledges does the container has on the volume?", []string{"Read + Write", "Read-only"})
 				if result == 1 {
 					priviledges = "ro"
 				}
@@ -268,17 +255,17 @@ func askForVolumes(flagAdvanced bool) (volumes []string) {
 			volumes = append(volumes, volumeOuter+":"+volumeInner+":"+priviledges)
 		}
 
-		utils.Pel()
+		util.Pel()
 	}
 	return
 }
 
 func askForNetworks() (networks []string) {
-	if utils.YesNoQuestion("Do you want to add networks to your service?", false) {
-		utils.Pel()
-		for another := true; another; another = utils.YesNoQuestion("Assign another network?", true) {
+	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
+		util.Pel()
+		for another := true; another; another = util.YesNoQuestion("Assign another network?", true) {
 			// Ask user for network assignments
-			globalNetwork := utils.YesNoQuestion("Do you want to add an external network (y) or create assign a new one (n)?", false)
+			globalNetwork := util.YesNoQuestion("Do you want to add an external network (y) or create assign a new one (n)?", false)
 			networkName := ""
 			if globalNetwork {
 				globalNetworks, err := diu.GetExistingNetworks()
@@ -288,98 +275,98 @@ func askForNetworks() (networks []string) {
 						menuItems = append(menuItems, network.Name+" | Driver: "+network.Driver)
 					}
 					if len(globalNetworks) >= 1 {
-						itemIndex := utils.MenuQuestionIndex("Which external network?", menuItems)
+						itemIndex := util.MenuQuestionIndex("Which external network?", menuItems)
 						networkName = globalNetworks[itemIndex].Name
-					} else if utils.YesNoQuestion("No external networks found. Do you want to create one?", true) {
-						networkName = utils.TextQuestion("How do you want to call the new external network?")
-						utils.ExecuteAndWait("docker", "network", "create", networkName)
+					} else if util.YesNoQuestion("No external networks found. Do you want to create one?", true) {
+						networkName = util.TextQuestion("How do you want to call the new external network?")
+						util.ExecuteAndWait("docker", "network", "create", networkName)
 					}
 				} else {
-					utils.Error("Error parsing external networks.", err, false)
+					util.Error("Error parsing external networks.", err, false)
 					continue
 				}
 			} else {
-				networkName = utils.TextQuestion("How do you want to call the new network?")
+				networkName = util.TextQuestion("How do you want to call the new network?")
 			}
 
 			networks = append(networks, networkName)
 		}
-		utils.Pel()
+		util.Pel()
 	}
 	return
 }
 
 func askForPorts() (ports []string) {
-	if utils.YesNoQuestion("Do you want to expose ports of your service?", false) {
-		utils.Pel()
-		for another := true; another; another = utils.YesNoQuestion("Expose another port?", true) {
-			portInner := utils.TextQuestionWithValidator("Which port do you want to expose? (inner port)", utils.PortValidator)
-			portOuter := utils.TextQuestionWithValidator("To which destination port on the host machine?", utils.PortValidator)
+	if util.YesNoQuestion("Do you want to expose ports of your service?", false) {
+		util.Pel()
+		for another := true; another; another = util.YesNoQuestion("Expose another port?", true) {
+			portInner := util.TextQuestionWithValidator("Which port do you want to expose? (inner port)", util.PortValidator)
+			portOuter := util.TextQuestionWithValidator("To which destination port on the host machine?", util.PortValidator)
 			ports = append(ports, portOuter+":"+portInner)
 		}
-		utils.Pel()
+		util.Pel()
 	}
 	return
 }
 
 func askForEnvVariables() (envVariables []string) {
-	if utils.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
-		utils.Pel()
-		for another := true; another; another = utils.YesNoQuestion("Expose another environment variable?", true) {
-			variableName := utils.TextQuestionWithValidator("Variable name (BEST_PRACTISE_IS_CAPS):", utils.EnvVarNameValidator)
-			variableValue := utils.TextQuestion("Variable value:")
+	if util.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
+		util.Pel()
+		for another := true; another; another = util.YesNoQuestion("Expose another environment variable?", true) {
+			variableName := util.TextQuestionWithValidator("Variable name (BEST_PRACTISE_IS_CAPS):", util.EnvVarNameValidator)
+			variableValue := util.TextQuestion("Variable value:")
 			envVariables = append(envVariables, variableName+"="+variableValue)
 		}
-		utils.Pel()
+		util.Pel()
 	}
 	return
 }
 
 func askForEnvFiles() (envFiles []string) {
-	if utils.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
-		utils.Pel()
-		for another := true; another; another = utils.YesNoQuestion("Add another environment file?", true) {
+	if util.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
+		util.Pel()
+		for another := true; another; another = util.YesNoQuestion("Add another environment file?", true) {
 			// Ask user for env file with auto-suggested text input
-			envFile := utils.TextQuestionWithDefaultAndSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
+			envFile := util.TextQuestionWithDefaultAndSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
 				files, _ = filepath.Glob(toComplete + "*.*")
 				return
 			})
 			// Check if the selected file is valid
-			if !utils.FileExists(envFile) || utils.IsDirectory(envFile) {
-				utils.Error("File is not valid. Please select another file", nil, false)
+			if !util.FileExists(envFile) || util.IsDirectory(envFile) {
+				util.Error("File is not valid. Please select another file", nil, false)
 				continue
 			}
 			envFiles = append(envFiles, envFile)
 		}
-		utils.Pel()
+		util.Pel()
 	}
 	return
 }
 
 func askForDependsOn(serviceNames []string) (dependsServices []string) {
-	if utils.YesNoQuestion("Should your service depend on other services?", false) {
-		utils.Pel()
-		dependsServices = utils.MultiSelectMenuQuestion("On which services should your service depend?", serviceNames)
-		utils.Pel()
+	if util.YesNoQuestion("Should your service depend on other services?", false) {
+		util.Pel()
+		dependsServices = util.MultiSelectMenuQuestion("On which services should your service depend?", serviceNames)
+		util.Pel()
 	}
 	return
 }
 
 func askForDependant(serviceNames []string) (dependantServices []string) {
-	if utils.YesNoQuestion("Should other services depend on your service?", false) {
-		utils.Pel()
-		dependantServices = utils.MultiSelectMenuQuestion("Which services should depend on your service?", serviceNames)
-		utils.Pel()
+	if util.YesNoQuestion("Should other services depend on your service?", false) {
+		util.Pel()
+		dependantServices = util.MultiSelectMenuQuestion("Which services should depend on your service?", serviceNames)
+		util.Pel()
 	}
 	return
 }
 
 func askForRestart(flagAdvanced bool) (restartValue string) {
 	if flagAdvanced {
-		utils.Pel()
+		util.Pel()
 		items := []string{"always", "on-failure", "unless-stopped", "no"}
-		restartValue = utils.MenuQuestion("When should the service get restarted?", items)
-		utils.Pel()
+		restartValue = util.MenuQuestion("When should the service get restarted?", items)
+		util.Pel()
 	}
 	return
 }

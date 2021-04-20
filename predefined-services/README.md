@@ -1,4 +1,5 @@
 # Predefined service templates
+If you miss a predefined template and you want to create one for the public, please read the following guide. Fork the repository, create the template and open a pr to the `dev` branch. The community is thankful for every predefined template!
 
 ## Service template structure
 ```
@@ -22,6 +23,8 @@ It consists of following parts:
 - `dir` - Name of the directory, the template is located in e.g.: `1_lamp`
 - `type` - Type of the service. One of: `proxy`, `tls-helper`, `frontend`, `backend`, `database` or `db-admin-tool`
 - `preselected` - Conditional string which defines, whether a service is initially selected in the list or not.
+- `demoAppInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for generating example projects or similar. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine.
+- `serviceInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for preparing work files, etc. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine.
 - `files` - List of important files the template comes with. For example the compose file or certain Dockerfiles.
 	- `path`: Path to a particular file
 	- `type`: Type of the file. Needs to be one of: `service`, `env`, `docs`, `docker`, `config`
@@ -52,11 +55,11 @@ An example:
 ```
 ...
 ports:
-  - "${{HOST_APP_PORT}}:80"
+  - ${{HOST_APP_PORT}}:80
 ...
 ```
 
-There are two predefined variables, which the cli will provide:
+There are two variables, which the cli will provide automatically:
 
 - `${{PROJECT_NAME}}` = Name of the project, which is a mandatory question of the cli
 - `${{PROJECT_NAME_CONTAINER}}` = Same as above, just in [kebab-case](https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841#a084).

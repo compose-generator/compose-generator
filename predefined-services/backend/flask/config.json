@@ -1,7 +1,7 @@
 {
     "label": "Flask",
     "preselected": "false",
-    "exampleAppInitCmd": [
+    "demoAppInitCmd": [
         "flask-now ${{FLASK_APP_NAME}} simple -e sqlalchemy",
         "mv ./${{FLASK_APP_NAME}}/* ./${{FLASK_SOURCE_DIRECTORY}}",
         "rmdir ${{FLASK_APP_NAME}}",
@@ -11,10 +11,6 @@
         {
             "path": "service.yml",
             "type": "service"
-        },
-        {
-            "path": "environment.env",
-            "type": "env"
         },
         {
             "path": "README.md",

@@ -22,25 +22,6 @@ Please visit the documentation on [compose-generator.com](https://www.compose-ge
 You can use the Compose Generator CLI by directly installing it on your Docker host system, install it via npm or by generating your compose file with the Compose Generator Docker container on the fly.
 
 ### Install Compose Generator CLI
-<details><summary><b>Install via NPM (all supported platforms)</b></summary>
-<p>
-
-### Install
-If you haven't installed npm yet, please do so by following the [installation guide on nodejs.org](https://nodejs.org/en/download/).
-
-Install Compose Generator by executing:
-```sh
-npm i -g @compose-generator/cli
-```
-
-### Use
-```sh
-compose-generator
-```
-
-</p>
-</details>
-
 <details><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
 <p>
 
@@ -143,6 +124,31 @@ $ compose-generator
 </p>
 </details>
 
+<details><summary><b>Install via NPM (all supported platforms)</b></summary>
+<p>
+
+### Install
+If you haven't installed npm yet, please do so by following the [installation guide on nodejs.org](https://nodejs.org/en/download/).
+
+Install Compose Generator by executing:
+```sh
+npm install -g @compose-generator/cli
+```
+
+### Update
+If you have Compose Generator already installed via NPM, you have to upgrade it by using this command:
+```sh
+npm update -g @compose-generator/cli
+```
+
+### Use
+```sh
+compose-generator
+```
+
+</p>
+</details>
+
 ## QuickStart with Docker
 *Note for Windows users: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
 
@@ -155,19 +161,19 @@ There are also downloadable packages available for all supported platforms:
 
 | **Platform**                | **x86_64 / amd64**                                                                     | **i386**                                                                             | **armv5**                                                                              | **armv6**                                                                              | **armv7**                                                                              | **arm64**                                                                              |
 |-----------------------------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
-| **Darwin / MacOS (tar.gz)** | [download](../../releases/download/0.6.0/compose-generator_0.6.0_darwin_amd64.tar.gz)  | -                                                                                    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
-| **FreeBSD (tag.gz)**        | [download](../../releases/download/0.6.0/compose-generator_0.6.0_freebsd_amd64.tar.gz) | [download](../../releases/download/0.6.0/compose-generator_0.6.0_freebsd_386.tar.gz) | [download](../../releases/download/0.6.0/compose-generator_0.6.0_freebsd_armv5.tar.gz) | [download](../../releases/download/0.6.0/compose-generator_0.6.0_freebsd_armv6.tar.gz) | [download](../../releases/download/0.6.0/compose-generator_0.6.0_freebsd_armv7.tar.gz) | [download](../../releases/download/0.6.0/compose-generator_0.6.0_freebsd_arm64.tar.gz) |
-| **Alpine (apk)**            | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_amd64.apk)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_386.apk)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv5.apk)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv6.apk)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv7.apk)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_arm64.apk)      |
-| **CentOS (rpm)**            | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_amd64.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_386.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv5.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv6.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv7.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_arm64.rpm)      |
-| **Debian (deb)**            | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_amd64.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_386.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv5.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv6.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv7.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_arm64.deb)      |
-| **Fedora (rpm)**            | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_amd64.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_386.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv5.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv6.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv7.rpm)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_arm64.rpm)      |
-| **Raspbian (deb)**          | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_amd64.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_386.deb)      | -                                                                                      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv6.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv7.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_arm64.deb)      |
-| **Ubuntu (deb)**            | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_amd64.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_386.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv5.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv6.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_armv7.deb)      | [download](../../releases/download/0.6.0/compose-generator_0.6.0_linux_arm64.deb)      |
-| **Windows Installer (exe)** | [download](../../releases/download/0.6.0/ComposeGenerator_0.6.0_x64_Setup.exe)         | [download](../../releases/download/0.6.0/ComposeGenerator_0.6.0_x86_Setup.exe)       | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
-| **Windows Portable (zip)**  | [download](../../releases/download/0.6.0/compose-generator_0.6.0_windows_amd64.zip)    | [download](../../releases/download/0.6.0/compose-generator_0.6.0_windows_386.zip)    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
+| **Darwin / MacOS (tar.gz)** | [download](../../releases/download/0.7.0/compose-generator_0.7.0_darwin_amd64.tar.gz)  | -                                                                                    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
+| **FreeBSD (tag.gz)**        | [download](../../releases/download/0.7.0/compose-generator_0.7.0_freebsd_amd64.tar.gz) | [download](../../releases/download/0.7.0/compose-generator_0.7.0_freebsd_386.tar.gz) | [download](../../releases/download/0.7.0/compose-generator_0.7.0_freebsd_armv5.tar.gz) | [download](../../releases/download/0.7.0/compose-generator_0.7.0_freebsd_armv6.tar.gz) | [download](../../releases/download/0.7.0/compose-generator_0.7.0_freebsd_armv7.tar.gz) | [download](../../releases/download/0.7.0/compose-generator_0.7.0_freebsd_arm64.tar.gz) |
+| **Alpine (apk)**            | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_amd64.apk)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_386.apk)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv5.apk)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv6.apk)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv7.apk)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_arm64.apk)      |
+| **CentOS (rpm)**            | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_amd64.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_386.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv5.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv6.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv7.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_arm64.rpm)      |
+| **Debian (deb)**            | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_amd64.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_386.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv5.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv6.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv7.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_arm64.deb)      |
+| **Fedora (rpm)**            | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_amd64.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_386.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv5.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv6.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv7.rpm)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_arm64.rpm)      |
+| **Raspbian (deb)**          | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_amd64.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_386.deb)      | -                                                                                      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv6.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv7.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_arm64.deb)      |
+| **Ubuntu (deb)**            | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_amd64.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_386.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv5.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv6.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_armv7.deb)      | [download](../../releases/download/0.7.0/compose-generator_0.7.0_linux_arm64.deb)      |
+| **Windows Installer (exe)** | [download](../../releases/download/0.7.0/ComposeGenerator_0.7.0_x64_Setup.exe)         | [download](../../releases/download/0.7.0/ComposeGenerator_0.7.0_x86_Setup.exe)       | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
+| **Windows Portable (zip)**  | [download](../../releases/download/0.7.0/compose-generator_0.7.0_windows_amd64.zip)    | [download](../../releases/download/0.7.0/compose-generator_0.7.0_windows_386.zip)    | -                                                                                      | -                                                                                      | -                                                                                      | -                                                                                      |
 
 ## Contribute by providing predefined templates
-If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-services/README.md). Fork the repository, create the template and open a pr.
+If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-services/README.md). Fork the repository, create the template and open a pr to the `dev` branch.
 The community is thankful for every predefined template!
 
 ## Contribute otherwise to the project

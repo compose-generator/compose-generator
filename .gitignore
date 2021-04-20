@@ -1,6 +1,9 @@
 # Ignore executables
 bin/*
 
+# Ignore predefined services archive
+predefined-services/*.tar.gz
+
 # Ignore custom templates
 templates/*
 
@@ -10,9 +13,6 @@ templates/*
 
 # Documentation build output
 docs/site/*
-
-# Toolbox image
-toolbox/toolbox.img
 
 # Node modules
 node_modules/*

@@ -1,5 +1,6 @@
-FROM gradle:6.8.3-jdk15 AS build
-WORKDIR /workdir/server
+# Gradle build instructions
+FROM gradle:7.0-jdk16 AS build
+WORKDIR /server
 COPY *.gradle *.kts ./
 RUN gradle build -q || return 0
 
@@ -7,11 +8,13 @@ COPY src src
 RUN gradle build -w
 RUN java -Djarmode=layertools -jar build/libs/*.jar extract
 
-
-FROM adoptopenjdk/openjdk15:jre-15.0.2_7-alpine AS prod
+# JRE run instructions
+FROM openjdk:16-alpine AS prod
 EXPOSE 8080
-COPY --from=build /workdir/server/dependencies/ ./
-COPY --from=build /workdir/server/snapshot-dependencies/ ./
-COPY --from=build /workdir/server/spring-boot-loader/ ./
-COPY --from=build /workdir/server/application/ ./
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+ARG DEPENDENCY=/server/target/dependency
+
+COPY --from=build /server/dependencies/ ./
+COPY --from=build /server/snapshot-dependencies/ ./
+COPY --from=build /server/spring-boot-loader/ ./
+COPY --from=build /server/application/ ./
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]1

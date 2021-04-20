@@ -1,117 +1,131 @@
 package cmd
 
 import (
-	"compose-generator/model"
-	"compose-generator/utils"
-	"io/ioutil"
+	"compose-generator/util"
 	"os"
 	"strings"
 
-	yaml "gopkg.in/yaml.v3"
+	dcu "github.com/compose-generator/dcu"
+	dcu_model "github.com/compose-generator/dcu/model"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Remove services from an existing compose file
 func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
-	utils.ClearScreen()
+	util.ClearScreen()
 
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
 	if flagAdvanced {
-		path = utils.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
+		path = util.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
 	}
 
-	utils.P("Parsing compose file ... ")
+	removeFromFile(path, serviceNames, flagWithVolumes, flagForce, flagAdvanced)
+
+	// Run if the corresponding flag is set
+	if flagRun || flagDetached {
+		util.DockerComposeUp(flagDetached)
+	}
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
+	util.P("Parsing compose file ... ")
 	// Load compose file
-	yamlFile, err := os.Open(path)
+	composeFile, err := dcu.DeserializeFromFile(filePath)
 	if err != nil {
-		utils.Error("Internal error - unable to load compose file", err, true)
+		util.Error("Internal error - unable to parse compose file", err, true)
 	}
-	bytes, _ := ioutil.ReadAll(yamlFile)
+	util.Done()
 
-	// Parse YAML
-	composeFile := model.ComposeFile{}
-	if err = yaml.Unmarshal(bytes, &composeFile); err != nil {
-		utils.Error("Internal error - unable to parse compose file", err, true)
-	}
-	utils.Done()
-
-	// Ask for service
+	// Ask for service(s)
 	if len(serviceNames) == 0 {
 		var items []string
 		for k := range composeFile.Services {
 			items = append(items, k)
 		}
-		serviceNames = utils.MultiSelectMenuQuestion("Which services do you want to remove?", items)
-		utils.Pel()
+		serviceNames = util.MultiSelectMenuQuestion("Which services do you want to remove?", items)
+		util.Pel()
 	}
 
 	for _, serviceName := range serviceNames {
 		// Remove volumes
 		if flagWithVolumes {
-			reallyDeleteVolumes := true
-			if !flagForce {
-				reallyDeleteVolumes = utils.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
-			}
-			if reallyDeleteVolumes {
-				utils.P("Removing volumes of '" + serviceName + "' ... ")
-				volumes := composeFile.Services[serviceName].Volumes
-				for _, paths := range volumes {
-					path := paths
-					if strings.Contains(path, ":") {
-						path = path[:strings.IndexByte(path, ':')]
-					}
-					// Check if volume is used by another container
-					canBeDeleted := true
-				out:
-					for k, s := range composeFile.Services {
-						if k != serviceName {
-							for _, pathsInner := range s.Volumes {
-								pathInner := pathsInner
-								if strings.Contains(pathInner, ":") {
-									pathInner = pathInner[:strings.IndexByte(pathInner, ':')]
-								}
-								if pathInner == path {
-									canBeDeleted = false
-									break out
-								}
-							}
-						}
-					}
-					if canBeDeleted && utils.FileExists(path) {
-						os.RemoveAll(path)
-					}
-				}
-				utils.Done()
-			}
+			removeVolumesForService(composeFile, serviceName, flagForce)
 		}
 
 		// Remove service
-		utils.P("Removing service '" + serviceName + "' ... ")
+		util.P("Removing service '" + serviceName + "' ... ")
+		var networkCount = make(map[string]int32)
 		delete(composeFile.Services, serviceName) // Remove service itself
 		for k, s := range composeFile.Services {
-			s.DependsOn = utils.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
-			s.Links = utils.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
+			s.DependsOn = util.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
+			s.Links = util.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
+			for networkName := range composeFile.Networks {                    // Collect count of every network
+				if util.SliceContainsString(s.Networks, networkName) {
+					networkCount[networkName]++
+				}
+			}
 			composeFile.Services[k] = s
 		}
-		utils.Done()
+
+		// Remove unused networks
+		for networkName := range composeFile.Networks {
+			if networkCount[networkName] < 2 {
+				delete(composeFile.Networks, networkName) // Delete network itself
+				for k, s := range composeFile.Services {  // Delete references on service
+					s.Networks = util.RemoveStringFromSlice(s.Networks, networkName)
+					composeFile.Services[k] = s
+				}
+			}
+		}
+		util.Done()
 	}
 
 	// Write to file
-	utils.P("Saving compose file ... ")
-	output, err1 := yaml.Marshal(&composeFile)
-	err2 := ioutil.WriteFile(path, output, 0777)
-	if err1 != nil {
-		utils.Error("Could not marshal yaml", err1, true)
+	util.P("Saving compose file ... ")
+	if err := dcu.SerializeToFile(composeFile, "./docker-compose.yml"); err != nil {
+		util.Error("Could not write yaml to compose file", err, true)
 	}
-	if err2 != nil {
-		utils.Error("Could not write yaml to compose file", err2, true)
-	}
-	utils.Done()
+	util.Done()
+}
 
-	// Run if the corresponding flag is set
-	if flagRun || flagDetached {
-		utils.DockerComposeUp(flagDetached)
+func removeVolumesForService(composeFile dcu_model.ComposeFile, serviceName string, flagForce bool) {
+	reallyDeleteVolumes := true
+	if !flagForce {
+		reallyDeleteVolumes = util.YesNoQuestion("Do you really want to delete all attached volumes of service '"+serviceName+"'. All data will be lost.", false)
+	}
+	if reallyDeleteVolumes {
+		util.P("Removing volumes of '" + serviceName + "' ... ")
+		volumes := composeFile.Services[serviceName].Volumes
+		for _, paths := range volumes {
+			path := paths
+			if strings.Contains(path, ":") {
+				path = path[:strings.IndexByte(path, ':')]
+			}
+			// Check if volume is used by another container
+			canBeDeleted := true
+		out:
+			for k, s := range composeFile.Services {
+				if k != serviceName {
+					for _, pathsInner := range s.Volumes {
+						pathInner := pathsInner
+						if strings.Contains(pathInner, ":") {
+							pathInner = pathInner[:strings.IndexByte(pathInner, ':')]
+						}
+						if pathInner == path {
+							canBeDeleted = false
+							break out
+						}
+					}
+				}
+			}
+			if canBeDeleted && util.FileExists(path) {
+				os.RemoveAll(path)
+			}
+		}
+		util.Done()
 	}
 }

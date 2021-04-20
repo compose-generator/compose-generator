@@ -1,4 +1,30 @@
 {% extends "base.html" %}
+
+{% block announce %}
+<style>
+  @keyframes pulse {
+    0%, 40%, 80%, 100% {
+      transform: scale(1);
+    }
+    20%, 60% {
+      transform: scale(0.9);
+    }
+  }
+
+  .twitter {
+    color: #1DA1F2;
+    animation: pulse 1000ms infinite;
+  }
+
+  .twitter-link {
+    color: white !important;
+  }
+</style>
+<a href="https://twitter.com/composegen" target="_blank" class="twitter-link">
+  For updates follow <strong>@composegen</strong> on <span class="twemoji twitter"> {% include ".icons/fontawesome/brands/twitter.svg" %} </span> <strong>Twitter</strong>
+</a>
+{% endblock %}
+
 {% block extrahead %}
 {% set title = config.site_name %}
 {% if page and page.title and not page.is_homepage %}
@@ -19,4 +45,5 @@
 <meta name="twitter:title" content="{{ title }}">
 <meta name="twitter:description" content="{{ config.site_description }}">
 <meta name="twitter:image" content="{{ image }}">
+<meta name="theme-color" content="#009485">
 {% endblock %}

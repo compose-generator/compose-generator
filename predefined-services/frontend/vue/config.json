@@ -1,7 +1,7 @@
 {
     "label": "Vue",
     "preselected": "false",
-    "exampleAppInitCmd": [
+    "demoAppInitCmd": [
         "vue create -dnf ${{PROJECT_NAME_CONTAINER}}",
         "rm -rf ${{PROJECT_NAME_CONTAINER}}/node_modules",
         "mv ${{PROJECT_NAME_CONTAINER}}/* ${{VUE_SOURCE_DIRECTORY}}",

@@ -7,7 +7,10 @@
         'type': 'string',
         'required': True
     },
-    'exampleAppInitCmd': {
+    'demoAppInitCmd': {
+        'type': 'list'
+    },
+    'serviceInitCmd': {
         'type': 'list'
     },
     'files': {

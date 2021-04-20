@@ -1,0 +1,63 @@
+{
+    "label": "Jira",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Jira instance?",
+            "type": 2,
+            "defaultValue": "8080",
+            "validator": "port",
+            "variable": "JIRA_PORT"
+        },
+        {
+            "text": "Which version of Jira do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "JIRA_VERSION",
+            "advanced": true
+        },
+        {
+            "text": "How much memory do you want to assign to Jira at min.?",
+            "type": 2,
+            "defaultValue": "384m",
+            "variable": "JIRA_MIN_MEM",
+            "advanced": true
+        },
+        {
+            "text": "How much memory do you want to assign to Jira at max.?",
+            "type": 2,
+            "defaultValue": "768m",
+            "variable": "JIRA_MAX_MEM",
+            "advanced": true
+        },
+        {
+            "text": "How much space do you want to assign to the Jira code cache?",
+            "type": 2,
+            "defaultValue": "512m",
+            "variable": "JIRA_CACHE_SIZE",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Jira data volume?",
+            "defaultValue": "./volumes/jira-data",
+            "variable": "VOLUME_JIRA_DATA",
+            "advanced": true
+        }
+    ]
+}

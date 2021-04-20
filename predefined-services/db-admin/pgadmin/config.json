@@ -1,6 +1,6 @@
 {
     "label": "pgAdmin",
-    "preselected": "has service postgres",
+    "preselected": "false",
     "files": [
         {
             "path": "service.yml",
@@ -42,12 +42,6 @@
             "text": "Custom path for pgAdmin data volume?",
             "defaultValue": "./volumes/pgadmin-data",
             "variable": "VOLUME_PGADMIN_DATA",
-            "advanced": true
-        },
-        {
-            "text": "Custom path for pgAdmin config volume?",
-            "defaultValue": "./volumes/pgadmin-config",
-            "variable": "VOLUME_PGADMIN_CONFIG",
             "advanced": true
         }
     ],

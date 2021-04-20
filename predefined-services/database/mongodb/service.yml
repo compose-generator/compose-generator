@@ -1,0 +1,16 @@
+image: mongo:${{MONGODB_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-mongodb
+restart: always
+networks:
+#! if has backend {
+#!  - backend-database
+#! }
+ports:
+  - ${{MONGODB_PORT}}:27017
+volumes: 
+  - ${{VOLUME_MONGODB_CONFIG}}:/data/configdb
+  - ${{VOLUME_MONGODB_CONFIG}}:/var/lib/mongodb
+  - ${{VOLUME_MONGODB_DATA}}:/data/db
+  - ${{VOLUME_MONGODB_INIT}}:/docker-entrypoint-initdb.d
+env_file:
+  - environment.env

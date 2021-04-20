@@ -7,21 +7,133 @@ updates:
       interval: daily
       time: "04:00"
       timezone: Europe/Berlin
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 15
     target-branch: dev
     reviewers:
       - marcauberer
     assignees:
       - marcauberer
 
-  # Docker image updates
+  # Main Dockerfile
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: daily
       time: "04:00"
       timezone: Europe/Berlin
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # Flask
+  - package-ecosystem: docker
+    directory: /predefined-services/backend/flask/backend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # PHP
+  - package-ecosystem: docker
+    directory: /predefined-services/backend/php/backend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # Spring Gradle
+  - package-ecosystem: docker
+    directory: /predefined-services/backend/spring-gradle/backend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # Spring Maven
+  - package-ecosystem: docker
+    directory: /predefined-services/backend/spring-maven/backend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # Angular
+  - package-ecosystem: docker
+    directory: /predefined-services/frontend/angular/frontend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # Common website
+  - package-ecosystem: docker
+    directory: /predefined-services/frontend/common-website/frontend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # React
+  - package-ecosystem: docker
+    directory: /predefined-services/frontend/react/frontend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  # Vue
+  - package-ecosystem: docker
+    directory: /predefined-services/frontend/vue/frontend
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
     target-branch: dev
     reviewers:
       - marcauberer
