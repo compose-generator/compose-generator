@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	const VERSION = "0.6.0"
+	const VERSION = "0.7.0"
 
 	// Version flag
 	cli.VersionFlag = &cli.BoolFlag{
