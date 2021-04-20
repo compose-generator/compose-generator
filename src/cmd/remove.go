@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	dcu "github.com/compose-generator/dcu"
+	dcu_model "github.com/compose-generator/dcu/model"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -39,7 +40,7 @@ func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool
 	}
 	util.Done()
 
-	// Ask for service
+	// Ask for service(s)
 	if len(serviceNames) == 0 {
 		var items []string
 		for k := range composeFile.Services {
@@ -52,41 +53,7 @@ func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool
 	for _, serviceName := range serviceNames {
 		// Remove volumes
 		if flagWithVolumes {
-			reallyDeleteVolumes := true
-			if !flagForce {
-				reallyDeleteVolumes = util.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
-			}
-			if reallyDeleteVolumes {
-				util.P("Removing volumes of '" + serviceName + "' ... ")
-				volumes := composeFile.Services[serviceName].Volumes
-				for _, paths := range volumes {
-					path := paths
-					if strings.Contains(path, ":") {
-						path = path[:strings.IndexByte(path, ':')]
-					}
-					// Check if volume is used by another container
-					canBeDeleted := true
-				out:
-					for k, s := range composeFile.Services {
-						if k != serviceName {
-							for _, pathsInner := range s.Volumes {
-								pathInner := pathsInner
-								if strings.Contains(pathInner, ":") {
-									pathInner = pathInner[:strings.IndexByte(pathInner, ':')]
-								}
-								if pathInner == path {
-									canBeDeleted = false
-									break out
-								}
-							}
-						}
-					}
-					if canBeDeleted && util.FileExists(path) {
-						os.RemoveAll(path)
-					}
-				}
-				util.Done()
-			}
+			removeVolumesForService(composeFile, serviceName, flagForce)
 		}
 
 		// Remove service
@@ -106,4 +73,42 @@ func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool
 		util.Error("Could not write yaml to compose file", err, true)
 	}
 	util.Done()
+}
+
+func removeVolumesForService(composeFile dcu_model.ComposeFile, serviceName string, flagForce bool) {
+	reallyDeleteVolumes := true
+	if !flagForce {
+		reallyDeleteVolumes = util.YesNoQuestion("Do you really want to delete all attached volumes. All data will be lost.", false)
+	}
+	if reallyDeleteVolumes {
+		util.P("Removing volumes of '" + serviceName + "' ... ")
+		volumes := composeFile.Services[serviceName].Volumes
+		for _, paths := range volumes {
+			path := paths
+			if strings.Contains(path, ":") {
+				path = path[:strings.IndexByte(path, ':')]
+			}
+			// Check if volume is used by another container
+			canBeDeleted := true
+		out:
+			for k, s := range composeFile.Services {
+				if k != serviceName {
+					for _, pathsInner := range s.Volumes {
+						pathInner := pathsInner
+						if strings.Contains(pathInner, ":") {
+							pathInner = pathInner[:strings.IndexByte(pathInner, ':')]
+						}
+						if pathInner == path {
+							canBeDeleted = false
+							break out
+						}
+					}
+				}
+			}
+			if canBeDeleted && util.FileExists(path) {
+				os.RemoveAll(path)
+			}
+		}
+		util.Done()
+	}
 }
