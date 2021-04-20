@@ -58,11 +58,28 @@ func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool
 
 		// Remove service
 		util.P("Removing service '" + serviceName + "' ... ")
+		var networkCount = make(map[string]int32)
 		delete(composeFile.Services, serviceName) // Remove service itself
 		for k, s := range composeFile.Services {
 			s.DependsOn = util.RemoveStringFromSlice(s.DependsOn, serviceName) // Remove dependencies on service
 			s.Links = util.RemoveStringFromSlice(s.Links, serviceName)         // Remove links on service
+			for networkName := range composeFile.Networks {                    // Collect count of every network
+				if util.SliceContainsString(s.Networks, networkName) {
+					networkCount[networkName]++
+				}
+			}
 			composeFile.Services[k] = s
+		}
+
+		// Remove unused networks
+		for networkName := range composeFile.Networks {
+			if networkCount[networkName] < 2 {
+				delete(composeFile.Networks, networkName) // Delete network itself
+				for k, s := range composeFile.Services {  // Delete references on service
+					s.Networks = util.RemoveStringFromSlice(s.Networks, networkName)
+					composeFile.Services[k] = s
+				}
+			}
 		}
 		util.Done()
 	}

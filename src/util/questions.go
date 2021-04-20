@@ -107,8 +107,9 @@ func MenuQuestionIndex(label string, items []string) (result int) {
 // MultiSelectMenuQuestion prints a multi selection of predefined items
 func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 	prompt := &survey.MultiSelect{
-		Message: label,
-		Options: items,
+		Message:  label,
+		Options:  items,
+		PageSize: 15,
 	}
 	handleInterrupt(survey.AskOne(prompt, &result, survey.WithIcons(func(icons *survey.IconSet) {
 		icons.Question.Format = "yellow+hb"
