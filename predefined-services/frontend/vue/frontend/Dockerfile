@@ -1,5 +1,5 @@
 # NodeJS build instructions
-FROM node:lts AS development
+FROM node:${{VUE_NODE_VERSION}} AS development
 
 RUN yarn global add @vue/cli
 
