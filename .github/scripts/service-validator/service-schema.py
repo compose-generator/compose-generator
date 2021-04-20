@@ -10,7 +10,8 @@
         'required': True
     },
     'volumes': {
-         'type': 'list'
+         'type': 'list',
+         'nullable': True
     },
     'networks': {
          'type': 'list',
