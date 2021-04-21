@@ -89,6 +89,7 @@ jobs:
           jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv5.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv5
           jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv6.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv6
           jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv7.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv7
+          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv8.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv8
           jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_386.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/i386
       
       - name: Deploy to RPM repository
