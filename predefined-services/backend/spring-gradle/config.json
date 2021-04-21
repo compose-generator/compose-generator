@@ -41,7 +41,7 @@
         {
             "text": "Programming language (java/kotlin/groovy)",
             "type": 2,
-            "defaultValue": "java",
+            "defaultValue": "kotlin",
             "variable": "SPRING_GRADLE_LANGUAGE"
         },
         {

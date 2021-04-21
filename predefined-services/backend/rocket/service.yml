@@ -1,0 +1,12 @@
+build: ${{ROCKET_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-rocket
+restart: always
+networks:
+#! if has frontend {
+#!  - frontend-backend
+#! }
+#! if has database {
+#!  - backend-database
+#! }
+ports:
+  - ${{ROCKET_PORT}}:8000

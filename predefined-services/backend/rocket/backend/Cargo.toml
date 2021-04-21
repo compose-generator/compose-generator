@@ -1,0 +1,11 @@
+[package]
+name = "${{ROCKET_APP_NAME}}"
+version = "0.0.0"
+publish = false
+
+[[bin]]
+name = "${{ROCKET_APP_NAME}}"
+path = "main.rs"
+
+[dependencies]
+rocket = "${{ROCKET_VERSION}}"

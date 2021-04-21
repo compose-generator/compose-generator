@@ -72,7 +72,7 @@ title: Install on Linux
     ```
 
 ### Install from package file
-You also can install Compose Generator from a Debian package (`.deb`). You can download the package [here](https://github.com/compose-generator/compose-generator/releases/latest).
+You also can install Compose Generator from a package file on your host system. You can download the package [here](https://github.com/compose-generator/compose-generator/releases/latest).
 
 === "Debian/Ubuntu"
     To install it, execute the following command:

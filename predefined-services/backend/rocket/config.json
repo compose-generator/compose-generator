@@ -1,0 +1,57 @@
+{
+    "label": "Rocket",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        },
+        {
+            "path": "backend/Cargo.toml",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Rocket application?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "ROCKET_PORT"
+        },
+        {
+            "text": "How do you want to call your app?",
+            "type": 2,
+            "defaultValue": "example-app",
+            "variable": "ROCKET_APP_NAME"
+        },
+        {
+            "text": "Which version of Rocket do you want to use?",
+            "type": 2,
+            "defaultValue": "0.4.7",
+            "variable": "ROCKET_VERSION"
+        },
+        {
+            "text": "Which version of Rust do you want to use?",
+            "type": 2,
+            "defaultValue": "1.51",
+            "variable": "ROCKET_RUST_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for source directory?",
+            "defaultValue": "./backend",
+            "variable": "ROCKET_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}
