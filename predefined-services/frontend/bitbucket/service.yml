@@ -8,7 +8,7 @@ networks:
 #!  - frontend-database
 #! }
 ports:
-  - ${{BITBUCKET_PORT}}:7990
-  - ${{BITBUCKET_PORT}}:7999
+  - ${{BITBUCKET_PORT_HTTP}}:7990
+  - ${{BITBUCKET_PORT_SSH}}:7999
 env_file:
   - environment.env
