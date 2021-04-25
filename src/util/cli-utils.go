@@ -68,13 +68,13 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 func ExecuteOnLinux(c string) {
 	// Start docker container
 	absolutePath, _ := os.Getwd()
-	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox", c)
+	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox:dev ", c)
 }
 
 // ExecuteOnLinuxWithCustomVolume runs a command in an isolated Linux environment with a custom volume mount
 func ExecuteOnLinuxWithCustomVolume(c string, volumePath string) {
 	// Start docker container
-	ExecuteAndWait("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox", c)
+	ExecuteAndWait("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:dev", c)
 }
 
 // ClearScreen errases the console contents

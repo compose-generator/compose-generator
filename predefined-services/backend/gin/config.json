@@ -1,0 +1,59 @@
+{
+    "label": "Gin",
+    "preselected": "false",
+    "demoAppInitCmd": [
+        "cd ${{GIN_SOURCE_DIRECTORY}}",
+        "touch test.txt",
+        "go mod init ${{GIN_APP_NAME}}",
+        "go mod tidy"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Gin app?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "GIN_PORT"
+        },
+        {
+            "text": "Which version of Gin do you want to use?",
+            "type": 2,
+            "defaultValue": "1.7.1",
+            "variable": "GIN_VERSION"
+        },
+        {
+            "text": "Which Go version do you want to use?",
+            "type": 2,
+            "defaultValue": "1.16",
+            "variable": "GIN_GO_VERSION"
+        },
+        {
+            "text": "How do you want to call your Gin app?",
+            "type": 2,
+            "defaultValue": "gin-example",
+            "variable": "GIN_APP_NAME"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend",
+            "variable": "GIN_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}
