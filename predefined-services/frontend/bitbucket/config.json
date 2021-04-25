@@ -1,0 +1,37 @@
+{
+    "label": "BitBucket",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your BitBucket instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "BITBUCKET_PORT"
+        },
+        {
+            "text": "Which version of BitBucket do you want to use?",
+            "type": 2,
+            "defaultValue": "7.12",
+            "variable": "BITBUCKET_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for BitBucket data volume?",
+            "defaultValue": "./volumes/bitbucket-data",
+            "variable": "VOLUME_BITBUCKET_DATA",
+            "advanced": true
+        }
+    ]
+}
