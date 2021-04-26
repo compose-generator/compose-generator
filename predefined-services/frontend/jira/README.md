@@ -12,6 +12,6 @@ After generating and starting the stack, you should be able to access Jira via t
 
 To install Jira and connect it to your database, click on 'I'll set it up myself' and select 'My Own Database'. The following options are recommended:
 
-Database Type: Depends on the type, you've selected#
+Database Type: Depends on the type, you've selected
 Hostname: database-postgres / database-mysql / database-oracle / database-mssql
 Database credentials: Can be found in the `environment.env` file, that was generated.
