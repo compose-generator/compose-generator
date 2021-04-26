@@ -12,3 +12,7 @@ ports:
   - ${{BITBUCKET_PORT_SSH}}:7999
 env_file:
   - environment.env
+#! if var.BITBUCKET_OUTSIDE_SCHEME == "https" {
+#! environment:
+#!   - SERVER_SECURE=true
+#! }
