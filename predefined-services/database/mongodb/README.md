@@ -1,4 +1,4 @@
-# MongoDB database
+## MongoDB database
 MongoDB is a common representative of NoSQL databases / document stores.
 
 ### Usage

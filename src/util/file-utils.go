@@ -23,6 +23,7 @@ func IsDirectory(path string) bool {
 	return fileInfo.IsDir()
 }
 
+// AddFileToGitignore takes a path and adds it to the .gitignore file in the current dir
 func AddFileToGitignore(path string) {
 	filename := ".gitignore"
 	var f *os.File

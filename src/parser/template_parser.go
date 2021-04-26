@@ -37,9 +37,9 @@ func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 			config.Dir = filepath.Join(templateType, f)
 			if configs[templateType] != nil {
 				configs[templateType] = append(configs[templateType], config)
-			} else {
-				configs[templateType] = []model.ServiceTemplateConfig{config}
+				continue
 			}
+			configs[templateType] = []model.ServiceTemplateConfig{config}
 		}
 	}
 	return configs

@@ -1,5 +1,5 @@
 ## Elasticsearch
-
+Elasticsearch is a search engine, based on Lucene. It offers to save data as Json documents and to communicate with clients via a RESTful API.
 
 ### Setup
 #### Prerequisites

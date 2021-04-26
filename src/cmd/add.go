@@ -142,15 +142,15 @@ func askBuildFromSource() (build bool, buildPath string, registry string) {
 		if !util.FileExists(buildPath+"/Dockerfile") && !util.FileExists(buildPath+"Dockerfile") {
 			util.Error("Aborting. The Dockerfile cannot be found.", nil, true)
 		}
-	} else {
-		// Ask for registry
-		registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
-		if registry == "docker.io" {
-			registry = ""
-		} else {
-			registry = registry + "/"
-		}
+		return
 	}
+	// Ask for registry
+	registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
+	if registry == "docker.io" {
+		registry = ""
+		return
+	}
+	registry = registry + "/"
 	return
 }
 
@@ -166,14 +166,14 @@ func searchRemoteImage(registry string, image string) {
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err == nil {
 		color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")
-	} else {
-		color.Red(" not found or no access\n")
-		proceed := util.YesNoQuestion("Proceed anyway?", false)
-		if !proceed {
-			os.Exit(0)
-		}
-		util.Pel()
+		return
 	}
+	color.Red(" not found or no access\n")
+	proceed := util.YesNoQuestion("Proceed anyway?", false)
+	if !proceed {
+		os.Exit(0)
+	}
+	util.Pel()
 }
 
 func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {

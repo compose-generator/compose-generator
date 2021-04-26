@@ -69,11 +69,11 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
-	} else {
-		// Print success message
-		util.Pel()
-		util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+		return
 	}
+	// Print success message
+	util.Pel()
+	util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -247,11 +247,11 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create demo applications
-		ExecuteListOfCommands(templateData, &varMap, "DemoAppInitCmd")
+		executeServiceInitCommands(templateData, &varMap, "DemoAppInitCmd")
 	}
 
 	// Intialize services
-	ExecuteListOfCommands(templateData, &varMap, "ServiceInitCmd")
+	executeServiceInitCommands(templateData, &varMap, "ServiceInitCmd")
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -350,101 +350,22 @@ func processUserInput(
 	instString = instString + string(fileIn) + "\n\n"
 
 	// Loop through templates
-	for templateType, templates := range templateData {
+	for _, templates := range templateData {
 		for _, template := range templates {
 			srcPath := util.GetPredefinedServicesPath() + "/" + template.Dir
 			// Apply all existing files of service template
-			for _, f := range template.Files {
-				switch f.Type {
+			for _, file := range template.Files {
+				switch file.Type {
 				case "docs":
-					if flagWithInstructions {
-						// Append content to existing file
-						fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-						if err != nil {
-							util.Error("Cannot read instructions file for template: "+template.Label, err, false)
-						}
-						instString = instString + string(fileIn) + "\n\n"
-					}
+					processDocsFile(file, &instString, template, srcPath, flagWithInstructions)
 				case "env":
-					// Append content to existing file
-					outPath := filepath.Join(dstPath, f.Path)
-					fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-					if err != nil {
-						util.Error("Cannot read environment file for template: "+template.Label, err, false)
-					}
-					envString = envString + string(fileIn) + "\n\n"
-					varFiles = util.AppendStringToSliceIfMissing(varFiles, outPath)
+					processEnvFile(file, &varFiles, &envString, template, srcPath, dstPath)
 				case "docker":
-					if flagWithDockerfile {
-						// Check if Dockerfile is inside of a volume
-						absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
-						dockerfileDst := filepath.Join(dstPath, f.Path)
-						for volSrc, volDst := range volMap {
-							absVolSrc, _ := filepath.Abs(volSrc)
-							if strings.Contains(absDockerfileSrc, absVolSrc) {
-								dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
-							}
-						}
-						dockerfileMap[absDockerfileSrc] = dockerfileDst
-						varFiles = append(varFiles, dockerfileDst)
-					}
+					processDockerFile(file, &varFiles, &dockerfileMap, &volMap, srcPath, dstPath, flagWithDockerfile)
 				case "config":
-					// Check if config file is inside of a volume
-					absConfigSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
-					configDst := filepath.Join(dstPath, f.Path)
-					for volSrc, volDst := range volMap {
-						absVolSrc, _ := filepath.Abs(volSrc)
-						if strings.Contains(absConfigSrc, absVolSrc) {
-							configDst = volDst + absConfigSrc[len(absVolSrc):]
-						}
-					}
-					varFiles = append(varFiles, configDst)
+					processConfigFile(file, &varFiles, &volMap, srcPath, dstPath)
 				case "service":
-					// Load service file
-					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
-					contentBytes, _ := ioutil.ReadAll(yamlFile)
-					// Evaluate conditional sections
-					content := util.EvaluateConditionalSections(string(contentBytes), templateData, varMap)
-					// Replace variables
-					content = util.ReplaceVarsInString(content, varMap)
-					// Parse yaml
-					service := dcu_model.Service{}
-					yaml.Unmarshal([]byte(content), &service)
-					// Get networks
-					networks = append(networks, service.Networks...)
-					// Add depends on
-					switch templateType {
-					case "frontend":
-						service.DependsOn = []string{}
-						for _, template := range templateData["backend"] {
-							service.DependsOn = append(service.DependsOn, "backend-"+template.Name)
-						}
-						if len(templateData["backend"]) == 0 {
-							for _, template := range templateData["database"] {
-								service.DependsOn = append(service.DependsOn, "database-"+template.Name)
-							}
-						}
-					case "backend":
-						service.DependsOn = []string{}
-						for _, template := range templateData["database"] {
-							service.DependsOn = append(service.DependsOn, "database-"+template.Name)
-						}
-					case "db-admin":
-						service.DependsOn = []string{}
-						for _, template := range templateData["database"] {
-							service.DependsOn = append(service.DependsOn, "database-"+template.Name)
-						}
-					case "tls-helper":
-						service.DependsOn = []string{}
-						for _, template := range templateData["proxy"] {
-							service.DependsOn = append(service.DependsOn, "proxy-"+template.Name)
-						}
-					}
-					// Add service to compose files
-					if templateType != "proxy" && templateType != "tls-helper" {
-						composeFileDev.Services[templateType+"-"+template.Name] = service
-					}
-					composeFileProd.Services[templateType+"-"+template.Name] = service
+					processServiceFile(file, templateData, &varMap, &composeFileProd, &composeFileDev, &networks, template, srcPath)
 				}
 			}
 			// Get secrets
@@ -476,8 +397,8 @@ func askForStackComponent(
 	flagWithDockerfile bool,
 ) (componentCount int) {
 	templates := (*templateData)[component]
-	items := templateListToLabelList(templates)
-	itemsPreselected := templateListToPreselectedLabelList(templates, templateData)
+	items := util.TemplateListToLabelList(templates)
+	itemsPreselected := util.TemplateListToPreselectedLabelList(templates, templateData)
 	(*templateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
 		templateSelections := util.MultiSelectMenuQuestionIndex(question, items, itemsPreselected)
@@ -577,7 +498,142 @@ func getVolumeMapFromVolumes(
 	}
 }
 
-func ExecuteListOfCommands(
+func processDocsFile(
+	file model.File,
+	instString *string,
+	template model.ServiceTemplateConfig,
+	srcPath string,
+	flagWithInstructions bool,
+) {
+	if flagWithInstructions {
+		// Append content to existing file
+		fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, file.Path))
+		if err != nil {
+			util.Error("Cannot read instructions file for template: "+template.Label, err, false)
+		}
+		*instString = *instString + string(fileIn) + "\n\n"
+	}
+}
+
+func processEnvFile(
+	file model.File,
+	varFiles *[]string,
+	envString *string,
+	template model.ServiceTemplateConfig,
+	srcPath string,
+	dstPath string,
+) {
+	// Append content to existing file
+	outPath := filepath.Join(dstPath, file.Path)
+	fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, file.Path))
+	if err != nil {
+		util.Error("Cannot read environment file for template: "+template.Label, err, false)
+	}
+	*envString = *envString + string(fileIn) + "\n\n"
+	*varFiles = util.AppendStringToSliceIfMissing(*varFiles, outPath)
+}
+
+func processDockerFile(
+	file model.File,
+	varFiles *[]string,
+	dockerfileMap *map[string]string,
+	volMap *map[string]string,
+	srcPath string,
+	dstPath string,
+	flagWithDockerfile bool,
+) {
+	if flagWithDockerfile {
+		// Check if Dockerfile is inside of a volume
+		absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, file.Path))
+		dockerfileDst := filepath.Join(dstPath, file.Path)
+		for volSrc, volDst := range *volMap {
+			absVolSrc, _ := filepath.Abs(volSrc)
+			if strings.Contains(absDockerfileSrc, absVolSrc) {
+				dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
+			}
+		}
+		(*dockerfileMap)[absDockerfileSrc] = dockerfileDst
+		*varFiles = append(*varFiles, dockerfileDst)
+	}
+}
+
+func processConfigFile(
+	file model.File,
+	varFiles *[]string,
+	volMap *map[string]string,
+	srcPath string,
+	dstPath string,
+) {
+	// Check if config file is inside of a volume
+	absConfigSrc, _ := filepath.Abs(filepath.Join(srcPath, file.Path))
+	configDst := filepath.Join(dstPath, file.Path)
+	for volSrc, volDst := range *volMap {
+		absVolSrc, _ := filepath.Abs(volSrc)
+		if strings.Contains(absConfigSrc, absVolSrc) {
+			configDst = volDst + absConfigSrc[len(absVolSrc):]
+		}
+	}
+	*varFiles = append(*varFiles, configDst)
+}
+
+func processServiceFile(
+	file model.File,
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap *map[string]string,
+	composeFileProd *dcu_model.ComposeFile,
+	composeFileDev *dcu_model.ComposeFile,
+	networks *[]string,
+	template model.ServiceTemplateConfig,
+	srcPath string,
+) {
+	// Load service file
+	yamlFile, _ := os.Open(filepath.Join(srcPath, file.Path))
+	contentBytes, _ := ioutil.ReadAll(yamlFile)
+	// Evaluate conditional sections
+	content := util.EvaluateConditionalSections(string(contentBytes), templateData, *varMap)
+	// Replace variables
+	content = util.ReplaceVarsInString(content, *varMap)
+	// Parse yaml
+	service := dcu_model.Service{}
+	yaml.Unmarshal([]byte(content), &service)
+	// Get networks
+	*networks = append(*networks, service.Networks...)
+	// Add depends on
+	switch template.Type {
+	case "frontend":
+		service.DependsOn = []string{}
+		for _, template := range templateData["backend"] {
+			service.DependsOn = append(service.DependsOn, "backend-"+template.Name)
+		}
+		if len(templateData["backend"]) == 0 {
+			for _, template := range templateData["database"] {
+				service.DependsOn = append(service.DependsOn, "database-"+template.Name)
+			}
+		}
+	case "backend":
+		service.DependsOn = []string{}
+		for _, template := range templateData["database"] {
+			service.DependsOn = append(service.DependsOn, "database-"+template.Name)
+		}
+	case "db-admin":
+		service.DependsOn = []string{}
+		for _, template := range templateData["database"] {
+			service.DependsOn = append(service.DependsOn, "database-"+template.Name)
+		}
+	case "tls-helper":
+		service.DependsOn = []string{}
+		for _, template := range templateData["proxy"] {
+			service.DependsOn = append(service.DependsOn, "proxy-"+template.Name)
+		}
+	}
+	// Add service to compose files
+	if template.Type != "proxy" && template.Type != "tls-helper" {
+		(*composeFileDev).Services[template.Type+"-"+template.Name] = service
+	}
+	(*composeFileProd).Services[template.Type+"-"+template.Name] = service
+}
+
+func executeServiceInitCommands(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	field string,
@@ -597,27 +653,4 @@ func ExecuteListOfCommands(
 			}
 		}
 	}
-}
-
-func templateListToLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		labels = append(labels, t.Label)
-	}
-	return
-}
-
-func templateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		conditions := strings.Split(t.Preselected, "|")
-		fulfilled := false
-		for _, c := range conditions {
-			if util.EvaluateCondition(c, *templateData, nil) {
-				fulfilled = true
-			}
-		}
-		if fulfilled {
-			labels = append(labels, t.Label)
-		}
-	}
-	return
 }

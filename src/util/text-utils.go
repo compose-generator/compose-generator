@@ -43,11 +43,7 @@ func SuccessMessage(text string) {
 
 // Error prints an error message
 func Error(description string, err error, exit bool) {
-	if err != nil {
-		color.Red("Error: " + description + ": " + err.Error())
-	} else {
-		color.Red("Error: " + description)
-	}
+	color.Red(getErrorMessage(description, err))
 	if exit {
 		os.Exit(1)
 	}
@@ -56,4 +52,13 @@ func Error(description string, err error, exit bool) {
 // Warning prints an warning message
 func Warning(description string) {
 	color.Red("Warning: " + description)
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func getErrorMessage(description string, err error) string {
+	if err != nil {
+		return "Error: " + description + ": " + err.Error()
+	}
+	return "Error: " + description
 }
