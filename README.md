@@ -25,7 +25,6 @@ You can use the Compose Generator CLI by directly installing it on your Docker h
 <details><summary><b>Install on Debian / Ubuntu / Raspbian</b></summary>
 <p>
 
-### Install
 ```sh
 $ sudo apt-get update
 $ sudo apt-get install apt-transport-https ca-certificates curl \
@@ -37,10 +36,6 @@ $ sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/debian \
 $ sudo sudo apt-get update
 $ sudo apt-get install compose-generator
 ```
-### Use
-```sh
-$ compose-generator
-```
 
 </p>
 </details>
@@ -48,16 +43,11 @@ $ compose-generator
 <details><summary><b>Install on Fedora</b></summary>
 <p>
 
-### Install
 ```sh
 $ sudo dnf -y install dnf-plugins-core
 $ sudo dnf config-manager --add-repo \
     https://repo.chillibits.com/artifactory/rpm/chillibits.repo
 $ sudo dnf install compose-generator
-```
-### Use
-```sh
-$ compose-generator
 ```
 
 </p>
@@ -66,16 +56,11 @@ $ compose-generator
 <details><summary><b>Install on CentOS</b></summary>
 <p>
 
-### Install
 ```sh
 $ sudo yum install -y yum-utils
 $ sudo yum-config-manager --add-repo \
     https://repo.chillibits.com/artifactory/rpm/chillibits.repo
 $ sudo yum install compose-generator
-```
-### Use
-```sh
-$ compose-generator
 ```
 
 </p>
@@ -84,7 +69,6 @@ $ compose-generator
 <details><summary><b>Install on Alpine</b></summary>
 <p>
 
-### Install
 ```sh
 $ apk update
 $ sh -c "echo 'https://repo.chillibits.com/artifactory/alpine/$(cat \
@@ -98,10 +82,6 @@ If there occure any errors on the last step, please try the following instead
 ```sh
 $ apk add compose-generator --allow-untrusted
 ```
-### Use
-```sh
-$ compose-generator
-```
 
 </p>
 </details>
@@ -109,17 +89,12 @@ $ compose-generator
 <details><summary><b>Windows</b></summary>
 <p>
 
-### Install
 Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft. <br>
 As soon as the Windows package manager is installed on your Windows machine, you can open powershell and execute this installation command: <br>
 ```sh
 $ winget install ChilliBits.ComposeGenerator
 ```
 After installing Compose Generator, you should restart your powershell instance to make it reload the available commands.
-### Use
-```sh
-$ compose-generator
-```
     
 </p>
 </details>
@@ -127,7 +102,8 @@ $ compose-generator
 <details><summary><b>Install via NPM (all supported platforms)</b></summary>
 <p>
 
-### Install
+**Install**
+
 If you haven't installed npm yet, please do so by following the [installation guide on nodejs.org](https://nodejs.org/en/download/).
 
 Install Compose Generator by executing:
@@ -135,15 +111,11 @@ Install Compose Generator by executing:
 npm install -g @compose-generator/cli
 ```
 
-### Update
+**Update**
+
 If you have Compose Generator already installed via NPM, you have to upgrade it by using this command:
 ```sh
 npm update -g @compose-generator/cli
-```
-
-### Use
-```sh
-compose-generator
 ```
 
 </p>
