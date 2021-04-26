@@ -3,7 +3,6 @@
     "preselected": "false",
     "demoAppInitCmd": [
         "cd ${{GIN_SOURCE_DIRECTORY}}",
-        "touch test.txt",
         "go mod init ${{GIN_APP_NAME}}",
         "go mod tidy"
     ],
