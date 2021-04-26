@@ -69,11 +69,11 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
-	} else {
-		// Print success message
-		util.Pel()
-		util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+		return
 	}
+	// Print success message
+	util.Pel()
+	util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------

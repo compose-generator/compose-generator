@@ -79,12 +79,16 @@ func ExecuteOnLinuxWithCustomVolume(c string, volumePath string) {
 
 // ClearScreen errases the console contents
 func ClearScreen() {
-	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/c", "cls")
-	} else {
-		cmd = exec.Command("clear")
-	}
+	var cmd = getClearScreenCommand()
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func getClearScreenCommand() *exec.Cmd {
+	if runtime.GOOS == "windows" {
+		return exec.Command("cmd", "/c", "cls")
+	}
+	return exec.Command("clear")
 }

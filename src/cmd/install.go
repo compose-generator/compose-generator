@@ -37,14 +37,16 @@ func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 		composeVersion, _ := cmd.CombinedOutput()
 		if flagOnlyCompose {
 			color.Yellow("Congrats! You have installed " + strings.TrimRight(string(composeVersion), "\r\n") + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
-		} else if flagOnlyDocker {
-			color.Yellow("Congrats! You have installed " + strings.TrimRight(string(dockerVersion), "\r\n") + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
-		} else {
-			color.Yellow("Congrats! You have installed " + strings.TrimRight(string(dockerVersion), "\r\n") + " and " + strings.TrimRight(string(composeVersion), "\r\n") + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
+			return
 		}
-	} else {
-		color.Red("An error occurred while installing Docker.")
+		if flagOnlyDocker {
+			color.Yellow("Congrats! You have installed " + strings.TrimRight(string(dockerVersion), "\r\n") + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
+			return
+		}
+		color.Yellow("Congrats! You have installed " + strings.TrimRight(string(dockerVersion), "\r\n") + " and " + strings.TrimRight(string(composeVersion), "\r\n") + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
+		return
 	}
+	color.Red("An error occurred while installing Docker.")
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -108,8 +110,7 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 			util.ExecuteAndWaitWithOutput("chmod", "+x", "/usr/local/bin/docker-compose")
 			util.Done()
 		}
-	} else {
-		color.Red("Please execute this command with root privileges. The cli is not able to install Docker and Docker Compose without those privileges.")
 		return
 	}
+	util.Error("Please execute this command with root privileges. The cli is not able to install Docker and Docker Compose without those privileges.", nil, true)
 }

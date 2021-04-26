@@ -52,9 +52,12 @@ func EvaluateCondition(
 				}
 			}
 		}
-	} else if strings.HasPrefix(condition, "has ") {
+		return false
+	}
+	if strings.HasPrefix(condition, "has ") {
 		return len(templateData[condition[4:]]) > 0
-	} else if strings.HasPrefix(condition, "var.") {
+	}
+	if strings.HasPrefix(condition, "var.") {
 		condition = condition[4:]
 		params := make(map[string]interface{})
 		for varName, varValue := range varMap {
