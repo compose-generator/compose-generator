@@ -1,0 +1,68 @@
+{
+    "label": "BitBucket",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your BitBucket HTTP endpoint?",
+            "type": 2,
+            "defaultValue": "7990",
+            "validator": "port",
+            "variable": "BITBUCKET_PORT_HTTP"
+        },
+        {
+            "text": "On which port you want to expose your BitBucket SSH endpoint?",
+            "type": 2,
+            "defaultValue": "7999",
+            "validator": "port",
+            "variable": "BITBUCKET_PORT_SSH"
+        },
+        {
+            "text": "On which hostname is your instance visible from outside?",
+            "type": 2,
+            "defaultValue": "localhost",
+            "variable": "BITBUCKET_OUTSIDE_HOST"
+        },
+        {
+            "text": "On which scheme is your instance visible from outside? (http/https)",
+            "type": 2,
+            "defaultValue": "http",
+            "validator": "alpha",
+            "variable": "BITBUCKET_OUTSIDE_SCHEME"
+        },
+        {
+            "text": "On which port is your instance visible from outside? (http: 80, https: 443)",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "BITBUCKET_OUTSIDE_PORT"
+        },
+        {
+            "text": "Which version of BitBucket do you want to use?",
+            "type": 2,
+            "defaultValue": "7.12",
+            "variable": "BITBUCKET_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for BitBucket data volume?",
+            "defaultValue": "./volumes/bitbucket-data",
+            "variable": "VOLUME_BITBUCKET_DATA",
+            "advanced": true
+        }
+    ]
+}

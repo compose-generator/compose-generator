@@ -1,0 +1,18 @@
+image: atlassian/bitbucket-server:${{BITBUCKET_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-bitbucket
+restart: always
+volumes:
+  - ${{VOLUME_BITBUCKET_DATA}}:/var/atlassian/application-data/bitbucket
+networks:
+#! if has database {
+#!  - frontend-database
+#! }
+ports:
+  - ${{BITBUCKET_PORT_HTTP}}:7990
+  - ${{BITBUCKET_PORT_SSH}}:7999
+env_file:
+  - environment.env
+#! if var.BITBUCKET_OUTSIDE_SCHEME == "https" {
+#! environment:
+#!   - SERVER_SECURE=true
+#! }
