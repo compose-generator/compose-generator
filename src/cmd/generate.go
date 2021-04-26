@@ -247,11 +247,11 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create demo applications
-		executeListOfCommands(templateData, &varMap, "DemoAppInitCmd")
+		executeServiceInitCommands(templateData, &varMap, "DemoAppInitCmd")
 	}
 
 	// Intialize services
-	executeListOfCommands(templateData, &varMap, "ServiceInitCmd")
+	executeServiceInitCommands(templateData, &varMap, "ServiceInitCmd")
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -354,21 +354,14 @@ func processUserInput(
 		for _, template := range templates {
 			srcPath := util.GetPredefinedServicesPath() + "/" + template.Dir
 			// Apply all existing files of service template
-			for _, f := range template.Files {
-				switch f.Type {
+			for _, file := range template.Files {
+				switch file.Type {
 				case "docs":
-					if flagWithInstructions {
-						// Append content to existing file
-						fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-						if err != nil {
-							util.Error("Cannot read instructions file for template: "+template.Label, err, false)
-						}
-						instString = instString + string(fileIn) + "\n\n"
-					}
+					processDocsFile(&instString, template, file, srcPath, flagWithInstructions)
 				case "env":
 					// Append content to existing file
-					outPath := filepath.Join(dstPath, f.Path)
-					fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
+					outPath := filepath.Join(dstPath, file.Path)
+					fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, file.Path))
 					if err != nil {
 						util.Error("Cannot read environment file for template: "+template.Label, err, false)
 					}
@@ -377,8 +370,8 @@ func processUserInput(
 				case "docker":
 					if flagWithDockerfile {
 						// Check if Dockerfile is inside of a volume
-						absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
-						dockerfileDst := filepath.Join(dstPath, f.Path)
+						absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, file.Path))
+						dockerfileDst := filepath.Join(dstPath, file.Path)
 						for volSrc, volDst := range volMap {
 							absVolSrc, _ := filepath.Abs(volSrc)
 							if strings.Contains(absDockerfileSrc, absVolSrc) {
@@ -390,8 +383,8 @@ func processUserInput(
 					}
 				case "config":
 					// Check if config file is inside of a volume
-					absConfigSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
-					configDst := filepath.Join(dstPath, f.Path)
+					absConfigSrc, _ := filepath.Abs(filepath.Join(srcPath, file.Path))
+					configDst := filepath.Join(dstPath, file.Path)
 					for volSrc, volDst := range volMap {
 						absVolSrc, _ := filepath.Abs(volSrc)
 						if strings.Contains(absConfigSrc, absVolSrc) {
@@ -401,7 +394,7 @@ func processUserInput(
 					varFiles = append(varFiles, configDst)
 				case "service":
 					// Load service file
-					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
+					yamlFile, _ := os.Open(filepath.Join(srcPath, file.Path))
 					contentBytes, _ := ioutil.ReadAll(yamlFile)
 					// Evaluate conditional sections
 					content := util.EvaluateConditionalSections(string(contentBytes), templateData, varMap)
@@ -476,8 +469,8 @@ func askForStackComponent(
 	flagWithDockerfile bool,
 ) (componentCount int) {
 	templates := (*templateData)[component]
-	items := templateListToLabelList(templates)
-	itemsPreselected := templateListToPreselectedLabelList(templates, templateData)
+	items := util.TemplateListToLabelList(templates)
+	itemsPreselected := util.TemplateListToPreselectedLabelList(templates, templateData)
 	(*templateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
 		templateSelections := util.MultiSelectMenuQuestionIndex(question, items, itemsPreselected)
@@ -577,7 +570,30 @@ func getVolumeMapFromVolumes(
 	}
 }
 
-func executeListOfCommands(
+func processDocsFile(instString *string, template model.ServiceTemplateConfig, file model.File, srcPath string, flagWithInstructions bool) {
+	if flagWithInstructions {
+		// Append content to existing file
+		fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, file.Path))
+		if err != nil {
+			util.Error("Cannot read instructions file for template: "+template.Label, err, false)
+		}
+		*instString = *instString + string(fileIn) + "\n\n"
+	}
+}
+
+func processEnvFile() {
+
+}
+
+func processConfigFile() {
+
+}
+
+func processServiceFile() {
+
+}
+
+func executeServiceInitCommands(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	field string,
@@ -597,27 +613,4 @@ func executeListOfCommands(
 			}
 		}
 	}
-}
-
-func templateListToLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		labels = append(labels, t.Label)
-	}
-	return
-}
-
-func templateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		conditions := strings.Split(t.Preselected, "|")
-		fulfilled := false
-		for _, c := range conditions {
-			if util.EvaluateCondition(c, *templateData, nil) {
-				fulfilled = true
-			}
-		}
-		if fulfilled {
-			labels = append(labels, t.Label)
-		}
-	}
-	return
 }

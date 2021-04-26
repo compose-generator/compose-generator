@@ -1,9 +1,11 @@
 package util
 
 import (
+	"compose-generator/model"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -57,4 +59,26 @@ func CheckForServiceTemplateUpdate(version string) {
 		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
 		Done()
 	}
+}
+
+// TemplateListToPreselectedLabelList retrieves a slice of all preselected other services for each service
+func TemplateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
+	for _, t := range templates {
+		conditions := strings.Split(t.Preselected, "|")
+		for _, c := range conditions {
+			if EvaluateCondition(c, *templateData, nil) {
+				labels = append(labels, t.Label)
+				break
+			}
+		}
+	}
+	return
+}
+
+// TemplateListToLabelList converts a slice of ServiceTemplateConfig to a slice of labels
+func TemplateListToLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
+	for _, t := range templates {
+		labels = append(labels, t.Label)
+	}
+	return
 }
