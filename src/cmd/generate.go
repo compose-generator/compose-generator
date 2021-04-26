@@ -247,11 +247,11 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create demo applications
-		ExecuteListOfCommands(templateData, &varMap, "DemoAppInitCmd")
+		executeListOfCommands(templateData, &varMap, "DemoAppInitCmd")
 	}
 
 	// Intialize services
-	ExecuteListOfCommands(templateData, &varMap, "ServiceInitCmd")
+	executeListOfCommands(templateData, &varMap, "ServiceInitCmd")
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -577,7 +577,7 @@ func getVolumeMapFromVolumes(
 	}
 }
 
-func ExecuteListOfCommands(
+func executeListOfCommands(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	field string,
