@@ -31,7 +31,7 @@ func main() {
 		Usage:     "Generate and manage docker compose configuration files for your projects.",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
-			&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration file with predefined answers. Works good for CI"},
+			&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration as a `FILE` with predefined answers. Works good for CI"},
 			&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 			&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
@@ -46,11 +46,11 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name:    "generate",
-				Aliases: []string{"g"},
+				Aliases: []string{"g", "gen"},
 				Usage:   "Generates a docker compose configuration",
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
-					&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration file with predefined answers. Works good for CI"},
+					&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration as a `FILE` with predefined answers. Works good for CI"},
 					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 					&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
@@ -81,7 +81,7 @@ func main() {
 			},
 			{
 				Name:    "remove",
-				Aliases: []string{"r", "rm"},
+				Aliases: []string{"r", "rm", "rem"},
 				Usage:   "Removes a service from an existing compose file",
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Show questions for advanced customization"},
@@ -135,7 +135,7 @@ func main() {
 			},
 			{
 				Name:    "install",
-				Aliases: []string{"i"},
+				Aliases: []string{"i", "in"},
 				Usage:   "Installs Docker and Docker Compose with a single command",
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "only-compose", Aliases: []string{"c"}, Usage: "Only install Docker Compose"},

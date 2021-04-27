@@ -1,6 +1,6 @@
-# Go CI
+# Go Build
 
-name: Go CI
+name: Go Build
 
 on:
   push:
@@ -28,16 +28,12 @@ jobs:
         go get -u golang.org/x/lint/golint
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Run vet & lint
+      run: |
+        cd src
+        go vet ./...
+        golint ./...
     - name: Run build
       run: |
         cd src
         go build -x
-    - name: Run vet & lint
-      run: |
-        cd src
-        go vet .
-        golint .
-    - name: Run tests
-      run: |
-        cd src
-        go test
