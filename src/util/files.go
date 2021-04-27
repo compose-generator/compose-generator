@@ -15,7 +15,7 @@ func FileExists(path string) bool {
 }
 
 // IsDirectory checks if a file is a directory
-func IsDirectory(path string) bool {
+func IsDir(path string) bool {
 	fileInfo, err := os.Stat(path)
 	if err != nil {
 		return false
@@ -39,7 +39,7 @@ func AddFileToGitignore(path string) {
 			// This path is already included
 			return
 		}
-		f, _ = os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0777)
+		f, _ = os.OpenFile(filename, os.O_WRONLY, 0777)
 	} else {
 		// File does not exist yet
 		f, _ = os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0777)
