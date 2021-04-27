@@ -6,13 +6,15 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/cli/safeexec"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // CommandExists checks if the stated command exists on the host system
 func CommandExists(cmd string) bool {
-	_, err := exec.LookPath(cmd)
+	_, err := safeexec.LookPath(cmd)
 	return err == nil
 }
 

@@ -7,6 +7,8 @@ github.com/PaesslerAG/gval v1.1.0 h1:k3RuxeZDO3eejD4cMPSt+74tUSvTnbGvLx0df4mdwFc
 github.com/PaesslerAG/gval v1.1.0/go.mod h1:y/nm5yEyTeX6av0OfKJNp9rBNj2XrGhAf5+v24IBN1I=
 github.com/PaesslerAG/jsonpath v0.1.0 h1:gADYeifvlqK3R3i2cR5B4DGgxLXIPb3TRTH1mGi0jPI=
 github.com/PaesslerAG/jsonpath v0.1.0/go.mod h1:4BzmtoM/PI8fPO4aQGIusjGxGir2BzcV0grWtFzq1Y8=
+github.com/cli/safeexec v1.0.0 h1:0VngyaIyqACHdcMNWfo6+KdUYnqEr2Sg+bSP1pdF+dI=
+github.com/cli/safeexec v1.0.0/go.mod h1:Z/D4tTN8Vs5gXYHDCbaM1S/anmEDnJb1iW0+EJ5zx3Q=
 github.com/compose-generator/dcu v0.0.0-20210427124759-01a6a6ebae8a h1:ux7XhNjBHtr3M/TPoER9B3p71RrNyliNvzPGh0rG7CI=
 github.com/compose-generator/dcu v0.0.0-20210427124759-01a6a6ebae8a/go.mod h1:PLu31yl52YLJnSlkspxioeaWLdO6yKyaioVwQHdrGvs=
 github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7 h1:SQhXiR8mdjSpcc2vAKj7ci0B1hQDb3lFgAVcP283jdQ=

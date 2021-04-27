@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/AlecAivazis/survey/v2 v2.2.12
 	github.com/PaesslerAG/gval v1.1.0
+	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/dcu v0.0.0-20210427124759-01a6a6ebae8a
 	github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7
 	github.com/fatih/color v1.10.0
