@@ -10,7 +10,7 @@ networks:
 ports:
   - ${{PMA_PORT}}:80
 volumes:
-  - /sessions
+  - ${{VOLUME_PMA_SESSIONS}}:/sessions
 env_file:
   - environment.env
 depends_on:

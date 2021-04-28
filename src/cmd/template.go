@@ -150,6 +150,7 @@ func LoadTemplate(name string, flagForce bool, flagShow bool, withDockerfile boo
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func searchForTemplateFiles() (files map[string]string, fileNames []string, preselected []string) {
+	files = make(map[string]string)
 	if util.FileExists("./docker-compose.yml") {
 		files["Docker Compose config file"] = "./docker-compose.yml"
 		fileNames = append(fileNames, "./docker-compose.yml")
