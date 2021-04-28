@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/compose-generator/dcu"
 	"github.com/otiai10/copy"
 )
 
@@ -32,6 +33,13 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 			return
 		}
 		util.Pel()
+	}
+	// Ask for files to include
+	files, fileNames, preselected := searchForTemplateFiles()
+	selectedFileIndices := util.MultiSelectMenuQuestionIndex("Select the files, you want to include into the template", fileNames, preselected)
+	selectedFiles := make(map[string]string)
+	for i := range selectedFileIndices {
+		selectedFiles[fileNames[i]] = files[fileNames[i]]
 	}
 	// Create metadata
 	util.P("Creating metadata file ... ")
@@ -136,5 +144,31 @@ func LoadTemplate(name string, flagForce bool, flagShow bool, withDockerfile boo
 	if err != nil {
 		util.Error("Could not load template files.", err, true)
 	}
+	util.Done()
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func searchForTemplateFiles() (files map[string]string, fileNames []string, preselected []string) {
+	if util.FileExists("./docker-compose.yml") {
+		files["Docker Compose config file"] = "./docker-compose.yml"
+		fileNames = append(fileNames, "./docker-compose.yml")
+		getFilesFromComposeFile("./docker-compose.yml", &files, &fileNames)
+	}
+	if util.FileExists("./README.md") {
+		files["Project README file"] = "./README.md"
+		fileNames = append(fileNames, "./README.md")
+	}
+	return
+}
+
+func getFilesFromComposeFile(path string, files *map[string]string, fileNames *[]string) {
+	util.P("Parsing file dependencies from compose file ... ")
+	composeFile, err := dcu.DeserializeFromFile(path)
+	if err != nil {
+		util.Error("Could not parse docker compose file", err, true)
+	}
+	*fileNames = append(*fileNames, dcu.GetVolumePathsFromComposeFile(composeFile)...)
+	*fileNames = append(*fileNames, dcu.GetEnvFilePathsFromComposeFile(composeFile)...)
 	util.Done()
 }

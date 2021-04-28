@@ -374,11 +374,11 @@ func processUserInput(
 	}
 	// Apply networks
 	if len(networks) > 0 {
-		composeFileDev.Networks = make(map[string]dcu_model.Network)
-		composeFileProd.Networks = make(map[string]dcu_model.Network)
+		composeFileDev.Networks = make(map[string]dcu_model.NetworkConfigurationReference)
+		composeFileProd.Networks = make(map[string]dcu_model.NetworkConfigurationReference)
 		for _, n := range networks {
-			composeFileDev.Networks[n] = dcu_model.Network{}
-			composeFileProd.Networks[n] = dcu_model.Network{}
+			composeFileDev.Networks[n] = dcu_model.NetworkConfigurationReference{}
+			composeFileProd.Networks[n] = dcu_model.NetworkConfigurationReference{}
 		}
 	}
 	return composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString

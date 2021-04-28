@@ -332,7 +332,7 @@ func askForEnvFiles() (envFiles []string) {
 				return
 			})
 			// Check if the selected file is valid
-			if !util.FileExists(envFile) || util.IsDirectory(envFile) {
+			if !util.FileExists(envFile) || util.IsDir(envFile) {
 				util.Error("File is not valid. Please select another file", nil, false)
 				continue
 			}
