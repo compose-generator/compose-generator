@@ -69,6 +69,7 @@ nav:
     - usage/remove.md
     - usage/template.md
     - usage/install.md
+  - supported-services.md
   - contributing.md
 
 markdown_extensions:
