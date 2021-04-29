@@ -7,10 +7,6 @@
             "type": "service"
         },
         {
-            "path": "environment.env",
-            "type": "env"
-        },
-        {
             "path": "README.md",
             "type": "docs"
         }
@@ -19,7 +15,7 @@
         {
             "text": "On which port you want to expose Cassandra?",
             "type": 2,
-            "defaultValue": "8888",
+            "defaultValue": "9042",
             "validator": "port",
             "variable": "CASSANDRA_PORT"
         },

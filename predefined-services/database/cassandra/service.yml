@@ -6,8 +6,6 @@ networks:
 #!  - backend-database
 #! }
 ports:
-  - ${{CASSANDRA_PORT}}:8888
+  - ${{CASSANDRA_PORT}}:9042
 volumes: 
   - ${{VOLUME_CASSANDRA_DATA}}:/var/lib/cassandra
-env_file:
-  - environment.env
