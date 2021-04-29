@@ -1,0 +1,64 @@
+{
+    "label": "Cassandra",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose Cassandra?",
+            "type": 2,
+            "defaultValue": "9042",
+            "validator": "port",
+            "variable": "CASSANDRA_PORT"
+        },
+        {
+            "text": "How do you want to call the Cassandra user for your application?",
+            "type": 2,
+            "defaultValue": "application",
+            "validator": "alphanum",
+            "variable": "CASSANDRA_USER"
+        },
+        {
+            "text": "How do you want to call the database for your application?",
+            "type": 2,
+            "defaultValue": "main",
+            "validator": "alphanum",
+            "variable": "CASSANDRA_DATABASE"
+        },
+        {
+            "text": "Which Cassandra version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.11",
+            "variable": "CASSANDRA_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Cassandra data volume?",
+            "defaultValue": "./volumes/cassandra-data",
+            "variable": "VOLUME_CASSANDRA_DATA",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Cassandra password for user 'root'",
+            "variable": "_PW_CASSANDRA_ROOT",
+            "length": 50
+        },
+        {
+            "name": "Cassandra password for the application user",
+            "variable": "_PW_CASSANDRA_USER",
+            "length": 30
+        }
+    ]
+}

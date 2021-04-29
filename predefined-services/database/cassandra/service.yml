@@ -1,0 +1,11 @@
+image: cassandra:${{CASSANDRA_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-cassandra
+restart: always
+networks:
+#! if has backend {
+#!  - backend-database
+#! }
+ports:
+  - ${{CASSANDRA_PORT}}:9042
+volumes: 
+  - ${{VOLUME_CASSANDRA_DATA}}:/var/lib/cassandra
