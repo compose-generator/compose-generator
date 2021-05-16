@@ -7,7 +7,7 @@ on:
     branches:
       - 'main'
       #- 'docs/**'
-      #- 'feature/**'
+      - 'feature/**'
     paths:
       - 'docs/**'
 
