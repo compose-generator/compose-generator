@@ -30,5 +30,13 @@
             "variable": "PMA_VERSION",
             "advanced": true
         }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for PhpMyAdmin session volume?",
+            "defaultValue": "./volumes/phpmyadmin-sessions",
+            "variable": "VOLUME_PMA_SESSIONS",
+            "advanced": true
+        }
     ]
 }
