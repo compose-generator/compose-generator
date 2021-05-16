@@ -23,17 +23,14 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
     - name: Prepare environment
-      run: |
-        go version
-        go get -u golang.org/x/lint/golint
+      run: go get -u golang.org/x/lint/golint
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Run vet & lint
+      working-directory: src
       run: |
-        cd src
         go vet ./...
         golint ./...
     - name: Run build
-      run: |
-        cd src
-        go build -x
+      working-directory: src
+      run: go build -x

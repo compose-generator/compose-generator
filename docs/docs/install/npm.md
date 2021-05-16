@@ -2,8 +2,8 @@
 title: Install via NPM
 ---
 
-### Install from official npm registry
-If you haven't installed npm yet, please do so by following the [guide on nodejs.org](https://nodejs.org/en/download/).
+### Install from official NPM registry
+If you haven't installed NPM yet, please do so by following the [guide on nodejs.org](https://nodejs.org/en/download/).
 
 Install Compose Generator by executing:
 ```sh
@@ -20,3 +20,5 @@ npm update -g @compose-generator/cli
 ```sh
 compose-generator
 ```
+
+*[NPM]: Node Package Manager

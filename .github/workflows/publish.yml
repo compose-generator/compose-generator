@@ -146,9 +146,8 @@ jobs:
           tag: ${{ github.ref }}
 
       - name: Create predefined services archive
-        run: |
-          cd ./predefined-services
-          tar cfvz ../predefined-services.tar.gz *
+        working-directory: predefined-services
+        run: tar cfvz ../predefined-services.tar.gz *
 
       - name: Upload predefined services archive
         uses: svenstaro/upload-release-action@v2
