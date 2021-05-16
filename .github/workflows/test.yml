@@ -22,8 +22,7 @@ jobs:
     - name: Install GoMock
       run: go install github.com/golang/mock/mockgen@v1.5.0
     - name: Run tests
-      run: |
-        cd src
-        go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+      working-directory: src
+      run: go test ./... -race -coverprofile=coverage.txt -covermode=atomic
     - name: Upload coverage to Codecov
       run: bash <(curl -s https://codecov.io/bash)
