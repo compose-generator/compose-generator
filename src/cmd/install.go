@@ -74,6 +74,7 @@ func installForWindows() {
 
 func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 	const LinuxDockerInstallScriptURL = "https://get.docker.com"
+	const LinuxComposeCLIInstallScriptURL = "https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh"
 
 	if util.IsPrivileged() {
 		// Install lsb_release if not installed already
@@ -95,6 +96,7 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 		// Install Docker Compose
 		if !flagOnlyDocker {
 			util.P("Installing Docker Compose ... ")
+			// Install legacy compose cli
 			cmd := exec.Command("uname", "-s")
 			output, _ := cmd.CombinedOutput()
 			unameS := strings.TrimRight(string(output), "\r\n")
@@ -103,11 +105,20 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 			output, _ = cmd.CombinedOutput()
 			unameM := strings.TrimRight(string(output), "\r\n")
 
-			err := util.DownloadFile("https://github.com/docker/compose/releases/download/1.28.2/docker-compose-"+unameS+"-"+unameM, "/usr/local/bin/docker-compose")
+			err := util.DownloadFile("https://github.com/docker/compose/releases/download/1.29.2/docker-compose-"+unameS+"-"+unameM, "/usr/local/bin/docker-compose")
 			if err != nil {
 				util.Error("Download of Docker Compose failed", err, true)
 			}
 			util.ExecuteAndWaitWithOutput("chmod", "+x", "/usr/local/bin/docker-compose")
+			
+			// Install new compose cli
+			filePath := os.TempDir() + "/install-compose.sh"
+			err = util.DownloadFile(LinuxComposeCLIInstallScriptURL, filePath)
+			if err != nil {
+				util.Error("Download of Compose CLI install script failed", err, true)
+			}
+			util.ExecuteAndWait("chmod", "+x", filePath)
+			util.ExecuteAndWait("sh", filePath)
 			util.Done()
 		}
 		return
