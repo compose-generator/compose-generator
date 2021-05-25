@@ -2,40 +2,19 @@ package util
 
 import (
 	"compose-generator/model"
-	"strings"
-
-	"github.com/PaesslerAG/gval"
+	"encoding/json"
 )
 
-// EvaluateConditionalSections takes in a string, searches for comments and uncomments it based on a condition
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 func EvaluateConditionalSections(
-	content string,
+	filePath string,
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 ) string {
-	rows := strings.Split(content, "\n")
-	uncommenting := false
-	var cleanRows []string = []string{}
-	// Evaluate conditions and uncomment lines
-	for _, row := range rows {
-		if strings.HasPrefix(row, "#! if ") {
-			// Conditional section found -> check condition
-			conditions := strings.Split(row[6:strings.Index(row, " {")], "|")
-			for _, c := range conditions {
-				if EvaluateCondition(c, templateData, varMap) {
-					uncommenting = true
-					break
-				}
-			}
-		} else if strings.HasPrefix(row, "#! }") {
-			uncommenting = false
-		} else if uncommenting {
-			cleanRows = append(cleanRows, row[3:])
-		} else if !strings.HasPrefix(row, "#! ") {
-			cleanRows = append(cleanRows, row)
-		}
-	}
-	return strings.Join(cleanRows, "\n")
+	dataString := PrepareInputData(templateData, varMap)
+	// Execute CCom
+	return ExecuteAndWaitWithOutput("ccom", "-d", string(dataString), "-s", filePath)
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
@@ -44,27 +23,31 @@ func EvaluateCondition(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 ) bool {
-	if strings.HasPrefix(condition, "has service ") {
-		for _, templates := range templateData {
-			for _, template := range templates {
-				if template.Name == condition[12:] {
-					return true
-				}
-			}
-		}
-		return false
+	dataString := PrepareInputData(templateData, varMap)
+	// Execute CCom
+	result := ExecuteAndWaitWithOutput("ccom", "-m", "-d", string(dataString), "-s", condition)
+	return result == "true"
+}
+
+func CheckIfCComIsInstalled() {
+	if !CommandExists("ccom") {
+		Error("CCom is not missing on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", nil, true)
 	}
-	if strings.HasPrefix(condition, "has ") {
-		return len(templateData[condition[4:]]) > 0
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func PrepareInputData(
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap map[string]string,
+) string {
+	data := model.CComDataInput{
+		Services: templateData,
+		Var:      varMap,
 	}
-	if strings.HasPrefix(condition, "var.") {
-		condition = condition[4:]
-		params := make(map[string]interface{})
-		for varName, varValue := range varMap {
-			params[varName] = varValue
-		}
-		result, err := gval.Evaluate(condition, params)
-		return result.(bool) && err == nil
+	dataJson, err := json.Marshal(data)
+	if err != nil {
+		Error("Could not evaluate conditional sections in template. Could be corrupted", err, true)
 	}
-	return false
+	return string(dataJson)
 }

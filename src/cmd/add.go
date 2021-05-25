@@ -17,6 +17,9 @@ import (
 
 // Add a service to an existing compose file
 func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
+	// Check if CCom is installed
+	util.CheckIfCComIsInstalled()
+
 	util.ClearScreen()
 
 	// Ask for custom YAML file

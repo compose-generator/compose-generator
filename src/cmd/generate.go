@@ -26,6 +26,9 @@ import (
 
 // Generate a docker compose configuration
 func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
+	// Check if CCom is installed
+	util.CheckIfCComIsInstalled()
+
 	// Clear screen if in interactive mode
 	if configPath == "" {
 		util.ClearScreen()
@@ -227,11 +230,7 @@ func generateDynamicStack(
 
 	// Copy dockerfiles
 	for src, dst := range dockerfileMap {
-		content, err1 := ioutil.ReadFile(src)
-		if err1 != nil {
-			util.Error("Could not read Dockerfile "+src, err1, true)
-		}
-		newContent := util.EvaluateConditionalSections(string(content), templateData, varMap)
+		newContent := util.EvaluateConditionalSections(src, templateData, varMap)
 		os.MkdirAll(filepath.Dir(dst), 0700)
 		if ioutil.WriteFile(dst, []byte(newContent), 0777) != nil {
 			util.Error("Could not write to Dockerfile "+dst, nil, true)
@@ -586,11 +585,8 @@ func processServiceFile(
 	template model.ServiceTemplateConfig,
 	srcPath string,
 ) {
-	// Load service file
-	yamlFile, _ := os.Open(filepath.Join(srcPath, file.Path))
-	contentBytes, _ := ioutil.ReadAll(yamlFile)
 	// Evaluate conditional sections
-	content := util.EvaluateConditionalSections(string(contentBytes), templateData, *varMap)
+	content := util.EvaluateConditionalSections(filepath.Join(srcPath, file.Path), templateData, *varMap)
 	// Replace variables
 	content = util.ReplaceVarsInString(content, *varMap)
 	// Parse yaml
