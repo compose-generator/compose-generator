@@ -1,6 +1,6 @@
 {
     "label": "PhpMyAdmin",
-    "preselected": "has service mysql|has service mariadb",
+    "preselected": "has service mysql | has service mariadb",
     "files": [
         {
             "path": "service.yml",

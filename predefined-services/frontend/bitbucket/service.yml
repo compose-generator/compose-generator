@@ -4,15 +4,15 @@ restart: always
 volumes:
   - ${{VOLUME_BITBUCKET_DATA}}:/var/atlassian/application-data/bitbucket
 networks:
-#! if has database {
-#!  - frontend-database
-#! }
+#? if has database {
+#  - frontend-database
+#? }
 ports:
   - ${{BITBUCKET_PORT_HTTP}}:7990
   - ${{BITBUCKET_PORT_SSH}}:7999
 env_file:
   - environment.env
-#! if var.BITBUCKET_OUTSIDE_SCHEME == "https" {
-#! environment:
-#!   - SERVER_SECURE=true
-#! }
+environment:
+#? if var.BITBUCKET_OUTSIDE_SCHEME == "https" {
+#   - SERVER_SECURE=true
+#? }

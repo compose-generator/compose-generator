@@ -2,11 +2,11 @@ build: ${{GIN_SOURCE_DIRECTORY}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-backend-gin
 restart: always
 networks:
-#! if has frontend {
-#!  - frontend-backend
-#! }
-#! if has database {
-#!  - backend-database
-#! }
+#? if has frontend {
+#  - frontend-backend
+#? }
+#? if has database {
+#  - backend-database
+#? }
 ports:
   - ${{GIN_PORT}}:8080

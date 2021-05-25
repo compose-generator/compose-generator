@@ -2,17 +2,17 @@ image: influxdb:${{INFLUXDB_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-influxdb
 restart: always
 networks:
-#! if has backend {
-#!  - backend-database
-#! }
+#? if has backend {
+#  - backend-database
+#? }
 ports:
   - ${{INFLUXDB_PORT}}:8086
 volumes:
-#! if var.INFLUXDB_VERSION >= 2 {
-#!  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb2
-#! }
-#! if var.INFLUXDB_VERSION < 2 {
-#!  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb
-#! }
+#? if var.INFLUXDB_VERSION >= 2 {
+#  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb2
+#? }
+#? if var.INFLUXDB_VERSION < 2 {
+#  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb
+#? }
 env_file:
   - environment.env

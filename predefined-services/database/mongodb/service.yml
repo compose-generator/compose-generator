@@ -2,9 +2,9 @@ image: mongo:${{MONGODB_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-mongodb
 restart: always
 networks:
-#! if has backend {
-#!  - backend-database
-#! }
+#? if has backend {
+#  - backend-database
+#? }
 ports:
   - ${{MONGODB_PORT}}:27017
 volumes: 

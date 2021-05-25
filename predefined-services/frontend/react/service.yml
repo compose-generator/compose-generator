@@ -2,8 +2,8 @@ build: ${{REACT_SOURCE_DIRECTORY}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-react
 restart: always
 networks:
-#! if has backend {
-#!  - frontend-backend
-#! }
+#? if has backend {
+#  - frontend-backend
+#? }
 ports:
   - ${{REACT_PORT}}:80
