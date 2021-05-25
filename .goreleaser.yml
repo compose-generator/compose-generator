@@ -73,3 +73,7 @@ release:
   prerelease: auto
   extra_files:
     - glob: ./predefined-services/predefined-services.tar.gz
+announce:
+  twitter:
+    enabled: true
+    message_template: 'Compose Generator {{.Tag}} is now available! Check out the new features: compose-generator.com!'
