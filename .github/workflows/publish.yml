@@ -52,11 +52,15 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PACKAGE_SIGNING }}
           passphrase: ${{ secrets.GPG_PACKAGE_SIGNING_PASSPHRASE }}
 
+      - name: Create predefined services archive
+        working-directory: predefined-services
+        run: tar cfvz ../predefined-services.tar.gz *
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
-        if: success() && startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          version: v0.160.0
+          version: v0.166.0
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -145,16 +149,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: compose-generator.exe
           asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_x86_Setup.exe
-          tag: ${{ github.ref }}
-
-      - name: Create predefined services archive
-        working-directory: predefined-services
-        run: tar cfvz ../predefined-services.tar.gz *
-
-      - name: Upload predefined services archive
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: predefined-services.tar.gz
-          asset_name: predefined-services.tar.gz
           tag: ${{ github.ref }}
