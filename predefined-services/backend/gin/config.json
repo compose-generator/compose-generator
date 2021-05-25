@@ -29,12 +29,6 @@
             "variable": "GIN_PORT"
         },
         {
-            "text": "Which version of Gin do you want to use?",
-            "type": 2,
-            "defaultValue": "1.7.1",
-            "variable": "GIN_VERSION"
-        },
-        {
             "text": "Which Go version do you want to use?",
             "type": 2,
             "defaultValue": "1.16",

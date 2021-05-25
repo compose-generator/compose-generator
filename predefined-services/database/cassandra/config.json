@@ -36,7 +36,7 @@
         {
             "text": "Which Cassandra version do you want to use?",
             "type": 2,
-            "defaultValue": "3.11",
+            "defaultValue": "4.0",
             "variable": "CASSANDRA_VERSION",
             "advanced": true
         }

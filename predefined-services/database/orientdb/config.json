@@ -40,7 +40,7 @@
         {
             "text": "Which OrientDB version do you want to use?",
             "type": 2,
-            "defaultValue": "3.1",
+            "defaultValue": "3.2",
             "variable": "ORIENTDB_VERSION",
             "advanced": true
         }

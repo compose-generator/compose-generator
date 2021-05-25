@@ -36,13 +36,13 @@
         {
             "text": "Which version of Rocket do you want to use?",
             "type": 2,
-            "defaultValue": "0.4.7",
+            "defaultValue": "0.4.10",
             "variable": "ROCKET_VERSION"
         },
         {
             "text": "Which version of Rust do you want to use?",
             "type": 2,
-            "defaultValue": "1.51",
+            "defaultValue": "1.52",
             "variable": "ROCKET_RUST_VERSION"
         }
     ],

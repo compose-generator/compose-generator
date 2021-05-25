@@ -18,5 +18,5 @@ FROM development AS build
 RUN yarn run build
 
 # Serve instructions
-FROM nginx:1.19-alpine
+FROM nginx:1.21-alpine
 COPY --from=build /code/build /usr/share/nginx/html

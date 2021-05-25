@@ -1,4 +1,4 @@
-image: postgres:${{POSTGRES_VERSION}}
+image: postgres:${{POSTGRES_VERSION}}-alpine
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-postgres
 restart: always
 networks:
