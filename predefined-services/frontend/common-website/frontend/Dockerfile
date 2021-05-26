@@ -1,3 +1,3 @@
-FROM nginx:1.19-alpine
+FROM nginx:1.21.0-alpine
 WORKDIR /usr/share/nginx/html
 COPY ./src .
