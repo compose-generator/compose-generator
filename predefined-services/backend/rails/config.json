@@ -1,0 +1,53 @@
+{
+    "label": "Ruby on Rails",
+    "preselected": "false",
+    "demoAppInitCmd": [
+        "flask-now ${{FLASK_APP_NAME}} simple -e sqlalchemy",
+        "mv ./${{FLASK_APP_NAME}}/* ./${{FLASK_SOURCE_DIRECTORY}}",
+        "rmdir ${{FLASK_APP_NAME}}",
+        "mv ./${{FLASK_SOURCE_DIRECTORY}}/main.py ./${{FLASK_SOURCE_DIRECTORY}}/run.py"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Rails app?",
+            "type": 2,
+            "defaultValue": "3000",
+            "validator": "port",
+            "variable": "RAILS_PORT"
+        },
+        {
+            "text": "Which Ruby version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.0",
+            "variable": "RAILS_RUBY_VERSION"
+        },
+        {
+            "text": "How do you want to call your Rails app?",
+            "type": 2,
+            "defaultValue": "rails-example",
+            "variable": "RAILS_APP_NAME"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend",
+            "variable": "RAILS_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}

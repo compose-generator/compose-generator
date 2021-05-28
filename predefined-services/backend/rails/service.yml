@@ -1,0 +1,12 @@
+build: ${{RAILS_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-rails
+restart: always
+networks:
+#! if has frontend {
+#!  - frontend-backend
+#! }
+#! if has database {
+#!  - backend-database
+#! }
+ports:
+  - ${{RAILS_PORT}}:5000
