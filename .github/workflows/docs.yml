@@ -8,7 +8,7 @@ on:
       - 'main'
       #- 'docs/**'
       #- 'feature/**'
-      - 'service/**'
+      #- 'service/**'
     paths:
       - 'docs/**'
 

@@ -7,8 +7,10 @@
         "mv ./${{RAILS_APP_NAME}}/* ./${{RAILS_SOURCE_DIRECTORY}}",
         "rmdir ${{RAILS_APP_NAME}}",
         "chmod -R 777 ./${{RAILS_SOURCE_DIRECTORY}}",
-        "echo \"ruby-${{RAILS_RUBY_VERSION}}\" > ./${{RAILS_SOURCE_DIRECTORY}}/.ruby-version",
-        "sed -i \"s/ruby '2.7.3'/ruby '${{RAILS_RUBY_VERSION}}'/g\" ./${{RAILS_SOURCE_DIRECTORY}}/Gemfile"
+        "cd ./${{RAILS_SOURCE_DIRECTORY}}",
+        "echo \"ruby-${{RAILS_RUBY_VERSION}}\" > .ruby-version",
+        "sed -i \"s/ruby '2.7.3'/ruby '${{RAILS_RUBY_VERSION}}'/g\" Gemfile",
+        "bundle exec rails webpacker:install"
     ],
     "files": [
         {
