@@ -1,0 +1,61 @@
+{
+    "label": "Django",
+    "preselected": "false",
+    "demoAppInitCmd": [
+        "django-admin startproject ${{DJANGO_APP_NAME}} ./${{DJANGO_SOURCE_DIRECTORY}}",
+        "chmod -R 777 ./${{DJANGO_SOURCE_DIRECTORY}}"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        },
+        {
+            "path": "backend/requirements.txt",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Django app?",
+            "type": 2,
+            "defaultValue": "8000",
+            "validator": "port",
+            "variable": "DJANGO_PORT"
+        },
+        {
+            "text": "Which Django version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.2.3",
+            "variable": "DJANGO_VERSION"
+        },
+        {
+            "text": "Which Python version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.9",
+            "variable": "DJANGO_PYTHON_VERSION"
+        },
+        {
+            "text": "How do you want to call your Django app?",
+            "type": 2,
+            "defaultValue": "example",
+            "variable": "DJANGO_APP_NAME"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend",
+            "variable": "DJANGO_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}
