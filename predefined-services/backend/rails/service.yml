@@ -9,4 +9,4 @@ networks:
 #!  - backend-database
 #! }
 ports:
-  - ${{RAILS_PORT}}:5000
+  - ${{RAILS_PORT}}:3000

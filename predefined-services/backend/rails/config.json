@@ -2,10 +2,13 @@
     "label": "Ruby on Rails",
     "preselected": "false",
     "demoAppInitCmd": [
-        "flask-now ${{FLASK_APP_NAME}} simple -e sqlalchemy",
-        "mv ./${{FLASK_APP_NAME}}/* ./${{FLASK_SOURCE_DIRECTORY}}",
-        "rmdir ${{FLASK_APP_NAME}}",
-        "mv ./${{FLASK_SOURCE_DIRECTORY}}/main.py ./${{FLASK_SOURCE_DIRECTORY}}/run.py"
+        "rails new ${{RAILS_APP_NAME}} --webpack=react",
+        "shopt -s dotglob",
+        "mv ./${{RAILS_APP_NAME}}/* ./${{RAILS_SOURCE_DIRECTORY}}",
+        "rmdir ${{RAILS_APP_NAME}}",
+        "chmod -R 777 ./${{RAILS_SOURCE_DIRECTORY}}",
+        "echo \"ruby-${{RAILS_RUBY_VERSION}}\" > ./${{RAILS_SOURCE_DIRECTORY}}/.ruby-version",
+        "sed -i \"s/ruby '2.7.3'/ruby '${{RAILS_RUBY_VERSION}}'/g\" ./${{RAILS_SOURCE_DIRECTORY}}/Gemfile"
     ],
     "files": [
         {
@@ -30,9 +33,9 @@
             "variable": "RAILS_PORT"
         },
         {
-            "text": "Which Ruby version do you want to use?",
+            "text": "Which Ruby version do you want to use (specify version in format x.y.z)?",
             "type": 2,
-            "defaultValue": "3.0",
+            "defaultValue": "3.0.1",
             "variable": "RAILS_RUBY_VERSION"
         },
         {
