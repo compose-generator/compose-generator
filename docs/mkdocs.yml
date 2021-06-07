@@ -57,9 +57,9 @@ nav:
   - Home: index.md
   - intro.md
   - Install:
-    - install/docker.md
     - install/linux.md
     - install/windows.md
+    - install/docker.md
     - install/npm.md
     - install/source.md
   - quick-start.md
