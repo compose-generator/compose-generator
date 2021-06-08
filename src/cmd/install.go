@@ -16,7 +16,7 @@ import (
 // Install Docker and Docker Compose with a single command
 func Install(flagOnlyCompose bool, flagOnlyDocker bool) {
 	// Check if Compose Generator runs in dockerized environment
-	if util.IsDockerized() {
+	if util.IsDockerizedEnvironment() {
 		util.Error("You are currently using the Docker container of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", nil, true)
 	}
 

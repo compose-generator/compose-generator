@@ -100,7 +100,7 @@ func getClearScreenCommand() *exec.Cmd {
 }
 
 func getToolboxImageVersion() string {
-	if IsDevVersion() || IsPreRelease() || IsDev() {
+	if IsDevVersion() || IsPreRelease() || IsDevEnvironment() {
 		return "dev"
 	}
 	return VERSION

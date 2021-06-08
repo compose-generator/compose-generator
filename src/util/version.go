@@ -6,7 +6,7 @@ const VERSION = "0.7.0"
 
 // IsDevVersion checks if this version of Compose Generator is a development version
 func IsDevVersion() bool {
-	return strings.HasSuffix(VERSION, "dev")
+	return strings.HasSuffix(VERSION, "-dev")
 }
 
 // IsPreRelease checks if this version of Compose Generator is a pre-release version
