@@ -1,5 +1,5 @@
 image: ghcr.io/livepoll/live-poll-dev:${{LIVE_POLL_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-backend-live-poll-api
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-live-poll
 restart: always
 ports:
   - ${{LIVE_POLL_PORT}}:80
