@@ -1,4 +1,4 @@
-image: ghcr.io/livepoll/live-poll-dev:${{LIVE_POLL_VERSION}}
+build: ${{LIVE_POLL_SOURCE_DIRECTORY}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-backend-live-poll
 restart: always
 ports:

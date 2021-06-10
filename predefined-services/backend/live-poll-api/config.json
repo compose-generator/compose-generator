@@ -55,13 +55,13 @@
         {
             "text": "On which url will your instance be visible to the internet?",
             "type": 2,
-            "defaultValue": "https://localhost:8080",
+            "defaultValue": "localhost:8080",
             "variable": "LIVE_POLL_API_URL"
         },
         {
             "text": "On which url will your frontend be visible to the internet?",
             "type": 2,
-            "defaultValue": "https://localhost:80",
+            "defaultValue": "localhost:80",
             "variable": "LIVE_POLL_API_FRONTEND_URL"
         }
     ],

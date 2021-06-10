@@ -117,7 +117,7 @@ func generateDynamicStack(
 						for _, question := range template.Questions {
 							varMap[question.Variable] = question.DefaultValue
 						}
-						// Loop through volumes and add default values to volMap
+						// Loop through volumes and add default values to varMap and volMap
 						for _, volume := range template.Volumes {
 							volMap[filepath.Join(template.Dir, volume.DefaultValue)] = volume.DefaultValue
 							varMap[volume.Variable] = volume.DefaultValue

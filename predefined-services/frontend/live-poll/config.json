@@ -2,7 +2,11 @@
     "label": "Live-Poll",
     "preselected": "false",
     "serviceInitCmd": [
-        "git clone https://github.com/livepoll/live-poll.git frontend"
+        "git clone https://github.com/livepoll/live-poll.git ${{LIVE_POLL_SOURCE_DIRECTORY}}",
+        "cd ${{LIVE_POLL_SOURCE_DIRECTORY}}",
+        "yarn install",
+        "yarn run build:themes",
+        "yarn run build:prod"
     ],
     "files": [
         {
@@ -27,6 +31,14 @@
             "type": 2,
             "defaultValue": "latest",
             "variable": "LIVE_POLL_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for source directory?",
+            "defaultValue": "./frontend",
+            "variable": "LIVE_POLL_SOURCE_DIRECTORY",
+            "withDockerfile": true
         }
     ]
 }
