@@ -1,0 +1,32 @@
+{
+    "label": "Live-Poll",
+    "preselected": "false",
+    "serviceInitCmd": [
+        "git clone https://github.com/livepoll/live-poll.git frontend"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Live-Poll instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "LIVE_POLL_PORT"
+        },
+        {
+            "text": "Which version of the Live-Poll do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "LIVE_POLL_VERSION"
+        }
+    ]
+}
