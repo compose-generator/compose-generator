@@ -109,6 +109,7 @@ func generateDynamicStack(
 		for templateType, templates := range templateData {
 			selectedTemplateData[templateType] = []model.ServiceTemplateConfig{}
 			for _, template := range templates {
+				srcDir := filepath.Join(util.GetPredefinedServicesPath(), template.Dir)
 				// Loop through service configurations
 				for _, service := range serviceConfig {
 					if service.Type == templateType && strings.HasSuffix(template.Dir, service.Service) {
@@ -119,7 +120,7 @@ func generateDynamicStack(
 						}
 						// Loop through volumes and add default values to varMap and volMap
 						for _, volume := range template.Volumes {
-							volMap[filepath.Join(template.Dir, volume.DefaultValue)] = volume.DefaultValue
+							volMap[filepath.Join(srcDir, volume.DefaultValue)] = volume.DefaultValue
 							varMap[volume.Variable] = volume.DefaultValue
 						}
 						// Override with params
@@ -128,7 +129,7 @@ func generateDynamicStack(
 							// Loop through volumes
 							for _, volume := range template.Volumes {
 								if volume.Variable == varName {
-									volMap[filepath.Join(template.Dir, volume.DefaultValue)] = varValue
+									volMap[filepath.Join(srcDir, volume.DefaultValue)] = varValue
 									break
 								}
 							}

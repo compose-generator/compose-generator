@@ -2,8 +2,11 @@
     "label": "Live-Poll",
     "preselected": "false",
     "serviceInitCmd": [
-        "git clone https://github.com/livepoll/live-poll.git ${{LIVE_POLL_SOURCE_DIRECTORY}}",
+        "git clone https://github.com/livepoll/live-poll.git tmp",
+        "mv tmp/* ${{LIVE_POLL_SOURCE_DIRECTORY}}",
+        "rm -rf tmp",
         "cd ${{LIVE_POLL_SOURCE_DIRECTORY}}",
+        "mv ./environment.prod.ts ./src/environments/environment.prod.ts",
         "yarn install",
         "yarn run build:themes",
         "yarn run build:prod"
@@ -16,6 +19,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "frontend/environment.prod.ts",
+            "type": "config"
         }
     ],
     "questions": [
@@ -25,6 +32,13 @@
             "defaultValue": "80",
             "validator": "port",
             "variable": "LIVE_POLL_PORT"
+        },
+        {
+            "text": "On which schema you want to expose your Live-Poll instance (https/http)?",
+            "type": 2,
+            "defaultValue": "https",
+            "validator": "alpha",
+            "variable": "LIVE_POLL_SCHEME"
         },
         {
             "text": "Which version of the Live-Poll do you want to use?",
@@ -38,7 +52,7 @@
             "text": "Custom path for source directory?",
             "defaultValue": "./frontend",
             "variable": "LIVE_POLL_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "advanced": true
         }
     ]
 }

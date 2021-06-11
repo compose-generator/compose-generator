@@ -1,6 +1,6 @@
 {
     "label": "Live-Poll API",
-    "preselected": "false",
+    "preselected": "has service live-poll",
     "files": [
         {
             "path": "service.yml",
@@ -24,10 +24,29 @@
             "variable": "LIVE_POLL_API_PORT"
         },
         {
+            "text": "On which scheme you want to expose your Live-Poll API instance (https/http)?",
+            "type": 2,
+            "defaultValue": "https",
+            "validator": "alpha",
+            "variable": "LIVE_POLL_API_SCHEME"
+        },
+        {
             "text": "Which version of the Live-Poll API do you want to use?",
             "type": 2,
             "defaultValue": "latest",
             "variable": "LIVE_POLL_API_VERSION"
+        },
+        {
+            "text": "On which url will your instance be visible to the internet?",
+            "type": 2,
+            "defaultValue": "localhost:8080",
+            "variable": "LIVE_POLL_API_URL"
+        },
+        {
+            "text": "On which url will your frontend be visible to the internet?",
+            "type": 2,
+            "defaultValue": "localhost:80",
+            "variable": "LIVE_POLL_API_FRONTEND_URL"
         },
         {
             "text": "Hostname of your SMTP server (smtp.provider.com):",
@@ -51,18 +70,6 @@
             "text": "Password to the SMTP server for this user:",
             "type": 2,
             "variable": "LIVE_POLL_API_SMTP_PASSWORD"
-        },
-        {
-            "text": "On which url will your instance be visible to the internet?",
-            "type": 2,
-            "defaultValue": "localhost:8080",
-            "variable": "LIVE_POLL_API_URL"
-        },
-        {
-            "text": "On which url will your frontend be visible to the internet?",
-            "type": 2,
-            "defaultValue": "localhost:80",
-            "variable": "LIVE_POLL_API_FRONTEND_URL"
         }
     ],
     "secrets": [
