@@ -11,8 +11,6 @@ import (
 )
 
 func main() {
-	const VERSION = "0.7.0"
-
 	// Version flag
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
@@ -23,7 +21,7 @@ func main() {
 	// Main cli configuration
 	app := &cli.App{
 		Name:    "compose-generator",
-		Version: VERSION,
+		Version: util.VERSION,
 		Authors: []*cli.Author{
 			{Name: "Marc Auberer", Email: "marc.auberer@chillibits.com"},
 		},
@@ -39,7 +37,6 @@ func main() {
 			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 		},
 		Action: func(c *cli.Context) error {
-			util.CheckForServiceTemplateUpdate(VERSION)
 			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 			return nil
 		},
@@ -58,7 +55,6 @@ func main() {
 					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 				},
 				Action: func(c *cli.Context) error {
-					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 					return nil
 				},
@@ -74,7 +70,6 @@ func main() {
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
-					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 					return nil
 				},

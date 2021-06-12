@@ -19,3 +19,6 @@ node_modules/*
 
 # Ignore python venv, installed by GH codespaces
 .venv/*
+
+# Ignore test files
+test/*

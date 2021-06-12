@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
@@ -68,15 +69,18 @@ func ExecuteAndWaitWithOutput(c ...string) string {
 
 // ExecuteOnLinux runs a command in an isolated Linux environment
 func ExecuteOnLinux(c string) {
+	imageVersion := getToolboxImageVersion()
 	// Start docker container
 	absolutePath, _ := os.Getwd()
-	ExecuteAndWait("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox:dev", c)
+	output := ExecuteAndWaitWithOutput("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	fmt.Println(output)
 }
 
 // ExecuteOnLinuxWithCustomVolume runs a command in an isolated Linux environment with a custom volume mount
 func ExecuteOnLinuxWithCustomVolume(c string, volumePath string) {
+	imageVersion := getToolboxImageVersion()
 	// Start docker container
-	ExecuteAndWait("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:dev", c)
+	ExecuteAndWait("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
 }
 
 // ClearScreen errases the console contents
@@ -93,4 +97,11 @@ func getClearScreenCommand() *exec.Cmd {
 		return exec.Command("cmd", "/c", "cls")
 	}
 	return exec.Command("clear")
+}
+
+func getToolboxImageVersion() string {
+	if IsDevVersion() || IsPreRelease() || IsDevEnvironment() {
+		return "dev"
+	}
+	return VERSION
 }
