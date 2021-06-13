@@ -32,7 +32,7 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 	}
 
 	// Check for predefined service templates updates
-	util.CheckForServiceTemplateUpdate(util.VERSION)
+	util.CheckForServiceTemplateUpdate()
 
 	// Load config file if available
 	var configFile model.GenerateConfig

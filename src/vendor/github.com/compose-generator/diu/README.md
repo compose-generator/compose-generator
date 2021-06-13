@@ -7,7 +7,7 @@
 
 This Go library contains a set of useful features to parse internal Docker objects and put them into handelable objects or slices.
 
-*Note: This library is part of the **Compose Generator** project, but also can be used independently.*
+*Note: This library is part of the [Compose Generator](https://github.com/compose-generator/compose-generator) project, but also can be used independently.*
 
 ## Installation
 ```sh

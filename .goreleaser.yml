@@ -19,6 +19,8 @@ builds:
       - 6
       - 7
       - 8
+    ldflags:
+      - -s -w -X util.version.Version={{ .Version }} -X util.version.Commit={{ .Commit }} -X util.version.Date={{ .CommitDate }} -X util.version.BuiltBy=github-actions
 dockers:
   - image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}

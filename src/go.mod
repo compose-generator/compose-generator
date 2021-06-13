@@ -6,8 +6,8 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.2.12
 	github.com/PaesslerAG/gval v1.1.1
 	github.com/cli/safeexec v1.0.0
-	github.com/compose-generator/dcu v0.0.0-20210427124759-01a6a6ebae8a
-	github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7
+	github.com/compose-generator/dcu v0.0.0-20210516173715-4fbca63d84ff
+	github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d
 	github.com/fatih/color v1.12.0
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-playground/validator/v10 v10.6.1
