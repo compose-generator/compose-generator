@@ -1,15 +1,38 @@
 package util
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
-const VERSION = "0.7.0"
+// nolint: gochecknoglobals
+var (
+	Version = "dev"
+	Commit  = ""
+	Date    = ""
+	BuiltBy = ""
+)
+
+func BuildVersion(version, commit, date, builtBy string) string {
+	result := version
+	if commit != "" {
+		result = fmt.Sprintf("%s, commit: %s", result, commit)
+	}
+	if date != "" {
+		result = fmt.Sprintf("%s, built at: %s", result, date)
+	}
+	if builtBy != "" {
+		result = fmt.Sprintf("%s, built by: %s", result, builtBy)
+	}
+	return result
+}
 
 // IsDevVersion checks if this version of Compose Generator is a development version
 func IsDevVersion() bool {
-	return strings.HasSuffix(VERSION, "-dev")
+	return Version == "dev"
 }
 
 // IsPreRelease checks if this version of Compose Generator is a pre-release version
 func IsPreRelease() bool {
-	return strings.Contains(VERSION, "alpha") || strings.Contains(VERSION, "beta") || strings.Contains(VERSION, "rc")
+	return strings.Contains(Version, "alpha") || strings.Contains(Version, "beta") || strings.Contains(Version, "rc")
 }

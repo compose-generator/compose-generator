@@ -7,7 +7,7 @@
 
 This Go library can be used to serialize / deserialize docker compose yaml files.
 
-*Note: This library is part of the **Compose Generator** project, but also can be used independently.*
+*Note: This library is part of the [Compose Generator](https://github.com/compose-generator/compose-generator) project, but also can be used independently.*
 
 ## Installation
 ```sh

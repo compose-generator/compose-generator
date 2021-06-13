@@ -1,7 +1,6 @@
 package util
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -23,9 +22,9 @@ func TestCommandExists_Failure(t *testing.T) {
 
 func TestGetToolboxImageVersion(t *testing.T) {
 	result := getToolboxImageVersion()
-	if strings.HasSuffix(VERSION, "-dev") {
+	if Version == "dev" {
 		assert.Equal(t, "dev", result)
 	} else {
-		assert.Equal(t, VERSION, result)
+		assert.Equal(t, Version, result)
 	}
 }
