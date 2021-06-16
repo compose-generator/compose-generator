@@ -1,5 +1,5 @@
 # Gradle build instructions
-FROM gradle:7.0-jdk16 AS build
+FROM gradle:7.1.0-jdk16 AS build
 WORKDIR /server
 COPY *.gradle *.kts ./
 RUN gradle build -q || return 0
