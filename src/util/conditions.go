@@ -3,6 +3,7 @@ package util
 import (
 	"compose-generator/model"
 	"encoding/json"
+	"fmt"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -14,7 +15,9 @@ func EvaluateConditionalSections(
 ) string {
 	dataString := PrepareInputData(templateData, varMap)
 	// Execute CCom
-	return ExecuteAndWaitWithOutput("ccom", "-d", string(dataString), "-s", filePath)
+	result := ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
+	fmt.Println(result)
+	return result
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
@@ -25,7 +28,7 @@ func EvaluateCondition(
 ) bool {
 	dataString := PrepareInputData(templateData, varMap)
 	// Execute CCom
-	result := ExecuteAndWaitWithOutput("ccom", "-m", "-d", string(dataString), "-s", condition)
+	result := ExecuteAndWaitWithOutput("ccom", "-m", "-d", dataString, "-s", condition)
 	return result == "true"
 }
 
@@ -41,6 +44,13 @@ func PrepareInputData(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 ) string {
+	// Delete empty service categories in template data
+	for key, value := range templateData {
+		if len(value) == 0 {
+			delete(templateData, key)
+		}
+	}
+	// Marshal to json
 	data := model.CComDataInput{
 		Services: templateData,
 		Var:      varMap,
