@@ -10,14 +10,14 @@ import (
 // ---------------------------------------------------------------- EvaluateConditionalSection ---------------------------------------------------------------
 
 func TestEvaluateConditionalSection_True1(t *testing.T) {
-	content := "property1: true\n#? if has services.backend[0].label = \"Wordpress\" {\n# property2: false\n#? }\nproperty3: true"
+	content := "property1: true\n#? if has services.backend[0].label == \"Wordpress\" {\n# property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
 	result := EvaluateConditionalSections(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
 func TestEvaluateConditionalSection_True2(t *testing.T) {
-	content := "property1: true\n#? if has services.database[1].name = \"postgres\" | has templates.backend {\n#? property2: false\n#? }\nproperty3: true"
+	content := "property1: true\n#? if has services.database[1].name == \"postgres\" | has templates.backend {\n#? property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
 	result := EvaluateConditionalSections(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
