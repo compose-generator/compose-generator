@@ -3,7 +3,6 @@ package util
 import (
 	"compose-generator/model"
 	"encoding/json"
-	"fmt"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -15,9 +14,7 @@ func EvaluateConditionalSections(
 ) string {
 	dataString := PrepareInputData(templateData, varMap)
 	// Execute CCom
-	result := ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
-	fmt.Println(result)
-	return result
+	return ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
@@ -28,7 +25,7 @@ func EvaluateCondition(
 ) bool {
 	dataString := PrepareInputData(templateData, varMap)
 	// Execute CCom
-	result := ExecuteAndWaitWithOutput("ccom", "-m", "-d", dataString, "-s", condition)
+	result := ExecuteAndWaitWithOutput("ccom", "-m", "-s", "-l", "yml", "-d", dataString, condition) // TODO: Remove '-l yml' as soon as ccom #50 is fixed
 	return result == "true"
 }
 

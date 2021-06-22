@@ -10,31 +10,38 @@ import (
 // ---------------------------------------------------------------- EvaluateConditionalSection ---------------------------------------------------------------
 
 func TestEvaluateConditionalSection_True1(t *testing.T) {
-	content := "property1: true\n#? if has services.backend[0].label == \"Wordpress\" {\n# property2: false\n#? }\nproperty3: true"
+	content := "property1: true\n#? if services.backend contains label == \"Wordpress\" {\n#property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
 	result := EvaluateConditionalSections(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
 func TestEvaluateConditionalSection_True2(t *testing.T) {
-	content := "property1: true\n#? if has services.database[1].name == \"postgres\" | has templates.backend {\n#? property2: false\n#? }\nproperty3: true"
+	content := "property1: true\n#? if services.frontend contains name == \"vue\" | has templates.backend {\n#property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
 	result := EvaluateConditionalSections(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
 func TestEvaluateConditionalSection_True3(t *testing.T) {
-	content := "property1: true\n#? if var.BAR == \"test1\" {\n# property2: false\n#? }\nproperty3: true"
+	content := "property1: true\n#? if var.BAR == \"test1\" {\n#property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
 	result := EvaluateConditionalSections(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
-func TestEvaluateConditionalSection_False(t *testing.T) {
+func TestEvaluateConditionalSection_False1(t *testing.T) {
 	content := "property1: true\n#? if var.BAR == \"invalid\" {\n# property2: false\n#? }\nproperty3: true"
-	expectation := "property1: true\nproperty2: false\nproperty3: true"
+	expectation := "property1: true\nproperty3: true"
 	result := EvaluateConditionalSections(content, templateData, varMap)
-	assert.NotEqual(t, expectation, result)
+	assert.Equal(t, expectation, result)
+}
+
+func TestEvaluateConditionalSection_False2(t *testing.T) {
+	content := "property1: true\n#? if has services.database {\n# property2: false\n#? }\nproperty3: true"
+	expectation := "property1: true\nproperty3: true"
+	result := EvaluateConditionalSections(content, templateData, varMap)
+	assert.Equal(t, expectation, result)
 }
 
 // ---------------------------------------------------------------- EvaluateCondition ---------------------------------------------------------------
@@ -61,7 +68,7 @@ func TestEvaluateCondition_True1(t *testing.T) {
 }
 
 func TestEvaluateCondition_True2(t *testing.T) {
-	condition := "services.frontend[0].name = \"angular\""
+	condition := "services.frontend[0].name == \"angular\""
 	result := EvaluateCondition(condition, templateData, varMap)
 	assert.True(t, result)
 }
@@ -73,7 +80,7 @@ func TestEvaluateCondition_True3(t *testing.T) {
 }
 
 func TestEvaluateCondition_False1(t *testing.T) {
-	condition := "services.database[1].name = \"postgres\""
+	condition := "services.database[1].name == \"postgres\""
 	result := EvaluateCondition(condition, templateData, varMap)
 	assert.False(t, result)
 }
