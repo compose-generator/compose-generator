@@ -7,7 +7,7 @@ volumes:
   - ${{VOLUME_YOUTRACK_LOGS}}:/opt/youtrack/logs
   - ${{VOLUME_YOUTRACK_BACKUPS}}:/opt/youtrack/backups
 networks:
-#? if has database {
+#? if has services.database {
 #  - frontend-database
 #? }
 ports:

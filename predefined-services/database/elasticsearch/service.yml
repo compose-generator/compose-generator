@@ -2,10 +2,10 @@ image: elasticsearch:${{ELASTICSEARCH_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-elasticsearch
 restart: always
 networks:
-#? if has backend {
+#? if has services.backend {
 #  - backend-database
 #? }
-#? if has service elasticsearch-hq {
+#? if services.dbadmin contains name == "elasticsearch-hq" {
 #  - elasticsearch-elasticsearchhq
 #? }
 ports:

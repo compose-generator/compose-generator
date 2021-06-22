@@ -47,6 +47,15 @@ func PrepareInputData(
 			delete(templateData, key)
 		}
 	}
+	// Re-map db-admin to dbadmin and tls-helper to tlshelper
+	if val, ok := templateData["db-admin"]; ok {
+		templateData["dbadmin"] = val
+		delete(templateData, "db-admin")
+	}
+	if val, ok := templateData["tls-helper"]; ok {
+		templateData["tlshelper"] = val
+		delete(templateData, "tls-helper")
+	}
 	// Marshal to json
 	data := model.CComDataInput{
 		Services: templateData,

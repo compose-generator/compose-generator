@@ -4,7 +4,7 @@ restart: always
 volumes:
   - ${{VOLUME_BITBUCKET_DATA}}:/var/atlassian/application-data/bitbucket
 networks:
-#? if has database {
+#? if has services.database {
 #  - frontend-database
 #? }
 ports:

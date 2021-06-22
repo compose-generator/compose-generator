@@ -2,16 +2,16 @@ image: postgres:${{POSTGRES_VERSION}}-alpine
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-postgres
 restart: always
 networks:
-#? if has backend {
+#? if has services.backend {
 #  - backend-database
 #? }
-#? if has service nextcloud | has service owncloud | has service gitea | has service sonarqube | has service jira | has service bitbucket {
+#? if services.frontend contains name == "nextcloud" | services.frontend contains name == "owncloud" | services.frontend contains name == "gitea" | services.frontend contains name == "sonarqube" | services.frontend contains name == "jira" | services.frontend contains name == "bitbucket" {
 #  - frontend-database
 #? }
-#? if has service pgadmin {
+#? if services.dbadmin contains name == "pgadmin" {
 #  - postgres-pgadmin
 #? }
-#? if has service adminer {
+#? if services.dbadmin contains name == "adminer" {
 #  - postgres-adminer
 #? }
 ports:

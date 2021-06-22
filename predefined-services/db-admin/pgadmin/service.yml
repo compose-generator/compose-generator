@@ -3,7 +3,7 @@ container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-pgadmin
 volumes:
   - ${{VOLUME_PGADMIN_DATA}}:/var/lib/pgadmin
 networks:
-#? if has service postgres {
+#? if services.database contains name == "postgres" {
 #   - postgres-pgadmin
 #? }
 ports:

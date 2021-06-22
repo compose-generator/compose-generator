@@ -2,10 +2,10 @@ build: ${{SPRING_MAVEN_SOURCE_DIRECTORY}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-backend-spring-maven
 restart: always
 networks:
-#? if has frontend {
+#? if has services.frontend {
 #  - frontend-backend
 #? }
-#? if has database {
+#? if has services.database {
 #  - backend-database
 #? }
 ports:

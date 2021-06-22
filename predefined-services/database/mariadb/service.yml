@@ -2,16 +2,16 @@ image: mariadb:${{MARIADB_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-mariadb
 restart: always
 networks:
-#? if has backend {
+#? if has services.backend {
 #  - backend-database
 #? }
-#? if has service nextcloud | has service owncloud | has service gitea {
+#? if services.frontend contains name == "nextcloud" | services.frontend contains name == "owncloud" | services.frontend contains name == "gitea" {
 #  - frontend-database
 #? }
-#? if has service phpmyadmin {
+#? if services.dbadmin contains name == "phpmyadmin" {
 #  - mariadb-phpmyadmin
 #? }
-#? if has service adminer {
+#? if services.dbadmin contains name == "adminer" {
 #  - mariadb-adminer
 #? }
 ports:

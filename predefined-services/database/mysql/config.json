@@ -1,6 +1,6 @@
 {
     "label": "MySQL",
-    "preselected": "has service wordpress | has service nextcloud | has service owncloud",
+    "preselected": "services.frontend contains name == \"wordpress\" | services.frontend contains name == \"nextcloud\" | has service services.frontend contains name == \"owncloud\"",
     "files": [
         {
             "path": "service.yml",

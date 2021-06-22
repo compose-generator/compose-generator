@@ -1,13 +1,13 @@
 image: adminer:${{ADMINER_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-adminer
 networks:
-#? if has service postgres {
+#? if services.database contains name == "postgres" {
 #   - postgres-adminer
 #? }
-#? if has service mysql {
+#? if services.database contains name == "mysql" {
 #   - mysql-adminer
 #? }
-#? if has service mariadb {
+#? if services.database contains name == "mariadb" {
 #   - mariadb-adminer
 #? }
 ports:

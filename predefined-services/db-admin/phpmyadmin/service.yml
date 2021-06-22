@@ -1,10 +1,10 @@
 image: phpmyadmin/phpmyadmin:${{PMA_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-phpmyadmin
 networks:
-#? if has service mysql {
+#? if services.database contains name == "mysql" {
 #   - mysql-phpmyadmin
 #? }
-#? if has service mariadb {
+#? if services.database contains name == "mariadb" {
 #   - mariadb-phpmyadmin
 #? }
 ports:

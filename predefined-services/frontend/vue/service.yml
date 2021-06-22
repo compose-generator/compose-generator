@@ -2,7 +2,7 @@ build: ${{VUE_SOURCE_DIRECTORY}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-vue
 restart: always
 networks:
-#? if has backend {
+#? if has services.backend {
 #  - frontend-backend
 #? }
 ports:
