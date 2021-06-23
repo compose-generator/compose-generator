@@ -9,11 +9,11 @@ github.com/PaesslerAG/gval
 # github.com/cli/safeexec v1.0.0
 ## explicit
 github.com/cli/safeexec
-# github.com/compose-generator/dcu v0.0.0-20210427124759-01a6a6ebae8a
+# github.com/compose-generator/dcu v0.0.0-20210516173715-4fbca63d84ff
 ## explicit
 github.com/compose-generator/dcu
 github.com/compose-generator/dcu/model
-# github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7
+# github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d
 ## explicit
 github.com/compose-generator/diu
 github.com/compose-generator/diu/cli
@@ -65,6 +65,7 @@ github.com/shurcooL/sanitized_anchor_name
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
 # github.com/urfave/cli/v2 v2.3.0
 ## explicit
 github.com/urfave/cli/v2

@@ -19,6 +19,9 @@ import (
 func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	util.ClearScreen()
 
+	// Check for predefined service templates updates
+	util.CheckForServiceTemplateUpdate()
+
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
 	if flagAdvanced {

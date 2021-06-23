@@ -21,8 +21,8 @@ func PrintSafetyWarning(existingCount int) {
 	Pel()
 }
 
-// IsDockerized checks if Compose Generator runs within a dockerized environment
-func IsDockerized() bool {
+// IsDockerizedEnvironment checks if Compose Generator runs within a dockerized environment
+func IsDockerizedEnvironment() bool {
 	return os.Getenv("COMPOSE_GENERATOR_DOCKERIZED") == "1"
 }
 
