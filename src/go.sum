@@ -1,5 +1,5 @@
-github.com/AlecAivazis/survey/v2 v2.2.12 h1:5a07y93zA6SZ09gOa9wLVLznF5zTJMQ+pJ3cZK4IuO8=
-github.com/AlecAivazis/survey/v2 v2.2.12/go.mod h1:6d4saEvBsfSHXeN1a5OA5m2+HJ2LuVokllnC77pAIKI=
+github.com/AlecAivazis/survey/v2 v2.2.13 h1:7s6Msv/M4omLvZ0PfItdmr/VqPEgsLLuxj5NvREsQu8=
+github.com/AlecAivazis/survey/v2 v2.2.13/go.mod h1:TH2kPCDU3Kqq7pLbnCWwZXDBjnhZtmsCle5EiYDJ2fg=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nBpB11F9br+3HUrpgb+fcm5iADzXXYEw=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
@@ -9,12 +9,8 @@ github.com/PaesslerAG/jsonpath v0.1.0 h1:gADYeifvlqK3R3i2cR5B4DGgxLXIPb3TRTH1mGi
 github.com/PaesslerAG/jsonpath v0.1.0/go.mod h1:4BzmtoM/PI8fPO4aQGIusjGxGir2BzcV0grWtFzq1Y8=
 github.com/cli/safeexec v1.0.0 h1:0VngyaIyqACHdcMNWfo6+KdUYnqEr2Sg+bSP1pdF+dI=
 github.com/cli/safeexec v1.0.0/go.mod h1:Z/D4tTN8Vs5gXYHDCbaM1S/anmEDnJb1iW0+EJ5zx3Q=
-github.com/compose-generator/dcu v0.0.0-20210427124759-01a6a6ebae8a h1:ux7XhNjBHtr3M/TPoER9B3p71RrNyliNvzPGh0rG7CI=
-github.com/compose-generator/dcu v0.0.0-20210427124759-01a6a6ebae8a/go.mod h1:PLu31yl52YLJnSlkspxioeaWLdO6yKyaioVwQHdrGvs=
 github.com/compose-generator/dcu v0.0.0-20210516173715-4fbca63d84ff h1:YiZUAlIP/PKGnRd+i6+iXlbg7Uf9xQzm/41buKAAVf0=
 github.com/compose-generator/dcu v0.0.0-20210516173715-4fbca63d84ff/go.mod h1:PLu31yl52YLJnSlkspxioeaWLdO6yKyaioVwQHdrGvs=
-github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7 h1:SQhXiR8mdjSpcc2vAKj7ci0B1hQDb3lFgAVcP283jdQ=
-github.com/compose-generator/diu v0.0.0-20210310231748-c292081e6dd7/go.mod h1:dtCz9JfVc0yS+V6wn1afxvk2LqEDkTnIDpmJvMYySQQ=
 github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d h1:NXmXFoBfQrHzlkYNNOWXeZR+yVP+4+Aq3PkNmZOcXY8=
 github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d/go.mod h1:dtCz9JfVc0yS+V6wn1afxvk2LqEDkTnIDpmJvMYySQQ=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSYgptZMwQh2aRr3LuazLJIa+Pg3Kc1ylSYVY=
@@ -67,7 +63,6 @@ github.com/sethvargo/go-password v0.2.0 h1:BTDl4CC/gjf/axHMaDQtw507ogrXLci6XRiLc
 github.com/sethvargo/go-password v0.2.0/go.mod h1:Ym4Mr9JXLBycr02MFuVQ/0JHidNetSgbzutTr3zsYXE=
 github.com/shurcooL/sanitized_anchor_name v1.0.0 h1:PdmoCO6wvbs+7yrJyMORt4/BmY5IYyJwS/kOiWx8mHo=
 github.com/shurcooL/sanitized_anchor_name v1.0.0/go.mod h1:1NzhyTcUVG4SuEtjjoZeVRXNmyL/1OwPU0+IJeTBvfc=
-github.com/stretchr/objx v0.1.0 h1:4G4v2dO3VZwixGIRoQ5Lfboy6nUhCyYzaqnIAPPhYs4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.2.1/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
@@ -83,10 +78,12 @@ golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20190222072716-a9d3bda3a223/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20190530182044-ad28b68e88f1/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200116001909-b77594299b42/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae h1:/WDfKMnPU+m5M4xB+6x4kaepxRw6jWvR5iDRdvjHgy8=
 golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 h1:nxC68pudNYkKU6jWhgrqdreuFiOQWj1Fs7T3VrH4Pjw=
+golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/term v0.0.0-20210503060354-a79de5458b56 h1:b8jxX3zqjpqb2LklXPzKSGJhzyxCOZSz8ncv8Nv+y7w=
+golang.org/x/term v0.0.0-20210503060354-a79de5458b56/go.mod h1:tfny5GFUkzUvx4ps4ajbZsCe5lw1metzhBm9T3x7oIY=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
 golang.org/x/text v0.3.3 h1:cokOdA+Jmi5PJGXLlLllQSgYigAEfHXJAERHVMaCc2k=
