@@ -24,7 +24,8 @@
         'type': 'list'
     },
     'environment': {
-        'type': 'list'
+        'type': 'list',
+         'nullable': True
     },
     'restart': {
         'type': 'string',

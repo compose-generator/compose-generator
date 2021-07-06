@@ -1,6 +1,6 @@
 {
     "label": "Adminer",
-    "preselected": "has service postgres",
+    "preselected": "services.database contains name == \"postgres\"",
     "files": [
         {
             "path": "service.yml",

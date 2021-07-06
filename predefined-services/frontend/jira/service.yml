@@ -4,8 +4,8 @@ restart: always
 volumes:
   - ${{VOLUME_JIRA_DATA}}:/var/atlassian/application-data/jira
 networks:
-#! if has database {
-#!  - frontend-database
-#! }
+#? if has services.database {
+#  - frontend-database
+#? }
 ports:
   - ${{JIRA_PORT}}:8080

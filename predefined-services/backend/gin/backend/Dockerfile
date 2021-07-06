@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine
+FROM golang:${{GIN_GO_VERSION}}-alpine
 WORKDIR /app
 COPY . .
 

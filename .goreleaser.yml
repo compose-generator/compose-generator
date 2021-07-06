@@ -1,8 +1,6 @@
 project_name: compose-generator
 builds:
-  - env:
-      - CGO_ENABLED=0
-    dir: src
+  - dir: src
     main: ./compose-generator.go
     goos:
       - linux
@@ -28,16 +26,15 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}
       - chillibits/compose-generator:latest
     dockerfile: Dockerfile
-    use_buildx: true
+    use: buildx
     extra_files:
       - predefined-services
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
-      - --label=org.opencontainers.image.url=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
       - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
       - --label=org.opencontainers.image.version={{ .Version }}
-      - --label=org.opencontainers.image.created={{ time "2021-02-14T18:30:05Z01:00" }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache 2.0
       - --platform=linux/amd64
@@ -60,6 +57,7 @@ nfpms:
       - deb
       - rpm
     dependencies:
+      - ccom
       - lsb-release
     overrides:
       rpm:
@@ -74,7 +72,10 @@ nfpms:
       - /usr/lib/compose-generator/templates
 release:
   name_template: v{{.Tag}}
-  github:
-    owner: compose-generator
-    name: compose-generator
   prerelease: auto
+  extra_files:
+    - glob: ./predefined-services/predefined-services.tar.gz
+announce:
+  twitter:
+    enabled: true
+    message_template: 'Compose Generator {{.Tag}} is now available! Check out the new features: compose-generator.com!'

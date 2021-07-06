@@ -3,9 +3,6 @@
 github.com/AlecAivazis/survey/v2
 github.com/AlecAivazis/survey/v2/core
 github.com/AlecAivazis/survey/v2/terminal
-# github.com/PaesslerAG/gval v1.1.1
-## explicit
-github.com/PaesslerAG/gval
 # github.com/cli/safeexec v1.0.0
 ## explicit
 github.com/cli/safeexec

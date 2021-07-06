@@ -2,9 +2,9 @@ image: fauna/faunadb:${{FAUNADB_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-faunadb
 restart: always
 networks:
-#! if has backend {
-#!  - backend-database
-#! }
+#? if has services.backend {
+#  - backend-database
+#? }
 ports:
   - ${{FAUNADB_PORT_API}}:8443
   - ${{FAUNADB_PORT_GRAPHQL}}:8084

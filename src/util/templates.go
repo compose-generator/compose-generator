@@ -5,12 +5,15 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
 // CheckForServiceTemplateUpdate checks if any updates are available for the predefined service templates
 func CheckForServiceTemplateUpdate() {
+	// Skip on dev version
+	if Version == "dev" {
+		return
+	}
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
 	if !FileExists(predefinedTemplatesDir) {
@@ -64,12 +67,11 @@ func CheckForServiceTemplateUpdate() {
 // TemplateListToPreselectedLabelList retrieves a slice of all preselected other services for each service
 func TemplateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
 	for _, t := range templates {
-		conditions := strings.Split(t.Preselected, "|")
-		for _, c := range conditions {
-			if EvaluateCondition(c, *templateData, nil) {
-				labels = append(labels, t.Label)
-				break
-			}
+		if t.Preselected == "false" {
+			continue
+		}
+		if t.Preselected == "true" || EvaluateCondition(t.Preselected, *templateData, nil) {
+			labels = append(labels, t.Label)
 		}
 	}
 	return
