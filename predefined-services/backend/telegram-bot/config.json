@@ -1,0 +1,54 @@
+{
+    "label": "Telegram Bot",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        },
+        {
+            "path": "backend/bot.py",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "How do you want to call your bot?",
+            "type": 2,
+            "validator": "required",
+            "variable": "TELEGRAM_BOT_NAME"
+        },
+        {
+            "text": "Please paste your Telegram API token:",
+            "type": 2,
+            "variable": "TELEGRAM_BOT_API_TOKEN"
+        },
+        {
+            "text": "Which Python version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.9",
+            "variable": "TELEGRAM_BOT_PYTHON_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend",
+            "variable": "TELEGRAM_BOT_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}

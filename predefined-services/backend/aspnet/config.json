@@ -1,0 +1,51 @@
+{
+    "label": "ASP.NET",
+    "preselected": "false",
+    "demoAppInitCmd": [
+        "cd ${{ASPNET_SOURCE_DIRECTORY}}",
+        "dotnet new webapp"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your ASP.NET app?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "ASPNET_PORT"
+        },
+        {
+            "text": "Which .NET version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.2.3",
+            "variable": "ASPNET_VERSION"
+        },
+        {
+            "text": "How do you want to call your ASP.NET app?",
+            "type": 2,
+            "defaultValue": "example",
+            "variable": "ASPNET_APP_NAME"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend",
+            "variable": "ASPNET_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}

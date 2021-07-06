@@ -9,7 +9,7 @@ import (
 )
 
 // CheckForServiceTemplateUpdate checks if any updates are available for the predefined service templates
-func CheckForServiceTemplateUpdate(version string) {
+func CheckForServiceTemplateUpdate() {
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
 	if !FileExists(predefinedTemplatesDir) {
@@ -18,7 +18,7 @@ func CheckForServiceTemplateUpdate(version string) {
 		}
 	}
 
-	fileUrl := "https://github.com/compose-generator/compose-generator/releases/download/" + version + "/predefined-services.tar.gz"
+	fileUrl := "https://github.com/compose-generator/compose-generator/releases/download/" + Version + "/predefined-services.tar.gz"
 	outputPath := GetPredefinedServicesPath() + "/predefined-services.tar.gz"
 	shouldUpdate := false
 

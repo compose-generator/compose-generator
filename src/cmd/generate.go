@@ -34,6 +34,9 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 		util.ClearScreen()
 	}
 
+	// Check for predefined service templates updates
+	util.CheckForServiceTemplateUpdate()
+
 	// Load config file if available
 	var configFile model.GenerateConfig
 	projectName := "Example Project"
