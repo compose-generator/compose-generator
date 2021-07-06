@@ -13,7 +13,9 @@ func EvaluateConditionalSections(
 	varMap map[string]string,
 ) string {
 	dataString := PrepareInputData(templateData, varMap)
+	Pl(dataString)
 	// Execute CCom
+	// ToDo: Remove '-l yml' as soon as CCom #62 is fixed
 	return ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
 }
 
@@ -38,27 +40,27 @@ func CheckIfCComIsInstalled() {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func PrepareInputData(
-	templateData map[string][]model.ServiceTemplateConfig,
+	selectedTemplateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 ) string {
 	// Delete empty service categories in template data
-	for key, value := range templateData {
+	for key, value := range selectedTemplateData {
 		if len(value) == 0 {
-			delete(templateData, key)
+			delete(selectedTemplateData, key)
 		}
 	}
 	// Re-map db-admin to dbadmin and tls-helper to tlshelper
-	if val, ok := templateData["db-admin"]; ok {
-		templateData["dbadmin"] = val
-		delete(templateData, "db-admin")
+	if val, ok := selectedTemplateData["db-admin"]; ok {
+		selectedTemplateData["dbadmin"] = val
+		delete(selectedTemplateData, "db-admin")
 	}
-	if val, ok := templateData["tls-helper"]; ok {
-		templateData["tlshelper"] = val
-		delete(templateData, "tls-helper")
+	if val, ok := selectedTemplateData["tls-helper"]; ok {
+		selectedTemplateData["tlshelper"] = val
+		delete(selectedTemplateData, "tls-helper")
 	}
 	// Create data object
 	data := model.CComDataInput{
-		Services: templateData,
+		Services: selectedTemplateData,
 		Var:      varMap,
 	}
 	// Marshal to json

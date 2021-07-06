@@ -17,4 +17,4 @@ COPY --from=build /server/dependencies/ ./
 COPY --from=build /server/snapshot-dependencies/ ./
 COPY --from=build /server/spring-boot-loader/ ./
 COPY --from=build /server/application/ ./
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]1
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]

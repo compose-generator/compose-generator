@@ -8,11 +8,7 @@ networks:
 ports:
   - ${{INFLUXDB_PORT}}:8086
 volumes:
-#? if var.INFLUXDB_VERSION >= 2 {
-#  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb2
-#? }
-#? if var.INFLUXDB_VERSION < 2 {
-#  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb
-#? }
+  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb2
+  - ${{VOLUME_INFLUXDB_DATA}}:/var/lib/influxdb
 env_file:
   - environment.env
