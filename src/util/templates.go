@@ -10,6 +10,10 @@ import (
 
 // CheckForServiceTemplateUpdate checks if any updates are available for the predefined service templates
 func CheckForServiceTemplateUpdate() {
+	// Skip on dev version
+	if Version == "dev" {
+		return
+	}
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
 	if !FileExists(predefinedTemplatesDir) {
