@@ -13,7 +13,6 @@ func EvaluateConditionalSections(
 	varMap map[string]string,
 ) string {
 	dataString := PrepareInputData(templateData, varMap)
-	Pl(dataString)
 	// Execute CCom
 	// ToDo: Remove '-l yml' as soon as CCom #62 is fixed
 	return ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)

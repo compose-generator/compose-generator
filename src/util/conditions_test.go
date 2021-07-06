@@ -56,6 +56,14 @@ var templateData = map[string][]model.ServiceTemplateConfig{
 	},
 	"database": {},
 }
+var templateData2 = map[string][]model.ServiceTemplateConfig{
+	"db-admin": {
+		{Label: "PhpMyAdmin", Name: "phpmyadmin"},
+	},
+	"tls-helper": {
+		{Label: "Lets Encrypt Companion", Name: "letsencrypt"},
+	},
+}
 var varMap = map[string]string{
 	"FOO": "test",
 	"BAR": "test1",
@@ -89,4 +97,16 @@ func TestEvaluateCondition_False2(t *testing.T) {
 	condition := "invalid condition"
 	result := EvaluateCondition(condition, templateData, varMap)
 	assert.False(t, result)
+}
+
+func TestPrepareInputData1(t *testing.T) {
+	result := PrepareInputData(templateData, varMap)
+	expected := "{\"services\":{\"backend\":[{\"label\":\"Wordpress\",\"name\":\"wordpress\"}],\"frontend\":[{\"label\":\"Angular\",\"name\":\"angular\"},{\"label\":\"Vue\",\"name\":\"vue\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
+	assert.Equal(t, expected, result)
+}
+
+func TestPrepareInputData2(t *testing.T) {
+	result := PrepareInputData(templateData2, varMap)
+	expected := "{\"services\":{\"dbadmin\":[{\"label\":\"PhpMyAdmin\",\"name\":\"phpmyadmin\"}],\"tlshelper\":[{\"label\":\"Lets Encrypt Companion\",\"name\":\"letsencrypt\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
+	assert.Equal(t, expected, result)
 }
