@@ -25,7 +25,7 @@ func EvaluateCondition(
 ) bool {
 	dataString := PrepareInputData(templateData, varMap)
 	// Execute CCom
-	result := ExecuteAndWaitWithOutput("ccom", "-m", "-s", "-l", "yml", "-d", dataString, condition) // TODO: Remove '-l yml' as soon as ccom #50 is fixed
+	result := ExecuteAndWaitWithOutput("ccom", "-m", "-s", "-d", dataString, condition)
 	return result == "true"
 }
 
@@ -56,11 +56,12 @@ func PrepareInputData(
 		templateData["tlshelper"] = val
 		delete(templateData, "tls-helper")
 	}
-	// Marshal to json
+	// Create data object
 	data := model.CComDataInput{
 		Services: templateData,
 		Var:      varMap,
 	}
+	// Marshal to json
 	dataJson, err := json.Marshal(data)
 	if err != nil {
 		Error("Could not evaluate conditional sections in template. Could be corrupted", err, true)

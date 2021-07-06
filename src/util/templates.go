@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -64,12 +63,11 @@ func CheckForServiceTemplateUpdate(version string) {
 // TemplateListToPreselectedLabelList retrieves a slice of all preselected other services for each service
 func TemplateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
 	for _, t := range templates {
-		conditions := strings.Split(t.Preselected, "|")
-		for _, c := range conditions {
-			if EvaluateCondition(c, *templateData, nil) {
-				labels = append(labels, t.Label)
-				break
-			}
+		if t.Preselected == "false" {
+			continue
+		}
+		if t.Preselected == "true" || EvaluateCondition(t.Preselected, *templateData, nil) {
+			labels = append(labels, t.Label)
 		}
 	}
 	return
