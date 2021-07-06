@@ -24,7 +24,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}
       - chillibits/compose-generator:latest
     dockerfile: Dockerfile
-    use_buildx: true
+    use: buildx
     extra_files:
       - predefined-services
     build_flag_templates:

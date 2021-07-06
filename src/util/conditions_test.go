@@ -56,14 +56,6 @@ var templateData = map[string][]model.ServiceTemplateConfig{
 	},
 	"database": {},
 }
-var templateData2 = map[string][]model.ServiceTemplateConfig{
-	"db-admin": {
-		{Label: "PhpMyAdmin", Name: "phpmyadmin"},
-	},
-	"tls-helper": {
-		{Label: "Lets Encrypt Companion", Name: "letsencrypt"},
-	},
-}
 var varMap = map[string]string{
 	"FOO": "test",
 	"BAR": "test1",
@@ -97,6 +89,17 @@ func TestEvaluateCondition_False2(t *testing.T) {
 	condition := "invalid condition"
 	result := EvaluateCondition(condition, templateData, varMap)
 	assert.False(t, result)
+}
+
+// ----------------------------------------------------------------- PrepareDataInput ---------------------------------------------------------------
+
+var templateData2 = map[string][]model.ServiceTemplateConfig{
+	"db-admin": {
+		{Label: "PhpMyAdmin", Name: "phpmyadmin"},
+	},
+	"tls-helper": {
+		{Label: "Lets Encrypt Companion", Name: "letsencrypt"},
+	},
 }
 
 func TestPrepareInputData1(t *testing.T) {
