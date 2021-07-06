@@ -26,6 +26,9 @@ import (
 
 // Generate a docker compose configuration
 func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
+	// Check if CCom is installed
+	util.CheckIfCComIsInstalled()
+
 	// Clear screen if in interactive mode
 	if configPath == "" {
 		util.ClearScreen()
@@ -102,13 +105,13 @@ func generateDynamicStack(
 
 	// Load configurations of service templates
 	templateData := parser.ParsePredefinedServices()
+	selectedTemplateData := map[string][]model.ServiceTemplateConfig{}
 
 	composeVersion := configFile.ComposeVersion
 	alsoProduction := configFile.AlsoProduction
 	if configFile.ProjectName != "" {
 		// Provide selected template data from config file
 		serviceConfig := configFile.ServiceConfig
-		selectedTemplateData := map[string][]model.ServiceTemplateConfig{}
 		for templateType, templates := range templateData {
 			selectedTemplateData[templateType] = []model.ServiceTemplateConfig{}
 			for _, template := range templates {
@@ -142,15 +145,14 @@ func generateDynamicStack(
 				}
 			}
 		}
-		templateData = selectedTemplateData
 	} else {
 		// Ask user decisions
-		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
+		composeVersion, alsoProduction = askForUserInput(&templateData, &selectedTemplateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
 	}
 
 	// Generate configuration
 	util.P("Generating configuration ... ")
-	composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString := processUserInput(selectedTemplateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
 	varFiles = append(varFiles, "docker-compose.yml")
 	varFiles = append(varFiles, "README.md")
 	if alsoProduction {
@@ -236,11 +238,7 @@ func generateDynamicStack(
 
 	// Copy dockerfiles
 	for src, dst := range dockerfileMap {
-		content, err1 := ioutil.ReadFile(src)
-		if err1 != nil {
-			util.Error("Could not read Dockerfile "+src, err1, true)
-		}
-		newContent := util.EvaluateConditionalSections(string(content), templateData, varMap)
+		newContent := util.EvaluateConditionalSections(src, selectedTemplateData, varMap)
 		os.MkdirAll(filepath.Dir(dst), 0700)
 		if ioutil.WriteFile(dst, []byte(newContent), 0777) != nil {
 			util.Error("Could not write to Dockerfile "+dst, nil, true)
@@ -256,11 +254,11 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create demo applications
-		executeServiceInitCommands(templateData, &varMap, "DemoAppInitCmd")
+		executeServiceInitCommands(selectedTemplateData, &varMap, "DemoAppInitCmd")
 	}
 
 	// Intialize services
-	executeServiceInitCommands(templateData, &varMap, "ServiceInitCmd")
+	executeServiceInitCommands(selectedTemplateData, &varMap, "ServiceInitCmd")
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -279,6 +277,7 @@ func generateDynamicStack(
 
 func askForUserInput(
 	templateData *map[string][]model.ServiceTemplateConfig,
+	selectedTemplateData *map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	volMap *map[string]string,
 	flagAdvanced bool,
@@ -298,36 +297,108 @@ func askForUserInput(
 	usedVolumes := []string{}
 
 	// Ask for frontends
-	askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(
+		templateData,
+		selectedTemplateData,
+		varMap,
+		volMap,
+		&usedPorts,
+		&usedVolumes,
+		"frontend",
+		true,
+		"Which frontend framework do you want to use?",
+		flagAdvanced,
+		flagWithDockerfile,
+	)
 
 	// Ask for backends
-	askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(
+		templateData,
+		selectedTemplateData,
+		varMap,
+		volMap,
+		&usedPorts,
+		&usedVolumes,
+		"backend",
+		true,
+		"Which backend framework do you want to use?",
+		flagAdvanced,
+		flagWithDockerfile,
+	)
 
 	// Ask for databases
-	databaseCount := askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(
+		templateData,
+		selectedTemplateData,
+		varMap,
+		volMap,
+		&usedPorts,
+		&usedVolumes,
+		"database",
+		true,
+		"Which database engine do you want to use?",
+		flagAdvanced,
+		flagWithDockerfile,
+	)
 
-	if databaseCount > 0 {
+	if len((*selectedTemplateData)["database"]) > 0 {
 		// Ask for db admin tools
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(
+			templateData,
+			selectedTemplateData,
+			varMap,
+			volMap,
+			&usedPorts,
+			&usedVolumes,
+			"db-admin",
+			true,
+			"Which db admin tool do you want to use?",
+			flagAdvanced,
+			flagWithDockerfile,
+		)
 	} else {
-		(*templateData)["db-admin"] = []model.ServiceTemplateConfig{}
+		(*selectedTemplateData)["db-admin"] = []model.ServiceTemplateConfig{}
 	}
 
 	if alsoProduction {
 		// Ask for proxies
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(
+			templateData,
+			selectedTemplateData,
+			varMap,
+			volMap,
+			&usedPorts,
+			&usedVolumes,
+			"proxy",
+			false,
+			"Which reverse proxy you want to use?",
+			flagAdvanced,
+			flagWithDockerfile,
+		)
 
 		// Ask for proxy tls helpers
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(
+			templateData,
+			selectedTemplateData,
+			varMap,
+			volMap,
+			&usedPorts,
+			&usedVolumes,
+			"tls-helper",
+			false,
+			"Which tls helper you want to use?",
+			flagAdvanced,
+			flagWithDockerfile,
+		)
 	} else {
-		(*templateData)["proxy"] = []model.ServiceTemplateConfig{}
-		(*templateData)["tls-helper"] = []model.ServiceTemplateConfig{}
+		(*selectedTemplateData)["proxy"] = []model.ServiceTemplateConfig{}
+		(*selectedTemplateData)["tls-helper"] = []model.ServiceTemplateConfig{}
 	}
 	return composeVersion, alsoProduction
 }
 
 func processUserInput(
-	templateData map[string][]model.ServiceTemplateConfig,
+	selectedTemplateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 	volMap map[string]string,
 	composeVersion string,
@@ -359,7 +430,7 @@ func processUserInput(
 	instString = instString + string(fileIn) + "\n\n"
 
 	// Loop through templates
-	for _, templates := range templateData {
+	for _, templates := range selectedTemplateData {
 		for _, template := range templates {
 			srcPath := util.GetPredefinedServicesPath() + "/" + template.Dir
 			// Apply all existing files of service template
@@ -374,7 +445,7 @@ func processUserInput(
 				case "config":
 					processConfigFile(file, &varFiles, &volMap, srcPath, dstPath)
 				case "service":
-					processServiceFile(file, templateData, &varMap, &composeFileProd, &composeFileDev, &networks, template, srcPath)
+					processServiceFile(file, selectedTemplateData, &varMap, &composeFileProd, &composeFileDev, &networks, template, srcPath)
 				}
 			}
 			// Get secrets
@@ -395,6 +466,7 @@ func processUserInput(
 
 func askForStackComponent(
 	templateData *map[string][]model.ServiceTemplateConfig,
+	selectedTemplateData *map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	volMap *map[string]string,
 	usedPorts *[]int,
@@ -407,20 +479,20 @@ func askForStackComponent(
 ) (componentCount int) {
 	templates := (*templateData)[component]
 	items := util.TemplateListToLabelList(templates)
-	itemsPreselected := util.TemplateListToPreselectedLabelList(templates, templateData)
-	(*templateData)[component] = []model.ServiceTemplateConfig{}
+	itemsPreselected := util.TemplateListToPreselectedLabelList(templates, selectedTemplateData)
+	(*selectedTemplateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
 		templateSelections := util.MultiSelectMenuQuestionIndex(question, items, itemsPreselected)
 		for _, index := range templateSelections {
 			util.Pel()
-			(*templateData)[component] = append((*templateData)[component], templates[index])
+			(*selectedTemplateData)[component] = append((*selectedTemplateData)[component], templates[index])
 			getVarMapFromQuestions(varMap, usedPorts, templates[index].Questions, flagAdvanced)
 			getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[index], flagAdvanced, flagWithDockerfile)
 			componentCount++
 		}
 	} else {
 		templateSelection := util.MenuQuestionIndex(question, items)
-		(*templateData)[component] = append((*templateData)[component], templates[templateSelection])
+		(*selectedTemplateData)[component] = append((*selectedTemplateData)[component], templates[templateSelection])
 		getVarMapFromQuestions(varMap, usedPorts, templates[templateSelection].Questions, flagAdvanced)
 		getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[templateSelection], flagAdvanced, flagWithDockerfile)
 		componentCount = 1
@@ -595,11 +667,8 @@ func processServiceFile(
 	template model.ServiceTemplateConfig,
 	srcPath string,
 ) {
-	// Load service file
-	yamlFile, _ := os.Open(filepath.Join(srcPath, file.Path))
-	contentBytes, _ := ioutil.ReadAll(yamlFile)
 	// Evaluate conditional sections
-	content := util.EvaluateConditionalSections(string(contentBytes), templateData, *varMap)
+	content := util.EvaluateConditionalSections(filepath.Join(srcPath, file.Path), templateData, *varMap)
 	// Replace variables
 	content = util.ReplaceVarsInString(content, *varMap)
 	// Parse yaml

@@ -2,9 +2,9 @@ image: neo4j:${{NEO4J_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-neo4j
 restart: always
 networks:
-#! if has backend {
-#!  - backend-database
-#! }
+#? if has services.backend {
+#  - backend-database
+#? }
 ports:
   - ${{NEO4J_PORT_WEB}}:7474
   - ${{NEO4J_PORT_API}}:7687
