@@ -24,8 +24,9 @@
             "variable": "LIVE_POLL_API_PORT"
         },
         {
-            "text": "On which scheme you want to expose your Live-Poll API instance (https/http)?",
-            "type": 2,
+            "text": "On which scheme you want to expose your Live-Poll API instance?",
+            "type": 3,
+            "options": ["https", "http"],
             "defaultValue": "https",
             "validator": "alpha",
             "variable": "LIVE_POLL_API_SCHEME"

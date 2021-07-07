@@ -25,7 +25,7 @@
     ],
     "questions": [
         {
-            "text": "On which port you want to expose Postgres DB?",
+            "text": "On which port you want to expose your Postgres database?",
             "type": 2,
             "defaultValue": "5432",
             "validator": "port",

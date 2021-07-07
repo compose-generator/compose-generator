@@ -544,6 +544,9 @@ func getVarMapFromQuestions(
 				} else {
 					(*varMap)[q.Variable] = util.TextQuestionWithDefault(q.Text, defaultValue)
 				}
+			case 3: // Select
+				answer := util.MenuQuestionWithDefault(q.Text, q.Options, q.DefaultValue)
+				(*varMap)[q.Variable] = answer
 			}
 		} else {
 			(*varMap)[q.Variable] = defaultValue
@@ -726,9 +729,9 @@ func executeServiceInitCommands(
 			}
 			if len(commands) > 0 {
 				if field == "ServiceInitCmd" {
-					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
-				} else {
 					util.P("Initializing service '" + template.Label + "' (may take a while) ... ")
+				} else {
+					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
 				}
 				util.ExecuteOnLinux(strings.Join(commands, "; "))
 				util.Done()

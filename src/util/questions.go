@@ -94,6 +94,16 @@ func MenuQuestion(label string, items []string) (result string) {
 	return
 }
 
+func MenuQuestionWithDefault(label string, items []string, defaultItem string) (result string) {
+	prompt := &survey.Select{
+		Message: label,
+		Options: items,
+		Default: defaultItem,
+	}
+	handleInterrupt(survey.AskOne(prompt, &result))
+	return
+}
+
 // MenuQuestionIndex prints a selection of predefined items and returns the selected index
 func MenuQuestionIndex(label string, items []string) (result int) {
 	prompt := &survey.Select{

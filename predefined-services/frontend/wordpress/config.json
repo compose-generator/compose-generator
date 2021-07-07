@@ -36,8 +36,9 @@
             "variable": "WORDPRESS_OUTSIDE_HOST"
         },
         {
-            "text": "On which scheme is your instance accessible from outside? (https/http)",
-            "type": 2,
+            "text": "On which scheme is your instance accessible from outside?",
+            "type": 3,
+            "options": ["https", "http"],
             "defaultValue": "http",
             "variable": "WORDPRESS_OUTSIDE_SCHEME"
         }

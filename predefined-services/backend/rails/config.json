@@ -35,7 +35,7 @@
             "variable": "RAILS_PORT"
         },
         {
-            "text": "Which Ruby version do you want to use (specify version in format x.y.z)?",
+            "text": "Which Ruby version do you want to use (must specified in format x.y.z)?",
             "type": 2,
             "defaultValue": "3.0.1",
             "variable": "RAILS_RUBY_VERSION"
