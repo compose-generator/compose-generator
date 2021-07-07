@@ -42,6 +42,9 @@
                     'type': 'integer',
                     'required': True
                 },
+                'options': {
+                    'type': 'list'
+                },
                 'defaultValue': {
                     'type': 'string'
                 },
