@@ -48,7 +48,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 	metadata.Label = name
 	metadata.CreationTime = time.Now().UnixNano() / int64(time.Millisecond)
 	metadataJSON, _ := json.MarshalIndent(metadata, "", " ")
-	err := ioutil.WriteFile(targetDir+"/metadata.json", metadataJSON, 0777)
+	err := ioutil.WriteFile(targetDir+"/metadata.json", metadataJSON, 0755)
 	if err != nil {
 		util.Error("Could not write metadata.", err, true)
 	}

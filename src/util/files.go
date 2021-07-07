@@ -39,10 +39,10 @@ func AddFileToGitignore(path string) {
 			// This path is already included
 			return
 		}
-		f, _ = os.OpenFile(filename, os.O_WRONLY, 0777)
+		f, _ = os.OpenFile(filename, os.O_WRONLY, 0755)
 	} else {
 		// File does not exist yet
-		f, _ = os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0777)
+		f, _ = os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0755)
 	}
 
 	defer f.Close()
