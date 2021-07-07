@@ -6,9 +6,9 @@ on:
   push:
     branches:
       - 'main'
-      #- 'docs/**'
+      - 'docs/**'
       #- 'feature/**'
-      - 'service/**'
+      #- 'service/**'
     paths:
       - 'docs/**'
 
