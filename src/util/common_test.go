@@ -2,12 +2,38 @@ package util
 
 import (
 	"compose-generator/model"
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 // ------------------------------------------ ReplaceVarsInFile ------------------------------------------
+
+func TestReplaceVarsInFile(t *testing.T) {
+	vars := map[string]string{
+		"SERVICE_NAME": "Test",
+		"SERVICE_PORT": "8080",
+		"_PW_TEST":     "insecure12345",
+	}
+	expectedOutput := "test_attr: true\ntree:\n  nested_attr: 5\n  name: Test\n  size: 10\n  port: 80:8080\nouter: \"String\"\npw: insecure12345"
+	inputPath := "../../.github/test-files/vars-replacement-test.yml"
+
+	// Temporarily save content of test file
+	originalContent, err := ioutil.ReadFile(inputPath)
+	assert.Nil(t, err)
+
+	// Replace vars in test file
+	ReplaceVarsInFile(inputPath, vars)
+	content, err := ioutil.ReadFile(inputPath)
+
+	// Write original content back to test file
+	ioutil.WriteFile(inputPath, originalContent, 0755)
+
+	// Make assertions
+	assert.Nil(t, err)
+	assert.Equal(t, expectedOutput, string(content))
+}
 
 // ------------------------------------------ ReplaceVarsInString ------------------------------------------
 
