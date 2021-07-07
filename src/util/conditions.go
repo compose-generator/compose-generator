@@ -32,7 +32,7 @@ func EvaluateCondition(
 
 func CheckIfCComIsInstalled() {
 	if !CommandExists("ccom") {
-		Error("CCom is not missing on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", nil, true)
+		Error("CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", nil, true)
 	}
 }
 

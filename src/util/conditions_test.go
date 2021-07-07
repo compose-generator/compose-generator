@@ -113,3 +113,10 @@ func TestPrepareInputData2(t *testing.T) {
 	expected := "{\"services\":{\"dbadmin\":[{\"label\":\"PhpMyAdmin\",\"name\":\"phpmyadmin\"}],\"tlshelper\":[{\"label\":\"Lets Encrypt Companion\",\"name\":\"letsencrypt\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
 	assert.Equal(t, expected, result)
 }
+
+// -------------------------------------------------------------- CheckIfCComIsInstalled ------------------------------------------------------------
+
+func TestCheckIfCComIsInstalled(t *testing.T) {
+	CheckIfCComIsInstalled()
+	assert.True(t, true)
+}

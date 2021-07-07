@@ -115,7 +115,8 @@ func generateDynamicStack(
 		for templateType, templates := range templateData {
 			selectedTemplateData[templateType] = []model.ServiceTemplateConfig{}
 			for _, template := range templates {
-				// Loop through services
+				srcDir := filepath.Join(util.GetPredefinedServicesPath(), template.Dir)
+				// Loop through service configurations
 				for _, service := range serviceConfig {
 					if service.Type == templateType && strings.HasSuffix(template.Dir, service.Service) {
 						selectedTemplateData[templateType] = append(selectedTemplateData[templateType], template)
@@ -123,13 +124,18 @@ func generateDynamicStack(
 						for _, question := range template.Questions {
 							varMap[question.Variable] = question.DefaultValue
 						}
+						// Loop through volumes and add default values to varMap and volMap
+						for _, volume := range template.Volumes {
+							volMap[filepath.Join(srcDir, volume.DefaultValue)] = volume.DefaultValue
+							varMap[volume.Variable] = volume.DefaultValue
+						}
 						// Override with params
 						for varName, varValue := range service.Params {
 							varMap[varName] = varValue
 							// Loop through volumes
 							for _, volume := range template.Volumes {
 								if volume.Variable == varName {
-									volMap[filepath.Join(template.Dir, volume.DefaultValue)] = varValue
+									volMap[filepath.Join(srcDir, volume.DefaultValue)] = varValue
 									break
 								}
 							}
@@ -719,7 +725,11 @@ func executeServiceInitCommands(
 				commands = append(commands, util.ReplaceVarsInString(cmd, *varMap))
 			}
 			if len(commands) > 0 {
-				util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
+				if field == "ServiceInitCmd" {
+					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
+				} else {
+					util.P("Initializing service '" + template.Label + "' (may take a while) ... ")
+				}
 				util.ExecuteOnLinux(strings.Join(commands, "; "))
 				util.Done()
 			}

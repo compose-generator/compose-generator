@@ -1,0 +1,8 @@
+test_attr: true
+tree:
+  nested_attr: 5
+  name: ${{SERVICE_NAME}}
+  size: 10
+  port: 80:${{SERVICE_PORT}}
+outer: "String"
+pw: ${{_PW_TEST}}

@@ -13,7 +13,7 @@ title: Install on Linux
         sudo apt-key add -
     sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/debian \
         $(lsb_release -cs) main"
-    sudo sudo apt-get update
+    sudo apt-get update
     sudo apt-get install -y compose-generator
 
     ```
@@ -67,7 +67,7 @@ title: Install on Linux
         sudo apt-key add -
     sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/debian \
         $(lsb_release -cs) main"
-    sudo sudo apt-get update
+    sudo apt-get update
     sudo apt-get install -y compose-generator
     ```
 

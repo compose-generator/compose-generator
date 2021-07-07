@@ -1,0 +1,9 @@
+image: ghcr.io/livepoll/api-dev:${{LIVE_POLL_API_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-live-poll-api
+restart: always
+networks:
+  - backend-database
+ports:
+  - ${{LIVE_POLL_API_PORT}}:8080
+env_file:
+  - environment.env
