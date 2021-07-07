@@ -34,10 +34,10 @@
             "variable": "LIVE_POLL_PORT"
         },
         {
-            "text": "On which schema you want to expose your Live-Poll instance (https/http)?",
-            "type": 2,
+            "text": "On which schema you want to expose your Live-Poll instance?",
+            "type": 3,
+            "options": ["https", "http"],
             "defaultValue": "https",
-            "validator": "alpha",
             "variable": "LIVE_POLL_SCHEME"
         },
         {

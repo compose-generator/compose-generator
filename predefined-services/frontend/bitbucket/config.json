@@ -37,17 +37,17 @@
             "variable": "BITBUCKET_OUTSIDE_HOST"
         },
         {
-            "text": "On which scheme is your instance visible from outside? (http/https)",
-            "type": 2,
+            "text": "On which scheme is your instance visible from outside?",
+            "type": 3,
+            "options": ["https", "http"],
             "defaultValue": "http",
-            "validator": "alpha",
             "variable": "BITBUCKET_OUTSIDE_SCHEME"
         },
         {
             "text": "On which port is your instance visible from outside? (http: 80, https: 443)",
-            "type": 2,
+            "type": 3,
+            "options": ["443", "80"],
             "defaultValue": "80",
-            "validator": "port",
             "variable": "BITBUCKET_OUTSIDE_PORT"
         },
         {

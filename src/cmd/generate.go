@@ -181,13 +181,13 @@ func generateDynamicStack(
 	}
 
 	// Write README.md
-	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
+	if ioutil.WriteFile("./README.md", []byte(instString), 0755) != nil {
 		util.Error("Could not write yaml to README file", nil, true)
 	}
 
 	// Write environment.env file
 	if len(envString) > 0 {
-		if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
+		if ioutil.WriteFile("./environment.env", []byte(envString), 0755) != nil {
 			util.Error("Could not write yaml to environment file", nil, true)
 		} else {
 			// Add environment.env file to .gitignore
@@ -231,7 +231,7 @@ func generateDynamicStack(
 			}
 		} else {
 			// Create empty volume
-			os.MkdirAll(dst, 0777)
+			os.MkdirAll(dst, 0755)
 		}
 	}
 	util.Done()
@@ -240,7 +240,7 @@ func generateDynamicStack(
 	for src, dst := range dockerfileMap {
 		newContent := util.EvaluateConditionalSections(src, selectedTemplateData, varMap)
 		os.MkdirAll(filepath.Dir(dst), 0700)
-		if ioutil.WriteFile(dst, []byte(newContent), 0777) != nil {
+		if ioutil.WriteFile(dst, []byte(newContent), 0755) != nil {
 			util.Error("Could not write to Dockerfile "+dst, nil, true)
 		}
 	}
@@ -544,6 +544,9 @@ func getVarMapFromQuestions(
 				} else {
 					(*varMap)[q.Variable] = util.TextQuestionWithDefault(q.Text, defaultValue)
 				}
+			case 3: // Select
+				answer := util.MenuQuestionWithDefault(q.Text, q.Options, q.DefaultValue)
+				(*varMap)[q.Variable] = answer
 			}
 		} else {
 			(*varMap)[q.Variable] = defaultValue
@@ -726,9 +729,9 @@ func executeServiceInitCommands(
 			}
 			if len(commands) > 0 {
 				if field == "ServiceInitCmd" {
-					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
-				} else {
 					util.P("Initializing service '" + template.Label + "' (may take a while) ... ")
+				} else {
+					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
 				}
 				util.ExecuteOnLinux(strings.Join(commands, "; "))
 				util.Done()

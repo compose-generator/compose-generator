@@ -50,7 +50,7 @@ func ParseCustomTemplates() (metadatas []model.TemplateMetadata) {
 	templatesPath := util.GetCustomTemplatesPath()
 	// Create templates dir, if it not exists
 	if !util.FileExists(templatesPath) {
-		os.MkdirAll(templatesPath, 0777)
+		os.MkdirAll(templatesPath, 0755)
 	}
 	// Read template directory names
 	files, err := ioutil.ReadDir(templatesPath)

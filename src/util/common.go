@@ -22,7 +22,7 @@ func ReplaceVarsInFile(path string, varMap map[string]string) {
 	content = []byte(ReplaceVarsInString(string(content), varMap))
 
 	// Write content back
-	err = ioutil.WriteFile(path, content, 0777)
+	err = ioutil.WriteFile(path, content, 0755)
 	if err != nil {
 		Error("Could not write to "+path, err, true)
 	}
@@ -47,7 +47,7 @@ func GenerateSecrets(path string, secrets []model.Secret) map[string]string {
 	secretsMap := generateSecretsAndReplaceInString(&content, secrets)
 
 	// Write content back
-	err = ioutil.WriteFile(path, []byte(content), 0777)
+	err = ioutil.WriteFile(path, []byte(content), 0755)
 	if err != nil {
 		Error("Could not write to "+path, err, true)
 	}
