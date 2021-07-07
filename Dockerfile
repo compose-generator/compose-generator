@@ -1,4 +1,4 @@
-FROM alpine:3.14.0
+FROM alpine:3.14
 WORKDIR /cg/out
 
 COPY compose-generator /cg/compose-generator
