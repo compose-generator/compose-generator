@@ -1,6 +1,6 @@
 {
     "label": "Live-Poll API",
-    "preselected": "has service live-poll",
+    "preselected": "services.frontend contains name == \"live-poll\"",
     "files": [
         {
             "path": "service.yml",

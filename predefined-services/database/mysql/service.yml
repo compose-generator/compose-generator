@@ -9,10 +9,10 @@ networks:
 #  - frontend-database
 #? }
 #? if services.dbadmin contains name == "phpmyadmin" {
-#  - mariadb-phpmyadmin
+#  - mysql-phpmyadmin
 #? }
 #? if services.dbadmin contains name == "adminer" {
-#  - mariadb-adminer
+#  - mysql-adminer
 #? }
 ports:
   - ${{MYSQL_PORT}}:3306

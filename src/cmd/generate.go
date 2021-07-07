@@ -725,7 +725,11 @@ func executeServiceInitCommands(
 				commands = append(commands, util.ReplaceVarsInString(cmd, *varMap))
 			}
 			if len(commands) > 0 {
-				util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
+				if field == "ServiceInitCmd" {
+					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
+				} else {
+					util.P("Initializing service '" + template.Label + "' (may take a while) ... ")
+				}
 				util.ExecuteOnLinux(strings.Join(commands, "; "))
 				util.Done()
 			}
