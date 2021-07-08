@@ -54,7 +54,9 @@ jobs:
 
       - name: Create predefined services archive
         working-directory: predefined-services
-        run: tar cfvz ../../predefined-services.tar.gz * # ../../predefined-services.tar.gz is outside of project directory, because goreleaser doesn't like a dirty git state
+        run: |
+          mkdir ../bin
+          tar cfvz ../bin/predefined-services.tar.gz *
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
@@ -101,9 +103,9 @@ jobs:
         run: |
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/fedora/compose-generator-latest.rpm
 
-#      - name: Deploy to Alpine repo
-#        run: |
-#          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.apk" "${{ secrets.NEXUS_URL }}/alpine/"
+      - name: Deploy to Alpine repo
+        run: |
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.apk" "${{ secrets.NEXUS_URL }}/alpine/compose-generator-latest.apk"
 
       - name: Download EnVar plugin for NSIS
         uses: carlosperate/download-file-action@v1.0.3
