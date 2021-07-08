@@ -1,0 +1,17 @@
+image: redis:${{REDIS_VERSION}}-alpine
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-redis
+restart: always
+networks:
+#? if has services.backend {
+#  - backend-database
+#? }
+#? if services.dbadmin contains name == "redis-insight" {
+#  - redis-redis-insight
+#? }
+ports:
+  - ${{REDIS_PORT}}:6379
+volumes: 
+  - ${{VOLUME_REDIS_DATA}}:/data
+env_file:
+  - environment.env
+command: redis-server --requirepass "$REDIS_PASSWORD"

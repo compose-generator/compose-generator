@@ -1,0 +1,6 @@
+image: redislabs/redisinsight:${{REDIS_INSIGHT_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-redis-insight
+networks:
+  - redis-redis-insight
+ports:
+  - ${{REDIS_INSIGHT_PORT}}:8001
