@@ -54,13 +54,13 @@ jobs:
 
       - name: Create predefined services archive
         working-directory: predefined-services
-        run: tar cfvz ../predefined-services.tar.gz *
+        run: tar cfvz ../../predefined-services.tar.gz * # ../../predefined-services.tar.gz is outside of project directory, because goreleaser doesn't like a dirty git state
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          version: v0.173.1
+          version: v0.173.2
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

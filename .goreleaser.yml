@@ -74,7 +74,7 @@ release:
   name_template: v{{.Tag}}
   prerelease: auto
   extra_files:
-    - glob: ./predefined-services/predefined-services.tar.gz
+    - glob: ../predefined-services.tar.gz
 announce:
   twitter:
     enabled: true
