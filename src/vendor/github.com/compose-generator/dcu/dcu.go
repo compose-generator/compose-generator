@@ -51,7 +51,7 @@ func SerializeToFile(composeFile model.ComposeFile, path string) (err error) {
 	if err != nil {
 		return
 	}
-	err = ioutil.WriteFile(path, output, 0755)
+	err = ioutil.WriteFile(path, output, 0777)
 	return
 }
 
