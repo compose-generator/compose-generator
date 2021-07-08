@@ -8,13 +8,10 @@ on:
       - '*'
 
 jobs:
-  release:
+  build-binaries:
+    name: Build binaries
     runs-on: ubuntu-latest
     steps:
-      - name: Get version name
-        id: get_version
-        uses: battila7/get-version-action@v2
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -78,14 +75,43 @@ jobs:
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist-output
+          path: dist/
+
+  deploy-nexus:
+    name: Deploy to Nexus
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - 386
+          - arm64
+          - armv5
+          - armv6
+          - armv7
+    steps:
+      - name: Get version name
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Download dist output
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-output
+
       - name: Deploy to Debian / Raspbian repo
-        working-directory: dist
         run: |
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-bullseye/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-buster/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-stretch/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-jessie/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-wheezy/"
+      
       - name: Deploy to Ubuntu repo
         run: |
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-hirsute/"
@@ -103,9 +129,36 @@ jobs:
         run: |
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/fedora/compose-generator-latest.rpm
 
-      - name: Deploy to Alpine repo
-        run: |
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.apk" "${{ secrets.NEXUS_URL }}/alpine/compose-generator-latest.apk"
+      #- name: Deploy to Alpine repo
+      #  run: |
+      #    curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.apk" "${{ secrets.NEXUS_URL }}/alpine/compose-generator-latest.apk"
+
+  build-win-installers:
+    name: Build installers
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+          - {
+              arch: amd64, label: x64
+            }
+          - {
+              arch: 386, label: x86
+            }
+    steps:
+      - name: Get version name
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download dist output
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-output
 
       - name: Download EnVar plugin for NSIS
         uses: carlosperate/download-file-action@v1.0.3
@@ -123,34 +176,18 @@ jobs:
       - name: Set plugin permissions
         run: sudo chown -R $(whoami) /usr/share/nsis/Plugins/
       
-      - name: Create NSIS installer - amd64
+      - name: Create NSIS installer
         uses: joncloud/makensis-action@v3.4
         with:
           additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
         env:
-          VERSION: ${{ github.event.release.tag_name }}
-          ARCH: amd64
+          VERSION: ${{ steps.get_version.outputs.version }}
+          ARCH: ${{ matrix.config.arch }}
       
       - name: Upload NSIS installer - amd64
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: compose-generator.exe
-          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_x64_Setup.exe
-          tag: ${{ github.ref }}
-      
-      - name: Create NSIS installer - i386
-        uses: joncloud/makensis-action@v3.4
-        with:
-          additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
-        env:
-          VERSION: ${{ github.event.release.tag_name }}
-          ARCH: 386
-      
-      - name: Upload NSIS installer - i386
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: compose-generator.exe
-          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_x86_Setup.exe
+          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_${{ matrix.config.label }}_Setup.exe
           tag: ${{ github.ref }}

@@ -52,7 +52,7 @@ Section "install" Installation
 
 ;Add files
   SetOutPath "$INSTDIR"
-  File /oname=compose-generator.exe dist/compose-generator_windows_${ARCH}/compose-generator.exe
+  File /oname=compose-generator.exe compose-generator_windows_${ARCH}/compose-generator.exe
   File /r predefined-services
 
 ;create start-menu items
