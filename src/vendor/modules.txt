@@ -31,7 +31,7 @@ github.com/go-playground/universal-translator
 # github.com/go-playground/validator v9.31.0+incompatible
 ## explicit
 github.com/go-playground/validator
-# github.com/go-playground/validator/v10 v10.6.1
+# github.com/go-playground/validator/v10 v10.7.0
 ## explicit
 github.com/go-playground/validator/v10
 # github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
