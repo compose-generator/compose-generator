@@ -1,0 +1,49 @@
+{
+    "label": "Redis",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Redis database?",
+            "type": 2,
+            "defaultValue": "6379",
+            "validator": "port",
+            "variable": "REDIS_PORT"
+        },
+        {
+            "text": "Which Redis version do you want to use?",
+            "type": 2,
+            "defaultValue": "6.2",
+            "variable": "REDIS_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Redis data volume?",
+            "defaultValue": "./volumes/redis-data",
+            "variable": "VOLUME_REDIS_DATA",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Redis password",
+            "variable": "_PW_REDIS",
+            "length": 50
+        }
+    ]
+}
