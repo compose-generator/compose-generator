@@ -4,6 +4,6 @@ cd src
 
 go env -w GOOS=windows
 go env -w GOARCH=amd64
-go build -o ../bin/compose-generator-amd64.exe compose-generator.go
+go build -o ../bin/compose-generator.exe compose-generator.go
 
 cd ..
