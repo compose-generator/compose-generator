@@ -20,12 +20,13 @@ builds:
       - -s -w -X compose-generator/util.Version={{ .Version }} -X compose-generator/util.Commit={{ .Commit }} -X compose-generator/util.Date={{ .CommitDate }} -X compose-generator/util.BuiltBy=github-actions
 dockers:
   - image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}
-      - ghcr.io/compose-generator/compose-generator:latest
-      - chillibits/compose-generator:{{ .Version }}
-      - chillibits/compose-generator:latest
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
+      - ghcr.io/compose-generator/compose-generator:latest-amd64
+      - chillibits/compose-generator:{{ .Version }}-amd64
+      - chillibits/compose-generator:latest-amd64
     dockerfile: Dockerfile
     use: buildx
+    goarch: amd64
     extra_files:
       - predefined-services
     build_flag_templates:
@@ -37,6 +38,114 @@ dockers:
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache 2.0
       - --platform=linux/amd64
+  - image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
+      - ghcr.io/compose-generator/compose-generator:latest-i386
+      - chillibits/compose-generator:{{ .Version }}-i386
+      - chillibits/compose-generator:latest-i386
+    dockerfile: Dockerfile
+    use: buildx
+    goarch: 386
+    extra_files:
+      - predefined-services
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --platform=linux/i386
+  - image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v5
+      - ghcr.io/compose-generator/compose-generator:latest-arm32v5
+      - chillibits/compose-generator:{{ .Version }}-arm32v5
+      - chillibits/compose-generator:latest-arm32v5
+    dockerfile: Dockerfile
+    use: buildx
+    goarch: arm
+    goarm: 5
+    extra_files:
+      - predefined-services
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --platform=linux/arm/v5
+  - image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:latest-arm32v6
+      - chillibits/compose-generator:{{ .Version }}-arm32v6
+      - chillibits/compose-generator:latest-arm32v6
+    dockerfile: Dockerfile
+    use: buildx
+    goarch: arm
+    goarm: 6
+    extra_files:
+      - predefined-services
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --platform=linux/arm/v6
+  - image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+      - ghcr.io/compose-generator/compose-generator:latest-arm32v7
+      - chillibits/compose-generator:{{ .Version }}-arm32v7
+      - chillibits/compose-generator:latest-arm32v7
+    dockerfile: Dockerfile
+    use: buildx
+    goarch: arm
+    goarm: 7
+    extra_files:
+      - predefined-services
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --platform=linux/arm/v7
+docker_manifests:
+  - name_template: chillibits/compose-generator:{{ .Version }}
+    image_templates:
+      - chillibits/compose-generator:{{ .Version }}-amd64
+      - chillibits/compose-generator:{{ .Version }}-i386
+      - chillibits/compose-generator:{{ .Version }}-arm32v5
+      - chillibits/compose-generator:{{ .Version }}-arm32v6
+      - chillibits/compose-generator:{{ .Version }}-arm32v7
+  - name_template: chillibits/compose-generator:latest
+    image_templates:
+      - chillibits/compose-generator:{{ .Version }}-amd64
+      - chillibits/compose-generator:{{ .Version }}-i386
+      - chillibits/compose-generator:{{ .Version }}-arm32v5
+      - chillibits/compose-generator:{{ .Version }}-arm32v6
+      - chillibits/compose-generator:{{ .Version }}-arm32v7
+  - name_template: ghcr.io/compose-generator/compose-generator:{{ .Version }}
+    image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v5
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+  - name_template: ghcr.io/compose-generator/compose-generator:latest
+    image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v5
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
 archives:
   - files:
       - LICENSE
@@ -77,4 +186,4 @@ release:
 announce:
   twitter:
     enabled: true
-    message_template: 'Compose Generator {{.Tag}} is now available! Check out the new features: compose-generator.com!'
+    message_template: 'Compose Generator {{ .Tag }} is now available! Check out the new features: compose-generator.com!'
