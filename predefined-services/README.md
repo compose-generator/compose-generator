@@ -67,7 +67,21 @@ There are two variables, which the cli will provide automatically:
 *Note: This configuration will use an environment variable from the host system: `${VARIABLE_NAME}`. Don't confuse the notations*
 
 ### Use of conditional sections
-*To be extended ...*
+For service files and other files like Dockerfiles, Compose Generator supports condition sections in those files. <br>
+Following situation as example: <br>
+The MySQL servies should be in the same network with the PhpMyAdmin service, but only if the PhpMyAdmin service was selected while generating the stack. This can be achieved with following conditional section in the service file of the MySQL service:
+
+```
+...
+networks:
+#? if services.dbadmin contains name == "phpmyadmin" {
+#  - mysql-phpmyadmin
+#? }
+...
+```
+*Note: In the above example, the `networks` attribute, which contains the conditional section is not included in the conditional payload. This can be neglected, as the service file gets parsed by Compose Generator at runtime and empty lists get omitted.*
+
+For more information about different condition types, etc., please refer to the [CCom documentation](https://ccom.compose-generator.com), where the conditional sections and conditional statements are described in more detail.
 
 ## Environment file ([example file](frontend/angular/environment.env))
 This file consists of key-value pares, and is not mandatory and should only be used for secrets, usernames, configurable paths, urls, etc.
