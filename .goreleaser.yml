@@ -16,7 +16,6 @@ builds:
       - 5
       - 6
       - 7
-      - 8
     ldflags:
       - -s -w -X compose-generator/util.Version={{ .Version }} -X compose-generator/util.Commit={{ .Commit }} -X compose-generator/util.Date={{ .CommitDate }} -X compose-generator/util.BuiltBy=github-actions
 dockers:
@@ -74,7 +73,7 @@ release:
   name_template: v{{.Tag}}
   prerelease: auto
   extra_files:
-    - glob: ./predefined-services/predefined-services.tar.gz
+    - glob: ./bin/predefined-services.tar.gz
 announce:
   twitter:
     enabled: true
