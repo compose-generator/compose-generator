@@ -1,9 +1,9 @@
 image: elastichq/elasticsearch-hq:${{ELASTICSEARCH_HQ_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-adminer
 networks:
-#! if has service elasticsearch {
-#!   - elasticsearch-elasticsearchhq
-#! }
+#? if services.database contains name == "elasticsearch" {
+#   - elasticsearch-elasticsearchhq
+#? }
 ports:
   - ${{ELASTICSEARCH_HQ_PORT}}:5000
 depends_on:

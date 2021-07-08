@@ -1,0 +1,88 @@
+{
+    "label": "Live-Poll API",
+    "preselected": "services.frontend contains name == \"live-poll\"",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Live-Poll API instance?",
+            "type": 2,
+            "defaultValue": "8080",
+            "validator": "port",
+            "variable": "LIVE_POLL_API_PORT"
+        },
+        {
+            "text": "On which scheme you want to expose your Live-Poll API instance?",
+            "type": 3,
+            "options": ["https", "http"],
+            "defaultValue": "https",
+            "validator": "alpha",
+            "variable": "LIVE_POLL_API_SCHEME"
+        },
+        {
+            "text": "Which version of the Live-Poll API do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "LIVE_POLL_API_VERSION"
+        },
+        {
+            "text": "On which url will your instance be visible to the internet?",
+            "type": 2,
+            "defaultValue": "localhost:8080",
+            "variable": "LIVE_POLL_API_URL"
+        },
+        {
+            "text": "On which url will your frontend be visible to the internet?",
+            "type": 2,
+            "defaultValue": "localhost:80",
+            "variable": "LIVE_POLL_API_FRONTEND_URL"
+        },
+        {
+            "text": "Hostname of your SMTP server (smtp.provider.com):",
+            "type": 2,
+            "validator": "hostname",
+            "variable": "LIVE_POLL_API_SMTP_HOST"
+        },
+        {
+            "text": "Port of your SMTP server:",
+            "type": 2,
+            "validator": "port",
+            "defaultValue": "587",
+            "variable": "LIVE_POLL_API_SMTP_PORT"
+        },
+        {
+            "text": "Username to the SMTP server for your Live-Poll API instance:",
+            "type": 2,
+            "variable": "LIVE_POLL_API_SMTP_USER"
+        },
+        {
+            "text": "Password to the SMTP server for this user:",
+            "type": 2,
+            "variable": "LIVE_POLL_API_SMTP_PASSWORD"
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Live-Poll API JWT key value",
+            "variable": "_PW_LIVE_POLL_API_JWT_KEY_VALUE",
+            "length": 16
+        },
+        {
+            "name": "Live-Poll API JWT secret",
+            "variable": "_PW_LIVE_POLL_API_JWT_SECRET",
+            "length": 30
+        }
+    ]
+}

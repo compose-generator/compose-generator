@@ -1,4 +1,4 @@
-image: sonarqube:${{SONARQUBE_VERSION}}
+image: sonarqube:${{SONARQUBE_VERSION}}-community
 container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-sonarqube
 restart: always
 volumes:

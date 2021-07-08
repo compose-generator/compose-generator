@@ -8,15 +8,14 @@ on:
       - '*'
 
 jobs:
-  release:
+  build-binaries:
+    name: Build binaries
     runs-on: ubuntu-latest
     steps:
-      - name: Get version name
-        id: get_version
-        uses: battila7/get-version-action@v2
-
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -50,11 +49,17 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PACKAGE_SIGNING }}
           passphrase: ${{ secrets.GPG_PACKAGE_SIGNING_PASSPHRASE }}
 
+      - name: Create predefined services archive
+        working-directory: predefined-services
+        run: |
+          mkdir ../bin
+          tar cfvz ../bin/predefined-services.tar.gz *
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
-        if: success() && startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          version: v0.160.0
+          version: v0.173.2
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,36 +70,95 @@ jobs:
           NFPM_PUBLISH_DEB_PASSPHRASE: ${{ secrets.GPG_PACKAGE_SIGNING_PASSPHRASE }}
           NFPM_PUBLISH_RPM_PASSPHRASE: ${{ secrets.GPG_PACKAGE_SIGNING_PASSPHRASE }}
           NFPM_PUBLISH_APK_PASSPHRASE: ${{ secrets.GPG_PACKAGE_SIGNING_PASSPHRASE }}
+          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
 
-      - name: Setup JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v1
-        env:
-          JF_ARTIFACTORY_1: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist-output
+          path: dist/
 
-      - name: Deploy to Alpine repository
+  deploy-nexus:
+    name: Deploy to Nexus
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - 386
+          - arm64
+          - armv5
+          - armv6
+          - armv7
+    steps:
+      - name: Get version name
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Download dist output
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-output
+
+      - name: Deploy to Debian / Raspbian repo
         run: |
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.13/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.12/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.11/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.apk" alpine/3.10/main/x86_64/compose-generator_${{ steps.get_version.outputs.version }}_amd64.apk
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.13/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.12/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.11/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.apk" alpine/3.10/main/aarch64/compose-generator_${{ steps.get_version.outputs.version }}_arm64.apk
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-bullseye/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-buster/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-stretch/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-jessie/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-wheezy/"
       
-      - name: Deploy to Debian repository
+      - name: Deploy to Ubuntu repo
         run: |
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/amd64
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/arm64
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv5.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv5
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv6.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv6
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_armv7.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/armv7
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_386.deb" debian/pool/ --deb buster,stretch,jessie,wheezy,trusty,xenial,bionic,focal,groovy/main/i386
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-hirsute/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-groovy/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-focal/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-bionic/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-xenial/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-trusty/"
       
-      - name: Deploy to RPM repository
+      - name: Deploy to CentOS repo
         run: |
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_amd64.rpm" rpm/x86_64/stable/compose-generator/${{ steps.get_version.outputs.version }}/compose-generator_${{ steps.get_version.outputs.version }}_amd64.rpm
-          jfrog rt u "dist/compose-generator_${{ steps.get_version.outputs.version }}_linux_arm64.rpm" rpm/aarch64/stable/compose-generator/${{ steps.get_version.outputs.version }}/compose-generator_${{ steps.get_version.outputs.version }}_arm64.rpm
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/centos/compose-generator-latest.rpm
+      
+      - name: Deploy to Fedora repo
+        run: |
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/fedora/compose-generator-latest.rpm
+
+      #- name: Deploy to Alpine repo
+      #  run: |
+      #    curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ steps.get_version.outputs.version }}_linux_${{ matrix.arch }}.apk" "${{ secrets.NEXUS_URL }}/alpine/compose-generator-latest.apk"
+
+  build-win-installers:
+    name: Build installers
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+          - {
+              arch: amd64, label: x64
+            }
+          - {
+              arch: 386, label: x86
+            }
+    steps:
+      - name: Get version name
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download dist output
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-output
 
       - name: Download EnVar plugin for NSIS
         uses: carlosperate/download-file-action@v1.0.3
@@ -112,47 +176,18 @@ jobs:
       - name: Set plugin permissions
         run: sudo chown -R $(whoami) /usr/share/nsis/Plugins/
       
-      - name: Create NSIS installer - amd64
+      - name: Create NSIS installer
         uses: joncloud/makensis-action@v3.4
         with:
           additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
         env:
-          VERSION: ${{ github.event.release.tag_name }}
-          ARCH: amd64
+          VERSION: ${{ steps.get_version.outputs.version }}
+          ARCH: ${{ matrix.config.arch }}
       
       - name: Upload NSIS installer - amd64
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: compose-generator.exe
-          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_x64_Setup.exe
-          tag: ${{ github.ref }}
-      
-      - name: Create NSIS installer - i386
-        uses: joncloud/makensis-action@v3.4
-        with:
-          additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
-        env:
-          VERSION: ${{ github.event.release.tag_name }}
-          ARCH: 386
-      
-      - name: Upload NSIS installer - i386
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: compose-generator.exe
-          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_x86_Setup.exe
-          tag: ${{ github.ref }}
-
-      - name: Create predefined services archive
-        run: |
-          cd ./predefined-services
-          tar cfvz ../predefined-services.tar.gz *
-
-      - name: Upload predefined services archive
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: predefined-services.tar.gz
-          asset_name: predefined-services.tar.gz
+          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_${{ matrix.config.label }}_Setup.exe
           tag: ${{ github.ref }}

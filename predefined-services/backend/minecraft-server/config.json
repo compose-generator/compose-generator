@@ -35,8 +35,9 @@
             "advanced": true
         },
         {
-            "text": "Accept Minecraft Eula (TRUE/FALSE)?",
-            "type": 2,
+            "text": "Accept Minecraft Eula?",
+            "type": 3,
+            "options": ["TRUE", "FALSE"],
             "defaultValue": "TRUE",
             "variable": "MINECRAFT_EULA"
         },
@@ -53,8 +54,9 @@
             "defaultValue": "20",
             "variable": "MINECRAFT_MAX_PLAYERS"
         },{
-            "text": "Game difficulty? (peaceful, easy, normal, hard)",
-            "type": 2,
+            "text": "Game difficulty?",
+            "type": 3,
+            "options": ["peaceful", "easy", "normal", "hard"],
             "defaultValue": "normal",
             "variable": "MINECRAFT_DIFFICULTY"
         },
@@ -65,14 +67,16 @@
             "variable": "MINECRAFT_MOTD"
         },
         {
-            "text": "Gamemode? (creative/survival/adventure/spectator)",
-            "type": 2,
-            "defaultValue": "20",
+            "text": "Gamemode?",
+            "type": 3,
+            "options": ["creative", "survival", "adventure", "spectator"],
+            "defaultValue": "survival",
             "variable": "MINECRAFT_GAMEMODE"
         },
         {
-            "text": "Online mode? (TRUE/FALSE)",
-            "type": 2,
+            "text": "Online mode?",
+            "type": 3,
+            "options": ["TRUE", "FALSE"],
             "defaultValue": "TRUE",
             "variable": "MINECRAFT_ONLINE_MODE",
             "advanced": true

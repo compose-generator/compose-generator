@@ -1,4 +1,4 @@
-# ElasticsearchHQ db admin tool (!Do not use in production!)
+## ElasticsearchHQ db admin tool (!Do not use in production!)
 ElasticsearchHQ is a database admin tool for Elasticsearch.
 
 ### Connect to Elasticsearch

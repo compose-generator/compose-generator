@@ -1,6 +1,6 @@
 {
     "label": "Adminer",
-    "preselected": "has service postgres",
+    "preselected": "services.database contains name == \"postgres\"",
     "files": [
         {
             "path": "service.yml",
@@ -32,7 +32,38 @@
         },
         {
             "text": "Which Adminer theme do you want to use?",
-            "type": 2,
+            "type": 3,
+            "options": [
+                "brade",
+                "bueltge",
+                "cviebni-ubor",
+                "dracula",
+                "esterka",
+                "flat",
+                "galkaev",
+                "haeckel",
+                "hever",
+                "hydra",
+                "jukin",
+                "kahi",
+                "konya",
+                "lucas-sandery",
+                "mancave-hever",
+                "mancave",
+                "mvt",
+                "nette",
+                "ng9",
+                "nicu",
+                "pappu687",
+                "paranoiq",
+                "pepa-linha-dark",
+                "pepa-linha",
+                "pilot",
+                "pokorny",
+                "price",
+                "rmsoft",
+                "rmsoft_blue"
+            ],
             "defaultValue": "dracula",
             "variable": "ADMINER_THEME",
             "advanced": true

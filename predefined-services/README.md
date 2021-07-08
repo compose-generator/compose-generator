@@ -1,5 +1,5 @@
 # Predefined service templates
-If you miss a predefined template and you want to create one for the public, please read the following guide. Fork the repository, create the template and open a pr to the `dev` branch. The community is thankful for every predefined template!
+If you miss a predefined template and you want to create one for the public, please first read our [contribution guidelines](../CONTRIBUTING.md) and then continue reading the following guide. Fork the repository, create the template and open a pr to the `dev` branch. The community is thankful for every predefined template!
 
 ## Service template structure
 ```

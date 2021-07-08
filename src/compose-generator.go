@@ -11,8 +11,6 @@ import (
 )
 
 func main() {
-	const VERSION = "0.7.0"
-
 	// Version flag
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
@@ -23,7 +21,7 @@ func main() {
 	// Main cli configuration
 	app := &cli.App{
 		Name:    "compose-generator",
-		Version: VERSION,
+		Version: util.BuildVersion(util.Version, util.Commit, util.Date, util.BuiltBy),
 		Authors: []*cli.Author{
 			{Name: "Marc Auberer", Email: "marc.auberer@chillibits.com"},
 		},
@@ -31,7 +29,7 @@ func main() {
 		Usage:     "Generate and manage docker compose configuration files for your projects.",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
-			&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration file with predefined answers. Works good for CI"},
+			&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration as a `FILE` with predefined answers. Works good for CI"},
 			&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
 			&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
@@ -39,18 +37,17 @@ func main() {
 			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 		},
 		Action: func(c *cli.Context) error {
-			util.CheckForServiceTemplateUpdate(VERSION)
 			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 			return nil
 		},
 		Commands: []*cli.Command{
 			{
 				Name:    "generate",
-				Aliases: []string{"g"},
+				Aliases: []string{"g", "gen"},
 				Usage:   "Generates a docker compose configuration",
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
-					&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration file with predefined answers. Works good for CI"},
+					&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration as a `FILE` with predefined answers. Works good for CI"},
 					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 					&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
@@ -58,7 +55,6 @@ func main() {
 					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
 				},
 				Action: func(c *cli.Context) error {
-					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
 					return nil
 				},
@@ -74,14 +70,13 @@ func main() {
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
 				},
 				Action: func(c *cli.Context) error {
-					util.CheckForServiceTemplateUpdate(VERSION)
 					cmd.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
 					return nil
 				},
 			},
 			{
 				Name:    "remove",
-				Aliases: []string{"r", "rm"},
+				Aliases: []string{"r", "rm", "rem"},
 				Usage:   "Removes a service from an existing compose file",
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Show questions for advanced customization"},
@@ -135,7 +130,7 @@ func main() {
 			},
 			{
 				Name:    "install",
-				Aliases: []string{"i"},
+				Aliases: []string{"i", "in"},
 				Usage:   "Installs Docker and Docker Compose with a single command",
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "only-compose", Aliases: []string{"c"}, Usage: "Only install Docker Compose"},

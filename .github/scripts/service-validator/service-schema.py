@@ -10,7 +10,8 @@
         'required': True
     },
     'volumes': {
-         'type': 'list'
+         'type': 'list',
+         'nullable': True
     },
     'networks': {
          'type': 'list',
@@ -23,7 +24,8 @@
         'type': 'list'
     },
     'environment': {
-        'type': 'list'
+        'type': 'list',
+         'nullable': True
     },
     'restart': {
         'type': 'string',

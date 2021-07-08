@@ -1,5 +1,5 @@
 # Gradle build instructions
-FROM gradle:7.0-jdk16 AS build
+FROM gradle:7.1-jdk16 AS build
 WORKDIR /server
 COPY *.gradle *.kts ./
 RUN gradle build -q || return 0
@@ -17,4 +17,4 @@ COPY --from=build /server/dependencies/ ./
 COPY --from=build /server/snapshot-dependencies/ ./
 COPY --from=build /server/spring-boot-loader/ ./
 COPY --from=build /server/application/ ./
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]1
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]

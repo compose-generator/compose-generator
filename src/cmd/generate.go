@@ -26,10 +26,16 @@ import (
 
 // Generate a docker compose configuration
 func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
+	// Check if CCom is installed
+	util.CheckIfCComIsInstalled()
+
 	// Clear screen if in interactive mode
 	if configPath == "" {
 		util.ClearScreen()
 	}
+
+	// Check for predefined service templates updates
+	util.CheckForServiceTemplateUpdate()
 
 	// Load config file if available
 	var configFile model.GenerateConfig
@@ -69,11 +75,11 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
-	} else {
-		// Print success message
-		util.Pel()
-		util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+		return
 	}
+	// Print success message
+	util.Pel()
+	util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -99,17 +105,18 @@ func generateDynamicStack(
 
 	// Load configurations of service templates
 	templateData := parser.ParsePredefinedServices()
+	selectedTemplateData := map[string][]model.ServiceTemplateConfig{}
 
 	composeVersion := configFile.ComposeVersion
 	alsoProduction := configFile.AlsoProduction
 	if configFile.ProjectName != "" {
 		// Provide selected template data from config file
 		serviceConfig := configFile.ServiceConfig
-		selectedTemplateData := map[string][]model.ServiceTemplateConfig{}
 		for templateType, templates := range templateData {
 			selectedTemplateData[templateType] = []model.ServiceTemplateConfig{}
 			for _, template := range templates {
-				// Loop through services
+				srcDir := filepath.Join(util.GetPredefinedServicesPath(), template.Dir)
+				// Loop through service configurations
 				for _, service := range serviceConfig {
 					if service.Type == templateType && strings.HasSuffix(template.Dir, service.Service) {
 						selectedTemplateData[templateType] = append(selectedTemplateData[templateType], template)
@@ -117,13 +124,18 @@ func generateDynamicStack(
 						for _, question := range template.Questions {
 							varMap[question.Variable] = question.DefaultValue
 						}
+						// Loop through volumes and add default values to varMap and volMap
+						for _, volume := range template.Volumes {
+							volMap[filepath.Join(srcDir, volume.DefaultValue)] = volume.DefaultValue
+							varMap[volume.Variable] = volume.DefaultValue
+						}
 						// Override with params
 						for varName, varValue := range service.Params {
 							varMap[varName] = varValue
 							// Loop through volumes
 							for _, volume := range template.Volumes {
 								if volume.Variable == varName {
-									volMap[filepath.Join(template.Dir, volume.DefaultValue)] = varValue
+									volMap[filepath.Join(srcDir, volume.DefaultValue)] = varValue
 									break
 								}
 							}
@@ -133,15 +145,14 @@ func generateDynamicStack(
 				}
 			}
 		}
-		templateData = selectedTemplateData
 	} else {
 		// Ask user decisions
-		composeVersion, alsoProduction = askForUserInput(&templateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
+		composeVersion, alsoProduction = askForUserInput(&templateData, &selectedTemplateData, &varMap, &volMap, flagAdvanced, flagWithDockerfile)
 	}
 
 	// Generate configuration
 	util.P("Generating configuration ... ")
-	composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString := processUserInput(templateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
+	composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString := processUserInput(selectedTemplateData, varMap, volMap, composeVersion, flagWithInstructions, flagWithDockerfile)
 	varFiles = append(varFiles, "docker-compose.yml")
 	varFiles = append(varFiles, "README.md")
 	if alsoProduction {
@@ -170,13 +181,13 @@ func generateDynamicStack(
 	}
 
 	// Write README.md
-	if ioutil.WriteFile("./README.md", []byte(instString), 0777) != nil {
+	if ioutil.WriteFile("./README.md", []byte(instString), 0755) != nil {
 		util.Error("Could not write yaml to README file", nil, true)
 	}
 
 	// Write environment.env file
 	if len(envString) > 0 {
-		if ioutil.WriteFile("./environment.env", []byte(envString), 0777) != nil {
+		if ioutil.WriteFile("./environment.env", []byte(envString), 0755) != nil {
 			util.Error("Could not write yaml to environment file", nil, true)
 		} else {
 			// Add environment.env file to .gitignore
@@ -220,20 +231,16 @@ func generateDynamicStack(
 			}
 		} else {
 			// Create empty volume
-			os.MkdirAll(dst, 0777)
+			os.MkdirAll(dst, 0755)
 		}
 	}
 	util.Done()
 
 	// Copy dockerfiles
 	for src, dst := range dockerfileMap {
-		content, err1 := ioutil.ReadFile(src)
-		if err1 != nil {
-			util.Error("Could not read Dockerfile "+src, err1, true)
-		}
-		newContent := util.EvaluateConditionalSections(string(content), templateData, varMap)
+		newContent := util.EvaluateConditionalSections(src, selectedTemplateData, varMap)
 		os.MkdirAll(filepath.Dir(dst), 0700)
-		if ioutil.WriteFile(dst, []byte(newContent), 0777) != nil {
+		if ioutil.WriteFile(dst, []byte(newContent), 0755) != nil {
 			util.Error("Could not write to Dockerfile "+dst, nil, true)
 		}
 	}
@@ -247,11 +254,11 @@ func generateDynamicStack(
 
 	if flagWithDockerfile {
 		// Create demo applications
-		ExecuteListOfCommands(templateData, &varMap, "DemoAppInitCmd")
+		executeServiceInitCommands(selectedTemplateData, &varMap, "DemoAppInitCmd")
 	}
 
 	// Intialize services
-	ExecuteListOfCommands(templateData, &varMap, "ServiceInitCmd")
+	executeServiceInitCommands(selectedTemplateData, &varMap, "ServiceInitCmd")
 
 	if len(secrets) > 0 {
 		// Generate secrets
@@ -270,6 +277,7 @@ func generateDynamicStack(
 
 func askForUserInput(
 	templateData *map[string][]model.ServiceTemplateConfig,
+	selectedTemplateData *map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	volMap *map[string]string,
 	flagAdvanced bool,
@@ -289,36 +297,108 @@ func askForUserInput(
 	usedVolumes := []string{}
 
 	// Ask for frontends
-	askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "frontend", true, "Which frontend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(
+		templateData,
+		selectedTemplateData,
+		varMap,
+		volMap,
+		&usedPorts,
+		&usedVolumes,
+		"frontend",
+		true,
+		"Which frontend framework do you want to use?",
+		flagAdvanced,
+		flagWithDockerfile,
+	)
 
 	// Ask for backends
-	askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "backend", true, "Which backend framework do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(
+		templateData,
+		selectedTemplateData,
+		varMap,
+		volMap,
+		&usedPorts,
+		&usedVolumes,
+		"backend",
+		true,
+		"Which backend framework do you want to use?",
+		flagAdvanced,
+		flagWithDockerfile,
+	)
 
 	// Ask for databases
-	databaseCount := askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "database", true, "Which database engine do you want to use?", flagAdvanced, flagWithDockerfile)
+	askForStackComponent(
+		templateData,
+		selectedTemplateData,
+		varMap,
+		volMap,
+		&usedPorts,
+		&usedVolumes,
+		"database",
+		true,
+		"Which database engine do you want to use?",
+		flagAdvanced,
+		flagWithDockerfile,
+	)
 
-	if databaseCount > 0 {
+	if len((*selectedTemplateData)["database"]) > 0 {
 		// Ask for db admin tools
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "db-admin", true, "Which db admin tool do you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(
+			templateData,
+			selectedTemplateData,
+			varMap,
+			volMap,
+			&usedPorts,
+			&usedVolumes,
+			"db-admin",
+			true,
+			"Which db admin tool do you want to use?",
+			flagAdvanced,
+			flagWithDockerfile,
+		)
 	} else {
-		(*templateData)["db-admin"] = []model.ServiceTemplateConfig{}
+		(*selectedTemplateData)["db-admin"] = []model.ServiceTemplateConfig{}
 	}
 
 	if alsoProduction {
 		// Ask for proxies
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "proxy", false, "Which reverse proxy you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(
+			templateData,
+			selectedTemplateData,
+			varMap,
+			volMap,
+			&usedPorts,
+			&usedVolumes,
+			"proxy",
+			false,
+			"Which reverse proxy you want to use?",
+			flagAdvanced,
+			flagWithDockerfile,
+		)
 
 		// Ask for proxy tls helpers
-		askForStackComponent(templateData, varMap, volMap, &usedPorts, &usedVolumes, "tls-helper", false, "Which tls helper you want to use?", flagAdvanced, flagWithDockerfile)
+		askForStackComponent(
+			templateData,
+			selectedTemplateData,
+			varMap,
+			volMap,
+			&usedPorts,
+			&usedVolumes,
+			"tls-helper",
+			false,
+			"Which tls helper you want to use?",
+			flagAdvanced,
+			flagWithDockerfile,
+		)
 	} else {
-		(*templateData)["proxy"] = []model.ServiceTemplateConfig{}
-		(*templateData)["tls-helper"] = []model.ServiceTemplateConfig{}
+		(*selectedTemplateData)["proxy"] = []model.ServiceTemplateConfig{}
+		(*selectedTemplateData)["tls-helper"] = []model.ServiceTemplateConfig{}
 	}
 	return composeVersion, alsoProduction
 }
 
 func processUserInput(
-	templateData map[string][]model.ServiceTemplateConfig,
+	selectedTemplateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 	volMap map[string]string,
 	composeVersion string,
@@ -350,101 +430,22 @@ func processUserInput(
 	instString = instString + string(fileIn) + "\n\n"
 
 	// Loop through templates
-	for templateType, templates := range templateData {
+	for _, templates := range selectedTemplateData {
 		for _, template := range templates {
 			srcPath := util.GetPredefinedServicesPath() + "/" + template.Dir
 			// Apply all existing files of service template
-			for _, f := range template.Files {
-				switch f.Type {
+			for _, file := range template.Files {
+				switch file.Type {
 				case "docs":
-					if flagWithInstructions {
-						// Append content to existing file
-						fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-						if err != nil {
-							util.Error("Cannot read instructions file for template: "+template.Label, err, false)
-						}
-						instString = instString + string(fileIn) + "\n\n"
-					}
+					processDocsFile(file, &instString, template, srcPath, flagWithInstructions)
 				case "env":
-					// Append content to existing file
-					outPath := filepath.Join(dstPath, f.Path)
-					fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, f.Path))
-					if err != nil {
-						util.Error("Cannot read environment file for template: "+template.Label, err, false)
-					}
-					envString = envString + string(fileIn) + "\n\n"
-					varFiles = util.AppendStringToSliceIfMissing(varFiles, outPath)
+					processEnvFile(file, &varFiles, &envString, template, srcPath, dstPath)
 				case "docker":
-					if flagWithDockerfile {
-						// Check if Dockerfile is inside of a volume
-						absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
-						dockerfileDst := filepath.Join(dstPath, f.Path)
-						for volSrc, volDst := range volMap {
-							absVolSrc, _ := filepath.Abs(volSrc)
-							if strings.Contains(absDockerfileSrc, absVolSrc) {
-								dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
-							}
-						}
-						dockerfileMap[absDockerfileSrc] = dockerfileDst
-						varFiles = append(varFiles, dockerfileDst)
-					}
+					processDockerFile(file, &varFiles, &dockerfileMap, &volMap, srcPath, dstPath, flagWithDockerfile)
 				case "config":
-					// Check if config file is inside of a volume
-					absConfigSrc, _ := filepath.Abs(filepath.Join(srcPath, f.Path))
-					configDst := filepath.Join(dstPath, f.Path)
-					for volSrc, volDst := range volMap {
-						absVolSrc, _ := filepath.Abs(volSrc)
-						if strings.Contains(absConfigSrc, absVolSrc) {
-							configDst = volDst + absConfigSrc[len(absVolSrc):]
-						}
-					}
-					varFiles = append(varFiles, configDst)
+					processConfigFile(file, &varFiles, &volMap, srcPath, dstPath)
 				case "service":
-					// Load service file
-					yamlFile, _ := os.Open(filepath.Join(srcPath, f.Path))
-					contentBytes, _ := ioutil.ReadAll(yamlFile)
-					// Evaluate conditional sections
-					content := util.EvaluateConditionalSections(string(contentBytes), templateData, varMap)
-					// Replace variables
-					content = util.ReplaceVarsInString(content, varMap)
-					// Parse yaml
-					service := dcu_model.Service{}
-					yaml.Unmarshal([]byte(content), &service)
-					// Get networks
-					networks = append(networks, service.Networks...)
-					// Add depends on
-					switch templateType {
-					case "frontend":
-						service.DependsOn = []string{}
-						for _, template := range templateData["backend"] {
-							service.DependsOn = append(service.DependsOn, "backend-"+template.Name)
-						}
-						if len(templateData["backend"]) == 0 {
-							for _, template := range templateData["database"] {
-								service.DependsOn = append(service.DependsOn, "database-"+template.Name)
-							}
-						}
-					case "backend":
-						service.DependsOn = []string{}
-						for _, template := range templateData["database"] {
-							service.DependsOn = append(service.DependsOn, "database-"+template.Name)
-						}
-					case "db-admin":
-						service.DependsOn = []string{}
-						for _, template := range templateData["database"] {
-							service.DependsOn = append(service.DependsOn, "database-"+template.Name)
-						}
-					case "tls-helper":
-						service.DependsOn = []string{}
-						for _, template := range templateData["proxy"] {
-							service.DependsOn = append(service.DependsOn, "proxy-"+template.Name)
-						}
-					}
-					// Add service to compose files
-					if templateType != "proxy" && templateType != "tls-helper" {
-						composeFileDev.Services[templateType+"-"+template.Name] = service
-					}
-					composeFileProd.Services[templateType+"-"+template.Name] = service
+					processServiceFile(file, selectedTemplateData, &varMap, &composeFileProd, &composeFileDev, &networks, template, srcPath)
 				}
 			}
 			// Get secrets
@@ -453,11 +454,11 @@ func processUserInput(
 	}
 	// Apply networks
 	if len(networks) > 0 {
-		composeFileDev.Networks = make(map[string]dcu_model.Network)
-		composeFileProd.Networks = make(map[string]dcu_model.Network)
+		composeFileDev.Networks = make(map[string]dcu_model.NetworkConfigurationReference)
+		composeFileProd.Networks = make(map[string]dcu_model.NetworkConfigurationReference)
 		for _, n := range networks {
-			composeFileDev.Networks[n] = dcu_model.Network{}
-			composeFileProd.Networks[n] = dcu_model.Network{}
+			composeFileDev.Networks[n] = dcu_model.NetworkConfigurationReference{}
+			composeFileProd.Networks[n] = dcu_model.NetworkConfigurationReference{}
 		}
 	}
 	return composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString
@@ -465,6 +466,7 @@ func processUserInput(
 
 func askForStackComponent(
 	templateData *map[string][]model.ServiceTemplateConfig,
+	selectedTemplateData *map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	volMap *map[string]string,
 	usedPorts *[]int,
@@ -476,21 +478,21 @@ func askForStackComponent(
 	flagWithDockerfile bool,
 ) (componentCount int) {
 	templates := (*templateData)[component]
-	items := templateListToLabelList(templates)
-	itemsPreselected := templateListToPreselectedLabelList(templates, templateData)
-	(*templateData)[component] = []model.ServiceTemplateConfig{}
+	items := util.TemplateListToLabelList(templates)
+	itemsPreselected := util.TemplateListToPreselectedLabelList(templates, selectedTemplateData)
+	(*selectedTemplateData)[component] = []model.ServiceTemplateConfig{}
 	if multiSelect {
 		templateSelections := util.MultiSelectMenuQuestionIndex(question, items, itemsPreselected)
 		for _, index := range templateSelections {
 			util.Pel()
-			(*templateData)[component] = append((*templateData)[component], templates[index])
+			(*selectedTemplateData)[component] = append((*selectedTemplateData)[component], templates[index])
 			getVarMapFromQuestions(varMap, usedPorts, templates[index].Questions, flagAdvanced)
 			getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[index], flagAdvanced, flagWithDockerfile)
 			componentCount++
 		}
 	} else {
 		templateSelection := util.MenuQuestionIndex(question, items)
-		(*templateData)[component] = append((*templateData)[component], templates[templateSelection])
+		(*selectedTemplateData)[component] = append((*selectedTemplateData)[component], templates[templateSelection])
 		getVarMapFromQuestions(varMap, usedPorts, templates[templateSelection].Questions, flagAdvanced)
 		getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[templateSelection], flagAdvanced, flagWithDockerfile)
 		componentCount = 1
@@ -542,6 +544,9 @@ func getVarMapFromQuestions(
 				} else {
 					(*varMap)[q.Variable] = util.TextQuestionWithDefault(q.Text, defaultValue)
 				}
+			case 3: // Select
+				answer := util.MenuQuestionWithDefault(q.Text, q.Options, q.DefaultValue)
+				(*varMap)[q.Variable] = answer
 			}
 		} else {
 			(*varMap)[q.Variable] = defaultValue
@@ -577,7 +582,139 @@ func getVolumeMapFromVolumes(
 	}
 }
 
-func ExecuteListOfCommands(
+func processDocsFile(
+	file model.File,
+	instString *string,
+	template model.ServiceTemplateConfig,
+	srcPath string,
+	flagWithInstructions bool,
+) {
+	if flagWithInstructions {
+		// Append content to existing file
+		fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, file.Path))
+		if err != nil {
+			util.Error("Cannot read instructions file for template: "+template.Label, err, false)
+		}
+		*instString = *instString + string(fileIn) + "\n\n"
+	}
+}
+
+func processEnvFile(
+	file model.File,
+	varFiles *[]string,
+	envString *string,
+	template model.ServiceTemplateConfig,
+	srcPath string,
+	dstPath string,
+) {
+	// Append content to existing file
+	outPath := filepath.Join(dstPath, file.Path)
+	fileIn, err := ioutil.ReadFile(filepath.Join(srcPath, file.Path))
+	if err != nil {
+		util.Error("Cannot read environment file for template: "+template.Label, err, false)
+	}
+	*envString = *envString + string(fileIn) + "\n\n"
+	*varFiles = util.AppendStringToSliceIfMissing(*varFiles, outPath)
+}
+
+func processDockerFile(
+	file model.File,
+	varFiles *[]string,
+	dockerfileMap *map[string]string,
+	volMap *map[string]string,
+	srcPath string,
+	dstPath string,
+	flagWithDockerfile bool,
+) {
+	if flagWithDockerfile {
+		// Check if Dockerfile is inside of a volume
+		absDockerfileSrc, _ := filepath.Abs(filepath.Join(srcPath, file.Path))
+		dockerfileDst := filepath.Join(dstPath, file.Path)
+		for volSrc, volDst := range *volMap {
+			absVolSrc, _ := filepath.Abs(volSrc)
+			if strings.Contains(absDockerfileSrc, absVolSrc) {
+				dockerfileDst = volDst + absDockerfileSrc[len(absVolSrc):]
+			}
+		}
+		(*dockerfileMap)[absDockerfileSrc] = dockerfileDst
+		*varFiles = append(*varFiles, dockerfileDst)
+	}
+}
+
+func processConfigFile(
+	file model.File,
+	varFiles *[]string,
+	volMap *map[string]string,
+	srcPath string,
+	dstPath string,
+) {
+	// Check if config file is inside of a volume
+	absConfigSrc, _ := filepath.Abs(filepath.Join(srcPath, file.Path))
+	configDst := filepath.Join(dstPath, file.Path)
+	for volSrc, volDst := range *volMap {
+		absVolSrc, _ := filepath.Abs(volSrc)
+		if strings.Contains(absConfigSrc, absVolSrc) {
+			configDst = volDst + absConfigSrc[len(absVolSrc):]
+		}
+	}
+	*varFiles = append(*varFiles, configDst)
+}
+
+func processServiceFile(
+	file model.File,
+	templateData map[string][]model.ServiceTemplateConfig,
+	varMap *map[string]string,
+	composeFileProd *dcu_model.ComposeFile,
+	composeFileDev *dcu_model.ComposeFile,
+	networks *[]string,
+	template model.ServiceTemplateConfig,
+	srcPath string,
+) {
+	// Evaluate conditional sections
+	content := util.EvaluateConditionalSections(filepath.Join(srcPath, file.Path), templateData, *varMap)
+	// Replace variables
+	content = util.ReplaceVarsInString(content, *varMap)
+	// Parse yaml
+	service := dcu_model.Service{}
+	yaml.Unmarshal([]byte(content), &service)
+	// Get networks
+	*networks = append(*networks, service.Networks...)
+	// Add depends on
+	switch template.Type {
+	case "frontend":
+		service.DependsOn = []string{}
+		for _, template := range templateData["backend"] {
+			service.DependsOn = append(service.DependsOn, "backend-"+template.Name)
+		}
+		if len(templateData["backend"]) == 0 {
+			for _, template := range templateData["database"] {
+				service.DependsOn = append(service.DependsOn, "database-"+template.Name)
+			}
+		}
+	case "backend":
+		service.DependsOn = []string{}
+		for _, template := range templateData["database"] {
+			service.DependsOn = append(service.DependsOn, "database-"+template.Name)
+		}
+	case "db-admin":
+		service.DependsOn = []string{}
+		for _, template := range templateData["database"] {
+			service.DependsOn = append(service.DependsOn, "database-"+template.Name)
+		}
+	case "tls-helper":
+		service.DependsOn = []string{}
+		for _, template := range templateData["proxy"] {
+			service.DependsOn = append(service.DependsOn, "proxy-"+template.Name)
+		}
+	}
+	// Add service to compose files
+	if template.Type != "proxy" && template.Type != "tls-helper" {
+		(*composeFileDev).Services[template.Type+"-"+template.Name] = service
+	}
+	(*composeFileProd).Services[template.Type+"-"+template.Name] = service
+}
+
+func executeServiceInitCommands(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap *map[string]string,
 	field string,
@@ -591,33 +728,14 @@ func ExecuteListOfCommands(
 				commands = append(commands, util.ReplaceVarsInString(cmd, *varMap))
 			}
 			if len(commands) > 0 {
-				util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
+				if field == "ServiceInitCmd" {
+					util.P("Initializing service '" + template.Label + "' (may take a while) ... ")
+				} else {
+					util.P("Generating demo application for '" + template.Label + "' (may take a while) ... ")
+				}
 				util.ExecuteOnLinux(strings.Join(commands, "; "))
 				util.Done()
 			}
 		}
 	}
-}
-
-func templateListToLabelList(templates []model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		labels = append(labels, t.Label)
-	}
-	return
-}
-
-func templateListToPreselectedLabelList(templates []model.ServiceTemplateConfig, templateData *map[string][]model.ServiceTemplateConfig) (labels []string) {
-	for _, t := range templates {
-		conditions := strings.Split(t.Preselected, "|")
-		fulfilled := false
-		for _, c := range conditions {
-			if util.EvaluateCondition(c, *templateData, nil) {
-				fulfilled = true
-			}
-		}
-		if fulfilled {
-			labels = append(labels, t.Label)
-		}
-	}
-	return
 }

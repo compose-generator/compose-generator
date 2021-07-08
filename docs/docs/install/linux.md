@@ -6,49 +6,37 @@ title: Install on Linux
 === "Debian/Ubuntu"
     To install Compose Generator on Debian, execute the following commands in your terminal:
     ```sh
-    sudo apt-get update
-    sudo apt-get install -y apt-transport-https ca-certificates curl \
-        gnupg-agent software-properties-common lsb-release
-    curl -fsSL https://repo.chillibits.com/artifactory/debian/gpg | \
-        sudo apt-key add -
-    sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/debian \
-        $(lsb_release -cs) main"
-    sudo sudo apt-get update
-    sudo apt-get install -y compose-generator
-
+    curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
+	sudo add-apt-repository "deb https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main"
+	sudo apt-get update
+	sudo apt-get install compose-generator
     ```
 
 === "Fedora"
     To install Compose Generator on Fedora, execute the following commands in your terminal:
     ```sh
     sudo dnf -y install dnf-plugins-core
-    sudo dnf config-manager --add-repo \
-        https://repo.chillibits.com/artifactory/rpm/chillibits.repo
-    sudo dnf -y install compose-generator
-
+	sudo dnf config-manager --add-repo https://server.chillibits.com/files/repo/fedora.repo
+	sudo dnf install compose-generator
     ```
 
 === "CentOS"
     To install Compose Generator on CentOS, execute the following commands in your terminal:
     ```sh
     sudo yum install -y yum-utils
-    sudo yum-config-manager --add-repo \
-        https://repo.chillibits.com/artifactory/rpm/chillibits.repo
-    sudo yum install -y compose-generator
-
+	sudo yum-config-manager --add-repo https://server.chillibits.com/files/repo/centos.repo
+	sudo yum install compose-generator
     ```
 
 === "Alpine"
     To install Compose Generator on Alpine, execute the following commands in your terminal:
     ```sh
     apk update
-    sh -c "echo 'https://repo.chillibits.com/artifactory/alpine/$(cat \
+    sh -c "echo 'https://repo.chillibits.com/alpine/$(cat \
         /etc/os-release | grep VERSION_ID | cut -d "=" -f2 | cut -d "." \
         -f1,2)/main'" >> /etc/apk/repositories
-    wget -O /etc/apk/keys/alpine.rsa.pub \
-        https://repo.chillibits.com/artifactory/alpine/alpine.rsa.pub
+    wget -O /etc/apk/keys/alpine.rsa.pub https://server.chillibits.com/files/repo/alpine.rsa.pub
     apk add -y compose-generator
-
     ```
 
     !!! note
@@ -60,19 +48,14 @@ title: Install on Linux
 === "Raspbian"
     To install Compose Generator on Raspbian, execute the following commands in your terminal:
     ```sh
-    sudo apt-get update
-    sudo apt-get install -y apt-transport-https ca-certificates curl \
-        gnupg-agent software-properties-common lsb-release
-    curl -fsSL https://repo.chillibits.com/artifactory/debian/gpg | \
-        sudo apt-key add -
-    sudo add-apt-repository "deb https://repo.chillibits.com/artifactory/debian \
-        $(lsb_release -cs) main"
-    sudo sudo apt-get update
-    sudo apt-get install -y compose-generator
+    curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
+	sudo add-apt-repository "deb https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main"
+	sudo apt-get update
+	sudo apt-get install compose-generator
     ```
 
 ### Install from package file
-You also can install Compose Generator from a Debian package (`.deb`). You can download the package [here](https://github.com/compose-generator/compose-generator/releases/latest).
+You also can install Compose Generator from a package file on your host system. You can download the package [here](https://github.com/compose-generator/compose-generator/releases/latest).
 
 === "Debian/Ubuntu"
     To install it, execute the following command:

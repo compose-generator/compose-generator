@@ -1,0 +1,5 @@
+build: ${{TELEGRAM_BOT_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-telegram-bot
+restart: always
+env_file:
+  - environment.env

@@ -35,12 +35,13 @@
         {
             "text": "Spring version",
             "type": 2,
-            "defaultValue": "2.4.5.RELEASE",
+            "defaultValue": "2.5.0",
             "variable": "SPRING_MAVEN_VERSION"
         },
         {
-            "text": "Programming language (java/kotlin/groovy)",
-            "type": 2,
+            "text": "Programming language",
+            "type": 3,
+            "options": ["java", "kotlin", "groovy"],
             "defaultValue": "java",
             "variable": "SPRING_MAVEN_LANGUAGE"
         },

@@ -1,4 +1,4 @@
-# FaunaDB database
+## FaunaDB database
 FaunaDB is a SaaS provisioned, serverless and multi-model database. For more information, please visit [www.fauna.com](https://fauna.com).
 
 ### Usage

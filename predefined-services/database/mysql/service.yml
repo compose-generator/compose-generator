@@ -2,18 +2,18 @@ image: mysql:${{MYSQL_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-mysql
 restart: always
 networks:
-#! if has backend {
-#!  - backend-database
-#! }
-#! if has service nextcloud|has service owncloud|has service wordpress|has service gitea|has service jira {
-#!  - frontend-database
-#! }
-#! if has service phpmyadmin {
-#!  - mysql-phpmyadmin
-#! }
-#! if has service adminer {
-#!  - mysql-adminer
-#! }
+#? if has services.backend {
+#  - backend-database
+#? }
+#? if services.frontend contains name == "nextcloud" | services.frontend contains name == "owncloud" | services.frontend contains name == "gitea" | services.frontend contains name == "jira" {
+#  - frontend-database
+#? }
+#? if services.dbadmin contains name == "phpmyadmin" {
+#  - mysql-phpmyadmin
+#? }
+#? if services.dbadmin contains name == "adminer" {
+#  - mysql-adminer
+#? }
 ports:
   - ${{MYSQL_PORT}}:3306
 volumes: 

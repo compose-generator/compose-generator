@@ -1,13 +1,3 @@
----
-name: New predefined service
-about: Create a new predefined service to help us to extend the project
-title: ''
-labels: predefined-service
-reviewers: compose-generator/core-team
-assignees: marcauberer
-
----
-
 Predefined service for generating a software stack using: *Replace with Framework/Language*
 
 **Checklist**

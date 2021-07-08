@@ -1,0 +1,39 @@
+# Go Tests
+
+name: Go Tests
+
+on:
+  push:
+    paths:
+      - 'src/**'
+  pull_request:
+    branches: [ main, dev, test/*, tests/* ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16.x
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install CCom
+      run: |
+        curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb https://admin.repo.chillibits.com/repository/ubuntu-$(lsb_release -cs) $(lsb_release -cs) main"
+        sudo apt-get update
+        sudo apt-get install ccom
+
+    - name: Install GoMock
+      run: go install github.com/golang/mock/mockgen@v1.5.0
+
+    - name: Run tests
+      working-directory: src
+      run: go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+
+    - name: Upload coverage to Codecov
+      run: bash <(curl -s https://codecov.io/bash)

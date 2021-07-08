@@ -37,9 +37,9 @@ func ParsePredefinedServices() map[string][]model.ServiceTemplateConfig {
 			config.Dir = filepath.Join(templateType, f)
 			if configs[templateType] != nil {
 				configs[templateType] = append(configs[templateType], config)
-			} else {
-				configs[templateType] = []model.ServiceTemplateConfig{config}
+				continue
 			}
+			configs[templateType] = []model.ServiceTemplateConfig{config}
 		}
 	}
 	return configs
@@ -50,7 +50,7 @@ func ParseCustomTemplates() (metadatas []model.TemplateMetadata) {
 	templatesPath := util.GetCustomTemplatesPath()
 	// Create templates dir, if it not exists
 	if !util.FileExists(templatesPath) {
-		os.MkdirAll(templatesPath, 0777)
+		os.MkdirAll(templatesPath, 0755)
 	}
 	// Read template directory names
 	files, err := ioutil.ReadDir(templatesPath)
@@ -77,13 +77,11 @@ func getConfigFromFile(dirPath string) (config model.ServiceTemplateConfig) {
 	if err != nil {
 		util.Error("Internal error - unable to load config file of template "+dirPath, err, true)
 	}
+	defer jsonFile.Close()
 
 	// Parse json to TemplateConfig struct
 	bytes, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal(bytes, &config)
-
-	// Close file
-	jsonFile.Close()
 	return
 }
 
@@ -93,13 +91,11 @@ func getMetadataFromFile(dirPath string) (metadata model.TemplateMetadata) {
 	if err != nil {
 		util.Error("Internal error - unable to load metadata file of template "+dirPath, err, true)
 	}
+	defer jsonFile.Close()
 
 	// Parse json to TemplateMetadata struct
 	bytes, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal(bytes, &metadata)
-
-	// Close file
-	jsonFile.Close()
 	return
 }
 

@@ -1,0 +1,58 @@
+{
+    "label": "Ruby on Rails",
+    "preselected": "false",
+    "demoAppInitCmd": [
+        "rails new ${{RAILS_APP_NAME}} --webpack=react",
+        "shopt -s dotglob",
+        "mv ./${{RAILS_APP_NAME}}/* ./${{RAILS_SOURCE_DIRECTORY}}",
+        "rmdir ${{RAILS_APP_NAME}}",
+        "chmod -R 777 ./${{RAILS_SOURCE_DIRECTORY}}",
+        "cd ./${{RAILS_SOURCE_DIRECTORY}}",
+        "echo \"ruby-${{RAILS_RUBY_VERSION}}\" > .ruby-version",
+        "sed -i \"s/ruby '2.7.3'/ruby '${{RAILS_RUBY_VERSION}}'/g\" Gemfile",
+        "bundle exec rails webpacker:install"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "type": "docker"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Rails app?",
+            "type": 2,
+            "defaultValue": "3000",
+            "validator": "port",
+            "variable": "RAILS_PORT"
+        },
+        {
+            "text": "Which Ruby version do you want to use (must specified in format x.y.z)?",
+            "type": 2,
+            "defaultValue": "3.0.1",
+            "variable": "RAILS_RUBY_VERSION"
+        },
+        {
+            "text": "How do you want to call your Rails app?",
+            "type": 2,
+            "defaultValue": "rails-example",
+            "variable": "RAILS_APP_NAME"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend",
+            "variable": "RAILS_SOURCE_DIRECTORY",
+            "withDockerfile": true
+        }
+    ]
+}

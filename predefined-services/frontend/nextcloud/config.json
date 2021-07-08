@@ -36,10 +36,11 @@
             "variable": "NEXTCLOUD_OUTSIDE_HOST"
         },
         {
-            "text": "On which protocol is your instance accessible from outside? (https/http)",
-            "type": 2,
+            "text": "On which scheme is your instance accessible from outside?",
+            "type": 3,
+            "options": ["https", "http"],
             "defaultValue": "http",
-            "variable": "NEXTCLOUD_OUTSIDE_PROTOCOL"
+            "variable": "NEXTCLOUD_OUTSIDE_SCHEME"
         }
     ],
     "volumes": [

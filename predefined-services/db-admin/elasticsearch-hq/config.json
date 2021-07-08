@@ -1,6 +1,6 @@
 {
     "label": "ElasticsearchHQ",
-    "preselected": "has service elasticsearch",
+    "preselected": "services.database contains name == \"elasticsearch\"",
     "files": [
         {
             "path": "service.yml",

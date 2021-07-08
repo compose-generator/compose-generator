@@ -17,7 +17,13 @@ import (
 
 // Add a service to an existing compose file
 func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
+	// Check if CCom is installed
+	util.CheckIfCComIsInstalled()
+
 	util.ClearScreen()
+
+	// Check for predefined service templates updates
+	util.CheckForServiceTemplateUpdate()
 
 	// Ask for custom YAML file
 	path := "./docker-compose.yml"
@@ -142,15 +148,15 @@ func askBuildFromSource() (build bool, buildPath string, registry string) {
 		if !util.FileExists(buildPath+"/Dockerfile") && !util.FileExists(buildPath+"Dockerfile") {
 			util.Error("Aborting. The Dockerfile cannot be found.", nil, true)
 		}
-	} else {
-		// Ask for registry
-		registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
-		if registry == "docker.io" {
-			registry = ""
-		} else {
-			registry = registry + "/"
-		}
+		return
 	}
+	// Ask for registry
+	registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
+	if registry == "docker.io" {
+		registry = ""
+		return
+	}
+	registry = registry + "/"
 	return
 }
 
@@ -166,14 +172,14 @@ func searchRemoteImage(registry string, image string) {
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err == nil {
 		color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")
-	} else {
-		color.Red(" not found or no access\n")
-		proceed := util.YesNoQuestion("Proceed anyway?", false)
-		if !proceed {
-			os.Exit(0)
-		}
-		util.Pel()
+		return
 	}
+	color.Red(" not found or no access\n")
+	proceed := util.YesNoQuestion("Proceed anyway?", false)
+	if !proceed {
+		os.Exit(0)
+	}
+	util.Pel()
 }
 
 func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {
@@ -332,7 +338,7 @@ func askForEnvFiles() (envFiles []string) {
 				return
 			})
 			// Check if the selected file is valid
-			if !util.FileExists(envFile) || util.IsDirectory(envFile) {
+			if !util.FileExists(envFile) || util.IsDir(envFile) {
 				util.Error("File is not valid. Please select another file", nil, false)
 				continue
 			}

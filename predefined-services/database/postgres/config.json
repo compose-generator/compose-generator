@@ -1,6 +1,6 @@
 {
     "label": "PostgreSQL",
-    "preselected": "has service gitea|has service sonarqube|has service jira",
+    "preselected": "services.frontend contains name == \"gitea\" | services.frontend contains name == \"sonarqube\" | services.frontend contains name == \"jira\" | services.frontend contains name == \"bitbucket\"",
     "serviceInitCmd": [
         "cd ${{VOLUME_POSTGRES_INIT}}",
         "dos2unix init-user-db.sh"
@@ -25,7 +25,7 @@
     ],
     "questions": [
         {
-            "text": "On which port you want to expose Postgres DB?",
+            "text": "On which port you want to expose your Postgres database?",
             "type": 2,
             "defaultValue": "5432",
             "validator": "port",
@@ -55,7 +55,7 @@
         {
             "text": "Which Postgres version do you want to use?",
             "type": 2,
-            "defaultValue": "13.2-alpine",
+            "defaultValue": "13.3",
             "variable": "POSTGRES_VERSION",
             "advanced": true
         }

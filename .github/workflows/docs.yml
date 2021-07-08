@@ -8,6 +8,7 @@ on:
       - 'main'
       #- 'docs/**'
       #- 'feature/**'
+      #- 'service/**'
     paths:
       - 'docs/**'
 
@@ -24,6 +25,5 @@ jobs:
       - name: Install dependencies
         run: pip install mkdocs-material mkdocs-minify-plugin
       - name: Build and deploy
-        run: |
-          cd docs
-          mkdocs gh-deploy --force
+        working-directory: docs
+        run: mkdocs gh-deploy --force

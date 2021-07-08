@@ -35,13 +35,14 @@
         {
             "text": "Spring version",
             "type": 2,
-            "defaultValue": "2.4.5.RELEASE",
+            "defaultValue": "2.5.0",
             "variable": "SPRING_GRADLE_VERSION"
         },
         {
-            "text": "Programming language (java/kotlin/groovy)",
-            "type": 2,
-            "defaultValue": "java",
+            "text": "Programming language",
+            "type": 3,
+            "options": ["java", "kotlin", "groovy"],
+            "defaultValue": "kotlin",
             "variable": "SPRING_GRADLE_LANGUAGE"
         },
         {

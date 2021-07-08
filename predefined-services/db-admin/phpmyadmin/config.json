@@ -1,6 +1,6 @@
 {
     "label": "PhpMyAdmin",
-    "preselected": "has service mysql|has service mariadb",
+    "preselected": "services.database contains name == \"mysql\" | services.database contains name == \"mariadb\"",
     "files": [
         {
             "path": "service.yml",
@@ -28,6 +28,14 @@
             "type": 2,
             "defaultValue": "latest",
             "variable": "PMA_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for PhpMyAdmin session volume?",
+            "defaultValue": "./volumes/phpmyadmin-sessions",
+            "variable": "VOLUME_PMA_SESSIONS",
             "advanced": true
         }
     ]
