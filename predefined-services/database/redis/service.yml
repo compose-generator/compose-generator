@@ -5,8 +5,11 @@ networks:
 #? if has services.backend {
 #  - backend-database
 #? }
+#? if services.dbadmin contains name == "redis-insight" {
+#  - redis-redis-insight
+#? }
 ports:
-  - ${{REDIS_PORT}}:5432
+  - ${{REDIS_PORT}}:6379
 volumes: 
   - ${{VOLUME_REDIS_DATA}}:/data
 env_file:

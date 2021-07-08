@@ -1,0 +1,30 @@
+{
+    "label": "RedisInsight",
+    "preselected": "services.database contains name == \"redis\"",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose RedisInsight?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "REDIS_INSIGHT_PORT"
+        },
+        {
+            "text": "Which version of RedisInsight do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "REDIS_INSIGHT_VERSION",
+            "advanced": true
+        }
+    ]
+}
