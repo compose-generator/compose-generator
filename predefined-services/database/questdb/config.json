@@ -7,10 +7,6 @@
             "type": "service"
         },
         {
-            "path": "environment.env",
-            "type": "env"
-        },
-        {
             "path": "README.md",
             "type": "docs"
         }
@@ -24,19 +20,19 @@
             "variable": "QUESTDB_API_PORT"
         },
         {
-            "text": "On which port you want to expose for Postgres wire protocol?",
-            "type": 2,
-            "defaultValue": "8812",
-            "validator": "port",
-            "variable": "QUESTDB_PG_WIRE_PORT",
+            "text": "Do you want to enable the endpoint for Postgres wire protocol?",
+            "type": 3,
+            "options": ["yes", "no"],
+            "defaultValue": "no",
+            "variable": "QUESTDB_ENABLE_PG_WIRE_PORT",
             "advanced": true
         },
         {
-            "text": "On which port you want to expose for InfluxDB line protocol?",
-            "type": 2,
-            "defaultValue": "9009",
-            "validator": "port",
-            "variable": "QUESTDB_INFLUX_LINE_PORT",
+            "text": "Do you want to enable the endpoint for InfluxDB line protocol?",
+            "type": 3,
+            "options": ["yes", "no"],
+            "defaultValue": "no",
+            "variable": "QUESTDB_ENABLE_INFLUX_LINE_ENDPOINT",
             "advanced": true
         },
         {

@@ -7,13 +7,17 @@ networks:
 #? }
 ports:
   - ${{QUESTDB_API_PORT}}:9000
-  - ${{QUESTDB_PG_WIRE_PORT}}:8812
-  - ${{QUESTDB_INFLUX_LINE_PORT}}:9009
-#? if vars.QUESTDB_ENABLE_HEALTH_ENDPOINT == "yes" {
+#? if var.QUESTDB_ENABLE_PG_WIRE_ENDPOINT == "yes" {
+#  - 8812:8812
+#? }
+
+#? if var.QUESTDB_ENABLE_INFLUX_LINE_ENDPOINT == "yes" {
+#  - 9009:9009
+#? }
+
+#? if var.QUESTDB_ENABLE_HEALTH_ENDPOINT == "yes" {
 #  - 9003:9003
 #? }
 volumes: 
   - ${{VOLUME_QUESTDB_DATA}}:/root/.questdb/db
   - ${{VOLUME_QUESTDB_CONFIG}}:/root/.questdb/conf
-env_file:
-  - environment.env
