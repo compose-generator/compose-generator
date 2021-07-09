@@ -1,0 +1,12 @@
+image: grafana/grafana:${{GRAFANA_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-grafana
+restart: always
+networks:
+#? if has services.backend {
+#  - frontend-backend
+#? }
+#? if has services.database {
+#  - frontend-database
+#? }
+ports:
+  - ${{GRAFANA_PORT}}:3000

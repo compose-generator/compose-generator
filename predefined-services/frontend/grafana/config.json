@@ -1,0 +1,30 @@
+{
+    "label": "Grafana",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Grafana instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "GRAFANA_PORT"
+        },
+        {
+            "text": "Which version of Grafana do you want to use?",
+            "type": 2,
+            "defaultValue": "8.0.5",
+            "variable": "GRAFANA_VERSION",
+            "advanced": true
+        }
+    ]
+}
