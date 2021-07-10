@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"compose-generator/util"
+	"context"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -10,6 +11,9 @@ import (
 	dcu "github.com/compose-generator/dcu"
 	model "github.com/compose-generator/dcu/model"
 	"github.com/compose-generator/diu"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/client"
 	"github.com/fatih/color"
 )
 
@@ -68,7 +72,18 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 }
 
 // AddService asks the user for a new service
-func AddService(existingServices map[string]model.Service, flagAdvanced bool, flagForce bool, modeGenerate bool) (service model.Service, serviceName string, existingServiceNames []string) {
+func AddService(
+	existingServices map[string]model.Service,
+	flagAdvanced bool,
+	flagForce bool,
+	modeGenerate bool,
+) (service model.Service, serviceName string, existingServiceNames []string) {
+	// Initialize Docker client
+	client, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		util.Error("Docker is not installed on your system", err, true)
+	}
+
 	// Get names of existing services
 	for name := range existingServices {
 		existingServiceNames = append(existingServiceNames, name)
@@ -82,7 +97,7 @@ func AddService(existingServices map[string]model.Service, flagAdvanced bool, fl
 
 	// Search for remote image and check manifest
 	if !build && !flagForce {
-		searchRemoteImage(registry, imageName)
+		searchRemoteImage(client, registry, imageName)
 	}
 
 	// Ask for service name
@@ -95,10 +110,10 @@ func AddService(existingServices map[string]model.Service, flagAdvanced bool, fl
 	}
 
 	// Ask for volumes
-	volumes := askForVolumes(flagAdvanced)
+	volumes := askForVolumes(client, flagAdvanced)
 
 	// Ask for networks
-	networks := askForNetworks()
+	networks := askForNetworks(client)
 
 	// Ask for ports
 	ports := askForPorts()
@@ -167,7 +182,7 @@ func askForImage(build bool) string {
 	return util.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
 }
 
-func searchRemoteImage(registry string, image string) {
+func searchRemoteImage(client *client.Client, registry string, image string) {
 	util.P("\nSearching image ... ")
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err == nil {
@@ -210,7 +225,7 @@ func askForContainerName(serviceName string) (name string) {
 	return
 }
 
-func askForVolumes(flagAdvanced bool) (volumes []string) {
+func askForVolumes(client *client.Client, flagAdvanced bool) (volumes []string) {
 	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
 		util.Pel()
 		for another := true; another; another = util.YesNoQuestion("Share another volume?", true) {
@@ -218,15 +233,15 @@ func askForVolumes(flagAdvanced bool) (volumes []string) {
 			globalVolume := util.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
 			volumeOuter := ""
 			if globalVolume {
-				globalVolumes, err := diu.GetExistingVolumes()
+				globalVolumes, err := client.VolumeList(context.Background(), filters.Args{})
 				if err == nil {
 					menuItems := []string{}
-					for _, volume := range globalVolumes {
+					for _, volume := range globalVolumes.Volumes {
 						menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
 					}
-					if len(globalVolumes) >= 1 {
+					if len(globalVolumes.Volumes) >= 1 {
 						itemIndex := util.MenuQuestionIndex("Which global volume?", menuItems)
-						volumeOuter = globalVolumes[itemIndex].Name
+						volumeOuter = globalVolumes.Volumes[itemIndex].Name
 					} else if util.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
 						volumeOuter = util.TextQuestion("How do you want to call the new global volume?")
 						util.ExecuteAndWait("docker", "volume", "create", volumeOuter)
@@ -266,7 +281,7 @@ func askForVolumes(flagAdvanced bool) (volumes []string) {
 	return
 }
 
-func askForNetworks() (networks []string) {
+func askForNetworks(client *client.Client) (networks []string) {
 	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
 		util.Pel()
 		for another := true; another; another = util.YesNoQuestion("Assign another network?", true) {
@@ -274,7 +289,7 @@ func askForNetworks() (networks []string) {
 			globalNetwork := util.YesNoQuestion("Do you want to add an external network (y) or create assign a new one (n)?", false)
 			networkName := ""
 			if globalNetwork {
-				globalNetworks, err := diu.GetExistingNetworks()
+				globalNetworks, err := client.NetworkList(context.Background(), types.NetworkListOptions{})
 				if err == nil {
 					menuItems := []string{}
 					for _, network := range globalNetworks {
