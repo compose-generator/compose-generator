@@ -1,0 +1,7 @@
+image: prom/prometheus:v${{PROMETHEUS_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-prometheus
+restart: always
+volumes:
+  - ${{VOLUME_PROMETHEUS_CONFIG}}/prometheus.yml:/etc/prometheus/prometheus.yml
+ports:
+  - ${{PROMETHEUS_PORT}}:9090
