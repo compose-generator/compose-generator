@@ -144,8 +144,8 @@ jobs:
   build-win-installers:
     name: Build installers
     if: startsWith(github.ref, 'refs/tags/')
-    needs: build-binaries
-    runs-on: ubuntu-latest
+    needs: build-cli
+    runs-on: windows-latest
     strategy:
       matrix:
         config:
@@ -156,46 +156,48 @@ jobs:
               arch: 386, label: x86
             }
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Get version name
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Download dist output
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-output
-
-      - name: Download EnVar plugin for NSIS
-        uses: carlosperate/download-file-action@v1.0.3
-        with:
-          file-url: https://nsis.sourceforge.io/mediawiki/images/7/7f/EnVar_plugin.zip
-          file-name: envar_plugin.zip
-          location: ${{ github.workspace }}
-      
-      - name: Extract EnVar plugin
-        run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/envar_plugin.zip"
-      
-      - name: Install makensis
-        run: sudo apt-get update && sudo apt-get install -y nsis nsis-pluginapi
-      
-      - name: Set plugin permissions
-        run: sudo chown -R $(whoami) /usr/share/nsis/Plugins/
-      
-      - name: Create NSIS installer
-        uses: joncloud/makensis-action@v3.4
-        with:
-          additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
+      - name: Download executables
+        id: download_exe
+        shell: bash
+        run: |
+          hub release download "${GITHUB_REF#refs/tags/}" -i '*windows_${{ matrix.config.arch }}*.zip'
+          printf "::set-output name=zip::%s\n" *.zip
+          unzip -o *.zip && rm -v *.zip
         env:
-          VERSION: ${{ steps.get_version.outputs.version }}
-          ARCH: ${{ matrix.config.arch }}
-      
-      - name: Upload NSIS installer - amd64
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Install GoMSI
+        run: choco install -y go-msi
+
+      - name: Prepare PATH
+        shell: bash
+        run: |
+          echo "$WIX\\bin" >> $GITHUB_PATH
+          echo "C:\\Program Files\\go-msi" >> $GITHUB_PATH
+
+      - name: Build MSI
+        shell: bash
+        id: build_msi
+        env:
+          ZIP_FILE: ${{ steps.download_exe.outputs.zip }}
+        run: |
+          mkdir -p build
+          msi="$(basename "$ZIP_FILE" ".zip").msi"
+          printf "::set-output name=msi::%s\n" "$msi"
+          go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version ${{ steps.get_version.outputs.version }}
+          printf "::set-output name=msi::%s\n" *.msi
+
+      - name: Upload MSI
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: compose-generator.exe
-          asset_name: ComposeGenerator_${{ steps.get_version.outputs.version }}_${{ matrix.config.label }}_Setup.exe
+          file: ${{ steps.build_msi.outputs.msi }}
+          asset_name: compose-generator_${{ steps.get_version.outputs.version }}_${{ matrix.config.label }}_setup.msi
           tag: ${{ github.ref }}
