@@ -208,9 +208,11 @@ func askForServiceName(existingServices map[string]model.Service, imageName stri
 	if i > -1 {
 		defaultName = defaultName[:i]
 	}
+	defaultName = strings.ToLower(defaultName)
+	defaultName = strings.ReplaceAll(defaultName, " ", "-")
 
 	// Ask for the service name
-	name = util.TextQuestionWithDefault("How do you want to call your service (best practice: lower cased):", defaultName)
+	name = util.TextQuestionWithDefault("How do you want to call your service (best practice: lower, kebab cased):", defaultName)
 	if _, exists := existingServices[name]; exists {
 		// Service name already exists
 		if !util.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
@@ -221,7 +223,7 @@ func askForServiceName(existingServices map[string]model.Service, imageName stri
 }
 
 func askForContainerName(serviceName string) (name string) {
-	name = util.TextQuestionWithDefault("How do you want to call your container (best practice: lower cased):", serviceName)
+	name = util.TextQuestionWithDefault("How do you want to call your container (best practice: lower, kebab cased):", serviceName)
 	return
 }
 

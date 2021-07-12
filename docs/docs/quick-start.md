@@ -39,7 +39,7 @@ Compose Generator offers several different methods to use it and it depends on y
     ??? summary "Install it on your development machine (recommended when using more frequently)"
         Installing Compose Generator with the native package manager is recommended due to the enhanced ability to udate to newer versions and to integrate in potentially existing devops workflows.
 
-        If you use Windows on your development machine, please refer to the guide on how to [install Compose Generator on Windows](../install/windows) and if you work with Linux, you can visit the guide on how to [insatll Compose Generator on Linux](../install/linux).
+        If you use Windows on your development machine, please refer to the guide on how to [install Compose Generator on Windows](../install/windows) and if you work with Linux, you can visit the guide on how to [install Compose Generator on Linux](../install/linux).
 
 <!--??? summary "I want to use it for CI/CD"
     You want to use it for development and do not have Docker installed-->
