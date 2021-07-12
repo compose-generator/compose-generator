@@ -19,7 +19,7 @@
             "variable": "TLS_DOMAIN_URL"
         },
         {
-            "text": "TLS Certificate E-Mail Adress (e.g. admin@example.com):",
+            "text": "TLS Certificate E-Mail Address (e.g. admin@example.com):",
             "defaultValue": "webmaster@${{TLS_DOMAIN_URL}}",
             "type": 2,
             "validator": "email",
