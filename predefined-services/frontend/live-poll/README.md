@@ -4,4 +4,4 @@ Live-Poll is an open-source platform for taking surveys or polls. There is an [f
 ### Setup
 Live-Poll comes as two parts: A frontend (this service) and an API (categorized as backend service).
 
-This frontend service, has to be built on the server where it's going to be live, because due to it's single-page-application behaviour, the API url has to be baked into the application at build time. This is why the "demo app creation" step takes so long.
+This frontend service, has to be built on the server where it's going to be live, because due to it's single-page-application behavior, the API url has to be baked into the application at build time. This is why the "demo app creation" step takes so long.

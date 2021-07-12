@@ -1,0 +1,20 @@
+# Workflow to detect typos in docs and source code
+name: Misspell
+on:
+  push:
+    branches:
+      - main
+      - docs/**
+  pull_request:
+jobs:
+  spellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Misspell
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          locale: "US"

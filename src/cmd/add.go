@@ -195,7 +195,7 @@ func askForServiceName(existingServices map[string]model.Service, imageName stri
 	}
 
 	// Ask for the service name
-	name = util.TextQuestionWithDefault("How do you want to call your service (best practise: lower cased):", defaultName)
+	name = util.TextQuestionWithDefault("How do you want to call your service (best practice: lower cased):", defaultName)
 	if _, exists := existingServices[name]; exists {
 		// Service name already exists
 		if !util.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
@@ -206,7 +206,7 @@ func askForServiceName(existingServices map[string]model.Service, imageName stri
 }
 
 func askForContainerName(serviceName string) (name string) {
-	name = util.TextQuestionWithDefault("How do you want to call your container (best practise: lower cased):", serviceName)
+	name = util.TextQuestionWithDefault("How do you want to call your container (best practice: lower cased):", serviceName)
 	return
 }
 
@@ -319,7 +319,7 @@ func askForEnvVariables() (envVariables []string) {
 	if util.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
 		util.Pel()
 		for another := true; another; another = util.YesNoQuestion("Expose another environment variable?", true) {
-			variableName := util.TextQuestionWithValidator("Variable name (BEST_PRACTISE_IS_CAPS):", util.EnvVarNameValidator)
+			variableName := util.TextQuestionWithValidator("Variable name (BEST_PRACTICE_IS_CAPS):", util.EnvVarNameValidator)
 			variableValue := util.TextQuestion("Variable value:")
 			envVariables = append(envVariables, variableName+"="+variableValue)
 		}

@@ -8,7 +8,7 @@ import (
 
 // ---------------------------------------------------------------- Command Exists ---------------------------------------------------------------
 
-func TestCommandExists_Succesful(t *testing.T) {
+func TestCommandExists_Successful(t *testing.T) {
 	result := CommandExists("ls")
 	assert.True(t, result)
 }
