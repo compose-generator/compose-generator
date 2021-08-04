@@ -3,7 +3,7 @@ module compose-generator
 go 1.16
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.2.14
+	github.com/AlecAivazis/survey/v2 v2.2.16
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/dcu v0.0.0-20210516173715-4fbca63d84ff
 	github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d
@@ -12,7 +12,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/fatih/color v1.12.0
 	github.com/go-playground/validator v9.31.0+incompatible
-	github.com/go-playground/validator/v10 v10.7.0
+  github.com/go-playground/validator/v10 v10.8.0
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
