@@ -3,5 +3,12 @@ container_name: ${{PROJECT_NAME_CONTAINER}}-backend-prometheus
 restart: always
 volumes:
   - ${{VOLUME_PROMETHEUS_CONFIG}}/prometheus.yml:/etc/prometheus/prometheus.yml
+networks:
+#? if has services.frontend {
+#  - frontend-backend
+#? }
+#? if has services.database {
+#  - backend-database
+#? }
 ports:
   - ${{PROMETHEUS_PORT}}:9090
