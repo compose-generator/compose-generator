@@ -28,13 +28,13 @@ func main() {
 		Copyright: "© 2021 Marc Auberer",
 		Usage:     "Generate and manage docker compose configuration files for your projects.",
 		Flags: []cli.Flag{
-			&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
+			&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode", Value: false},
 			&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration as a `FILE` with predefined answers. Works good for CI"},
-			&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
-			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
-			&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
-			&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
+			&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file", Value: false},
+			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks", Value: false},
+			&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template", Value: false},
+			&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file", Value: false},
+			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project", Value: false},
 		},
 		Action: func(c *cli.Context) error {
 			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
@@ -46,13 +46,13 @@ func main() {
 				Aliases: []string{"g", "gen"},
 				Usage:   "Generates a docker compose configuration",
 				Flags: []cli.Flag{
-					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
+					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode", Value: false},
 					&cli.PathFlag{Name: "config", Aliases: []string{"c"}, Usage: "Pass a configuration as a `FILE` with predefined answers. Works good for CI"},
-					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
-					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
-					&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template"},
-					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project"},
+					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file", Value: false},
+					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks", Value: false},
+					&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template", Value: false},
+					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file", Value: false},
+					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project", Value: false},
 				},
 				Action: func(c *cli.Context) error {
 					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
@@ -64,10 +64,10 @@ func main() {
 				Aliases: []string{"a"},
 				Usage:   "Adds a service to an existing compose file",
 				Flags: []cli.Flag{
-					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode"},
-					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
-					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
+					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Generate compose file in advanced mode", Value: false},
+					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file", Value: false},
+					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file", Value: false},
+					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks", Value: false},
 				},
 				Action: func(c *cli.Context) error {
 					cmd.Add(c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"))
@@ -79,11 +79,11 @@ func main() {
 				Aliases: []string{"r", "rm", "rem"},
 				Usage:   "Removes a service from an existing compose file",
 				Flags: []cli.Flag{
-					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Show questions for advanced customization"},
-					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks"},
-					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file"},
-					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file"},
-					&cli.BoolFlag{Name: "with-volumes", Aliases: []string{"v"}, Usage: "Remove associated volumes"},
+					&cli.BoolFlag{Name: "advanced", Aliases: []string{"a"}, Usage: "Show questions for advanced customization", Value: false},
+					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks", Value: false},
+					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file", Value: false},
+					&cli.BoolFlag{Name: "detached", Aliases: []string{"d"}, Usage: "Run docker-compose detached after creating the compose file", Value: false},
+					&cli.BoolFlag{Name: "with-volumes", Aliases: []string{"v"}, Usage: "Remove associated volumes", Value: false},
 				},
 				Action: func(c *cli.Context) error {
 					serviceNames := c.Args().Slice()
@@ -101,9 +101,9 @@ func main() {
 						Aliases: []string{"s"},
 						Usage:   "Save a custom template.",
 						Flags: []cli.Flag{
-							&cli.BoolFlag{Name: "stash", Aliases: []string{"s"}, Usage: "Move the regarding files, instead of copying them"},
-							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
-							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also save the Dockerfile in the template"},
+							&cli.BoolFlag{Name: "stash", Aliases: []string{"s"}, Usage: "Move the regarding files, instead of copying them", Value: false},
+							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks", Value: false},
+							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also save the Dockerfile in the template", Value: false},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
@@ -116,9 +116,9 @@ func main() {
 						Aliases: []string{"l"},
 						Usage:   "Load a custom template.",
 						Flags: []cli.Flag{
-							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks"},
-							&cli.BoolFlag{Name: "show", Aliases: []string{"s"}, Usage: "Do not load a template. Instead only list all templates and terminate"},
-							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also load the Dockerfile from the template (if existing)"},
+							&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks", Value: false},
+							&cli.BoolFlag{Name: "show", Aliases: []string{"s"}, Usage: "Do not load a template. Instead only list all templates and terminate", Value: false},
+							&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Also load the Dockerfile from the template (if existing)", Value: false},
 						},
 						Action: func(c *cli.Context) error {
 							name := c.Args().Get(0)
@@ -133,8 +133,8 @@ func main() {
 				Aliases: []string{"i", "in"},
 				Usage:   "Installs Docker and Docker Compose with a single command",
 				Flags: []cli.Flag{
-					&cli.BoolFlag{Name: "only-compose", Aliases: []string{"c"}, Usage: "Only install Docker Compose"},
-					&cli.BoolFlag{Name: "only-docker", Aliases: []string{"d"}, Usage: "Only install Docker"},
+					&cli.BoolFlag{Name: "only-compose", Aliases: []string{"c"}, Usage: "Only install Docker Compose", Value: false},
+					&cli.BoolFlag{Name: "only-docker", Aliases: []string{"d"}, Usage: "Only install Docker", Value: false},
 				},
 				Action: func(c *cli.Context) error {
 					cmd.Install(c.Bool("only-compose"), c.Bool("only-docker"))
