@@ -26,7 +26,7 @@
         {
             "text": "Which version of Jira do you want to use?",
             "type": 2,
-            "defaultValue": "8.17",
+            "defaultValue": "8.18",
             "variable": "JIRA_VERSION",
             "advanced": true
         },

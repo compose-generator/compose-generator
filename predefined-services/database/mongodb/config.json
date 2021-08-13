@@ -51,7 +51,7 @@
         {
             "text": "Which MongoDB version do you want to use?",
             "type": 2,
-            "defaultValue": "4.4",
+            "defaultValue": "5.0",
             "variable": "MONGODB_VERSION",
             "advanced": true
         }
