@@ -22,7 +22,7 @@
         {
             "text": "Which version of Prometheus do you want to use?",
             "type": 2,
-            "defaultValue": "2.28.1",
+            "defaultValue": "2.29.1",
             "variable": "PROMETHEUS_VERSION"
         }
     ],

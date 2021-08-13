@@ -22,7 +22,7 @@
         {
             "text": "Which Elasticsearch version do you want to use?",
             "type": 2,
-            "defaultValue": "7.12.1",
+            "defaultValue": "7.14.0",
             "variable": "ELASTICSEARCH_VERSION",
             "advanced": true
         }

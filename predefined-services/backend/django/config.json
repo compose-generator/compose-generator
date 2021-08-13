@@ -34,7 +34,7 @@
         {
             "text": "Which Django version do you want to use?",
             "type": 2,
-            "defaultValue": "3.2.3",
+            "defaultValue": "3.2.6",
             "variable": "DJANGO_VERSION"
         },
         {

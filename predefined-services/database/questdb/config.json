@@ -46,7 +46,7 @@
         {
             "text": "Which QuestDB version do you want to use?",
             "type": 2,
-            "defaultValue": "6.0.3",
+            "defaultValue": "6.0.4",
             "variable": "QUESTDB_VERSION",
             "advanced": true
         }

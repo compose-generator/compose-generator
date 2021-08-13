@@ -41,3 +41,17 @@ updates:
       - marcauberer
     assignees:
       - marcauberer
+
+  # Github Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: dev
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer

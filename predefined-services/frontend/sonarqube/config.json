@@ -26,7 +26,7 @@
         {
             "text": "Which version of SonarQube do you want to use?",
             "type": 2,
-            "defaultValue": "8.9",
+            "defaultValue": "9.0",
             "variable": "SONARQUBE_VERSION"
         }
     ],

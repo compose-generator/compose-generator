@@ -22,7 +22,7 @@
         {
             "text": "Which version of YouTack do you want to use (latest not available)?",
             "type": 2,
-            "defaultValue": "2021.1.15276",
+            "defaultValue": "2021.3.23639",
             "variable": "YOUTRACK_VERSION",
             "advanced": true
         }
