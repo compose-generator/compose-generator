@@ -14,7 +14,7 @@ var (
 	BuiltBy = ""
 )
 
-// BuildVersion returns a version string for the current verison, including commit id, date and user
+// BuildVersion returns a version string for the current version, including commit id, date and user
 func BuildVersion(version, commit, date, builtBy string) string {
 	result := version
 	if commit != "" {
