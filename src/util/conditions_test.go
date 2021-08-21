@@ -103,13 +103,13 @@ var templateData2 = map[string][]model.ServiceTemplateConfig{
 }
 
 func TestPrepareInputData1(t *testing.T) {
-	result := PrepareInputData(templateData, varMap)
+	result := prepareInputData(templateData, varMap)
 	expected := "{\"services\":{\"backend\":[{\"label\":\"Wordpress\",\"name\":\"wordpress\"}],\"frontend\":[{\"label\":\"Angular\",\"name\":\"angular\"},{\"label\":\"Vue\",\"name\":\"vue\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
 	assert.Equal(t, expected, result)
 }
 
 func TestPrepareInputData2(t *testing.T) {
-	result := PrepareInputData(templateData2, varMap)
+	result := prepareInputData(templateData2, varMap)
 	expected := "{\"services\":{\"dbadmin\":[{\"label\":\"PhpMyAdmin\",\"name\":\"phpmyadmin\"}],\"tlshelper\":[{\"label\":\"Lets Encrypt Companion\",\"name\":\"letsencrypt\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
 	assert.Equal(t, expected, result)
 }

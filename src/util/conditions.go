@@ -7,15 +7,15 @@ import (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
+// EvaluateConditionalSections evaluates conditional sections in template data
 func EvaluateConditionalSections(
 	filePath string,
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 ) string {
-	dataString := PrepareInputData(templateData, varMap)
+	dataString := prepareInputData(templateData, varMap)
 	// Execute CCom
-	// ToDo: Remove '-l yml' as soon as CCom #62 is fixed
-	return ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
+	return ExecuteAndWaitWithOutput("ccom", "-d", dataString, "-s", filePath)
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
@@ -24,12 +24,13 @@ func EvaluateCondition(
 	templateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 ) bool {
-	dataString := PrepareInputData(templateData, varMap)
+	dataString := prepareInputData(templateData, varMap)
 	// Execute CCom
 	result := ExecuteAndWaitWithOutput("ccom", "-m", "-s", "-d", dataString, condition)
 	return result == "true"
 }
 
+// CheckIfCComIsInstalled checks if CCom is present on the current machine
 func CheckIfCComIsInstalled() {
 	if !CommandExists("ccom") {
 		Error("CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", nil, true)
@@ -38,7 +39,7 @@ func CheckIfCComIsInstalled() {
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func PrepareInputData(
+func prepareInputData(
 	selectedTemplateData map[string][]model.ServiceTemplateConfig,
 	varMap map[string]string,
 ) string {
