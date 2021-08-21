@@ -15,7 +15,7 @@ func EvaluateConditionalSections(
 ) string {
 	dataString := prepareInputData(templateData, varMap)
 	// Execute CCom
-	return ExecuteAndWaitWithOutput("ccom", "-d", dataString, "-s", filePath)
+	return ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
