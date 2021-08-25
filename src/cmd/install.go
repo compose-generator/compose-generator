@@ -110,7 +110,7 @@ func installForLinux(flagOnlyCompose bool, flagOnlyDocker bool) {
 				util.Error("Download of Docker Compose failed", err, true)
 			}
 			util.ExecuteAndWaitWithOutput("chmod", "+x", "/usr/local/bin/docker-compose")
-			
+
 			// Install new compose cli
 			filePath := os.TempDir() + "/install-compose.sh"
 			err = util.DownloadFile(LinuxComposeCLIInstallScriptURL, filePath)

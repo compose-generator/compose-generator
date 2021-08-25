@@ -32,7 +32,7 @@
   "goBinary": {
     "name": "compose-generator",
     "path": "./bin",
-    "url": "https://github.com/compose-generator/compose-generator/releases/download/{{version}}/compose-generator_{{version}}_{{platform}}_{{arch}}.tar.gz"
+    "url": "https://github.com/compose-generator/compose-generator/releases/download/{{version}}/compose-generator_{{platform}}_{{arch}}.tar.gz"
   },
   "dependencies": {
     "@gzuidhof/go-npm": "^0.1.13"

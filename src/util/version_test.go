@@ -31,7 +31,7 @@ func TestBuildVersion(t *testing.T) {
 			date:    "12/12/12",
 			commit:  "aaaa",
 			builtBy: "me",
-			out:     "1.2.3, commit: aaaa, built at: 12/12/12, built by: me",
+			out:     "1.2.3\ncommit: aaaa\nbuilt at: 12/12/12\nbuilt by: me",
 		},
 		"only version": {
 			version: "1.2.3",
@@ -40,13 +40,13 @@ func TestBuildVersion(t *testing.T) {
 		"version and date": {
 			version: "1.2.3",
 			date:    "12/12/12",
-			out:     "1.2.3, built at: 12/12/12",
+			out:     "1.2.3\nbuilt at: 12/12/12",
 		},
 		"version, date, built by": {
 			version: "1.2.3",
 			date:    "12/12/12",
 			builtBy: "me",
-			out:     "1.2.3, built at: 12/12/12, built by: me",
+			out:     "1.2.3\nbuilt at: 12/12/12\nbuilt by: me",
 		},
 	} {
 		tt := tt

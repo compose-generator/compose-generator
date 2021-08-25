@@ -14,7 +14,7 @@ func FileExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
-// IsDirectory checks if a file is a directory
+// IsDir checks if a file is a directory
 func IsDir(path string) bool {
 	fileInfo, err := os.Stat(path)
 	if err != nil {
