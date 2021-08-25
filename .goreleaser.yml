@@ -175,3 +175,6 @@ announce:
   twitter:
     enabled: true
     message_template: 'Compose Generator {{ .Tag }} is now available! Check out the new features: compose-generator.com!'
+milestones:
+  - close: true
+    fail_on_error: false
