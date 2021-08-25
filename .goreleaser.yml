@@ -37,6 +37,7 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=amd64
       - --platform=linux/amd64
   - image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
@@ -56,6 +57,7 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=386
       - --platform=linux/i386
   - image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
@@ -76,6 +78,7 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=armv6
       - --platform=linux/arm/v6
   - image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
@@ -96,6 +99,7 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=armv7
       - --platform=linux/arm/v7
 docker_manifests:
   - name_template: chillibits/compose-generator:{{ .Version }}
@@ -123,14 +127,18 @@ docker_manifests:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
 archives:
-  - files:
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    files:
       - LICENSE
       - predefined-services/*
     format_overrides:
       - goos: windows
         format: zip
+checksum:
+  name_template: '{{ .ProjectName }}_checksums.txt'
 nfpms:
   - id: publish
+    file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     maintainer: Marc Auberer <marc.auberer@chillibits.com>
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.compose-generator.com
@@ -159,6 +167,10 @@ release:
   prerelease: auto
   extra_files:
     - glob: ./bin/predefined-services.tar.gz
+  footer: |
+    ---
+    
+    __Visit [www.compose-generator.com](https://www.compose-generator.com) to test the new features!__
 announce:
   twitter:
     enabled: true
