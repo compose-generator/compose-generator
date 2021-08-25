@@ -9,8 +9,10 @@ on:
       #- 'docs/**'
       #- 'feature/**'
       #- 'service/**'
+      #- 'fix/**'
     paths:
       - 'docs/**'
+  workflow_dispatch:
 
 jobs:
   docs-deploy:

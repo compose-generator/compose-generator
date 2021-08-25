@@ -34,6 +34,9 @@ theme:
         icon: material/weather-night
         name: Switch to dark mode
 
+extra_css:
+  - stylesheets/styles.css
+
 plugins:
   - search:
       prebuild_index: python
