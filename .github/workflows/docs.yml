@@ -9,7 +9,7 @@ on:
       #- 'docs/**'
       #- 'feature/**'
       #- 'service/**'
-      - 'fix/**'
+      #- 'fix/**'
     paths:
       - 'docs/**'
   workflow_dispatch:
