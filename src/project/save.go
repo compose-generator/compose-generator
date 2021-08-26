@@ -1,63 +1,28 @@
-package parser
+package project
 
 import (
+	"compose-generator/model"
 	"compose-generator/util"
 	"io/ioutil"
-	"os"
 
-	"gopkg.in/yaml.v3"
-
-	"github.com/compose-spec/compose-go/loader"
-	"github.com/compose-spec/compose-go/types"
+	"gopkg.in/yaml.v2"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// LoadProject loads the Docker compose project from the current directory
-func LoadProject() *types.Project {
-	content, err := ioutil.ReadFile("docker-compose.yml")
-	if err != nil {
-		util.Error("Unable to parse docker-compose.yml file", err, true)
-	}
-	dict, err := loader.ParseYAML(content)
-	if err != nil {
-		util.Error("Unable to parse docker-compose.yml file", err, true)
-	}
-
-	workingDir, err := os.Getwd()
-	if err != nil {
-		util.Error("Unable to retrieve workdir", err, true)
-	}
-
-	configs := []types.ConfigFile{
-		{
-			Filename: "docker-compose.yml",
-			Config:   dict,
-		},
-	}
-	config := types.ConfigDetails{
-		WorkingDir:  workingDir,
-		ConfigFiles: configs,
-		Environment: nil,
-	}
-	project, err := loader.Load(config)
-	if err != nil {
-		util.Error("Could not load project from the current directory", err, true)
-	}
-	return project
-}
-
 // SaveProject saves the Docker compose project to the current directory
-func SaveProject(project *types.Project) {
+func SaveProject(project *model.CGProject) {
+	saveGitignore(project)
+	saveReadme(project)
 	saveEnvironmentFiles(project)
 	saveComposeFile(project)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func saveComposeFile(project *types.Project) {
+func saveComposeFile(project *model.CGProject) {
 	// Save docker compose file
-	content, err := yaml.Marshal(project)
+	content, err := yaml.Marshal(project.Project)
 	if err != nil {
 		util.Error("Could not save docker-compose.yml", err, true)
 	}
@@ -67,10 +32,10 @@ func saveComposeFile(project *types.Project) {
 	}
 }
 
-func saveEnvironmentFiles(project *types.Project) {
+func saveEnvironmentFiles(project *model.CGProject) {
 	// Make a list of all env files, which are listed in the project
 	envFiles := make(map[string]map[string]*string)
-	for _, service := range project.AllServices() {
+	for _, service := range project.Project.AllServices() {
 		if len(service.EnvFile) > 0 {
 			envFileName := service.EnvFile[0]
 			// Initialize env file with empty map
@@ -96,5 +61,38 @@ func saveEnvironmentFiles(project *types.Project) {
 		if err := ioutil.WriteFile(fileName, []byte(content), 0755); err != nil {
 			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
 		}
+	}
+}
+
+func saveVolumes(project *model.CGProject) {
+	// Make a list with all volume paths
+}
+
+func saveGitignore(project *model.CGProject) {
+	if project.WithGitignore {
+		// Create gitignore file with all the paths from the list
+		content := ""
+		for _, path := range project.GitignorePaths {
+			content += path + "\n"
+		}
+		ioutil.WriteFile(".gitignore", []byte(content), 0755)
+	}
+}
+
+func saveReadme(project *model.CGProject) {
+	if project.WithReadme {
+		// Create Readme file, which consists of the content of all stated files
+		content := ""
+		for _, path := range project.ReadmeChildPaths {
+			if util.FileExists(path) {
+				childContent, err := ioutil.ReadFile(path)
+				if err != nil {
+					util.Error("Could not load README.md from service template", err, false)
+					continue
+				}
+				content += string(childContent) + "\n"
+			}
+		}
+		ioutil.WriteFile("README.md", []byte(content), 0755)
 	}
 }

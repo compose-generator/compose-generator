@@ -1,63 +1,64 @@
 package cmd
 
 import (
-	"bufio"
-	"compose-generator/parser"
+	"compose-generator/model"
+	"compose-generator/project"
 	"compose-generator/util"
-	"context"
-	"encoding/json"
-	"fmt"
-	"os"
-	"path/filepath"
+	"path"
 	"strconv"
-	"strings"
 
-	model "github.com/compose-generator/dcu/model"
 	"github.com/compose-generator/diu"
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/filters"
-	"github.com/docker/docker/client"
 	"github.com/fatih/color"
+
+	"github.com/compose-spec/compose-go/types"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Add a service to an existing compose file
-func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
+func Add(
+	flagAdvanced bool,
+	flagRun bool,
+	flagDetached bool,
+	flagForce bool,
+) {
 	// Check if CCom is installed
 	util.CheckIfCComIsInstalled()
 
+	// Clear the screen for CG output
 	util.ClearScreen()
 
 	// Check for predefined service templates updates
 	util.CheckForServiceTemplateUpdate()
 
 	// Ask for custom YAML file
-	/*path := "./docker-compose.yml"
+	composeFilePath := "docker-compose.yml"
 	if flagAdvanced {
-		path = util.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
-	}*/
-
-	util.P("Loading project ... ")
-	project := parser.LoadProject()
-	json, _ := json.Marshal(project)
-	fmt.Println(string(json))
-
-	fmt.Print("Press 'Enter' to continue...")
-	bufio.NewReader(os.Stdin).ReadBytes('\n')
-
-	parser.SaveProject(project)
-
-	/*util.P("Parsing compose file ... ")
-	// Load compose file
-	composeFile, err := dcu.DeserializeFromFile(path)
-	if err != nil {
-		util.Error("Internal error - unable to load compose file", err, true)
+		composeFilePath = util.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
 	}
+
+	// Load project
+	util.P("Loading project ... ")
+	options := project.LoadOptions{ComposeFileName: composeFilePath}
+	proj := project.LoadProject(options)
 	util.Done()
 	util.Pel()
 
-	service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce, false)
+	// Add custom service
+	AddCustomService(proj)
+
+	// Save project
+	util.P("Saving project ... ")
+	project.SaveProject(proj)
+	util.Done()
+	util.Pel()
+
+	// Run if the correspondig flag is set
+	if flagRun || flagDetached {
+		util.DockerComposeUp(flagDetached)
+	}
+
+	/*service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce, false)
 
 	// Ask for services that depend on the new service
 	for _, existingServiceName := range askForDependant(existingServiceNames) {
@@ -84,8 +85,18 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	}*/
 }
 
+func AddCustomService(project *model.CGProject) {
+	newService := types.ServiceConfig{}
+
+	// Ask questions
+	askBuildFromSource(&newService, project)
+
+	// Add the new service to the project
+	project.Project.Services = append(project.Project.Services, newService)
+}
+
 // AddService asks the user for a new service
-func AddService(
+/*func AddService(
 	existingServices map[string]model.Service,
 	flagAdvanced bool,
 	flagForce bool,
@@ -163,11 +174,53 @@ func AddService(
 		Environment:   envVariables,
 	}
 	return
-}
+}*/
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func askBuildFromSource() (build bool, buildPath string, registry string) {
+func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) {
+	fromSource := util.YesNoQuestion("Build from source?", false)
+	if fromSource { // Build from source
+		// Ask for build path
+		dockerfilePath := util.TextQuestionWithDefault("Where is your Dockerfile located?", "./Dockerfile")
+		// Check if Dockerfile exists
+		if !util.FileExists(dockerfilePath) {
+			util.Error("The Dockerfile could not be found", nil, true)
+		}
+		// Add build config to service
+		service.Build = &types.BuildConfig{
+			Context:    path.Dir(dockerfilePath),
+			Dockerfile: dockerfilePath,
+		}
+	} else { // Load pre-built image
+		chooseAgain := true
+		registry := ""
+		image := ""
+		for chooseAgain {
+			// Ask for registry
+			registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
+			if registry == "docker.io" {
+				registry = ""
+			} else {
+				registry += "/"
+			}
+
+			// Ask for image
+			image = util.TextQuestionWithDefault("Which Image do you want to use? (e.g. chillibits/ccom:0.8.0)", "hello-world")
+
+			chooseAgain = searchRemoteImage(registry, image)
+		}
+
+		options := []string{"frontend", "backend", "database", "db-admin"}
+		serviceType := util.MenuQuestion("Which type is the closest match for this service?", options)
+
+		// Add image config to service
+		service.Image = registry + image
+		service.Name = serviceType + "-" + image
+	}
+}
+
+/*func askBuildFromSource() (build bool, buildPath string, registry string) {
 	build = util.YesNoQuestion("Build from source?", false)
 	if build {
 		// Ask for build path
@@ -193,21 +246,6 @@ func askForImage(build bool) string {
 		return util.TextQuestion("How do you want to call the built image?")
 	}
 	return util.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
-}
-
-func searchRemoteImage(client *client.Client, registry string, image string) {
-	util.P("\nSearching image ... ")
-	manifest, err := diu.GetImageManifest(registry + image)
-	if err == nil {
-		color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")
-		return
-	}
-	color.Red(" not found or no access\n")
-	proceed := util.YesNoQuestion("Proceed anyway?", false)
-	if !proceed {
-		os.Exit(0)
-	}
-	util.Pel()
 }
 
 func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {
@@ -405,4 +443,17 @@ func askForRestart(flagAdvanced bool) (restartValue string) {
 		util.Pel()
 	}
 	return
+}*/
+
+func searchRemoteImage(registry string, image string) bool {
+	util.P("\nSearching image ... ")
+	manifest, err := diu.GetImageManifest(registry + image)
+	if err != nil {
+		color.Red(" not found or no access\n")
+		chooseAgain := util.YesNoQuestion("Choose another image (Y) or proceed anyway (n)?", true)
+		util.Pel()
+		return chooseAgain
+	}
+	color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")
+	return false
 }
