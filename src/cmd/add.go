@@ -1,14 +1,17 @@
 package cmd
 
 import (
+	"bufio"
+	"compose-generator/parser"
 	"compose-generator/util"
 	"context"
+	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
-	dcu "github.com/compose-generator/dcu"
 	model "github.com/compose-generator/dcu/model"
 	"github.com/compose-generator/diu"
 	"github.com/docker/docker/api/types"
@@ -30,12 +33,22 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	util.CheckForServiceTemplateUpdate()
 
 	// Ask for custom YAML file
-	path := "./docker-compose.yml"
+	/*path := "./docker-compose.yml"
 	if flagAdvanced {
 		path = util.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
-	}
+	}*/
 
-	util.P("Parsing compose file ... ")
+	util.P("Loading project ... ")
+	project := parser.LoadProject()
+	json, _ := json.Marshal(project)
+	fmt.Println(string(json))
+
+	fmt.Print("Press 'Enter' to continue...")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
+
+	parser.SaveProject(project)
+
+	/*util.P("Parsing compose file ... ")
 	// Load compose file
 	composeFile, err := dcu.DeserializeFromFile(path)
 	if err != nil {
@@ -68,7 +81,7 @@ func Add(flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool) {
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
-	}
+	}*/
 }
 
 // AddService asks the user for a new service
