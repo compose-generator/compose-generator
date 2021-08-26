@@ -1,0 +1,37 @@
+{
+    "label": "Uptime Kuma",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Uptime Kuma instance?",
+            "type": 2,
+            "defaultValue": "3001",
+            "validator": "port",
+            "variable": "UPTIME_KUMA_PORT"
+        },
+        {
+            "text": "Which version of Uptime Kuma do you want to use?",
+            "type": 2,
+            "defaultValue": "1",
+            "variable": "UPTIME_KUMA_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Uptime Kuma data volume?",
+            "defaultValue": "./volumes/uptime-kuma-data",
+            "variable": "VOLUME_UPTIME_KUMA_DATA",
+            "advanced": true
+        }
+    ]
+}
