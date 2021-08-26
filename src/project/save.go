@@ -5,6 +5,7 @@ import (
 	"compose-generator/util"
 	"io/ioutil"
 
+	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 )
 
@@ -12,6 +13,7 @@ import (
 
 // SaveProject saves the Docker compose project to the current directory
 func SaveProject(project *model.CGProject) {
+	saveCGFile(project)
 	saveGitignore(project)
 	saveReadme(project)
 	saveEnvironmentFiles(project)
@@ -95,4 +97,12 @@ func saveReadme(project *model.CGProject) {
 		}
 		ioutil.WriteFile("README.md", []byte(content), 0755)
 	}
+}
+
+func saveCGFile(project *model.CGProject) {
+	viper.SetConfigName(".cg.yml")
+	viper.AddConfigPath(".")
+	viper.Set("project-name", project.Name)
+	viper.Set("project-container-name", project.ContainerName)
+	viper.WriteConfig()
 }

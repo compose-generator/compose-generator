@@ -5,9 +5,12 @@ import (
 	"compose-generator/util"
 	"io/ioutil"
 	"os"
+	"path"
+	"strings"
 
 	"github.com/compose-spec/compose-go/loader"
 	"github.com/compose-spec/compose-go/types"
+	"github.com/spf13/viper"
 )
 
 type LoadOptions struct {
@@ -68,5 +71,30 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	project.Project, err = loader.Load(config)
 	if err != nil {
 		util.Error("Could not load project from the current directory", err, true)
+	}
+}
+
+func loadCGFile(project *model.CGProject) {
+	if util.FileExists(".cg.yml") {
+		workingDir, err := os.Getwd()
+		if err != nil {
+			util.Error("Unable to retrieve workdir", err, true)
+		}
+		defaultProjectName := path.Base(workingDir)
+		defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
+
+		// Set default values
+		viper.SetDefault("project-name", defaultProjectName)
+		viper.SetDefault("project-container-name", defaultContainerName)
+		// Load config file
+		viper.SetConfigName(".cg.yml")
+		viper.AddConfigPath(".")
+		err = viper.ReadInConfig()
+		if err != nil {
+			util.Error("Could not read '.cg.yml' file", err, true)
+		}
+		// Assign values
+		project.Name = viper.GetString("project-name")
+		project.ContainerName = viper.GetString("project-container-name")
 	}
 }

@@ -85,11 +85,14 @@ func Add(
 	}*/
 }
 
+// AddCustomService adds a fully customizable service to the project
 func AddCustomService(project *model.CGProject) {
 	newService := types.ServiceConfig{}
 
 	// Ask questions
 	askBuildFromSource(&newService, project)
+	askForServiceName(&newService, project)
+	askForContainerName(&newService, project)
 
 	// Add the new service to the project
 	project.Project.Services = append(project.Project.Services, newService)
@@ -217,38 +220,19 @@ func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) 
 		// Add image config to service
 		service.Image = registry + image
 		service.Name = serviceType + "-" + image
+		service.ContainerName = project.ContainerName + "-" + serviceType + "-" + image
 	}
 }
 
-/*func askBuildFromSource() (build bool, buildPath string, registry string) {
-	build = util.YesNoQuestion("Build from source?", false)
-	if build {
-		// Ask for build path
-		buildPath = util.TextQuestionWithDefault("Where is your Dockerfile located?", ".")
-		// Check if Dockerfile exists
-		if !util.FileExists(buildPath+"/Dockerfile") && !util.FileExists(buildPath+"Dockerfile") {
-			util.Error("Aborting. The Dockerfile cannot be found.", nil, true)
-		}
-		return
-	}
-	// Ask for registry
-	registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
-	if registry == "docker.io" {
-		registry = ""
-		return
-	}
-	registry = registry + "/"
-	return
+func askForServiceName(service *types.ServiceConfig, project *model.CGProject) {
+
 }
 
-func askForImage(build bool) string {
-	if build {
-		return util.TextQuestion("How do you want to call the built image?")
-	}
-	return util.TextQuestionWithDefault("From which image do you want to build your service?", "hello-world")
+func askForContainerName(service *types.ServiceConfig, project *model.CGProject) {
+
 }
 
-func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {
+/*func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {
 	// Set image name as default service name
 	defaultName := imageName
 	i := strings.Index(defaultName, "/")
