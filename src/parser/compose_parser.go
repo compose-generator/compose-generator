@@ -69,24 +69,30 @@ func saveComposeFile(project *types.Project) {
 
 func saveEnvironmentFiles(project *types.Project) {
 	// Make a list of all env files, which are listed in the project
-	envFiles := make(map[string]string)
+	envFiles := make(map[string]map[string]*string)
 	for _, service := range project.AllServices() {
 		if len(service.EnvFile) > 0 {
 			envFileName := service.EnvFile[0]
-			// Initialize file content with empty string
+			// Initialize env file with empty map
 			if _, ok := envFiles[envFileName]; !ok {
-				envFiles[envFileName] = ""
+				envFiles[envFileName] = make(map[string]*string)
 			}
 
 			// Append line for each env var and delete the env var from the project
 			for key, value := range service.Environment {
-				envFiles[envFileName] += key + "=" + *value + "\n"
+				envFiles[envFileName][key] = value
 				delete(service.Environment, key)
 			}
 		}
 	}
 	// Write each file to the disk
-	for fileName, content := range envFiles {
+	for fileName, envVars := range envFiles {
+		// Join env variables of this particular env file together
+		content := ""
+		for key, value := range envVars {
+			content += key + "=" + *value + "\n"
+		}
+		// Write to disk
 		if err := ioutil.WriteFile(fileName, []byte(content), 0755); err != nil {
 			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
 		}
