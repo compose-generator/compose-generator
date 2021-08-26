@@ -1,0 +1,9 @@
+image: louislam/uptime-kuma:${{UPTIME_KUMA_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-uptime-kuma
+restart: always
+volumes:
+  - ${{VOLUME_UPTIME_KUMA_DATA}}:/app/data
+networks:
+  - frontend-database
+ports:
+  - ${{UPTIME_KUMA_PORT}}:3001
