@@ -53,7 +53,7 @@ func Add(
 	util.Done()
 	util.Pel()
 
-	// Run if the correspondig flag is set
+	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 	}
@@ -196,9 +196,9 @@ func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) 
 			Dockerfile: dockerfilePath,
 		}
 	} else { // Load pre-built image
-		chooseAgain := true
 		registry := ""
 		image := ""
+		chooseAgain := true
 		for chooseAgain {
 			// Ask for registry
 			registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
@@ -219,17 +219,25 @@ func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) 
 
 		// Add image config to service
 		service.Image = registry + image
-		service.Name = serviceType + "-" + image
-		service.ContainerName = project.ContainerName + "-" + serviceType + "-" + image
+		service.Name = serviceType + "-" + path.Base(image) // A bit hacky, but it works ;)
+		service.ContainerName = project.ContainerName + "-" + serviceType + "-" + path.Base(image)
 	}
 }
 
 func askForServiceName(service *types.ServiceConfig, project *model.CGProject) {
-
+	chooseAgain := true
+	for chooseAgain {
+		name := util.TextQuestionWithDefault("How do you want to call your service (best practice: lower, kebab cased):", service.Name)
+		if util.SliceContainsString(project.Project.ServiceNames(), name) {
+			util.Error("This service name already exists. Please choose a different one", nil, false)
+		} else {
+			chooseAgain = false
+		}
+	}
 }
 
 func askForContainerName(service *types.ServiceConfig, project *model.CGProject) {
-
+	service.ContainerName = util.TextQuestionWithDefault("How do you want to call your container (best practice: lower, kebab cased):", service.ContainerName)
 }
 
 /*func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {

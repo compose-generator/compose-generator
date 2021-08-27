@@ -3,6 +3,7 @@ package project
 import (
 	"compose-generator/model"
 	"compose-generator/util"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -36,6 +37,7 @@ func LoadProject(options ...LoadOptions) *model.CGProject {
 
 	// Load components
 	loadComposeFile(project, opt)
+	loadCGFile(project)
 
 	return project
 }
@@ -75,26 +77,34 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 }
 
 func loadCGFile(project *model.CGProject) {
-	if util.FileExists(".cg.yml") {
-		workingDir, err := os.Getwd()
-		if err != nil {
-			util.Error("Unable to retrieve workdir", err, true)
-		}
-		defaultProjectName := path.Base(workingDir)
-		defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
+	// Get default config values
+	workingDir, err := os.Getwd()
+	if err != nil {
+		util.Error("Unable to retrieve workdir", err, true)
+	}
+	defaultProjectName := path.Base(strings.ReplaceAll(workingDir, "\\", "/"))
+	defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
+
+	configFileName := ".gc.yml"
+	if util.FileExists(configFileName) {
 
 		// Set default values
 		viper.SetDefault("project-name", defaultProjectName)
 		viper.SetDefault("project-container-name", defaultContainerName)
 		// Load config file
-		viper.SetConfigName(".cg.yml")
+		viper.SetConfigName(configFileName)
 		viper.AddConfigPath(".")
 		err = viper.ReadInConfig()
 		if err != nil {
-			util.Error("Could not read '.cg.yml' file", err, true)
+			util.Error("Could not read '"+configFileName+"' file", err, true)
 		}
 		// Assign values
 		project.Name = viper.GetString("project-name")
 		project.ContainerName = viper.GetString("project-container-name")
+	} else {
+		project.Name = defaultProjectName
+		project.ContainerName = defaultContainerName
 	}
+	fmt.Println("Project name: " + project.Name)
+	fmt.Println("Container name: " + project.ContainerName)
 }
