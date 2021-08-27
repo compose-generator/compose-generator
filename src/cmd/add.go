@@ -48,6 +48,7 @@ func Add(
 	util.P("Loading project ... ")
 	options := project.LoadOptions{ComposeFileName: composeFilePath}
 	proj := project.LoadProject(options)
+	proj.AdvancedConfig = flagAdvanced
 	util.Done()
 	util.Pel()
 
@@ -64,32 +65,6 @@ func Add(
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 	}
-
-	/*service, serviceName, existingServiceNames := AddService(composeFile.Services, flagAdvanced, flagForce, false)
-
-	// Ask for services that depend on the new service
-	for _, existingServiceName := range askForDependant(existingServiceNames) {
-		currentService := composeFile.Services[existingServiceName]
-		currentService.DependsOn = append(currentService.DependsOn, serviceName)
-		composeFile.Services[existingServiceName] = currentService
-	}
-
-	// Add service
-	util.P("Adding service ... ")
-	composeFile.Services[serviceName] = service
-	util.Done()
-
-	// Write to file
-	util.P("Saving compose file ... ")
-	if dcu.SerializeToFile(composeFile, path) != nil {
-		util.Error("Could not write yaml to compose file", err, true)
-	}
-	util.Done()
-
-	// Run if the corresponding flag is set
-	if flagRun || flagDetached {
-		util.DockerComposeUp(flagDetached)
-	}*/
 }
 
 // AddCustomService adds a fully customizable service to the project
@@ -118,87 +93,6 @@ func AddCustomService(project *model.CGProject) {
 	// Add the new service to the project
 	project.Project.Services = append(project.Project.Services, newService)
 }
-
-// AddService asks the user for a new service
-/*func AddService(
-	existingServices map[string]model.Service,
-	flagAdvanced bool,
-	flagForce bool,
-	modeGenerate bool,
-) (service model.Service, serviceName string, existingServiceNames []string) {
-	// Initialize Docker client
-	client, err := client.NewClientWithOpts(client.FromEnv)
-	if err != nil {
-		util.Error("Docker is not installed on your system", err, true)
-	}
-
-	// Get names of existing services
-	for name := range existingServices {
-		existingServiceNames = append(existingServiceNames, name)
-	}
-
-	// Ask if the image should be built from source
-	build, buildPath, registry := askBuildFromSource()
-
-	// Ask for image
-	imageName := askForImage(build)
-
-	// Search for remote image and check manifest
-	if !build && !flagForce {
-		searchRemoteImage(client, registry, imageName)
-	}
-
-	// Ask for service name
-	serviceName = askForServiceName(existingServices, imageName)
-
-	// Ask for container name
-	containerName := serviceName
-	if flagAdvanced {
-		containerName = askForContainerName(serviceName)
-	}
-
-	// Ask for volumes
-	volumes := askForVolumes(client, flagAdvanced)
-
-	// Ask for networks
-	networks := askForNetworks(client)
-
-	// Ask for ports
-	ports := askForPorts()
-
-	// Ask for env files
-	envFiles := askForEnvFiles()
-
-	// Ask for env variables
-	envVariables := []string{}
-	if len(envFiles) == 0 {
-		envVariables = askForEnvVariables()
-	}
-
-	// Ask for services, the new one should depend on
-	var dependsServices []string
-	if !modeGenerate {
-		dependsServices = askForDependsOn(util.RemoveStringFromSlice(existingServiceNames, serviceName))
-	}
-
-	// Ask for restart mode
-	restartValue := askForRestart(flagAdvanced)
-
-	// Build service object
-	service = model.Service{
-		Build:         buildPath,
-		Image:         registry + imageName,
-		ContainerName: containerName,
-		Volumes:       volumes,
-		Networks:      networks,
-		Ports:         ports,
-		Restart:       restartValue,
-		DependsOn:     dependsServices,
-		EnvFile:       envFiles,
-		Environment:   envVariables,
-	}
-	return
-}*/
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
@@ -267,7 +161,7 @@ func askForContainerName(service *spec.ServiceConfig, project *model.CGProject) 
 func askForVolumes(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
 		util.Pel()
-		for ok := true; ok; ok = util.YesNoQuestion("Add another volume?", false) {
+		for ok := true; ok; ok = util.YesNoQuestion("Add another volume?", true) {
 			globalVolume := util.YesNoQuestion("Do you want to add an existing external volume (y) or link a directory / file (n)?", false)
 			if globalVolume {
 				askForExternalVolume(service, project, client)
@@ -395,8 +289,8 @@ func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
 func askForNetworks(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
 		util.Pel()
-		for ok := true; ok; ok = util.YesNoQuestion("Add another network?", false) {
-			globalNetwork := util.YesNoQuestion("Do you want to add an external network (y) or create a new one (n)?", false)
+		for ok := true; ok; ok = util.YesNoQuestion("Add another network?", true) {
+			globalNetwork := util.YesNoQuestion("Do you want to add an external network (y) or create a new one (N)?", false)
 			if globalNetwork {
 				askForExternalNetwork(service, project, client)
 			} else {
@@ -425,13 +319,17 @@ func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject
 	index := util.MenuQuestionIndex("Which one?", menuItems)
 	selectedNetwork := externalNetworks[index]
 
-	// Ask for a custom name withing the compose file
+	// Ask for a custom name within the compose file
 	customName := util.TextQuestionWithDefault("How do you want to call the network internally?", selectedNetwork.Name)
 
-	// Add network to the service
+	// Create maps if not exists
 	if service.Networks == nil {
 		service.Networks = make(map[string]*spec.ServiceNetworkConfig)
 	}
+	if project.Project.Networks == nil {
+		project.Project.Networks = make(spec.Networks)
+	}
+	// Add network to the service
 	service.Networks[customName] = nil
 	// Add network to project-wide network section
 	if project.Project.Networks == nil {
@@ -464,6 +362,13 @@ func askForNewNetwork(service *spec.ServiceConfig, project *model.CGProject, cli
 			External: true,
 			Name:     networkName,
 		}
+	}
+	// Create maps if not exists
+	if service.Networks == nil {
+		service.Networks = make(map[string]*spec.ServiceNetworkConfig)
+	}
+	if project.Project.Networks == nil {
+		project.Project.Networks = make(spec.Networks)
 	}
 	// Add network to the service
 	service.Networks[networkName] = &spec.ServiceNetworkConfig{}
@@ -527,39 +432,10 @@ func askForEnvVariables(service *spec.ServiceConfig, _ *model.CGProject) {
 }
 
 func askForEnvFiles(service *spec.ServiceConfig, _ *model.CGProject) {
-
-}
-
-func askForRestart(service *spec.ServiceConfig, _ *model.CGProject) {
-
-}
-
-func askForDependsOn(service *spec.ServiceConfig, project *model.CGProject) {
-
-}
-
-func askForDependant(service *spec.ServiceConfig, project *model.CGProject) {
-
-}
-
-/*func askForEnvVariables() (envVariables []string) {
-	if util.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
-		util.Pel()
-		for another := true; another; another = util.YesNoQuestion("Expose another environment variable?", true) {
-			variableName := util.TextQuestionWithValidator("Variable name (BEST_PRACTICE_IS_CAPS):", util.EnvVarNameValidator)
-			variableValue := util.TextQuestion("Variable value:")
-			envVariables = append(envVariables, variableName+"="+variableValue)
-		}
-		util.Pel()
-	}
-	return
-}
-
-func askForEnvFiles() (envFiles []string) {
 	if util.YesNoQuestion("Do you want to provide an environment file to your service?", false) {
 		util.Pel()
 		for another := true; another; another = util.YesNoQuestion("Add another environment file?", true) {
-			// Ask user for env file with auto-suggested text input
+			// Ask for env file with auto-suggested test input
 			envFile := util.TextQuestionWithDefaultAndSuggestions("Where is your env file located?", "environment.env", func(toComplete string) (files []string) {
 				files, _ = filepath.Glob(toComplete + "*.*")
 				return
@@ -569,40 +445,66 @@ func askForEnvFiles() (envFiles []string) {
 				util.Error("File is not valid. Please select another file", nil, false)
 				continue
 			}
-			envFiles = append(envFiles, envFile)
+			// Add env file to service
+			service.EnvFile = append(service.EnvFile, envFile)
 		}
 		util.Pel()
 	}
-	return
 }
 
-func askForDependsOn(serviceNames []string) (dependsServices []string) {
-	if util.YesNoQuestion("Should your service depend on other services?", false) {
-		util.Pel()
-		dependsServices = util.MultiSelectMenuQuestion("On which services should your service depend?", serviceNames)
-		util.Pel()
-	}
-	return
-}
-
-func askForDependant(serviceNames []string) (dependantServices []string) {
-	if util.YesNoQuestion("Should other services depend on your service?", false) {
-		util.Pel()
-		dependantServices = util.MultiSelectMenuQuestion("Which services should depend on your service?", serviceNames)
-		util.Pel()
-	}
-	return
-}
-
-func askForRestart(flagAdvanced bool) (restartValue string) {
-	if flagAdvanced {
+func askForRestart(service *spec.ServiceConfig, project *model.CGProject) {
+	if project.AdvancedConfig {
 		util.Pel()
 		items := []string{"always", "on-failure", "unless-stopped", "no"}
-		restartValue = util.MenuQuestion("When should the service get restarted?", items)
+		service.Restart = util.MenuQuestion("When should the service get restarted?", items)
 		util.Pel()
 	}
-	return
-}*/
+}
+
+func askForDependsOn(service *spec.ServiceConfig, project *model.CGProject) {
+	if util.YesNoQuestion("Do you want your service depend on other services?", false) {
+		util.Pel()
+		// Ask for services
+		selectedServices := util.MultiSelectMenuQuestion("Which ones?", project.Project.ServiceNames())
+		// Create map if not exists
+		if service.DependsOn == nil {
+			service.DependsOn = make(spec.DependsOnConfig)
+		}
+		// Add service dependencies
+		for _, name := range selectedServices {
+			service.DependsOn[name] = spec.ServiceDependency{
+				Condition: spec.ServiceConditionStarted,
+			}
+		}
+		util.Pel()
+	}
+}
+
+func askForDependant(service *spec.ServiceConfig, project *model.CGProject) {
+	if util.YesNoQuestion("Do you want other services depend on the new one?", false) {
+		util.Pel()
+		selectedServices := util.MultiSelectMenuQuestion("Which ones?", project.Project.ServiceNames())
+		// Add service dependencies
+		for _, name := range selectedServices {
+			otherService, err := project.Project.GetService(name)
+			if err != nil {
+				util.Error("Selected service '"+name+"' was not found", err, false)
+				continue
+			}
+			// Create map if not exists
+			if otherService.DependsOn == nil {
+				service.DependsOn = make(spec.DependsOnConfig)
+			}
+			// Add service dependency
+			otherService.DependsOn[service.Name] = spec.ServiceDependency{
+				Condition: spec.ServiceConditionStarted,
+			}
+		}
+		util.Pel()
+	}
+}
+
+// --------------------------------------------------------------- Helper functions ----------------------------------------------------------------
 
 func searchRemoteImage(registry string, image string) bool {
 	util.P("\nSearching image ... ")
