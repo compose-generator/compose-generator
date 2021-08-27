@@ -108,6 +108,12 @@ func AddCustomService(project *model.CGProject) {
 	askForContainerName(&newService, project)
 	askForVolumes(&newService, project, client)
 	askForNetworks(&newService, project, client)
+	askForPorts(&newService, project)
+	askForEnvVariables(&newService, project)
+	askForEnvFiles(&newService, project)
+	askForRestart(&newService, project)
+	askForDependsOn(&newService, project)
+	askForDependant(&newService, project)
 
 	// Add the new service to the project
 	project.Project.Services = append(project.Project.Services, newService)
@@ -468,56 +474,75 @@ func askForNewNetwork(service *spec.ServiceConfig, project *model.CGProject, cli
 	}
 }
 
-/*func askForNetworks(client *client.Client) (networks []string) {
-	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
-		util.Pel()
-		for another := true; another; another = util.YesNoQuestion("Assign another network?", true) {
-			// Ask user for network assignments
-			globalNetwork := util.YesNoQuestion("Do you want to add an external network (y) or create assign a new one (n)?", false)
-			networkName := ""
-			if globalNetwork {
-				globalNetworks, err := client.NetworkList(context.Background(), types.NetworkListOptions{})
-				if err == nil {
-					menuItems := []string{}
-					for _, network := range globalNetworks {
-						menuItems = append(menuItems, network.Name+" | Driver: "+network.Driver)
-					}
-					if len(globalNetworks) >= 1 {
-						itemIndex := util.MenuQuestionIndex("Which external network?", menuItems)
-						networkName = globalNetworks[itemIndex].Name
-					} else if util.YesNoQuestion("No external networks found. Do you want to create one?", true) {
-						networkName = util.TextQuestion("How do you want to call the new external network?")
-						util.ExecuteAndWait("docker", "network", "create", networkName)
-					}
-				} else {
-					util.Error("Error parsing external networks.", err, false)
-					continue
-				}
-			} else {
-				networkName = util.TextQuestion("How do you want to call the new network?")
-			}
-
-			networks = append(networks, networkName)
-		}
-		util.Pel()
-	}
-	return
-}
-
-func askForPorts() (ports []string) {
+func askForPorts(service *spec.ServiceConfig, _ *model.CGProject) {
 	if util.YesNoQuestion("Do you want to expose ports of your service?", false) {
 		util.Pel()
+		// Create list if not exists
+		if service.Ports == nil {
+			service.Ports = []spec.ServicePortConfig{}
+		}
+		// Question loop
 		for another := true; another; another = util.YesNoQuestion("Expose another port?", true) {
+			// Ask for inner and outer port
 			portInner := util.TextQuestionWithValidator("Which port do you want to expose? (inner port)", util.PortValidator)
 			portOuter := util.TextQuestionWithValidator("To which destination port on the host machine?", util.PortValidator)
-			ports = append(ports, portOuter+":"+portInner)
+			portInnerInt, err := strconv.ParseUint(portInner, 10, 32)
+			if err != nil {
+				util.Error("Port could not be converted to uint32", err, false)
+				return
+			}
+			portOuterInt, err := strconv.ParseUint(portOuter, 10, 32)
+			if err != nil {
+				util.Error("Port could not be converted to uint32", err, false)
+				return
+			}
+
+			// Add port to service
+			service.Ports = append(service.Ports, spec.ServicePortConfig{
+				Mode:      "ingress",
+				Protocol:  "tcp",
+				Target:    uint32(portInnerInt),
+				Published: uint32(portOuterInt),
+			})
 		}
 		util.Pel()
 	}
-	return
 }
 
-func askForEnvVariables() (envVariables []string) {
+func askForEnvVariables(service *spec.ServiceConfig, _ *model.CGProject) {
+	if util.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
+		util.Pel()
+		if service.Environment == nil {
+			service.Environment = make(map[string]*string)
+		}
+		for another := true; another; another = util.YesNoQuestion("Expose another environment variable?", true) {
+			// Ask for name and value
+			variableName := util.TextQuestionWithValidator("Variable name (BEST_PRACTICE_IS_CAPS):", util.EnvVarNameValidator)
+			variableValue := util.TextQuestion("Variable value:")
+			// Add env var to service
+			service.Environment[variableName] = &variableValue
+		}
+		util.Pel()
+	}
+}
+
+func askForEnvFiles(service *spec.ServiceConfig, _ *model.CGProject) {
+
+}
+
+func askForRestart(service *spec.ServiceConfig, _ *model.CGProject) {
+
+}
+
+func askForDependsOn(service *spec.ServiceConfig, project *model.CGProject) {
+
+}
+
+func askForDependant(service *spec.ServiceConfig, project *model.CGProject) {
+
+}
+
+/*func askForEnvVariables() (envVariables []string) {
 	if util.YesNoQuestion("Do you want to provide environment variables to your service?", false) {
 		util.Pel()
 		for another := true; another; another = util.YesNoQuestion("Expose another environment variable?", true) {
