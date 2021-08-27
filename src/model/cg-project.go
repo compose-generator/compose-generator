@@ -10,4 +10,5 @@ type CGProject struct {
 	GitignorePaths   []string
 	WithReadme       bool
 	ReadmeChildPaths []string
+	AdvancedConfig   bool
 }

@@ -3,7 +3,6 @@ package project
 import (
 	"compose-generator/model"
 	"compose-generator/util"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -84,13 +83,14 @@ func loadCGFile(project *model.CGProject) {
 	}
 	defaultProjectName := path.Base(strings.ReplaceAll(workingDir, "\\", "/"))
 	defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
+	defaultAdvancedMode := false
 
 	configFileName := ".gc.yml"
 	if util.FileExists(configFileName) {
-
 		// Set default values
 		viper.SetDefault("project-name", defaultProjectName)
 		viper.SetDefault("project-container-name", defaultContainerName)
+		viper.SetDefault("advanced-config", defaultAdvancedMode)
 		// Load config file
 		viper.SetConfigName(configFileName)
 		viper.AddConfigPath(".")
@@ -101,10 +101,10 @@ func loadCGFile(project *model.CGProject) {
 		// Assign values
 		project.Name = viper.GetString("project-name")
 		project.ContainerName = viper.GetString("project-container-name")
+		project.AdvancedConfig = viper.GetBool("advanced-config")
 	} else {
 		project.Name = defaultProjectName
 		project.ContainerName = defaultContainerName
+		project.AdvancedConfig = defaultAdvancedMode
 	}
-	fmt.Println("Project name: " + project.Name)
-	fmt.Println("Container name: " + project.ContainerName)
 }

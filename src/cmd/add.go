@@ -4,13 +4,19 @@ import (
 	"compose-generator/model"
 	"compose-generator/project"
 	"compose-generator/util"
+	"context"
 	"path"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/compose-generator/diu"
 	"github.com/fatih/color"
 
 	"github.com/compose-spec/compose-go/types"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/api/types/volume"
+	"github.com/docker/docker/client"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -89,10 +95,18 @@ func Add(
 func AddCustomService(project *model.CGProject) {
 	newService := types.ServiceConfig{}
 
+	// Initialize Docker client
+	client, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		util.Error("Docker is not installed on your system", err, true)
+	}
+
 	// Ask questions
 	askBuildFromSource(&newService, project)
 	askForServiceName(&newService, project)
 	askForContainerName(&newService, project)
+	askForVolumes(&newService, project, client)
+	askForNetworks(&newService, project, client)
 
 	// Add the new service to the project
 	project.Project.Services = append(project.Project.Services, newService)
@@ -217,10 +231,13 @@ func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) 
 		options := []string{"frontend", "backend", "database", "db-admin"}
 		serviceType := util.MenuQuestion("Which type is the closest match for this service?", options)
 
+		imageBaseName := path.Base(image)
+		imageBaseName = strings.Split(imageBaseName, ":")[0]
+
 		// Add image config to service
 		service.Image = registry + image
-		service.Name = serviceType + "-" + path.Base(image) // A bit hacky, but it works ;)
-		service.ContainerName = project.ContainerName + "-" + serviceType + "-" + path.Base(image)
+		service.Name = serviceType + "-" + imageBaseName
+		service.ContainerName = project.ContainerName + "-" + serviceType + "-" + imageBaseName
 	}
 }
 
@@ -240,37 +257,76 @@ func askForContainerName(service *types.ServiceConfig, project *model.CGProject)
 	service.ContainerName = util.TextQuestionWithDefault("How do you want to call your container (best practice: lower, kebab cased):", service.ContainerName)
 }
 
-/*func askForServiceName(existingServices map[string]model.Service, imageName string) (name string) {
-	// Set image name as default service name
-	defaultName := imageName
-	i := strings.Index(defaultName, "/")
-	if i > -1 {
-		defaultName = defaultName[i+1:]
-	}
-	i = strings.Index(defaultName, ":")
-	if i > -1 {
-		defaultName = defaultName[:i]
-	}
-	defaultName = strings.ToLower(defaultName)
-	defaultName = strings.ReplaceAll(defaultName, " ", "-")
-
-	// Ask for the service name
-	name = util.TextQuestionWithDefault("How do you want to call your service (best practice: lower, kebab cased):", defaultName)
-	if _, exists := existingServices[name]; exists {
-		// Service name already exists
-		if !util.YesNoQuestion("This service name alreay exists in the compose file. It will be overwritten if you continue. Continue?", false) {
-			os.Exit(0)
+func askForVolumes(service *types.ServiceConfig, project *model.CGProject, client *client.Client) {
+	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
+		util.Pel()
+		for ok := true; ok; ok = util.YesNoQuestion("Add another volume?", false) {
+			globalVolume := util.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
+			if globalVolume {
+				askForGlobalVolume(service, project, client)
+			} else {
+				askForFileVolume(service, project)
+			}
 		}
 	}
-	return
 }
 
-func askForContainerName(serviceName string) (name string) {
-	name = util.TextQuestionWithDefault("How do you want to call your container (best practice: lower, kebab cased):", serviceName)
-	return
+func askForGlobalVolume(service *types.ServiceConfig, _ *model.CGProject, client *client.Client) {
+	if util.YesNoQuestion("Do you want to select an existing one (Y) or do you want to create one (n)?", true) {
+		globalVolumes, err := client.VolumeList(context.Background(), filters.Args{})
+		if err != nil {
+			util.Error("Error parsing global volumes.", err, false)
+			return
+		}
+		if globalVolumes.Volumes == nil || len(globalVolumes.Volumes) == 0 {
+			util.Error("There is no global volume existing", nil, false)
+			return
+		}
+		menuItems := []string{}
+		for _, volume := range globalVolumes.Volumes {
+			menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
+		}
+	} else {
+		name := util.TextQuestion("How do you want to call your global volume?")
+		client.VolumeCreate(context.Background(), volume.VolumeCreateBody{
+			Name: name,
+		})
+	}
 }
 
-func askForVolumes(client *client.Client, flagAdvanced bool) (volumes []string) {
+func askForFileVolume(service *types.ServiceConfig, project *model.CGProject) {
+	// Ask for outer path
+	volumeOuter := util.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
+		files, _ = filepath.Glob(toComplete + "*")
+		return
+	})
+	volumeOuter = strings.TrimSpace(volumeOuter)
+	if !strings.HasPrefix(volumeOuter, "./") && !strings.HasPrefix(volumeOuter, "/") {
+		volumeOuter = "./" + volumeOuter
+	}
+
+	// Ask for inner path
+	volumeInner := util.TextQuestion("Directory / file inside the container:")
+
+	// Ask for read-only
+	readOnly := false
+	if project.AdvancedConfig {
+		readOnly = util.YesNoQuestion("Do you want to make the volume read-only?", false)
+	}
+
+	service.Volumes = append(service.Volumes, types.ServiceVolumeConfig{
+		Type:     types.VolumeTypeBind,
+		Source:   volumeOuter,
+		Target:   volumeInner,
+		ReadOnly: readOnly,
+	})
+}
+
+func askForNetworks(setvice *types.ServiceConfig, project *model.CGProject, client *client.Client) {
+
+}
+
+/*func askForVolumes(client *client.Client, flagAdvanced bool) (volumes []string) {
 	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
 		util.Pel()
 		for another := true; another; another = util.YesNoQuestion("Share another volume?", true) {

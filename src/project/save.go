@@ -104,5 +104,6 @@ func saveCGFile(project *model.CGProject) {
 	viper.AddConfigPath(".")
 	viper.Set("project-name", project.Name)
 	viper.Set("project-container-name", project.ContainerName)
+	viper.Set("advanced-config", project.AdvancedConfig)
 	viper.WriteConfig()
 }
