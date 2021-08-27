@@ -13,9 +13,10 @@ import (
 	"github.com/compose-generator/diu"
 	"github.com/fatih/color"
 
-	"github.com/compose-spec/compose-go/types"
-	"github.com/docker/docker/api/types/filters"
-	"github.com/docker/docker/api/types/volume"
+	spec "github.com/compose-spec/compose-go/types"
+	"github.com/docker/docker/api/types"
+	types_filters "github.com/docker/docker/api/types/filters"
+	types_volume "github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/client"
 )
 
@@ -93,7 +94,7 @@ func Add(
 
 // AddCustomService adds a fully customizable service to the project
 func AddCustomService(project *model.CGProject) {
-	newService := types.ServiceConfig{}
+	newService := spec.ServiceConfig{}
 
 	// Initialize Docker client
 	client, err := client.NewClientWithOpts(client.FromEnv)
@@ -195,7 +196,7 @@ func AddCustomService(project *model.CGProject) {
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) {
+func askBuildFromSource(service *spec.ServiceConfig, project *model.CGProject) {
 	fromSource := util.YesNoQuestion("Build from source?", false)
 	if fromSource { // Build from source
 		// Ask for build path
@@ -205,7 +206,7 @@ func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) 
 			util.Error("The Dockerfile could not be found", nil, true)
 		}
 		// Add build config to service
-		service.Build = &types.BuildConfig{
+		service.Build = &spec.BuildConfig{
 			Context:    path.Dir(dockerfilePath),
 			Dockerfile: dockerfilePath,
 		}
@@ -241,7 +242,7 @@ func askBuildFromSource(service *types.ServiceConfig, project *model.CGProject) 
 	}
 }
 
-func askForServiceName(service *types.ServiceConfig, project *model.CGProject) {
+func askForServiceName(service *spec.ServiceConfig, project *model.CGProject) {
 	chooseAgain := true
 	for chooseAgain {
 		name := util.TextQuestionWithDefault("How do you want to call your service (best practice: lower, kebab cased):", service.Name)
@@ -253,17 +254,17 @@ func askForServiceName(service *types.ServiceConfig, project *model.CGProject) {
 	}
 }
 
-func askForContainerName(service *types.ServiceConfig, project *model.CGProject) {
+func askForContainerName(service *spec.ServiceConfig, project *model.CGProject) {
 	service.ContainerName = util.TextQuestionWithDefault("How do you want to call your container (best practice: lower, kebab cased):", service.ContainerName)
 }
 
-func askForVolumes(service *types.ServiceConfig, project *model.CGProject, client *client.Client) {
+func askForVolumes(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
 		util.Pel()
 		for ok := true; ok; ok = util.YesNoQuestion("Add another volume?", false) {
-			globalVolume := util.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
+			globalVolume := util.YesNoQuestion("Do you want to add an existing external volume (y) or link a directory / file (n)?", false)
 			if globalVolume {
-				askForGlobalVolume(service, project, client)
+				askForExternalVolume(service, project, client)
 			} else {
 				askForFileVolume(service, project)
 			}
@@ -271,30 +272,93 @@ func askForVolumes(service *types.ServiceConfig, project *model.CGProject, clien
 	}
 }
 
-func askForGlobalVolume(service *types.ServiceConfig, _ *model.CGProject, client *client.Client) {
+func askForExternalVolume(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	if util.YesNoQuestion("Do you want to select an existing one (Y) or do you want to create one (n)?", true) {
-		globalVolumes, err := client.VolumeList(context.Background(), filters.Args{})
+		// Search for external volumes
+		externalVolumes, err := client.VolumeList(context.Background(), types_filters.Args{})
 		if err != nil {
-			util.Error("Error parsing global volumes.", err, false)
+			util.Error("Error parsing external volumes", err, false)
 			return
 		}
-		if globalVolumes.Volumes == nil || len(globalVolumes.Volumes) == 0 {
-			util.Error("There is no global volume existing", nil, false)
+		if externalVolumes.Volumes == nil || len(externalVolumes.Volumes) == 0 {
+			util.Error("There is no external volume existing", nil, false)
 			return
 		}
+		// Let the user choose one
 		menuItems := []string{}
-		for _, volume := range globalVolumes.Volumes {
+		for _, volume := range externalVolumes.Volumes {
 			menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
 		}
+		index := util.MenuQuestionIndex("Which one?", menuItems)
+		selectedVolume := externalVolumes.Volumes[index]
+
+		// Ask for inner path
+		volumeInner := util.TextQuestion("Directory / file inside the container:")
+
+		// Ask for read-only
+		readOnly := false
+		if project.AdvancedConfig {
+			readOnly = util.YesNoQuestion("Do you want to make the volume read-only?", false)
+		}
+
+		// Add the volume to the service
+		service.Volumes = append(service.Volumes, spec.ServiceVolumeConfig{
+			Source:   selectedVolume.Name,
+			Target:   volumeInner,
+			Type:     spec.VolumeTypeVolume,
+			ReadOnly: readOnly,
+		})
+		// Add the volume to the project-wide volume section
+		project.Project.Volumes[selectedVolume.Name] = spec.VolumeConfig{
+			Name: selectedVolume.Name,
+			External: spec.External{
+				Name:     selectedVolume.Name,
+				External: true,
+			},
+		}
 	} else {
-		name := util.TextQuestion("How do you want to call your global volume?")
-		client.VolumeCreate(context.Background(), volume.VolumeCreateBody{
+		// Ask user for volume name
+		name := util.TextQuestion("How do you want to call your external volume?")
+		// Add external volume
+		volume, err := client.VolumeCreate(context.Background(), types_volume.VolumeCreateBody{
 			Name: name,
 		})
+		if err != nil {
+			util.Error("Could not create external volume", err, false)
+			return
+		}
+
+		// Ask for inner path
+		volumeInner := util.TextQuestion("Directory / file inside the container:")
+
+		// Ask for read-only
+		readOnly := false
+		if project.AdvancedConfig {
+			readOnly = util.YesNoQuestion("Do you want to make the volume read-only?", false)
+		}
+
+		// Add the volume to the service
+		service.Volumes = append(service.Volumes, spec.ServiceVolumeConfig{
+			Source:   volume.Name,
+			Target:   volumeInner,
+			Type:     spec.VolumeTypeVolume,
+			ReadOnly: readOnly,
+		})
+		// Add the volume to the project-wide volume section
+		if project.Project.Volumes == nil {
+			project.Project.Volumes = make(spec.Volumes)
+		}
+		project.Project.Volumes[volume.Name] = spec.VolumeConfig{
+			Name: volume.Name,
+			External: spec.External{
+				Name:     volume.Name,
+				External: true,
+			},
+		}
 	}
 }
 
-func askForFileVolume(service *types.ServiceConfig, project *model.CGProject) {
+func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
 	// Ask for outer path
 	volumeOuter := util.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
 		files, _ = filepath.Glob(toComplete + "*")
@@ -314,75 +378,97 @@ func askForFileVolume(service *types.ServiceConfig, project *model.CGProject) {
 		readOnly = util.YesNoQuestion("Do you want to make the volume read-only?", false)
 	}
 
-	service.Volumes = append(service.Volumes, types.ServiceVolumeConfig{
-		Type:     types.VolumeTypeBind,
+	service.Volumes = append(service.Volumes, spec.ServiceVolumeConfig{
+		Type:     spec.VolumeTypeBind,
 		Source:   volumeOuter,
 		Target:   volumeInner,
 		ReadOnly: readOnly,
 	})
 }
 
-func askForNetworks(setvice *types.ServiceConfig, project *model.CGProject, client *client.Client) {
-
-}
-
-/*func askForVolumes(client *client.Client, flagAdvanced bool) (volumes []string) {
-	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
+func askForNetworks(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
+	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
 		util.Pel()
-		for another := true; another; another = util.YesNoQuestion("Share another volume?", true) {
-			// Ask user for volume attachments
-			globalVolume := util.YesNoQuestion("Do you want to add an existing global volume (y) or link a directory / file (n)?", false)
-			volumeOuter := ""
-			if globalVolume {
-				globalVolumes, err := client.VolumeList(context.Background(), filters.Args{})
-				if err == nil {
-					menuItems := []string{}
-					for _, volume := range globalVolumes.Volumes {
-						menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
-					}
-					if len(globalVolumes.Volumes) >= 1 {
-						itemIndex := util.MenuQuestionIndex("Which global volume?", menuItems)
-						volumeOuter = globalVolumes.Volumes[itemIndex].Name
-					} else if util.YesNoQuestion("No global volumes found. Do you want to create one?", true) {
-						volumeOuter = util.TextQuestion("How do you want to call the new global volume?")
-						util.ExecuteAndWait("docker", "volume", "create", volumeOuter)
-					}
-				} else {
-					util.Error("Error parsing global volumes.", err, false)
-					continue
-				}
+		for ok := true; ok; ok = util.YesNoQuestion("Add another network?", false) {
+			globalNetwork := util.YesNoQuestion("Do you want to add an external network (y) or create a new one (n)?", false)
+			if globalNetwork {
+				askForExternalNetwork(service, project, client)
 			} else {
-				volumeOuter = util.TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) (files []string) {
-					files, _ = filepath.Glob(toComplete + "*")
-					return
-				})
-				volumeOuter = strings.TrimSpace(volumeOuter)
-				if !strings.HasPrefix(volumeOuter, "./") && !strings.HasPrefix(volumeOuter, "/") {
-					volumeOuter = "./" + volumeOuter
-				}
+				askForNewNetwork(service, project, client)
 			}
-
-			// Ask for inner path
-			volumeInner := util.TextQuestion("Directory / file inside the container:")
-
-			// Ask for volume priviledges if advanced more is enabled
-			priviledges := "rw"
-			if flagAdvanced {
-				result := util.MenuQuestionIndex("Which priviledges does the container has on the volume?", []string{"Read + Write", "Read-only"})
-				if result == 1 {
-					priviledges = "ro"
-				}
-			}
-
-			volumes = append(volumes, volumeOuter+":"+volumeInner+":"+priviledges)
 		}
-
-		util.Pel()
 	}
-	return
 }
 
-func askForNetworks(client *client.Client) (networks []string) {
+func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
+	// Search for external networks
+	externalNetworks, err := client.NetworkList(context.Background(), types.NetworkListOptions{})
+	if err != nil {
+		util.Error("Error parsing external networks", err, false)
+		return
+	}
+	if externalNetworks == nil || len(externalNetworks) == 0 {
+		util.Error("There is no external network existing", nil, false)
+		return
+	}
+	// Let the user choose one
+	menuItems := []string{}
+	for _, network := range externalNetworks {
+		menuItems = append(menuItems, network.Name)
+	}
+	index := util.MenuQuestionIndex("Which one?", menuItems)
+	selectedNetwork := externalNetworks[index]
+
+	// Ask for a custom name withing the compose file
+	customName := util.TextQuestionWithDefault("How do you want to call the network internally?", selectedNetwork.Name)
+
+	// Add network to the service
+	if service.Networks == nil {
+		service.Networks = make(map[string]*spec.ServiceNetworkConfig)
+	}
+	service.Networks[customName] = nil
+	// Add network to project-wide network section
+	if project.Project.Networks == nil {
+		project.Project.Networks = make(map[string]spec.NetworkConfig)
+	}
+	project.Project.Networks[customName] = spec.NetworkConfig{
+		Name: customName,
+		External: spec.External{
+			Name:     selectedNetwork.Name,
+			External: true,
+		},
+	}
+}
+
+func askForNewNetwork(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
+	// Ask user to add a new network
+	networkName := util.TextQuestion("How do you want to call the new network?")
+	external := util.YesNoQuestion("Do you want to create it as an external network and link it in?", false)
+	externalConfig := spec.External{}
+	if external {
+		// Create external network
+		_, err := client.NetworkCreate(context.Background(), networkName, types.NetworkCreate{
+			Internal: false,
+		})
+		if err != nil {
+			util.Error("External network could not be created", err, false)
+			return
+		}
+		externalConfig = spec.External{
+			External: true,
+			Name:     networkName,
+		}
+	}
+	// Add network to the service
+	service.Networks[networkName] = &spec.ServiceNetworkConfig{}
+	// Add network to project-wide network section
+	project.Project.Networks[networkName] = spec.NetworkConfig{
+		Name:     networkName,
+		External: externalConfig,
+	}
+}
+
+/*func askForNetworks(client *client.Client) (networks []string) {
 	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
 		util.Pel()
 		for another := true; another; another = util.YesNoQuestion("Assign another network?", true) {
