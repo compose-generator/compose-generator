@@ -36,6 +36,7 @@ func Remove(
 	proj := project.LoadProject(options)
 	proj.AdvancedConfig = flagAdvanced
 	proj.ForceConfig = flagForce
+	proj.WithVolumesConfig = flagWithVolumes
 	util.Done()
 	util.Pel()
 
@@ -64,13 +65,6 @@ func Remove(
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func removeService(project *model.CGProject, serviceName string, withVolumes bool) {
-	// Display warning to the user
-	if !project.ForceConfig {
-		if !util.YesNoQuestion("Do you really want to remove service '"+serviceName+"'?", false) {
-			return
-		}
-	}
-
 	// Get service and its index by its name
 	service, index, err := findServiceWithIndex(project, serviceName)
 	if err != nil {
@@ -78,10 +72,15 @@ func removeService(project *model.CGProject, serviceName string, withVolumes boo
 		return
 	}
 
-	// Execute passes on the service
-	if withVolumes {
-		pass.RemoveVolumes(&service, project)
+	// Display warning to the user
+	if !project.ForceConfig {
+		if !util.YesNoQuestion("Do you really want to remove service '"+serviceName+"'?", false) {
+			return
+		}
 	}
+
+	// Execute passes on the service
+	pass.RemoveVolumes(&service, project)
 	pass.RemoveDependencies(&service, project)
 
 	// Remove service from the project

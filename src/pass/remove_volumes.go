@@ -14,31 +14,37 @@ import (
 
 // RemoveVolumes removes all volumes of a service
 func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
-	if util.YesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false) {
-		// Delete volumes on disk
-		for _, volume := range service.Volumes {
-			// Check if volume exists
-			if !util.FileExists(volume.Source) {
-				continue // Volume is either a external volume or was already deleted
-			}
-			// Check if the volume is used by other services
-			if !isVolumeUsedByOtherServices(&volume, project) {
-				// Delete volume recursively
+	deleteFromDisk := util.YesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false)
+	for _, volume := range service.Volumes {
+		// Check if volume exists
+		if !util.FileExists(volume.Source) {
+			continue // Volume is either a external volume or was already deleted
+		}
+		// Check if the volume is used by other services
+		if !isVolumeUsedByOtherServices(&volume, service, project) {
+			// Delete volume recursively
+			if deleteFromDisk {
 				os.RemoveAll(volume.Source)
 			}
-
+			// Remove in project-wide volumes section
+			//delete(project.Project.Volumes, volume.Name)
 		}
 	}
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func isVolumeUsedByOtherServices(volume *spec.ServiceVolumeConfig, project *model.CGProject) bool {
+func isVolumeUsedByOtherServices(volume *spec.ServiceVolumeConfig, service *spec.ServiceConfig, project *model.CGProject) bool {
 	volumeAbs, err := filepath.Abs(volume.Source)
 	if err != nil {
 		return false
 	}
 	for _, otherService := range project.Project.Services {
+		// Skip the service, we are currently editing
+		if otherService.Name == service.Name {
+			continue
+		}
+		// Search through volumes of all other services
 		for _, otherVolume := range otherService.Volumes {
 			otherVolumeAbs, err := filepath.Abs(otherVolume.Source)
 			if err != nil {
