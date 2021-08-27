@@ -7,6 +7,8 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // AddDependants asks the user if he/she wants to let other services depend on a service
 func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 	if util.YesNoQuestion("Do you want other services depend on the new one?", false) {

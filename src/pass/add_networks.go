@@ -10,6 +10,8 @@ import (
 	"github.com/docker/docker/client"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // AddNetworks asks the user if he/she wants to add some networks to the configuration
 func AddNetworks(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
@@ -24,6 +26,8 @@ func AddNetworks(service *spec.ServiceConfig, project *model.CGProject, client *
 		}
 	}
 }
+
+// ---------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	// Search for external networks

@@ -8,6 +8,8 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // AddPorts asks the user if he/she wants to add ports to the configuration
 func AddPorts(service *spec.ServiceConfig, _ *model.CGProject) {
 	if util.YesNoQuestion("Do you want to expose ports of your service?", false) {

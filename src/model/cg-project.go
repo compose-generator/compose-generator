@@ -11,4 +11,5 @@ type CGProject struct {
 	WithReadme       bool
 	ReadmeChildPaths []string
 	AdvancedConfig   bool
+	ForceConfig      bool
 }

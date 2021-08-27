@@ -7,6 +7,8 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // AddEnvVars asks the user if he/she wants to add environment variables to the configuration
 func AddEnvVars(service *spec.ServiceConfig, _ *model.CGProject) {
 	if util.YesNoQuestion("Do you want to provide environment variables to your service?", false) {

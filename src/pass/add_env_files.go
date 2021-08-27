@@ -8,6 +8,8 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // AddEnvFiles asks the user if he/she wants to add env files to the configuration
 func AddEnvFiles(service *spec.ServiceConfig, _ *model.CGProject) {
 	if util.YesNoQuestion("Do you want to provide an environment file to your service?", false) {

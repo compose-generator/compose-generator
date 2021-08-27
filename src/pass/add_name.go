@@ -7,6 +7,8 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // AddName asks the user if he/she wants to set a name for a service
 func AddName(service *spec.ServiceConfig, project *model.CGProject) {
 	chooseAgain := true

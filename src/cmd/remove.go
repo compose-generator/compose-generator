@@ -1,27 +1,59 @@
 package cmd
 
 import (
+	"compose-generator/model"
+	"compose-generator/pass"
+	"compose-generator/project"
 	"compose-generator/util"
-	"os"
-	"strings"
+	"errors"
 
-	dcu "github.com/compose-generator/dcu"
-	dcu_model "github.com/compose-generator/dcu/model"
+	spec "github.com/compose-spec/compose-go/types"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Remove services from an existing compose file
-func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
+func Remove(
+	serviceNames []string,
+	flagRun bool,
+	flagDetached bool,
+	flagWithVolumes bool,
+	flagForce bool,
+	flagAdvanced bool,
+) {
+	// Clear the screen for CG output
 	util.ClearScreen()
 
-	// Ask for custom YAML file
-	path := "./docker-compose.yml"
+	// Ask for custom compose file
+	composeFilePath := "docker-compose.yml"
 	if flagAdvanced {
-		path = util.TextQuestionWithDefault("From which compose file do you want to remove a service?", "./docker-compose.yml")
+		composeFilePath = util.TextQuestionWithDefault("From with compose file do you want to load?", "./docker-compose.yml")
 	}
 
-	removeFromFile(path, serviceNames, flagWithVolumes, flagForce, flagAdvanced)
+	// Load project
+	util.P("Loading project ... ")
+	options := project.LoadOptions{ComposeFileName: composeFilePath}
+	proj := project.LoadProject(options)
+	proj.AdvancedConfig = flagAdvanced
+	proj.ForceConfig = flagForce
+	util.Done()
+	util.Pel()
+
+	// Ask for services to remove
+	if len(serviceNames) == 0 {
+		serviceNames = util.MultiSelectMenuQuestion("Which services do you want to remove?", proj.Project.ServiceNames())
+	}
+
+	// Remove selected services
+	for _, serviceName := range serviceNames {
+		removeService(proj, serviceName, flagWithVolumes)
+	}
+
+	// Save project
+	util.P("Saving project ... ")
+	project.SaveProject(proj)
+	util.Done()
+	util.Pel()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -31,7 +63,48 @@ func Remove(serviceNames []string, flagRun bool, flagDetached bool, flagWithVolu
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
+func removeService(project *model.CGProject, serviceName string, withVolumes bool) {
+	// Display warning to the user
+	if !project.ForceConfig {
+		if !util.YesNoQuestion("Do you really want to remove service '"+serviceName+"'?", false) {
+			return
+		}
+	}
+
+	// Get service and its index by its name
+	service, index, err := findServiceWithIndex(project, serviceName)
+	if err != nil {
+		util.Error("Service not found", err, false)
+		return
+	}
+
+	// Execute passes on the service
+	if withVolumes {
+		pass.RemoveVolumes(&service, project)
+	}
+	pass.RemoveDependencies(&service, project)
+
+	// Remove service from the project
+	project.Project.Services = removeServiceFromProject(project.Project.Services, index)
+}
+
+// ---------------------------------------------------------------- Helper functions ---------------------------------------------------------------
+
+func findServiceWithIndex(project *model.CGProject, serviceName string) (spec.ServiceConfig, int, error) {
+	for index, service := range project.Project.Services {
+		if service.Name == serviceName {
+			return service, index, nil
+		}
+	}
+	return spec.ServiceConfig{}, -1, errors.New("Service '" + serviceName + "' not found")
+}
+
+func removeServiceFromProject(services []spec.ServiceConfig, index int) []spec.ServiceConfig {
+	services[index] = services[len(services)-1]
+	return services[:len(services)-1]
+}
+
+/*func removeFromFile(filePath string, serviceNames []string, flagWithVolumes bool, flagForce bool, flagAdvanced bool) {
 	util.P("Parsing compose file ... ")
 	// Load compose file
 	composeFile, err := dcu.DeserializeFromFile(filePath)
@@ -135,4 +208,4 @@ func removeVolumesForService(composeFile dcu_model.ComposeFile, serviceName stri
 		}
 		util.Done()
 	}
-}
+}*/

@@ -28,10 +28,10 @@ func Add(
 	// Check for predefined service templates updates
 	util.CheckForServiceTemplateUpdate()
 
-	// Ask for custom YAML file
+	// Ask for custom compose file
 	composeFilePath := "docker-compose.yml"
 	if flagAdvanced {
-		composeFilePath = util.TextQuestionWithDefault("Which compose file do you want to add the service to?", "./docker-compose.yml")
+		composeFilePath = util.TextQuestionWithDefault("From which compose file do you want to load?", "./docker-compose.yml")
 	}
 
 	// Load project
@@ -64,10 +64,10 @@ func AddCustomService(project *model.CGProject) {
 	// Initialize Docker client
 	client, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		util.Error("Docker is not installed on your system", err, true)
+		util.Error("Could not intanciate Docker client. Please check your Docker installation", err, true)
 	}
 
-	// Ask questions
+	// Execute passes on the service
 	pass.AddBuildOrImage(&newService, project)
 	pass.AddName(&newService, project)
 	pass.AddContainerName(&newService, project)

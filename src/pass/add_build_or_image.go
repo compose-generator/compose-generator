@@ -13,6 +13,8 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // AddBuildOrImage asks the user if he/she wants to build from source or add a predefined image to a service
 func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
 	fromSource := util.YesNoQuestion("Build from source?", false)
@@ -60,7 +62,7 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
 	}
 }
 
-// --------------------------------------------------------------- Helper functions ----------------------------------------------------------------
+// ---------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func searchRemoteImage(registry string, image string) bool {
 	util.P("\nSearching image ... ")
