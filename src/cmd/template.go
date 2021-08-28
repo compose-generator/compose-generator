@@ -45,7 +45,7 @@ func SaveTemplate(
 
 	// Copy volumes over to the new template dir
 	util.P("Copying volumes ...")
-	copyVolumes(proj, targetDir)
+	copyVolumesToTemplate(proj, targetDir)
 	util.Done()
 
 	// Save the project to the templates dir
@@ -96,7 +96,7 @@ func LoadTemplate(
 
 		// Copy volumes over to the new template dir
 		util.P("Copying volumes ...")
-		copyVolumes(proj, ".")
+		copyVolumesFromTemplate(proj, sourceDir)
 		util.Done()
 
 		// Save the project to the current dir
@@ -116,6 +116,7 @@ func askForTemplate() string {
 	util.P("Loading template list ...")
 	templateMetadataList := getTemplateMetadataList()
 	util.Done()
+
 	if len(templateMetadataList) > 0 {
 		var items []string
 		var keys []string
@@ -137,6 +138,7 @@ func showTemplateList() {
 	util.P("Loading template list ...")
 	templateMetadataList := getTemplateMetadataList()
 	util.Done()
+
 	if len(templateMetadataList) > 0 {
 		// Show list of saved templates
 		util.Heading("List of all templates:")
@@ -178,7 +180,7 @@ func isTemplateExisting(name string) bool {
 	return false
 }
 
-func copyVolumes(proj *model.CGProject, targetDir string) {
+func copyVolumesToTemplate(proj *model.CGProject, targetDir string) {
 	currentAbs, err := filepath.Abs(".")
 	if err != nil {
 		util.Error("Could not find absolute path of current dir", err, true)
@@ -190,5 +192,20 @@ func copyVolumes(proj *model.CGProject, targetDir string) {
 			continue
 		}
 		copy.Copy(path, targetDir+"/"+pathRel)
+	}
+}
+
+func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
+	currentAbs, err := filepath.Abs(".")
+	if err != nil {
+		util.Error("Could not find absolute path of current dir", err, true)
+	}
+	for _, path := range proj.GetAllVolumePathsNormalized() {
+		pathRel, err := filepath.Rel(currentAbs, path)
+		if err != nil {
+			util.Error("Could not copy volume '"+path+"'", err, false)
+			continue
+		}
+		copy.Copy(sourceDir+"/"+pathRel, path)
 	}
 }
