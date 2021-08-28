@@ -15,28 +15,31 @@ import (
 func SaveProject(project *model.CGProject, options ...SaveOption) {
 	opt := applySaveOptions(options...)
 
-	saveCGFile(project)
-	saveGitignore(project)
-	saveReadme(project)
-	saveEnvironmentFiles(project)
+	saveCGFile(project, opt)
+	saveGitignore(project, opt)
+	saveReadme(project, opt)
+	saveEnvironmentFiles(project, opt)
+	saveVolumes(project, opt)
 	saveComposeFile(project, opt)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func saveComposeFile(project *model.CGProject, options SaveOptions) {
+	// Minify compose file
+	project.Composition.WithoutUnnecessaryResources()
 	// Save docker compose file
 	content, err := yaml.Marshal(project.Composition)
 	if err != nil {
 		util.Error("Could not save "+options.ComposeFileName, err, true)
 	}
-	err = ioutil.WriteFile(options.ComposeFileName, content, 0755)
+	err = ioutil.WriteFile(options.WorkingDir+options.ComposeFileName, content, 0755)
 	if err != nil {
 		util.Error("Could not save "+options.ComposeFileName, err, true)
 	}
 }
 
-func saveEnvironmentFiles(project *model.CGProject) {
+func saveEnvironmentFiles(project *model.CGProject, options SaveOptions) {
 	// Make a list of all env files, which are listed in the project
 	envFiles := make(map[string]map[string]*string)
 	for _, service := range project.Composition.AllServices() {
@@ -62,28 +65,28 @@ func saveEnvironmentFiles(project *model.CGProject) {
 			content += key + "=" + *value + "\n"
 		}
 		// Write to disk
-		if err := ioutil.WriteFile(fileName, []byte(content), 0755); err != nil {
+		if err := ioutil.WriteFile(options.WorkingDir+fileName, []byte(content), 0755); err != nil {
 			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
 		}
 	}
 }
 
-func saveVolumes(project *model.CGProject) {
+func saveVolumes(project *model.CGProject, options SaveOptions) {
 	// Make a list with all volume paths
 }
 
-func saveGitignore(project *model.CGProject) {
+func saveGitignore(project *model.CGProject, options SaveOptions) {
 	if project.WithGitignore {
 		// Create gitignore file with all the paths from the list
 		content := ""
 		for _, pattern := range project.GitignorePatterns {
 			content += pattern + "\n"
 		}
-		ioutil.WriteFile(".gitignore", []byte(content), 0755)
+		ioutil.WriteFile(options.WorkingDir+".gitignore", []byte(content), 0755)
 	}
 }
 
-func saveReadme(project *model.CGProject) {
+func saveReadme(project *model.CGProject, options SaveOptions) {
 	if project.WithReadme {
 		// Create Readme file, which consists of the content of all stated files
 		content := ""
@@ -97,13 +100,13 @@ func saveReadme(project *model.CGProject) {
 				content += string(childContent) + "\n"
 			}
 		}
-		ioutil.WriteFile("README.md", []byte(content), 0755)
+		ioutil.WriteFile(options.WorkingDir+"README.md", []byte(content), 0755)
 	}
 }
 
-func saveCGFile(project *model.CGProject) {
+func saveCGFile(project *model.CGProject, options SaveOptions) {
 	viper.Set("project-name", project.Name)
 	viper.Set("project-container-name", project.ContainerName)
 	viper.Set("advanced-config", project.AdvancedConfig)
-	viper.WriteConfigAs(".cg.yml")
+	viper.WriteConfigAs(options.WorkingDir + ".cg.yml")
 }

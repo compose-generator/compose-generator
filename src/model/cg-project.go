@@ -1,6 +1,11 @@
 package model
 
-import "github.com/compose-spec/compose-go/types"
+import (
+	"path/filepath"
+	"strings"
+
+	"github.com/compose-spec/compose-go/types"
+)
 
 type CGProject struct {
 	Name              string
@@ -30,4 +35,32 @@ func (p CGProject) getAllVolumePaths() []string {
 		}
 	}
 	return paths
+}
+
+func (p CGProject) getAllVolumePathsNormalized() []string {
+	paths := p.getAllVolumePaths()
+	normalizedPaths := []string{}
+	for _, path := range paths {
+		pathAbs, err := filepath.Abs(path)
+		if err != nil {
+			continue
+		}
+		// Check if the path is not contained in other paths
+		containedInOtherPath := false
+		for _, otherPath := range paths {
+			otherPathAbs, err := filepath.Abs(otherPath)
+			if err != nil {
+				continue
+			}
+			if strings.HasPrefix(pathAbs, otherPathAbs) {
+				containedInOtherPath = true
+				break
+			}
+		}
+		// Add to normalized list if not contained anywhere
+		if !containedInOtherPath {
+			normalizedPaths = append(normalizedPaths, path)
+		}
+	}
+	return normalizedPaths
 }

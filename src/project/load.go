@@ -30,7 +30,7 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 
 	// Load components
 	loadComposeFile(project, opts)
-	loadGitignoreFile(project)
+	loadGitignoreFile(project, opts)
 	loadCGFile(project)
 
 	return project
@@ -67,10 +67,10 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	}
 }
 
-func loadGitignoreFile(project *model.CGProject) {
+func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 	if project.WithGitignore {
 		// Load patterns from .gitignore file
-		content, err := ioutil.ReadFile(project.Composition.WorkingDir + ".gitignore")
+		content, err := ioutil.ReadFile(opt.WorkingDir + ".gitignore")
 		if err != nil {
 			util.Error("Unable to parse .gitignore file", err, true)
 		}

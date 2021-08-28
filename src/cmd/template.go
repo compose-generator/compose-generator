@@ -26,25 +26,36 @@ func SaveTemplate(
 	flagWithDockerfile bool,
 ) {
 	// Load project
+	util.P("Loading project ... ")
 	proj := project.LoadProject()
 	proj.ForceConfig = flagForce
+	util.Done()
 
 	// Ask for template name
 	if name == "" {
 		for another := true; another; another = isTemplateExisting(proj.Name) {
-			proj.Name = util.TextQuestionWithDefault("How would you like to call your template: ", proj.Name)
+			name = util.TextQuestionWithDefault("How would you like to call your template:", proj.Name)
+			proj.Name = name
 		}
 	}
 
-	// Change working dir
-	proj.Composition.WorkingDir = util.GetCustomTemplatesPath() + "/" + name
+	// Create the new template
+	targetDir := util.GetCustomTemplatesPath() + "/" + name
+	os.MkdirAll(targetDir, 0755)
 
 	// Save the project to the templates dir
-	project.SaveProject(proj)
+	util.P("Saving project ... ")
+	project.SaveProject(
+		proj,
+		project.SaveIntoDir(targetDir),
+	)
+	util.Done()
 
 	// Delete the original project if the stash flag is set
 	if flagStash {
+		util.P("Stashing project ...")
 		project.DeleteProject(proj)
+		util.Done()
 	}
 }
 
