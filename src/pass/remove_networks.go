@@ -16,7 +16,8 @@ func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 		networkConfig := project.Project.Networks[networkName]
 		otherServices := getServicesWhichUseNetwork(networkName, service, project)
 		util.Pl(networkName + ": " + strconv.Itoa(len(otherServices)))
-		canBeRemoved := networkConfig.External.External && len(otherServices) == 0 || !networkConfig.External.External && len(otherServices) == 1
+		canBeRemoved := networkConfig.External.External && len(otherServices) == 0 || !networkConfig.External.External && len(otherServices) <= 1
+		util.Pl(networkName + ": " + strconv.FormatBool(canBeRemoved))
 		// Go to next if condition is not fulfilled
 		if !canBeRemoved {
 			continue
