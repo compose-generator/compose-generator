@@ -11,6 +11,7 @@ func DeleteProject(project *model.CGProject, options ...DeleteOption) {
 	deleteReadme(project, opts)
 	deleteEnvFile(project, opts)
 	deleteGitignore(project, opts)
+	deleteVolumes(project, opts)
 	deleteComposeFile(project, opts)
 }
 
@@ -25,6 +26,10 @@ func deleteEnvFile(project *model.CGProject, options DeleteOptions) {
 }
 
 func deleteGitignore(project *model.CGProject, options DeleteOptions) {
+
+}
+
+func deleteVolumes(project *model.CGProject, options DeleteOptions) {
 
 }
 

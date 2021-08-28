@@ -4,9 +4,10 @@ import (
 	"compose-generator/model"
 	"compose-generator/util"
 	"io/ioutil"
-	"os"
+	"os/user"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/compose-spec/compose-go/loader"
 	"github.com/compose-spec/compose-go/types"
@@ -21,9 +22,11 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 
 	// Create project instance
 	project := &model.CGProject{
-		WithGitignore:     util.FileExists(opts.WorkingDir + ".gitignore"),
+		CGProjectMetadata: model.CGProjectMetadata{
+			WithGitignore: util.FileExists(opts.WorkingDir + ".gitignore"),
+			WithReadme:    util.FileExists(opts.WorkingDir + "README.md"),
+		},
 		GitignorePatterns: []string{},
-		WithReadme:        util.FileExists(opts.WorkingDir + "README.md"),
 		ReadmeChildPaths:  []string{"README.md"},
 		ForceConfig:       false,
 	}
@@ -31,9 +34,24 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 	// Load components
 	loadComposeFile(project, opts)
 	loadGitignoreFile(project, opts)
-	loadCGFile(project)
+	loadCGFile(&project.CGProjectMetadata, opts)
 
 	return project
+}
+
+func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
+	opts := applyLoadOptions(options...)
+
+	// Create project metadata instance
+	metadata := &model.CGProjectMetadata{
+		WithGitignore: util.FileExists(opts.WorkingDir + ".gitignore"),
+		WithReadme:    util.FileExists(opts.WorkingDir + "README.md"),
+	}
+
+	// Load metadata
+	loadCGFile(metadata, opts)
+
+	return metadata
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -85,36 +103,52 @@ func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 	}
 }
 
-func loadCGFile(project *model.CGProject) {
+func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 	// Get default config values
-	workingDir, err := os.Getwd()
-	if err != nil {
-		util.Error("Unable to retrieve workdir", err, true)
-	}
-	defaultProjectName := path.Base(strings.ReplaceAll(workingDir, "\\", "/"))
+	defaultProjectName := path.Base(opt.WorkingDir)
 	defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
 	defaultAdvancedMode := false
+	defaultCreatedBy := "unknown"
+	defaultModifiedBy := "unknown"
+	if user, err := user.Current(); err == nil {
+		defaultCreatedBy = user.Name
+		defaultModifiedBy = user.Name
+	}
+	defaultCreatedAt := time.Now().UnixMilli()
+	defaultModifiedAt := time.Now().UnixMilli()
 
 	configFileName := ".gc.yml"
-	if util.FileExists(configFileName) {
+	if util.FileExists(opt.WorkingDir + configFileName) {
 		// Set default values
 		viper.SetDefault("project-name", defaultProjectName)
 		viper.SetDefault("project-container-name", defaultContainerName)
 		viper.SetDefault("advanced-config", defaultAdvancedMode)
+		viper.SetDefault("created-by", defaultCreatedBy)
+		viper.SetDefault("created-at", defaultCreatedAt)
+		viper.SetDefault("modified-by", defaultModifiedBy)
+		viper.SetDefault("modified-at", defaultModifiedAt)
 		// Load config file
 		viper.SetConfigName(configFileName)
-		viper.AddConfigPath(".")
-		err = viper.ReadInConfig()
+		viper.AddConfigPath(opt.WorkingDir)
+		err := viper.ReadInConfig()
 		if err != nil {
 			util.Error("Could not read '"+configFileName+"' file", err, true)
 		}
 		// Assign values
-		project.Name = viper.GetString("project-name")
-		project.ContainerName = viper.GetString("project-container-name")
-		project.AdvancedConfig = viper.GetBool("advanced-config")
+		metadata.Name = viper.GetString("project-name")
+		metadata.ContainerName = viper.GetString("project-container-name")
+		metadata.AdvancedConfig = viper.GetBool("advanced-config")
+		metadata.CreatedBy = viper.GetString("created-by")
+		metadata.CreatedAt = viper.GetInt64("created-at")
+		metadata.LastModifiedBy = viper.GetString("modified-by")
+		metadata.LastModifiedAt = viper.GetInt64("modified-at")
 	} else {
-		project.Name = defaultProjectName
-		project.ContainerName = defaultContainerName
-		project.AdvancedConfig = defaultAdvancedMode
+		metadata.Name = defaultProjectName
+		metadata.ContainerName = defaultContainerName
+		metadata.AdvancedConfig = defaultAdvancedMode
+		metadata.CreatedBy = defaultCreatedBy
+		metadata.CreatedAt = defaultCreatedAt
+		metadata.LastModifiedBy = defaultModifiedBy
+		metadata.LastModifiedAt = defaultModifiedAt
 	}
 }

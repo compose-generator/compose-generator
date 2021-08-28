@@ -4,6 +4,8 @@ import (
 	"compose-generator/model"
 	"compose-generator/util"
 	"io/ioutil"
+	"os/user"
+	"time"
 
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
@@ -105,8 +107,20 @@ func saveReadme(project *model.CGProject, options SaveOptions) {
 }
 
 func saveCGFile(project *model.CGProject, options SaveOptions) {
+	// Get some information
+	project.LastModifiedBy = "unknown"
+	if user, err := user.Current(); err == nil {
+		project.LastModifiedBy = user.Name
+	}
+	project.LastModifiedAt = time.Now().UnixMilli()
+
+	// Save config file
 	viper.Set("project-name", project.Name)
 	viper.Set("project-container-name", project.ContainerName)
 	viper.Set("advanced-config", project.AdvancedConfig)
+	viper.Set("created-by", project.CreatedBy)
+	viper.Set("created-at", project.CreatedAt)
+	viper.Set("modified-by", project.LastModifiedBy)
+	viper.Set("modified-at", project.LastModifiedAt)
 	viper.WriteConfigAs(options.WorkingDir + ".cg.yml")
 }
