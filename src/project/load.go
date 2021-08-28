@@ -114,34 +114,36 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		defaultCreatedBy = user.Name
 		defaultModifiedBy = user.Name
 	}
-	defaultCreatedAt := time.Now().UnixMilli()
-	defaultModifiedAt := time.Now().UnixMilli()
+	defaultCreatedAt := time.Now().UnixNano()
+	defaultModifiedAt := time.Now().UnixNano()
 
-	configFileName := ".gc.yml"
+	configFileName := ".cg.yml"
 	if util.FileExists(opt.WorkingDir + configFileName) {
+		config := viper.New()
 		// Set default values
-		viper.SetDefault("project-name", defaultProjectName)
-		viper.SetDefault("project-container-name", defaultContainerName)
-		viper.SetDefault("advanced-config", defaultAdvancedMode)
-		viper.SetDefault("created-by", defaultCreatedBy)
-		viper.SetDefault("created-at", defaultCreatedAt)
-		viper.SetDefault("modified-by", defaultModifiedBy)
-		viper.SetDefault("modified-at", defaultModifiedAt)
+		config.SetDefault("project-name", defaultProjectName)
+		config.SetDefault("project-container-name", defaultContainerName)
+		config.SetDefault("advanced-config", defaultAdvancedMode)
+		config.SetDefault("created-by", defaultCreatedBy)
+		config.SetDefault("created-at", defaultCreatedAt)
+		config.SetDefault("modified-by", defaultModifiedBy)
+		config.SetDefault("modified-at", defaultModifiedAt)
 		// Load config file
-		viper.SetConfigName(configFileName)
-		viper.AddConfigPath(opt.WorkingDir)
-		err := viper.ReadInConfig()
+		config.SetConfigName(".cg")
+		config.SetConfigType("yml")
+		config.AddConfigPath(opt.WorkingDir)
+		err := config.ReadInConfig()
 		if err != nil {
 			util.Error("Could not read '"+configFileName+"' file", err, true)
 		}
 		// Assign values
-		metadata.Name = viper.GetString("project-name")
-		metadata.ContainerName = viper.GetString("project-container-name")
-		metadata.AdvancedConfig = viper.GetBool("advanced-config")
-		metadata.CreatedBy = viper.GetString("created-by")
-		metadata.CreatedAt = viper.GetInt64("created-at")
-		metadata.LastModifiedBy = viper.GetString("modified-by")
-		metadata.LastModifiedAt = viper.GetInt64("modified-at")
+		metadata.Name = config.GetString("project-name")
+		metadata.ContainerName = config.GetString("project-container-name")
+		metadata.AdvancedConfig = config.GetBool("advanced-config")
+		metadata.CreatedBy = config.GetString("created-by")
+		metadata.CreatedAt = config.GetInt64("created-at")
+		metadata.LastModifiedBy = config.GetString("modified-by")
+		metadata.LastModifiedAt = config.GetInt64("modified-at")
 	} else {
 		metadata.Name = defaultProjectName
 		metadata.ContainerName = defaultContainerName

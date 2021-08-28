@@ -112,17 +112,16 @@ func LoadTemplate(
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func askForTemplate() string {
-	// Load stacks from templates
-	util.P("Loading template list ...")
+	util.P("Loading template list ... ")
 	templateMetadataList := getTemplateMetadataList()
 	util.Done()
+	util.Pel()
 
 	if len(templateMetadataList) > 0 {
 		var items []string
 		var keys []string
 		for key, metadata := range templateMetadataList {
-			lastModifiedNanos := metadata.LastModifiedAt * int64(time.Millisecond)
-			creationDate := time.Unix(0, lastModifiedNanos).Format(timeFormat)
+			creationDate := time.Unix(0, int64(metadata.LastModifiedAt)).Format(timeFormat)
 			keys = append(keys, key)
 			items = append(items, metadata.Name+" (Saved at: "+creationDate+")")
 		}
@@ -135,19 +134,19 @@ func askForTemplate() string {
 }
 
 func showTemplateList() {
-	util.P("Loading template list ...")
+	util.P("Loading template list ... ")
 	templateMetadataList := getTemplateMetadataList()
 	util.Done()
+	util.Pel()
 
 	if len(templateMetadataList) > 0 {
 		// Show list of saved templates
 		util.Heading("List of all templates:")
-		util.Pel()
 		for _, metadata := range templateMetadataList {
-			lastModifiedNanos := metadata.LastModifiedAt * int64(time.Millisecond)
-			creationDate := time.Unix(0, lastModifiedNanos).Format(timeFormat)
+			creationDate := time.Unix(0, int64(metadata.LastModifiedAt)).Format(timeFormat)
 			util.Pl(metadata.Name + " (Saved at: " + creationDate + ")")
 		}
+		util.Pel()
 	} else {
 		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	}
