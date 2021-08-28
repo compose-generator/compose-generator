@@ -36,8 +36,9 @@ func Add(
 
 	// Load project
 	util.P("Loading project ... ")
-	options := project.LoadOptions{ComposeFileName: composeFilePath}
-	proj := project.LoadProject(options)
+	proj := project.LoadProject(
+		project.LoadFromComposeFile(composeFilePath),
+	)
 	proj.AdvancedConfig = flagAdvanced
 	util.Done()
 	util.Pel()
@@ -81,5 +82,5 @@ func AddCustomService(project *model.CGProject) {
 	pass.AddDependants(&newService, project)
 
 	// Add the new service to the project
-	project.Project.Services = append(project.Project.Services, newService)
+	project.Composition.Services = append(project.Composition.Services, newService)
 }

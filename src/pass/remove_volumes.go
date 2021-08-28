@@ -27,7 +27,7 @@ func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
 				os.RemoveAll(volume.Source)
 			}
 			// Remove in project-wide volumes section
-			delete(project.Project.Volumes, volume.Source)
+			delete(project.Composition.Volumes, volume.Source)
 		}
 	}
 }
@@ -39,7 +39,7 @@ func isVolumeUsedByOtherServices(volume *spec.ServiceVolumeConfig, service *spec
 	if err != nil {
 		return false
 	}
-	for _, otherService := range project.Project.Services {
+	for _, otherService := range project.Composition.Services {
 		// Skip the service, we are currently editing
 		if otherService.Name == service.Name {
 			continue

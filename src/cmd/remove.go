@@ -32,8 +32,9 @@ func Remove(
 
 	// Load project
 	util.P("Loading project ... ")
-	options := project.LoadOptions{ComposeFileName: composeFilePath}
-	proj := project.LoadProject(options)
+	proj := project.LoadProject(
+		project.LoadFromComposeFile(composeFilePath),
+	)
 	proj.AdvancedConfig = flagAdvanced
 	proj.ForceConfig = flagForce
 	proj.WithVolumesConfig = flagWithVolumes
@@ -42,7 +43,7 @@ func Remove(
 
 	// Ask for services to remove
 	if len(serviceNames) == 0 {
-		serviceNames = proj.Project.ServiceNames()
+		serviceNames = proj.Composition.ServiceNames()
 		if len(serviceNames) == 0 {
 			util.Error("No services found", nil, true)
 		}
@@ -89,13 +90,13 @@ func removeService(project *model.CGProject, serviceName string, withVolumes boo
 	pass.RemoveDependencies(&service, project)
 
 	// Remove service from the project
-	project.Project.Services = removeServiceFromProject(project.Project.Services, index)
+	project.Composition.Services = removeServiceFromProject(project.Composition.Services, index)
 }
 
 // ---------------------------------------------------------------- Helper functions ---------------------------------------------------------------
 
 func findServiceWithIndex(project *model.CGProject, serviceName string) (spec.ServiceConfig, int, error) {
-	for index, service := range project.Project.Services {
+	for index, service := range project.Composition.Services {
 		if service.Name == serviceName {
 			return service, index, nil
 		}

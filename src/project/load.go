@@ -13,29 +13,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-type LoadOptions struct {
-	ComposeFileName string
-}
-
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // LoadProject loads the Docker compose project from the current directory
-func LoadProject(options ...LoadOptions) *model.CGProject {
-	// Load default options
-	opt := LoadOptions{ComposeFileName: "docker-compose.yml"}
-	// Replace with the passed options, if available
-	if len(options) > 0 {
-		opt = options[0]
-	}
+func LoadProject(options ...LoadOption) *model.CGProject {
+	opts := applyLoadOptions(options...)
 
 	// Create project instance
 	project := &model.CGProject{
-		WithGitignore: false,
-		WithReadme:    false,
+		WithGitignore:     util.FileExists(opts.WorkingDir + ".gitignore"),
+		GitignorePatterns: []string{},
+		WithReadme:        util.FileExists(opts.WorkingDir + "README.md"),
+		ReadmeChildPaths:  []string{"README.md"},
+		ForceConfig:       false,
 	}
 
 	// Load components
-	loadComposeFile(project, opt)
+	loadComposeFile(project, opts)
+	loadGitignoreFile(project)
 	loadCGFile(project)
 
 	return project
@@ -44,18 +39,16 @@ func LoadProject(options ...LoadOptions) *model.CGProject {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
-	content, err := ioutil.ReadFile(opt.ComposeFileName)
+	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
+		util.Error("Compose file not found", nil, true)
+	}
+	content, err := ioutil.ReadFile(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
 		util.Error("Unable to parse '"+opt.ComposeFileName+"'", err, true)
 	}
 	dict, err := loader.ParseYAML(content)
 	if err != nil {
 		util.Error("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
-	}
-
-	workingDir, err := os.Getwd()
-	if err != nil {
-		util.Error("Unable to retrieve workdir", err, true)
 	}
 
 	configs := []types.ConfigFile{
@@ -65,13 +58,30 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 		},
 	}
 	config := types.ConfigDetails{
-		WorkingDir:  workingDir,
+		WorkingDir:  opt.WorkingDir,
 		ConfigFiles: configs,
-		Environment: nil,
 	}
-	project.Project, err = loader.Load(config)
+	project.Composition, err = loader.Load(config)
 	if err != nil {
 		util.Error("Could not load project from the current directory", err, true)
+	}
+}
+
+func loadGitignoreFile(project *model.CGProject) {
+	if project.WithGitignore {
+		// Load patterns from .gitignore file
+		content, err := ioutil.ReadFile(project.Composition.WorkingDir + ".gitignore")
+		if err != nil {
+			util.Error("Unable to parse .gitignore file", err, true)
+		}
+		contentStr := strings.ReplaceAll(string(content), "\r\n", "\n")
+		// Save them into the project
+		for _, line := range strings.Split(contentStr, "\n") {
+			trimmedLine := strings.TrimSpace(line)
+			if len(trimmedLine) > 0 && !strings.HasPrefix(trimmedLine, "#") {
+				project.GitignorePatterns = append(project.GitignorePatterns, trimmedLine)
+			}
+		}
 	}
 }
 

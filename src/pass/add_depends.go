@@ -14,7 +14,7 @@ func AddDepends(service *spec.ServiceConfig, project *model.CGProject) {
 	if util.YesNoQuestion("Do you want your service depend on other services?", false) {
 		util.Pel()
 		// Ask for services
-		selectedServices := util.MultiSelectMenuQuestion("Which ones?", project.Project.ServiceNames())
+		selectedServices := util.MultiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
 		// Create map if not exists
 		if service.DependsOn == nil {
 			service.DependsOn = make(spec.DependsOnConfig)

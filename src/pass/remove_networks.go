@@ -13,7 +13,7 @@ import (
 func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 	for networkName := range service.Networks {
 		// Get project-wide network config by the name of the network
-		networkConfig := project.Project.Networks[networkName]
+		networkConfig := project.Composition.Networks[networkName]
 		otherServices := getServicesWhichUseNetwork(networkName, service, project)
 		util.Pl(networkName + ": " + strconv.Itoa(len(otherServices)))
 		canBeRemoved := networkConfig.External.External && len(otherServices) == 0 || !networkConfig.External.External && len(otherServices) <= 1
@@ -27,7 +27,7 @@ func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 			delete(otherService.Networks, networkName)
 		}
 		// Remove network from project-wide network section
-		delete(project.Project.Networks, networkName)
+		delete(project.Composition.Networks, networkName)
 	}
 }
 
@@ -35,7 +35,7 @@ func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 
 func getServicesWhichUseNetwork(networkName string, service *spec.ServiceConfig, project *model.CGProject) []spec.ServiceConfig {
 	var services []spec.ServiceConfig
-	for _, otherService := range project.Project.Services {
+	for _, otherService := range project.Composition.Services {
 		// Skip the service, we are currently editing
 		if otherService.Name == service.Name {
 			continue

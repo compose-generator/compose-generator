@@ -70,7 +70,7 @@ func askForExternalVolume(service *spec.ServiceConfig, project *model.CGProject,
 			ReadOnly: readOnly,
 		})
 		// Add the volume to the project-wide volume section
-		project.Project.Volumes[selectedVolume.Name] = spec.VolumeConfig{
+		project.Composition.Volumes[selectedVolume.Name] = spec.VolumeConfig{
 			Name: selectedVolume.Name,
 			External: spec.External{
 				Name:     selectedVolume.Name,
@@ -106,10 +106,10 @@ func askForExternalVolume(service *spec.ServiceConfig, project *model.CGProject,
 			ReadOnly: readOnly,
 		})
 		// Add the volume to the project-wide volume section
-		if project.Project.Volumes == nil {
-			project.Project.Volumes = make(spec.Volumes)
+		if project.Composition.Volumes == nil {
+			project.Composition.Volumes = make(spec.Volumes)
 		}
-		project.Project.Volumes[volume.Name] = spec.VolumeConfig{
+		project.Composition.Volumes[volume.Name] = spec.VolumeConfig{
 			Name: volume.Name,
 			External: spec.External{
 				Name:     volume.Name,

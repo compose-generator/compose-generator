@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"compose-generator/model"
 	"compose-generator/parser"
+	"compose-generator/project"
 	"compose-generator/util"
-	"encoding/json"
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -20,8 +18,42 @@ const (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// SaveTemplate copies the compose configuration in the current directory to a central templates directory
-func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bool) {
+// SaveTemplate copies the compose configuration from the current directory to a central templates directory
+func SaveTemplate(
+	name string,
+	flagStash bool,
+	flagForce bool,
+	flagWithDockerfile bool,
+) {
+	// Load project
+	proj := project.LoadProject()
+	proj.ForceConfig = flagForce
+
+	// Ask for template name
+	if name == "" {
+		for another := true; another; another = isTemplateExisting(proj.Name) {
+			proj.Name = util.TextQuestionWithDefault("How would you like to call your template: ", proj.Name)
+		}
+	}
+
+	// Change working dir
+	proj.Composition.WorkingDir = util.GetCustomTemplatesPath() + "/" + name
+
+	// Save the project to the templates dir
+	project.SaveProject(proj)
+
+	// Delete the original project if the stash flag is set
+	if flagStash {
+		project.DeleteProject(proj)
+	}
+}
+
+/*func SaveTemplate(
+	name string,
+	flagStash bool,
+	flagForce bool,
+	withDockerfile bool,
+) {
 	if name == "" {
 		name = util.TextQuestion("How would you like to call your template: ")
 	}
@@ -81,7 +113,7 @@ func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bo
 		}
 		util.Done()
 	}
-}
+}*/
 
 // LoadTemplate copies a template from the central templates directory to the working directory
 func LoadTemplate(name string, flagForce bool, flagShow bool, withDockerfile bool) {
@@ -148,6 +180,15 @@ func LoadTemplate(name string, flagForce bool, flagShow bool, withDockerfile boo
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func isTemplateExisting(name string) bool {
+	targetDir := util.GetCustomTemplatesPath() + "/" + name
+	if util.FileExists(targetDir) {
+		util.Error("Template with the name '"+name+"' already exists", nil, false)
+		return true
+	}
+	return false
+}
 
 func searchForTemplateFiles() (files map[string]string, fileNames []string, preselected []string) {
 	files = make(map[string]string)

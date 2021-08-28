@@ -13,10 +13,10 @@ import (
 func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 	if util.YesNoQuestion("Do you want other services depend on the new one?", false) {
 		util.Pel()
-		selectedServices := util.MultiSelectMenuQuestion("Which ones?", project.Project.ServiceNames())
+		selectedServices := util.MultiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
 		// Add service dependencies
 		for _, name := range selectedServices {
-			otherService, err := project.Project.GetService(name)
+			otherService, err := project.Composition.GetService(name)
 			if err != nil {
 				util.Error("Selected service '"+name+"' was not found", err, false)
 				continue

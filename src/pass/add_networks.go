@@ -55,16 +55,16 @@ func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject
 	if service.Networks == nil {
 		service.Networks = make(map[string]*spec.ServiceNetworkConfig)
 	}
-	if project.Project.Networks == nil {
-		project.Project.Networks = make(spec.Networks)
+	if project.Composition.Networks == nil {
+		project.Composition.Networks = make(spec.Networks)
 	}
 	// Add network to the service
 	service.Networks[customName] = nil
 	// Add network to project-wide network section
-	if project.Project.Networks == nil {
-		project.Project.Networks = make(map[string]spec.NetworkConfig)
+	if project.Composition.Networks == nil {
+		project.Composition.Networks = make(map[string]spec.NetworkConfig)
 	}
-	project.Project.Networks[customName] = spec.NetworkConfig{
+	project.Composition.Networks[customName] = spec.NetworkConfig{
 		Name: customName,
 		External: spec.External{
 			Name:     selectedNetwork.Name,
@@ -96,13 +96,13 @@ func askForNewNetwork(service *spec.ServiceConfig, project *model.CGProject, cli
 	if service.Networks == nil {
 		service.Networks = make(map[string]*spec.ServiceNetworkConfig)
 	}
-	if project.Project.Networks == nil {
-		project.Project.Networks = make(spec.Networks)
+	if project.Composition.Networks == nil {
+		project.Composition.Networks = make(spec.Networks)
 	}
 	// Add network to the service
 	service.Networks[networkName] = &spec.ServiceNetworkConfig{}
 	// Add network to project-wide network section
-	project.Project.Networks[networkName] = spec.NetworkConfig{
+	project.Composition.Networks[networkName] = spec.NetworkConfig{
 		Name:     networkName,
 		External: externalConfig,
 	}
