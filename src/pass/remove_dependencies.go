@@ -10,5 +10,12 @@ import (
 
 // RemoveDependencies removes all dependencies on a service from all other services of the configuration
 func RemoveDependencies(service *spec.ServiceConfig, project *model.CGProject) {
-
+	for _, otherService := range project.Project.Services {
+		for dependency := range otherService.DependsOn {
+			if dependency == service.Name {
+				delete(otherService.DependsOn, service.Name)
+				break
+			}
+		}
+	}
 }
