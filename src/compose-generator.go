@@ -132,12 +132,8 @@ func main() {
 				Name:    "install",
 				Aliases: []string{"i", "in"},
 				Usage:   "Installs Docker and Docker Compose with a single command",
-				Flags: []cli.Flag{
-					&cli.BoolFlag{Name: "only-compose", Aliases: []string{"c"}, Usage: "Only install Docker Compose", Value: false},
-					&cli.BoolFlag{Name: "only-docker", Aliases: []string{"d"}, Usage: "Only install Docker", Value: false},
-				},
 				Action: func(c *cli.Context) error {
-					cmd.Install(c.Bool("only-compose"), c.Bool("only-docker"))
+					cmd.Install()
 					return nil
 				},
 			},
