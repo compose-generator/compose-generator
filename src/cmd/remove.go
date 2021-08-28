@@ -42,7 +42,11 @@ func Remove(
 
 	// Ask for services to remove
 	if len(serviceNames) == 0 {
-		serviceNames = util.MultiSelectMenuQuestion("Which services do you want to remove?", proj.Project.ServiceNames())
+		serviceNames = proj.Project.ServiceNames()
+		if len(serviceNames) == 0 {
+			util.Error("No services found", nil, true)
+		}
+		serviceNames = util.MultiSelectMenuQuestion("Which services do you want to remove?", serviceNames)
 	}
 
 	// Remove selected services
@@ -81,10 +85,12 @@ func removeService(project *model.CGProject, serviceName string, withVolumes boo
 
 	// Execute passes on the service
 	pass.RemoveVolumes(&service, project)
+	pass.RemoveNetworks(&service, project)
 	pass.RemoveDependencies(&service, project)
 
 	// Remove service from the project
-	project.Project.Services = removeServiceFromProject(project.Project.Services, index)
+	/*project.Project.Services = */
+	removeServiceFromProject(project.Project.Services, index)
 }
 
 // ---------------------------------------------------------------- Helper functions ---------------------------------------------------------------

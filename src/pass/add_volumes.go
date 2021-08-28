@@ -20,7 +20,7 @@ func AddVolumes(service *spec.ServiceConfig, project *model.CGProject, client *c
 	if util.YesNoQuestion("Do you want to add volumes to your service?", false) {
 		util.Pel()
 		for ok := true; ok; ok = util.YesNoQuestion("Add another volume?", true) {
-			globalVolume := util.YesNoQuestion("Do you want to add an existing external volume (y) or link a directory / file (n)?", false)
+			globalVolume := util.YesNoQuestion("Do you want to add an existing external volume (y) or link a directory / file (N)?", false)
 			if globalVolume {
 				askForExternalVolume(service, project, client)
 			} else {
@@ -54,6 +54,7 @@ func askForExternalVolume(service *spec.ServiceConfig, project *model.CGProject,
 
 		// Ask for inner path
 		volumeInner := util.TextQuestion("Directory / file inside the container:")
+		volumeInner = strings.ReplaceAll(volumeInner, "\\", "/")
 
 		// Ask for read-only
 		readOnly := false

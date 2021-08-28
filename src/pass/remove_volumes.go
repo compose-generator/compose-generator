@@ -27,7 +27,7 @@ func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
 				os.RemoveAll(volume.Source)
 			}
 			// Remove in project-wide volumes section
-			//delete(project.Project.Volumes, volume.Name)
+			delete(project.Project.Volumes, volume.Source)
 		}
 	}
 }
