@@ -105,61 +105,6 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	}
 }
 
-/*
-func getVarMapFromQuestions(
-	varMap *map[string]string,
-	usedPorts *[]int,
-	questions []model.Question,
-	flagAdvanced bool,
-) {
-	for _, q := range questions {
-		defaultValue := util.ReplaceVarsInString(q.DefaultValue, *varMap)
-		if !q.Advanced || (q.Advanced && flagAdvanced) {
-			switch q.Type {
-			case 1: // Yes/No
-				defaultValue, _ := strconv.ParseBool(defaultValue)
-				(*varMap)[q.Variable] = strconv.FormatBool(util.YesNoQuestion(q.Text, defaultValue))
-			case 2: // Text
-				if q.Validator != "" {
-					var customValidator survey.Validator
-					switch q.Validator {
-					case "port":
-						customValidator = util.PortValidator
-						// Check if port was already assigned
-						port, _ := strconv.Atoi(defaultValue)
-						for util.SliceContainsInt(*usedPorts, port) {
-							port = port + 1
-						}
-						defaultValue = strconv.Itoa(port)
-					default:
-						customValidator = func(val interface{}) error {
-							validate := validator.New()
-							if validate.Var(val.(string), "required,"+q.Validator) != nil {
-								return errors.New("please provide a valid input")
-							}
-							return nil
-						}
-					}
-					answer := util.TextQuestionWithDefaultAndValidator(q.Text, defaultValue, customValidator)
-					(*varMap)[q.Variable] = answer
-					if q.Validator == "port" {
-						port, _ := strconv.Atoi(answer)
-						*usedPorts = append(*usedPorts, port)
-					}
-				} else {
-					(*varMap)[q.Variable] = util.TextQuestionWithDefault(q.Text, defaultValue)
-				}
-			case 3: // Select
-				answer := util.MenuQuestionWithDefault(q.Text, q.Options, q.DefaultValue)
-				(*varMap)[q.Variable] = answer
-			}
-		} else {
-			(*varMap)[q.Variable] = defaultValue
-		}
-	}
-}
-*/
-
 // TemplateListToLabelList converts a slice of ServiceTemplateConfig to a slice of labels
 func TemplateListToLabelList(templates []model.PredefinedTemplateConfig) (labels []string) {
 	for _, t := range templates {

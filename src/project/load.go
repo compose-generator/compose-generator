@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"gopkg.in/yaml.v2"
+
 	"github.com/compose-spec/compose-go/loader"
 	"github.com/compose-spec/compose-go/types"
 	"github.com/spf13/viper"
@@ -54,6 +56,11 @@ func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
 	return metadata
 }
 
+func LoadTemplateService(options ...LoadOption) *types.ServiceConfig {
+	opts := applyLoadOptions(options...)
+	return loadComposeFileSingleService(opts)
+}
+
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
@@ -83,6 +90,22 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	if err != nil {
 		util.Error("Could not load project from the current directory", err, true)
 	}
+}
+
+func loadComposeFileSingleService(opt LoadOptions) *types.ServiceConfig {
+	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
+		util.Error("Compose file not found", nil, true)
+	}
+	content, err := ioutil.ReadFile(opt.WorkingDir + opt.ComposeFileName)
+	if err != nil {
+		util.Error("Unable to parse '"+opt.ComposeFileName+"'", err, true)
+	}
+	var service types.ServiceConfig
+	err = yaml.Unmarshal(content, &service)
+	if err != nil {
+		util.Error("Unable to unmarshal '"+opt.ComposeFileName+"'", err, true)
+	}
+	return &service
 }
 
 func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {

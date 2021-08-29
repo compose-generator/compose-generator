@@ -36,7 +36,7 @@ func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject
 		util.Error("Error parsing external networks", err, false)
 		return
 	}
-	if externalNetworks == nil || len(externalNetworks) == 0 {
+	if len(externalNetworks) == 0 {
 		util.Error("There is no external network existing", nil, false)
 		return
 	}

@@ -10,7 +10,17 @@ type GenerateConfig struct {
 
 // ServiceConfig represents a collection of services within a GenerateConfig
 type ServiceConfig struct {
-	Type    string            `yaml:"type"`
-	Service string            `yaml:"service"`
-	Params  map[string]string `yaml:"params,omitempty"`
+	Type   string            `yaml:"type"`
+	Name   string            `yaml:"name"`
+	Params map[string]string `yaml:"params,omitempty"`
+}
+
+func (c GenerateConfig) GetServiceConfigurationsByName(templateType string) []ServiceConfig {
+	services := []ServiceConfig{}
+	for _, service := range c.ServiceConfig {
+		if service.Type == templateType {
+			services = append(services, service)
+		}
+	}
+	return services
 }

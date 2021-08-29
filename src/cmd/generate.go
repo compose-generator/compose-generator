@@ -86,18 +86,19 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		ProxyServices:    []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
-	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates)
-	//pass.GenerateChooseTemplates(project, config, pass.TemplateTypeBackend)
-	//pass.GenerateChooseTemplates(project, config, pass.TemplateTypeDatabase)
-	//pass.GenerateChooseTemplates(project, config, pass.TemplateTypeDbAdmin)
-	/*if project.ProductionReady {
-		pass.GenerateChooseTemplates(project, config, pass.TemplateTypeProxy)
-		pass.GenerateChooseTemplates(project, config, pass.TemplateTypeTlsHelper)
-	}*/
+	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)
+	pass.GenerateChooseBackends(project, availableTemplates, selectedTemplates)
+	pass.GenerateChooseDatabases(project, availableTemplates, selectedTemplates)
+	pass.GenerateChooseDbAdmins(project, availableTemplates, selectedTemplates)
+	if project.ProductionReady {
+		pass.GenerateChooseProxies(project, availableTemplates, selectedTemplates)
+		pass.GenerateChooseTlsHelpers(project, availableTemplates, selectedTemplates)
+	}
 
 	// Execute passes
 	pass.GenerateSecrets(project, config)
 	pass.GenerateExecServiceInitCommands(project, config)
+	pass.GenerateExecDemoAppInitCommands(project, config)
 }
 
 /*func generateDynamicStack(
@@ -478,87 +479,6 @@ func processUserInput(
 		}
 	}
 	return composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString
-}
-
-func getVarMapFromQuestions(
-	varMap *map[string]string,
-	usedPorts *[]int,
-	questions []model.Question,
-	flagAdvanced bool,
-) {
-	for _, q := range questions {
-		defaultValue := util.ReplaceVarsInString(q.DefaultValue, *varMap)
-		if !q.Advanced || (q.Advanced && flagAdvanced) {
-			switch q.Type {
-			case 1: // Yes/No
-				defaultValue, _ := strconv.ParseBool(defaultValue)
-				(*varMap)[q.Variable] = strconv.FormatBool(util.YesNoQuestion(q.Text, defaultValue))
-			case 2: // Text
-				if q.Validator != "" {
-					var customValidator survey.Validator
-					switch q.Validator {
-					case "port":
-						customValidator = util.PortValidator
-						// Check if port was already assigned
-						port, _ := strconv.Atoi(defaultValue)
-						for util.SliceContainsInt(*usedPorts, port) {
-							port = port + 1
-						}
-						defaultValue = strconv.Itoa(port)
-					default:
-						customValidator = func(val interface{}) error {
-							validate := validator.New()
-							if validate.Var(val.(string), "required,"+q.Validator) != nil {
-								return errors.New("please provide a valid input")
-							}
-							return nil
-						}
-					}
-					answer := util.TextQuestionWithDefaultAndValidator(q.Text, defaultValue, customValidator)
-					(*varMap)[q.Variable] = answer
-					if q.Validator == "port" {
-						port, _ := strconv.Atoi(answer)
-						*usedPorts = append(*usedPorts, port)
-					}
-				} else {
-					(*varMap)[q.Variable] = util.TextQuestionWithDefault(q.Text, defaultValue)
-				}
-			case 3: // Select
-				answer := util.MenuQuestionWithDefault(q.Text, q.Options, q.DefaultValue)
-				(*varMap)[q.Variable] = answer
-			}
-		} else {
-			(*varMap)[q.Variable] = defaultValue
-		}
-	}
-}
-
-func getVolumeMapFromVolumes(
-	varMap *map[string]string,
-	volMap *map[string]string,
-	usedVolumes *[]string,
-	template model.ServiceTemplateConfig,
-	flagAdvanced bool,
-	flagWithDockerfile bool,
-) {
-	srcPath := filepath.Join(util.GetPredefinedServicesPath(), template.Dir)
-	for _, v := range template.Volumes {
-		defaultValue := v.DefaultValue
-		if util.SliceContainsString(*usedVolumes, defaultValue) {
-			defaultValue = defaultValue + "-" + template.Name
-		}
-		if !v.Advanced || (v.Advanced && flagAdvanced) {
-			if !v.WithDockerfile || (v.WithDockerfile && flagWithDockerfile) {
-				(*varMap)[v.Variable] = util.TextQuestionWithDefault(v.Text, defaultValue)
-			} else {
-				(*varMap)[v.Variable] = defaultValue
-			}
-		} else {
-			(*varMap)[v.Variable] = defaultValue
-		}
-		*usedVolumes = append(*usedVolumes, defaultValue)
-		(*volMap)[filepath.Join(srcPath, v.DefaultValue)] = (*varMap)[v.Variable]
-	}
 }
 
 func processDocsFile(
