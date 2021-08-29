@@ -44,7 +44,7 @@ func SaveTemplate(
 	os.MkdirAll(targetDir, 0755)
 
 	// Copy volumes over to the new template dir
-	util.P("Copying volumes ...")
+	util.P("Copying volumes ... ")
 	copyVolumesToTemplate(proj, targetDir)
 	util.Done()
 
@@ -58,7 +58,7 @@ func SaveTemplate(
 
 	// Delete the original project if the stash flag is set
 	if flagStash {
-		util.P("Stashing project ...")
+		util.P("Stashing project ... ")
 		project.DeleteProject(proj)
 		util.Done()
 	}
@@ -185,7 +185,11 @@ func copyVolumesToTemplate(proj *model.CGProject, targetDir string) {
 		util.Error("Could not find absolute path of current dir", err, true)
 	}
 	for _, path := range proj.GetAllVolumePathsNormalized() {
-		pathRel, err := filepath.Rel(currentAbs, path)
+		pathAbs, err := filepath.Abs(path)
+		if err != nil {
+			util.Error("Could not find absolute path of volume dir", err, true)
+		}
+		pathRel, err := filepath.Rel(currentAbs, pathAbs)
 		if err != nil {
 			util.Error("Could not copy volume '"+path+"'", err, false)
 			continue
@@ -200,7 +204,11 @@ func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
 		util.Error("Could not find absolute path of current dir", err, true)
 	}
 	for _, path := range proj.GetAllVolumePathsNormalized() {
-		pathRel, err := filepath.Rel(currentAbs, path)
+		pathAbs, err := filepath.Abs(path)
+		if err != nil {
+			util.Error("Could not find absolute path of volume dir", err, true)
+		}
+		pathRel, err := filepath.Rel(currentAbs, pathAbs)
 		if err != nil {
 			util.Error("Could not copy volume '"+path+"'", err, false)
 			continue

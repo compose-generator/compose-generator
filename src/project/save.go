@@ -20,8 +20,7 @@ func SaveProject(project *model.CGProject, options ...SaveOption) {
 	saveCGFile(project, opt)
 	saveGitignore(project, opt)
 	saveReadme(project, opt)
-	saveEnvironmentFiles(project, opt)
-	saveVolumes(project, opt)
+	saveEnvFiles(project, opt)
 	saveComposeFile(project, opt)
 }
 
@@ -41,7 +40,7 @@ func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	}
 }
 
-func saveEnvironmentFiles(project *model.CGProject, opt SaveOptions) {
+func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 	// Make a list of all env files, which are listed in the project
 	envFiles := make(map[string]map[string]*string)
 	for _, service := range project.Composition.AllServices() {
@@ -71,10 +70,6 @@ func saveEnvironmentFiles(project *model.CGProject, opt SaveOptions) {
 			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
 		}
 	}
-}
-
-func saveVolumes(project *model.CGProject, options SaveOptions) {
-	// Make a list with all volume paths
 }
 
 func saveGitignore(project *model.CGProject, opt SaveOptions) {

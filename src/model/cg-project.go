@@ -81,3 +81,39 @@ func (p CGProject) GetAllVolumePathsNormalized() []string {
 	}
 	return normalizedPaths
 }
+
+func (p CGProject) GetAllEnvFilePaths() []string {
+	paths := []string{}
+	// Return empty list when no composition is attached
+	if p.Composition == nil {
+		return paths
+	}
+	// Search for volume paths in all services
+	for _, service := range p.Composition.Services {
+		for _, envFile := range service.EnvFile {
+			paths = append(paths, envFile)
+		}
+	}
+	return paths
+}
+
+func (p CGProject) GetAllEnvFilePathsNormalized() []string {
+	paths := p.GetAllEnvFilePaths()
+	normalizedPaths := []string{}
+	for _, path := range paths {
+		// Check for duplicate
+		duplicate := false
+		for _, normalizedPath := range normalizedPaths {
+			if path == normalizedPath {
+				duplicate = true
+				break
+			}
+		}
+		if duplicate {
+			continue
+		}
+		// No duplicate => add to list
+		normalizedPaths = append(normalizedPaths, path)
+	}
+	return normalizedPaths
+}

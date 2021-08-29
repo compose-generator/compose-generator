@@ -2,8 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
-	"strconv"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
@@ -15,9 +13,7 @@ func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 		// Get project-wide network config by the name of the network
 		networkConfig := project.Composition.Networks[networkName]
 		otherServices := getServicesWhichUseNetwork(networkName, service, project)
-		util.Pl(networkName + ": " + strconv.Itoa(len(otherServices)))
 		canBeRemoved := networkConfig.External.External && len(otherServices) == 0 || !networkConfig.External.External && len(otherServices) <= 1
-		util.Pl(networkName + ": " + strconv.FormatBool(canBeRemoved))
 		// Go to next if condition is not fulfilled
 		if !canBeRemoved {
 			continue
