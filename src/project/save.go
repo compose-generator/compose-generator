@@ -114,6 +114,7 @@ func saveCGFile(project *model.CGProject, opt SaveOptions) {
 	config.Set("project-name", project.Name)
 	config.Set("project-container-name", project.ContainerName)
 	config.Set("advanced-config", project.AdvancedConfig)
+	config.Set("production-ready", project.ProductionReady)
 	config.Set("created-by", project.CreatedBy)
 	config.Set("created-at", project.CreatedAt)
 	config.Set("modified-by", project.LastModifiedBy)

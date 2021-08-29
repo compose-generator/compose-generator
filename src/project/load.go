@@ -108,6 +108,7 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 	defaultProjectName := path.Base(opt.WorkingDir)
 	defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
 	defaultAdvancedMode := false
+	defaultProductionReady := false
 	defaultCreatedBy := "unknown"
 	defaultModifiedBy := "unknown"
 	if user, err := user.Current(); err == nil {
@@ -124,6 +125,7 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		config.SetDefault("project-name", defaultProjectName)
 		config.SetDefault("project-container-name", defaultContainerName)
 		config.SetDefault("advanced-config", defaultAdvancedMode)
+		config.SetDefault("production-ready", defaultProductionReady)
 		config.SetDefault("created-by", defaultCreatedBy)
 		config.SetDefault("created-at", defaultCreatedAt)
 		config.SetDefault("modified-by", defaultModifiedBy)
@@ -140,6 +142,7 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		metadata.Name = config.GetString("project-name")
 		metadata.ContainerName = config.GetString("project-container-name")
 		metadata.AdvancedConfig = config.GetBool("advanced-config")
+		metadata.ProductionReady = config.GetBool("production-ready")
 		metadata.CreatedBy = config.GetString("created-by")
 		metadata.CreatedAt = config.GetInt64("created-at")
 		metadata.LastModifiedBy = config.GetString("modified-by")

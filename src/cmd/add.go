@@ -20,7 +20,7 @@ func Add(
 	flagForce bool,
 ) {
 	// Check if CCom is installed
-	util.CheckIfCComIsInstalled()
+	util.EnsureCComIsInstalled()
 
 	// Clear the screen for CG output
 	util.ClearScreen()

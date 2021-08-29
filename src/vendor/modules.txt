@@ -10,10 +10,6 @@ github.com/Microsoft/go-winio/pkg/guid
 # github.com/cli/safeexec v1.0.0
 ## explicit; go 1.15
 github.com/cli/safeexec
-# github.com/compose-generator/dcu v0.0.0-20210516173715-4fbca63d84ff
-## explicit; go 1.16
-github.com/compose-generator/dcu
-github.com/compose-generator/dcu/model
 # github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d
 ## explicit; go 1.16
 github.com/compose-generator/diu
@@ -91,9 +87,6 @@ github.com/go-playground/locales/currency
 # github.com/go-playground/universal-translator v0.18.0
 ## explicit; go 1.13
 github.com/go-playground/universal-translator
-# github.com/go-playground/validator v9.31.0+incompatible
-## explicit
-github.com/go-playground/validator
 # github.com/go-playground/validator/v10 v10.9.0
 ## explicit; go 1.13
 github.com/go-playground/validator/v10
@@ -290,8 +283,6 @@ google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# gopkg.in/go-playground/assert.v1 v1.2.1
-## explicit
 # gopkg.in/ini.v1 v1.62.0
 ## explicit
 gopkg.in/ini.v1

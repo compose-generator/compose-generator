@@ -13,18 +13,22 @@ type CGProject struct {
 	ReadmeChildPaths  []string
 	ForceConfig       bool
 	WithVolumesConfig bool
+	Secrets           map[string]string
+	Vars              map[string]string
+	Ports             []int
 }
 
 type CGProjectMetadata struct {
-	Name           string
-	ContainerName  string
-	WithGitignore  bool
-	WithReadme     bool
-	AdvancedConfig bool
-	CreatedBy      string
-	CreatedAt      int64
-	LastModifiedBy string
-	LastModifiedAt int64
+	Name            string
+	ContainerName   string
+	WithGitignore   bool
+	WithReadme      bool
+	AdvancedConfig  bool
+	ProductionReady bool
+	CreatedBy       string
+	CreatedAt       int64
+	LastModifiedBy  string
+	LastModifiedAt  int64
 }
 
 // GetAllVolumePaths returns the paths to all volumes, known by the project
@@ -116,4 +120,19 @@ func (p CGProject) GetAllEnvFilePathsNormalized() []string {
 		normalizedPaths = append(normalizedPaths, path)
 	}
 	return normalizedPaths
+}
+
+func (p CGProject) ApplyAllVars() {
+
+}
+
+func (p CGProject) ApplyAllSecrets() {
+	for _, service := range p.Composition.Services {
+		// Replace all secrets in all env vars
+		for index, envVar := range service.Environment {
+			for secretKey, secretValue := range p.Secrets {
+				*service.Environment[index] = strings.ReplaceAll(*envVar, "${"+secretKey+"}", secretValue)
+			}
+		}
+	}
 }

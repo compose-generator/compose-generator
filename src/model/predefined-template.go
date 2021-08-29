@@ -1,7 +1,42 @@
 package model
 
-// ServiceTemplateConfig represents the JSON structure of predefined template configuration file
-type ServiceTemplateConfig struct {
+const (
+	TemplateTypeFrontend  = "frontend"
+	TemplateTypeBackend   = "backend"
+	TemplateTypeDatabase  = "database"
+	TemplateTypeDbAdmin   = "db-admin"
+	TemplateTypeProxy     = "proxy"
+	TemplateTypeTlsHelper = "tls-helper"
+)
+
+const (
+	QuestionTypeYesNo = 1
+	QuestionTypeText  = 2
+	QuestionTypeMenu  = 3
+)
+
+// SelectedTemplate represents predefined service templates, which were selected by the user to add to the stack
+type SelectedTemplates struct {
+	FrontendServices []PredefinedTemplateConfig `json:"frontend,omitempty"`
+	BackendServices  []PredefinedTemplateConfig `json:"backend,omitempty"`
+	DatabaseServices []PredefinedTemplateConfig `json:"database,omitempty"`
+	DbAdminService   []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
+	ProxyServices    []PredefinedTemplateConfig `json:"proxy,omitempty"`
+	TlsHelperService []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
+}
+
+// AvailableTemplates represents all available predefined service templates
+type AvailableTemplates struct {
+	FrontendServices []PredefinedTemplateConfig
+	BackendServices  []PredefinedTemplateConfig
+	DatabaseServices []PredefinedTemplateConfig
+	DbAdminService   []PredefinedTemplateConfig
+	ProxyServices    []PredefinedTemplateConfig
+	TlsHelperService []PredefinedTemplateConfig
+}
+
+// PredefinedTemplateConfig represents the JSON structure of predefined template configuration file
+type PredefinedTemplateConfig struct {
 	Label          string     `json:"label,omitempty"`
 	Name           string     `json:"name,omitempty"`
 	Dir            string     `json:"dir,omitempty"`

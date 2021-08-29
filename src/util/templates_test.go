@@ -14,7 +14,7 @@ import (
 // ------------------------------------------ TemplateListToLabelList ------------------------------------------
 
 func TestTemplateListToLabelList(t *testing.T) {
-	templates := []model.ServiceTemplateConfig{
+	templates := []model.PredefinedTemplateConfig{
 		{Label: "Angular"},
 		{Label: "Wordpress"},
 		{Label: "MySQL"},

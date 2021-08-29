@@ -1,33 +1,26 @@
 package cmd
 
 import (
-	"errors"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"reflect"
-	"strconv"
-	"strings"
-
-	"github.com/AlecAivazis/survey/v2"
-	dcu "github.com/compose-generator/dcu"
-	dcu_model "github.com/compose-generator/dcu/model"
-	"github.com/fatih/color"
-	"github.com/go-playground/validator"
-	"github.com/otiai10/copy"
-	yaml "gopkg.in/yaml.v3"
-
 	"compose-generator/model"
 	"compose-generator/parser"
+	"compose-generator/pass"
 	"compose-generator/util"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Generate a docker compose configuration
-func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached bool, flagForce bool, flagWithInstructions bool, flagWithDockerfile bool) {
+func Generate(
+	configPath string,
+	flagAdvanced bool,
+	flagRun bool,
+	flagDetached bool,
+	flagForce bool,
+	flagWithInstructions bool,
+	flagWithDockerfile bool,
+) {
 	// Check if CCom is installed
-	util.CheckIfCComIsInstalled()
+	util.EnsureCComIsInstalled()
 
 	// Clear screen if in interactive mode
 	if configPath == "" {
@@ -37,46 +30,35 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 	// Check for predefined service templates updates
 	util.CheckForServiceTemplateUpdate()
 
-	// Load config file if available
-	var configFile model.GenerateConfig
-	projectName := "Example Project"
-	if configPath != "" {
-		if util.FileExists(configPath) {
-			yamlFile, err1 := os.Open(configPath)
-			content, err2 := ioutil.ReadAll(yamlFile)
-			if err1 != nil {
-				util.Error("Could not load config file. Permissions granted?", err1, true)
-			}
-			if err2 != nil {
-				util.Error("Could not load config file. Permissions granted?", err2, true)
-			}
-			// Parse yaml
-			yaml.Unmarshal(content, &configFile)
-			projectName = configFile.ProjectName
-		} else {
-			util.Error("Config file could not be found", nil, true)
-		}
-	} else {
-		// Welcome Message
-		util.Heading("Welcome to Compose Generator! 👋")
-		util.Pl("Please continue by answering a few questions:")
-		util.Pel()
-
-		// Ask for project name
-		projectName = util.TextQuestion("What is the name of your project:")
-		if projectName == "" {
-			util.Error("Error. You must specify a project name!", nil, true)
-		}
+	// Create instances of project and generate config
+	proj := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			AdvancedConfig: flagAdvanced,
+			WithGitignore:  true,
+			WithReadme:     flagWithInstructions,
+		},
+		ForceConfig: flagForce,
+		Vars:        make(map[string]string),
+		Secrets:     make(map[string]string),
 	}
+	proj.Vars["PROJECT_NAME"] = proj.Name
+	proj.Vars["PROJECT_NAME_CONTAINER"] = proj.ContainerName
+	config := &model.GenerateConfig{}
 
-	// Generate dynamic stack
-	generateDynamicStack(configFile, projectName, flagAdvanced, flagForce, flagWithInstructions, flagWithDockerfile)
+	// Run passes
+	pass.LoadGenerateConfig(proj, config, configPath)
+
+	// Enrich project with information
+	generateProject(proj, config)
+
+	/*// Save project
+	project.SaveProject(proj)
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 		return
-	}
+	}*/
 	// Print success message
 	util.Pel()
 	util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
@@ -84,7 +66,41 @@ func Generate(configPath string, flagAdvanced bool, flagRun bool, flagDetached b
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func generateDynamicStack(
+func generateProject(project *model.CGProject, config *model.GenerateConfig) {
+	// Clear screen
+	if !config.FromFile {
+		util.ClearScreen()
+	}
+
+	// Parse available service templates
+	util.P("Loading predefined service templates ... ")
+	availableTemplates := parser.GetAvailablePredefinedTemplates()
+	util.Done()
+
+	// Generate composition
+	selectedTemplates := &model.SelectedTemplates{
+		FrontendServices: []model.PredefinedTemplateConfig{},
+		BackendServices:  []model.PredefinedTemplateConfig{},
+		DatabaseServices: []model.PredefinedTemplateConfig{},
+		DbAdminService:   []model.PredefinedTemplateConfig{},
+		ProxyServices:    []model.PredefinedTemplateConfig{},
+		TlsHelperService: []model.PredefinedTemplateConfig{},
+	}
+	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates)
+	//pass.GenerateChooseTemplates(project, config, pass.TemplateTypeBackend)
+	//pass.GenerateChooseTemplates(project, config, pass.TemplateTypeDatabase)
+	//pass.GenerateChooseTemplates(project, config, pass.TemplateTypeDbAdmin)
+	/*if project.ProductionReady {
+		pass.GenerateChooseTemplates(project, config, pass.TemplateTypeProxy)
+		pass.GenerateChooseTemplates(project, config, pass.TemplateTypeTlsHelper)
+	}*/
+
+	// Execute passes
+	pass.GenerateSecrets(project, config)
+	pass.GenerateExecServiceInitCommands(project, config)
+}
+
+/*func generateDynamicStack(
 	configFile model.GenerateConfig,
 	projectName string,
 	flagAdvanced bool,
@@ -464,43 +480,6 @@ func processUserInput(
 	return composeFileDev, composeFileProd, varFiles, secrets, dockerfileMap, instString, envString
 }
 
-func askForStackComponent(
-	templateData *map[string][]model.ServiceTemplateConfig,
-	selectedTemplateData *map[string][]model.ServiceTemplateConfig,
-	varMap *map[string]string,
-	volMap *map[string]string,
-	usedPorts *[]int,
-	usedVolumes *[]string,
-	component string,
-	multiSelect bool,
-	question string,
-	flagAdvanced bool,
-	flagWithDockerfile bool,
-) (componentCount int) {
-	templates := (*templateData)[component]
-	items := util.TemplateListToLabelList(templates)
-	itemsPreselected := util.TemplateListToPreselectedLabelList(templates, selectedTemplateData)
-	(*selectedTemplateData)[component] = []model.ServiceTemplateConfig{}
-	if multiSelect {
-		templateSelections := util.MultiSelectMenuQuestionIndex(question, items, itemsPreselected)
-		for _, index := range templateSelections {
-			util.Pel()
-			(*selectedTemplateData)[component] = append((*selectedTemplateData)[component], templates[index])
-			getVarMapFromQuestions(varMap, usedPorts, templates[index].Questions, flagAdvanced)
-			getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[index], flagAdvanced, flagWithDockerfile)
-			componentCount++
-		}
-	} else {
-		templateSelection := util.MenuQuestionIndex(question, items)
-		(*selectedTemplateData)[component] = append((*selectedTemplateData)[component], templates[templateSelection])
-		getVarMapFromQuestions(varMap, usedPorts, templates[templateSelection].Questions, flagAdvanced)
-		getVolumeMapFromVolumes(varMap, volMap, usedVolumes, templates[templateSelection], flagAdvanced, flagWithDockerfile)
-		componentCount = 1
-	}
-	util.Pel()
-	return
-}
-
 func getVarMapFromQuestions(
 	varMap *map[string]string,
 	usedPorts *[]int,
@@ -738,4 +717,4 @@ func executeServiceInitCommands(
 			}
 		}
 	}
-}
+}*/

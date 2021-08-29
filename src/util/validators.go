@@ -5,10 +5,25 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/go-playground/validator/v10"
 )
 
 var validate *validator.Validate
+
+func GetValidatorByName(validatorName string) survey.Validator {
+	if validatorName == "port" {
+		return PortValidator
+	} else {
+		return func(val interface{}) error {
+			validate := validator.New()
+			if validate.Var(val.(string), "required,"+validatorName) != nil {
+				return errors.New("please provide a valid input")
+			}
+			return nil
+		}
+	}
+}
 
 // PortValidator is a validator function to check if a port number is valid
 func PortValidator(val interface{}) error {
