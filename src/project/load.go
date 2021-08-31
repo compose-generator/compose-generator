@@ -104,7 +104,7 @@ func loadComposeFileSingleService(
 	opt LoadOptions,
 ) *types.ServiceConfig {
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
-		util.Error("Compose file not found", nil, true)
+		util.Error("Compose file not found in template "+templateTypeName+"-"+serviceName, nil, true)
 	}
 	// Evaluate conditional sections
 	evaluated := util.EvaluateConditionalSections(
@@ -117,11 +117,11 @@ func loadComposeFileSingleService(
 	// Parse file contents to service
 	serviceDict, err := loader.ParseYAML([]byte(evaluated))
 	if err != nil {
-		util.Error("Unable to unmarshal the evaluated version of '"+opt.ComposeFileName+"'", err, true)
+		util.Error("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", err, true)
 	}
 	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil)
 	if err != nil {
-		util.Error("Unable to load '"+opt.ComposeFileName+"'", err, true)
+		util.Error("Unable to load '"+templateTypeName+"-"+serviceName+"'", err, true)
 	}
 	return service
 }

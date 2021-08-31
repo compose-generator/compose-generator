@@ -90,12 +90,12 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
 	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)
-	pass.GenerateChooseBackends(project, availableTemplates, selectedTemplates)
-	pass.GenerateChooseDatabases(project, availableTemplates, selectedTemplates)
-	pass.GenerateChooseDbAdmins(project, availableTemplates, selectedTemplates)
+	pass.GenerateChooseBackends(project, availableTemplates, selectedTemplates, config)
+	pass.GenerateChooseDatabases(project, availableTemplates, selectedTemplates, config)
+	pass.GenerateChooseDbAdmins(project, availableTemplates, selectedTemplates, config)
 	if project.ProductionReady {
-		pass.GenerateChooseProxies(project, availableTemplates, selectedTemplates)
-		pass.GenerateChooseTlsHelpers(project, availableTemplates, selectedTemplates)
+		pass.GenerateChooseProxies(project, availableTemplates, selectedTemplates, config)
+		pass.GenerateChooseTlsHelpers(project, availableTemplates, selectedTemplates, config)
 	}
 
 	// Execute passes
