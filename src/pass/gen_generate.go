@@ -78,4 +78,8 @@ func generateService(
 	)
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)
+	// Add child readme files
+	proj.ReadmeChildPaths = append(proj.ReadmeChildPaths, template.GetFilePathsByType("docs")...)
+	// Add gitignore patterns
+	proj.GitignorePatterns = append(proj.GitignorePatterns, template.GetFilePathsByType("env")...)
 }

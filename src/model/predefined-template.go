@@ -61,6 +61,16 @@ type PredefinedTemplateConfig struct {
 	Secrets        []Secret   `json:"secrets,omitempty"`
 }
 
+func (t PredefinedTemplateConfig) GetFilePathsByType(fileType string) []string {
+	filteredFiles := []string{}
+	for _, file := range t.Files {
+		if file.Type == fileType {
+			filteredFiles = append(filteredFiles, t.Dir+"/"+file.Path)
+		}
+	}
+	return filteredFiles
+}
+
 // File represents an important file and holds the path and the type of this file
 type File struct {
 	Path string `json:"path,omitempty"`

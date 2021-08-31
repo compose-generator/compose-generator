@@ -5,6 +5,7 @@ import (
 	"compose-generator/util"
 	"io/ioutil"
 	"os/user"
+	"sort"
 	"time"
 
 	"github.com/spf13/viper"
@@ -29,6 +30,12 @@ func SaveProject(project *model.CGProject, options ...SaveOption) {
 func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	// Minify compose file
 	project.Composition.WithoutUnnecessaryResources()
+	// Remove unsupported options
+	for _, service := range project.Composition.Services {
+		for _, volume := range service.Volumes {
+			volume.Bind = nil
+		}
+	}
 	// Save docker compose file
 	content, err := yaml.Marshal(project.Composition)
 	if err != nil {
@@ -60,10 +67,16 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 	}
 	// Write each file to the disk
 	for fileName, envVars := range envFiles {
+		// Sort env variables alphabetically
+		keys := make([]string, 0, len(envVars))
+		for key := range envVars {
+			keys = append(keys, key)
+		}
+		sort.Strings(keys)
 		// Join env variables of this particular env file together
 		content := ""
-		for key, value := range envVars {
-			content += key + "=" + *value + "\n"
+		for _, key := range keys {
+			content += key + "=" + *envVars[key] + "\n"
 		}
 		// Write to disk
 		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0755); err != nil {
@@ -94,9 +107,12 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 					util.Error("Could not load README.md from service template", err, false)
 					continue
 				}
-				content += string(childContent) + "\n"
+				content += string(childContent) + "\n\n"
 			}
 		}
+		// Replace vars
+		content = util.ReplaceVarsInString(content, project.Vars)
+		// Write to output file
 		ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0755)
 	}
 }
