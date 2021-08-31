@@ -41,7 +41,7 @@
                 },
                 'type': {
                     'type': 'integer',
-                    'required': True
+                    'required': True,
                     'allowed': [1, 2, 3]
                 },
                 'options': {
