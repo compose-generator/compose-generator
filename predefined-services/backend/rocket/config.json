@@ -11,10 +11,6 @@
             "type": "docs"
         },
         {
-            "path": "backend/Dockerfile",
-            "type": "docker"
-        },
-        {
             "path": "backend/Cargo.toml",
             "type": "config"
         }

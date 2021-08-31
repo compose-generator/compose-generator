@@ -15,10 +15,6 @@
             "type": "env"
         },
         {
-            "path": "backend/Dockerfile",
-            "type": "docker"
-        },
-        {
             "path": "backend/bot.py",
             "type": "config"
         }

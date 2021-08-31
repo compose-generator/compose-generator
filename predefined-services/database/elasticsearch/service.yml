@@ -8,6 +8,9 @@ networks:
 #? if services.dbadmin contains name == "elasticsearch-hq" {
 #  - elasticsearch-elasticsearchhq
 #? }
+#? if services.dbadmin contains name == "adminer" {
+#  - elasticsearch-adminer
+#? }
 ports:
   - ${{ELASTICSEARCH_PORT}}:9200
 volumes: 

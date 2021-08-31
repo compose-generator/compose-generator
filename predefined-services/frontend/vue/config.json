@@ -15,10 +15,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "frontend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [

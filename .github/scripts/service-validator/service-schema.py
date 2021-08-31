@@ -10,22 +10,22 @@
         'required': True
     },
     'volumes': {
-         'type': 'list',
-         'nullable': True
+        'type': 'list',
+        'nullable': True
     },
     'networks': {
-         'type': 'list',
-         'nullable': True
+        'type': 'list',
+        'nullable': True
     },
     'ports': {
-         'type': 'list'
+        'type': 'list'
     },
     'env_file': {
         'type': 'list'
     },
     'environment': {
         'type': 'list',
-         'nullable': True
+        'nullable': True
     },
     'restart': {
         'type': 'string',
@@ -33,15 +33,15 @@
     },
     'depends_on': {
         'type': 'list',
-         'nullable': True
+        'nullable': True
     },
     'links': {
         'type': 'list',
-         'nullable': True
+        'nullable': True
     },
     'labels': {
         'type': 'list',
-         'nullable': True
+        'nullable': True
     },
     'command': {
         'type': 'string'

@@ -69,23 +69,21 @@ type File struct {
 
 // Question represents the JSON structure of a question of a predefined template
 type Question struct {
-	Text           string   `json:"text,omitempty"`
-	Type           int      `json:"type,omitempty"` // 1 = Yes/No; 2 = Text
-	DefaultValue   string   `json:"defaultValue,omitempty"`
-	Options        []string `json:"options,omitempty"`
-	Validator      string   `json:"validator,omitempty"`
-	Variable       string   `json:"variable,omitempty"`
-	Advanced       bool     `json:"advanced,omitempty"`
-	WithDockerfile bool     `json:"withDockerfile,omitempty"`
+	Text         string   `json:"text,omitempty"`
+	Type         int      `json:"type,omitempty"` // 1 = Yes/No; 2 = Text
+	DefaultValue string   `json:"defaultValue,omitempty"`
+	Options      []string `json:"options,omitempty"`
+	Validator    string   `json:"validator,omitempty"`
+	Variable     string   `json:"variable,omitempty"`
+	Advanced     bool     `json:"advanced,omitempty"`
 }
 
 // Volume represents the JSON structure of a volume of a predefined template
 type Volume struct {
-	Text           string `json:"text,omitempty"`
-	DefaultValue   string `json:"defaultValue,omitempty"`
-	Variable       string `json:"variable,omitempty"`
-	Advanced       bool   `json:"advanced,omitempty"`
-	WithDockerfile bool   `json:"withDockerfile,omitempty"`
+	Text         string `json:"text,omitempty"`
+	DefaultValue string `json:"defaultValue,omitempty"`
+	Variable     string `json:"variable,omitempty"`
+	Advanced     bool   `json:"advanced,omitempty"`
 }
 
 // Secret represents the JSON structure of a secret of a predefined template

@@ -15,10 +15,6 @@
             "type": "docs"
         },
         {
-            "path": "backend/Dockerfile",
-            "type": "docker"
-        },
-        {
             "path": "backend/requirements.txt",
             "type": "config"
         }

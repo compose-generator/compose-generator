@@ -23,8 +23,9 @@
                     'required': True
                 },
                 'type': {
-                'type': 'string',
-                'required': True
+                    'type': 'string',
+                    'required': True,
+                    'allowed': ['service', 'env', 'docs', 'config']
                 }
             }
         }
@@ -41,6 +42,7 @@
                 'type': {
                     'type': 'integer',
                     'required': True
+                    'allowed': [1, 2, 3]
                 },
                 'options': {
                     'type': 'list'
@@ -56,9 +58,6 @@
                     'required': True
                 },
                 'advanced': {
-                    'type': 'boolean'
-                },
-                'withDockerfile': {
                     'type': 'boolean'
                 }
             }
@@ -82,9 +81,6 @@
                     'required': True
                 },
                 'advanced': {
-                    'type': 'boolean'
-                },
-                'withDockerfile': {
                     'type': 'boolean'
                 }
             }

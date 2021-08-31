@@ -18,7 +18,6 @@ func Generate(
 	flagDetached bool,
 	flagForce bool,
 	flagWithInstructions bool,
-	flagWithDockerfile bool,
 ) {
 	// Check if CCom is installed
 	util.EnsureCComIsInstalled()

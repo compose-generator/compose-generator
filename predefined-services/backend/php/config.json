@@ -9,10 +9,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "backend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [
