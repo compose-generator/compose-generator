@@ -30,8 +30,7 @@
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./backend",
-            "variable": "PHP_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "PHP_SOURCE_DIRECTORY"
         }
     ]
 }

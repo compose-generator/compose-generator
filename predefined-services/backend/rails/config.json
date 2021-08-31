@@ -47,8 +47,7 @@
         {
             "text": "Custom path for backend source directory?",
             "defaultValue": "./backend",
-            "variable": "RAILS_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "RAILS_SOURCE_DIRECTORY"
         }
     ]
 }

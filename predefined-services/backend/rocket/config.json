@@ -46,8 +46,7 @@
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./backend",
-            "variable": "ROCKET_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "ROCKET_SOURCE_DIRECTORY"
         }
     ]
 }

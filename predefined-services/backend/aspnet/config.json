@@ -40,8 +40,7 @@
         {
             "text": "Custom path for backend source directory?",
             "defaultValue": "./backend",
-            "variable": "ASPNET_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "ASPNET_SOURCE_DIRECTORY"
         }
     ]
 }

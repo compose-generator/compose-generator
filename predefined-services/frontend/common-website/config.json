@@ -24,8 +24,7 @@
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./frontend",
-            "variable": "CW_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "CW_SOURCE_DIRECTORY"
         }
     ]
 }

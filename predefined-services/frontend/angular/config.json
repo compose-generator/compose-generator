@@ -27,8 +27,7 @@
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./frontend",
-            "variable": "ANGULAR_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "ANGULAR_SOURCE_DIRECTORY"
         }
     ]
 }

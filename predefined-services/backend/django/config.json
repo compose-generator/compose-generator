@@ -50,8 +50,7 @@
         {
             "text": "Custom path for backend source directory?",
             "defaultValue": "./backend",
-            "variable": "DJANGO_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "DJANGO_SOURCE_DIRECTORY"
         }
     ]
 }

@@ -32,8 +32,7 @@
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./frontend",
-            "variable": "REACT_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "REACT_SOURCE_DIRECTORY"
         }
     ]
 }

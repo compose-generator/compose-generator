@@ -30,8 +30,7 @@
         {
             "text": "Custom path for source directory?",
             "defaultValue": "./frontend",
-            "variable": "VUE_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "VUE_SOURCE_DIRECTORY"
         }
     ]
 }

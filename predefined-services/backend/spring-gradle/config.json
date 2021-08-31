@@ -58,8 +58,7 @@
         {
             "text": "Custom path for backend source directory?",
             "defaultValue": "./backend",
-            "variable": "SPRING_GRADLE_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "SPRING_GRADLE_SOURCE_DIRECTORY"
         }
     ]
 }

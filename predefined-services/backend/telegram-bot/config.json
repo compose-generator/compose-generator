@@ -43,8 +43,7 @@
         {
             "text": "Custom path for backend source directory?",
             "defaultValue": "./backend",
-            "variable": "TELEGRAM_BOT_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "variable": "TELEGRAM_BOT_SOURCE_DIRECTORY"
         }
     ]
 }
