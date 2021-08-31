@@ -4,6 +4,7 @@ import (
 	"compose-generator/model"
 	"compose-generator/project"
 	"compose-generator/util"
+	"path/filepath"
 	"strconv"
 
 	"github.com/compose-spec/compose-go/types"
@@ -79,7 +80,13 @@ func generateService(
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)
 	// Add child readme files
-	proj.ReadmeChildPaths = append(proj.ReadmeChildPaths, template.GetFilePathsByType("docs")...)
+	for _, readmePath := range template.GetFilePathsByType("docs") {
+		proj.ReadmeChildPaths = append(proj.ReadmeChildPaths, filepath.Join(template.Dir, readmePath))
+	}
 	// Add gitignore patterns
-	proj.GitignorePatterns = append(proj.GitignorePatterns, template.GetFilePathsByType("env")...)
+	for _, envFilePath := range template.GetFilePathsByType("env") {
+		if !util.SliceContainsString(proj.GitignorePatterns, envFilePath) {
+			proj.GitignorePatterns = append(proj.GitignorePatterns, envFilePath)
+		}
+	}
 }

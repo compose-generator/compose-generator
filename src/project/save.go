@@ -31,9 +31,9 @@ func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	// Minify compose file
 	project.Composition.WithoutUnnecessaryResources()
 	// Remove unsupported options
-	for _, service := range project.Composition.Services {
-		for _, volume := range service.Volumes {
-			volume.Bind = nil
+	for serviceIndex, service := range project.Composition.Services {
+		for volumeIndex := range service.Volumes {
+			project.Composition.Services[serviceIndex].Volumes[volumeIndex].Bind = nil
 		}
 	}
 	// Save docker compose file

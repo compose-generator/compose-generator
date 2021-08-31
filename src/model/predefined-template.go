@@ -65,7 +65,7 @@ func (t PredefinedTemplateConfig) GetFilePathsByType(fileType string) []string {
 	filteredFiles := []string{}
 	for _, file := range t.Files {
 		if file.Type == fileType {
-			filteredFiles = append(filteredFiles, t.Dir+"/"+file.Path)
+			filteredFiles = append(filteredFiles, file.Path)
 		}
 	}
 	return filteredFiles
