@@ -9,8 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"gopkg.in/yaml.v2"
-
 	"github.com/compose-spec/compose-go/loader"
 	"github.com/compose-spec/compose-go/types"
 	"github.com/spf13/viper"
@@ -56,9 +54,15 @@ func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
 	return metadata
 }
 
-func LoadTemplateService(options ...LoadOption) *types.ServiceConfig {
+func LoadTemplateService(
+	project *model.CGProject,
+	selectedTemplates *model.SelectedTemplates,
+	templateTypeName string,
+	serviceName string,
+	options ...LoadOption,
+) *types.ServiceConfig {
 	opts := applyLoadOptions(options...)
-	return loadComposeFileSingleService(opts)
+	return loadComposeFileSingleService(project, selectedTemplates, templateTypeName, serviceName, opts)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -92,20 +96,34 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	}
 }
 
-func loadComposeFileSingleService(opt LoadOptions) *types.ServiceConfig {
+func loadComposeFileSingleService(
+	project *model.CGProject,
+	selectedTemplates *model.SelectedTemplates,
+	templateTypeName string,
+	serviceName string,
+	opt LoadOptions,
+) *types.ServiceConfig {
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
 		util.Error("Compose file not found", nil, true)
 	}
-	content, err := ioutil.ReadFile(opt.WorkingDir + opt.ComposeFileName)
+	// Evaluate conditional sections
+	evaluated := util.EvaluateConditionalSections(
+		opt.WorkingDir+opt.ComposeFileName,
+		selectedTemplates,
+		project.Vars,
+	)
+	// Replace vars
+	evaluated = util.ReplaceVarsInString(evaluated, project.Vars)
+	// Parse file contents to service
+	serviceDict, err := loader.ParseYAML([]byte(evaluated))
 	if err != nil {
-		util.Error("Unable to parse '"+opt.ComposeFileName+"'", err, true)
+		util.Error("Unable to unmarshal the evaluated version of '"+opt.ComposeFileName+"'", err, true)
 	}
-	var service types.ServiceConfig
-	err = yaml.Unmarshal(content, &service)
+	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil)
 	if err != nil {
-		util.Error("Unable to unmarshal '"+opt.ComposeFileName+"'", err, true)
+		util.Error("Unable to load '"+opt.ComposeFileName+"'", err, true)
 	}
-	return &service
+	return service
 }
 
 func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {

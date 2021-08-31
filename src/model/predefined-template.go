@@ -25,6 +25,17 @@ type SelectedTemplates struct {
 	TlsHelperService []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
+// GetTotal returns the total number of selected templates
+func (t SelectedTemplates) GetTotal() int {
+	count := len(t.FrontendServices)
+	count += len(t.BackendServices)
+	count += len(t.DatabaseServices)
+	count += len(t.DbAdminService)
+	count += len(t.ProxyServices)
+	count += len(t.TlsHelperService)
+	return count
+}
+
 // AvailableTemplates represents all available predefined service templates
 type AvailableTemplates struct {
 	FrontendServices []PredefinedTemplateConfig

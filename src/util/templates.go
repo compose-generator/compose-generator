@@ -105,6 +105,22 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	}
 }
 
+func AskForCustomVolumePaths(project *model.CGProject, template *model.PredefinedTemplateConfig) {
+	for _, volume := range template.Volumes {
+		defaultValue := ReplaceVarsInString(volume.DefaultValue, project.Vars)
+		// Only ask advanced questions when the project was created in advanced mode
+		if project.AdvancedConfig || !volume.Advanced {
+			answer := ""
+			// Ask a text question with validator
+			answer = TextQuestionWithDefault(volume.Text, defaultValue)
+			project.Vars[volume.Variable] = answer
+		} else {
+			// Advanced question falls back to default value
+			project.Vars[volume.Variable] = volume.DefaultValue
+		}
+	}
+}
+
 // TemplateListToLabelList converts a slice of ServiceTemplateConfig to a slice of labels
 func TemplateListToLabelList(templates []model.PredefinedTemplateConfig) (labels []string) {
 	for _, t := range templates {

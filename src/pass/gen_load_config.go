@@ -40,12 +40,15 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 			}
 			// Parse yaml
 			yaml.Unmarshal(content, &config)
-			project.Name = config.ProjectName
-			project.ContainerName = strings.ReplaceAll(strings.ToLower(project.Name), " ", "-")
-			project.ProductionReady = config.ProductionReady
 			config.FromFile = true
 		} else {
 			util.Error("Config file could not be found", nil, true)
 		}
 	}
+
+	project.Name = config.ProjectName
+	project.ProductionReady = config.ProductionReady
+	project.ContainerName = strings.ReplaceAll(strings.ToLower(project.Name), " ", "-")
+	project.Vars["PROJECT_NAME"] = project.Name
+	project.Vars["PROJECT_NAME_CONTAINER"] = project.ContainerName
 }

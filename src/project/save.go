@@ -73,7 +73,7 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 }
 
 func saveGitignore(project *model.CGProject, opt SaveOptions) {
-	if project.WithGitignore {
+	if project.WithGitignore && len(project.GitignorePatterns) > 0 {
 		// Create gitignore file with all the paths from the list
 		content := ""
 		for _, pattern := range project.GitignorePatterns {
@@ -84,7 +84,7 @@ func saveGitignore(project *model.CGProject, opt SaveOptions) {
 }
 
 func saveReadme(project *model.CGProject, opt SaveOptions) {
-	if project.WithReadme {
+	if project.WithReadme && len(project.ReadmeChildPaths) > 0 {
 		// Create Readme file, which consists of the content of all stated files
 		content := ""
 		for _, path := range project.ReadmeChildPaths {

@@ -46,6 +46,8 @@ func GenerateChooseFrontends(
 			selectedConfig := available.FrontendServices[index]
 			// Ask questions to the user
 			util.AskTemplateQuestions(project, &selectedConfig)
+			// Ask volume questions to the user
+			util.AskForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.FrontendServices = append(selected.FrontendServices, selectedConfig)
 		}
