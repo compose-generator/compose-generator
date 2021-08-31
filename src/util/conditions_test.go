@@ -105,7 +105,7 @@ func TestEvaluateCondition_False2(t *testing.T) {
 
 func TestPrepareInputData1(t *testing.T) {
 	result := prepareInputData(templateData, varMap)
-	expected := "{\"services\":{\"backend\":[{\"label\":\"Wordpress\",\"name\":\"wordpress\"}],\"frontend\":[{\"label\":\"Angular\",\"name\":\"angular\"},{\"label\":\"Vue\",\"name\":\"vue\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
+	expected := "{\"services\":{\"frontend\":[{\"label\":\"Angular\",\"name\":\"angular\"},{\"label\":\"Vue\",\"name\":\"vue\"}],\"backend\":[{\"label\":\"Wordpress\",\"name\":\"wordpress\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
 	assert.Equal(t, expected, result)
 }
 

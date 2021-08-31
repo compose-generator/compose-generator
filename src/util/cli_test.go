@@ -9,7 +9,7 @@ import (
 // ---------------------------------------------------------------- Command Exists ---------------------------------------------------------------
 
 func TestCommandExists_Successful(t *testing.T) {
-	result := CommandExists("ls")
+	result := CommandExists("curl")
 	assert.True(t, result)
 }
 
