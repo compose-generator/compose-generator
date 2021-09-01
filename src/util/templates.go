@@ -69,6 +69,17 @@ func CheckForServiceTemplateUpdate() {
 func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, question := range template.Questions {
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
+		// If the port is already in use, find unused one
+		if question.Validator == "port" {
+			port, err := strconv.Atoi(defaultValue)
+			if err != nil {
+				Error("Could not convert port to integer. Please check template", err, true)
+			}
+			for SliceContainsInt(project.Ports, port) {
+				port++
+			}
+			defaultValue = strconv.Itoa(port)
+		}
 		// Only ask advanced questions when the project was created in advanced mode
 		if project.AdvancedConfig || !question.Advanced {
 			// Question can be answered
@@ -88,6 +99,13 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 					// Ask a text question with validator
 					validator := GetValidatorByName(question.Validator)
 					answer = TextQuestionWithDefaultAndValidator(question.Text, defaultValue, validator)
+					if question.Validator == "port" {
+						port, err := strconv.Atoi(answer)
+						if err != nil {
+							Error("Internal error", err, true)
+						}
+						project.Ports = append(project.Ports, port)
+					}
 				} else {
 					// Ask a text question without validator
 					answer = TextQuestionWithDefault(question.Text, defaultValue)
