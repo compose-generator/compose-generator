@@ -2,38 +2,10 @@ package util
 
 import (
 	"compose-generator/model"
-	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-// ------------------------------------------ ReplaceVarsInFile ------------------------------------------
-
-func TestReplaceVarsInFile(t *testing.T) {
-	vars := map[string]string{
-		"SERVICE_NAME": "Test",
-		"SERVICE_PORT": "8080",
-		"_PW_TEST":     "insecure12345",
-	}
-	expectedOutput := "test_attr: true\ntree:\n  nested_attr: 5\n  name: Test\n  size: 10\n  port: 80:8080\nouter: \"String\"\npw: insecure12345"
-	inputPath := "../../.github/test-files/vars-replacement-test.yml"
-
-	// Temporarily save content of test file
-	originalContent, err := ioutil.ReadFile(inputPath)
-	assert.Nil(t, err)
-
-	// Replace vars in test file
-	ReplaceVarsInFile(inputPath, vars)
-	content, err := ioutil.ReadFile(inputPath)
-
-	// Write original content back to test file
-	ioutil.WriteFile(inputPath, originalContent, 0755)
-
-	// Make assertions
-	assert.Nil(t, err)
-	assert.Equal(t, expectedOutput, string(content))
-}
 
 // ------------------------------------------ ReplaceVarsInString ------------------------------------------
 
@@ -69,20 +41,6 @@ func TestGenerateSecretsAndReplaceInString(t *testing.T) {
 	assert.Equal(t, 30, len(secretsMap["MySQL application password"]))
 }
 
-// ------------------------------------------ AppendStringToSliceIfMissing ------------------------------------------
-
-func TestAppendStringToSliceIfMissing_Missing(t *testing.T) {
-	slice := []string{"test", "foo", "bar", "lorem"}
-	slice = AppendStringToSliceIfMissing(slice, "ipsum")
-	assert.Equal(t, 5, len(slice))
-}
-
-func TestAppendStringToSliceIfMissing_NotMissing(t *testing.T) {
-	slice := []string{"test", "foo", "bar", "lorem"}
-	slice = AppendStringToSliceIfMissing(slice, "bar")
-	assert.Equal(t, 4, len(slice))
-}
-
 // ------------------------------------------ TestSliceContainsString ------------------------------------------
 
 func TestSliceContainsString_True(t *testing.T) {
@@ -109,18 +67,4 @@ func TestSliceContainsInt_False(t *testing.T) {
 	slice := []int{5, 1, 78, 6}
 	result := SliceContainsInt(slice, 9)
 	assert.False(t, result)
-}
-
-// ------------------------------------------ RemoveStringFromSlice ------------------------------------------
-
-func TestRemoveStringFromSlice_Found(t *testing.T) {
-	slice := []string{"test", "foo", "bar", "lorem"}
-	result := RemoveStringFromSlice(slice, "foo")
-	assert.Equal(t, 3, len(result))
-}
-
-func TestRemoveStringFromSlice_NotFound(t *testing.T) {
-	slice := []string{"test", "foo", "bar", "lorem"}
-	result := RemoveStringFromSlice(slice, "abc")
-	assert.Equal(t, 4, len(result))
 }

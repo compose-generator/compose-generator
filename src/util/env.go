@@ -3,24 +3,12 @@ package util
 import (
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/kardianos/osext"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
-
-// PrintSafetyWarning checks if commonly used files are already existing and warns the user about it
-func PrintSafetyWarning(existingCount int) {
-	Pel()
-	Warning(strconv.Itoa(existingCount) + " output files already exist. By continuing, those files will be overwritten!")
-	result := YesNoQuestion("Do you want to continue?", true)
-	if !result {
-		os.Exit(0)
-	}
-	Pel()
-}
 
 // IsDockerizedEnvironment checks if Compose Generator runs within a dockerized environment
 func IsDockerizedEnvironment() bool {

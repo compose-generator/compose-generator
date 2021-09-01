@@ -122,10 +122,6 @@ func (p CGProject) GetAllEnvFilePathsNormalized() []string {
 	return normalizedPaths
 }
 
-func (p CGProject) ApplyAllVars() {
-
-}
-
 func (p CGProject) ApplyAllSecrets() {
 	for _, service := range p.Composition.Services {
 		// Replace all secrets in all env vars
