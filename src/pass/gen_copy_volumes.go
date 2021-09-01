@@ -55,7 +55,6 @@ func copyBuildDir(build *types.BuildConfig, sourcePath string, dstPath string) {
 		if os.MkdirAll(dstPath, 0755) != nil {
 			util.Warning("Could not create volume dir")
 		}
-		return
 	} else {
 		// Copy volume
 		copy.Copy(sourcePath, dstPath)
