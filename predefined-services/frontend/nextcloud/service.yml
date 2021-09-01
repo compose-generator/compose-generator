@@ -10,5 +10,3 @@ networks:
   - frontend-database
 ports:
   - ${{NEXTCLOUD_PORT}}:80
-env_file:
-  - environment.env

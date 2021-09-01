@@ -2,15 +2,13 @@ package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/parser"
+	"compose-generator/project"
 	"compose-generator/util"
-	"encoding/json"
 	"io/ioutil"
 	"os"
-	"strings"
+	"path/filepath"
 	"time"
 
-	"github.com/compose-generator/dcu"
 	"github.com/otiai10/copy"
 )
 
@@ -20,156 +18,201 @@ const (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// SaveTemplate copies the compose configuration in the current directory to a central templates directory
-func SaveTemplate(name string, flagStash bool, flagForce bool, withDockerfile bool) {
+// SaveTemplate copies the compose configuration from the current directory to a central templates directory
+func SaveTemplate(
+	name string,
+	flagStash bool,
+	flagForce bool,
+	flagWithDockerfile bool,
+) {
+	// Load project
+	util.P("Loading project ... ")
+	proj := project.LoadProject()
+	proj.ForceConfig = flagForce
+	util.Done()
+
+	// Ask for template name
 	if name == "" {
-		name = util.TextQuestion("How would you like to call your template: ")
+		for another := true; another; another = isTemplateExisting(proj.Name) {
+			name = util.TextQuestionWithDefault("How would you like to call your template:", proj.Name)
+			proj.Name = name
+		}
 	}
-	// Check if templated with that name exists already
+
+	// Create the new template
 	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	if !flagForce && util.FileExists(targetDir) {
-		result := util.YesNoQuestion("There is already a template called '"+name+"'. Do you want to replace it?", false)
-		if !result {
-			return
-		}
-		util.Pel()
-	}
-	// Ask for files to include
-	files, fileNames, preselected := searchForTemplateFiles()
-	selectedFileIndices := util.MultiSelectMenuQuestionIndex("Select the files, you want to include into the template", fileNames, preselected)
-	selectedFiles := make(map[string]string)
-	for i := range selectedFileIndices {
-		selectedFiles[fileNames[i]] = files[fileNames[i]]
-	}
-	// Create metadata
-	util.P("Creating metadata file ... ")
-	os.MkdirAll(targetDir, os.ModePerm)
-	var metadata model.TemplateMetadata
-	metadata.Label = name
-	metadata.CreationTime = time.Now().UnixNano() / int64(time.Millisecond)
-	metadataJSON, _ := json.MarshalIndent(metadata, "", " ")
-	err := ioutil.WriteFile(targetDir+"/metadata.json", metadataJSON, 0755)
-	if err != nil {
-		util.Error("Could not write metadata.", err, true)
-	}
+	os.MkdirAll(targetDir, 0755)
+
+	// Copy volumes over to the new template dir
+	util.P("Copying volumes ... ")
+	copyVolumesToTemplate(proj, targetDir)
 	util.Done()
-	// Save template
-	util.P("Saving template ... ")
-	var savedFiles []string
-	opt := copy.Options{
-		Skip: func(src string) (bool, error) {
-			conditionToSkip := !strings.HasSuffix(src, "docker-compose.yml") && !strings.HasSuffix(src, "environment.env") && (!withDockerfile || !strings.HasSuffix(src, "Dockerfile")) && !strings.Contains(src, "volumes")
-			if !conditionToSkip && flagStash {
-				savedFiles = append(savedFiles, src)
-			}
-			return conditionToSkip, nil
-		},
-		OnDirExists: func(src string, dst string) copy.DirExistsAction {
-			return copy.Replace
-		},
-	}
-	err = copy.Copy(".", targetDir, opt)
-	if err != nil {
-		util.Error("Could not copy files. Is the permission granted?", err, true)
-	}
+
+	// Save the project to the templates dir
+	util.P("Saving project ... ")
+	project.SaveProject(
+		proj,
+		project.SaveIntoDir(targetDir),
+	)
 	util.Done()
-	// Delete files from source dir if stash flag is set
+
+	// Delete the original project if the stash flag is set
 	if flagStash {
-		util.P("Stashing ... ")
-		for _, f := range savedFiles {
-			os.RemoveAll(f)
-		}
+		util.P("Stashing project ... ")
+		project.DeleteProject(proj)
 		util.Done()
 	}
 }
 
 // LoadTemplate copies a template from the central templates directory to the working directory
-func LoadTemplate(name string, flagForce bool, flagShow bool, withDockerfile bool) {
-	// Execute safety checks
-	/*if !flagForce {
-		util.PrintSafetyWarning(false, withDockerfile)
-	}*/
-	// Check if the template exists
-	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	if name != "" && !util.FileExists(targetDir) {
-		util.Error("Template with the name '"+name+"' could not be found. You can query a list of the templates by executing 'compose-generator template load'.", nil, true)
+func LoadTemplate(
+	dirName string,
+	flagForce bool,
+	flagShow bool,
+	withDockerfile bool,
+) {
+	if flagShow {
+		showTemplateList()
 	} else {
-		// Load stacks from templates
-		if templateData := parser.ParseCustomTemplates(); len(templateData) > 0 {
-			// Show list of saved templates
-			var items []string
-			for _, t := range templateData {
-				creationDate := time.Unix(0, t.CreationTime*int64(time.Millisecond)).Format(timeFormat)
-				items = append(items, t.Label+" (Saved at: "+creationDate+")")
-			}
-			if flagShow {
-				util.Heading("List of all templates:")
-				util.Pel()
-				for _, item := range items {
-					util.Pl(item)
-				}
-				os.Exit(0)
-			} else {
-				index := util.MenuQuestionIndex("Saved templates", items)
-				targetDir = targetDir + templateData[index].Label
-			}
+		sourceDir := util.GetCustomTemplatesPath() + "/" + dirName
+		if dirName == "" {
+			// Let the user choose a template
+			dirName = askForTemplate()
+			sourceDir += dirName
 		} else {
-			util.Warning("No templates found. Use \"$ compose-generator save <template-name>\" to save one.")
-			os.Exit(0)
+			// Check if the stated template exists
+			if !util.FileExists(sourceDir) {
+				util.Error("Could not find template '"+dirName+"'", nil, true)
+			}
 		}
-		util.Pel()
-	}
-	// Load template
-	util.P("Loading template ... ")
-	srcPath := targetDir
-	dstPath := "."
 
-	os.Remove(dstPath + "/docker-compose.yml")
-	os.Remove(dstPath + "/environment.env")
-	if withDockerfile {
-		os.Remove(dstPath + "/Dockerfile")
-	}
-	os.RemoveAll(dstPath + "/volumes")
+		// Load project
+		util.P("Loading project ... ")
+		proj := project.LoadProject(
+			project.LoadFromDir(sourceDir),
+		)
+		proj.ForceConfig = flagForce
+		util.Done()
 
-	opt := copy.Options{
-		Skip: func(src string) (bool, error) {
-			conditionToSkip := strings.HasSuffix(src, "metadata.json") || (!withDockerfile && strings.HasSuffix(src, "Dockerfile"))
-			return conditionToSkip, nil
-		},
-		OnDirExists: func(src string, dst string) copy.DirExistsAction {
-			return copy.Replace
-		},
+		// Copy volumes over to the new template dir
+		util.P("Copying volumes ...")
+		copyVolumesFromTemplate(proj, sourceDir)
+		util.Done()
+
+		// Save the project to the current dir
+		util.P("Saving project ... ")
+		project.SaveProject(
+			proj,
+			project.SaveIntoDir("."),
+		)
+		util.Done()
 	}
-	err := copy.Copy(srcPath, dstPath, opt)
-	if err != nil {
-		util.Error("Could not load template files.", err, true)
-	}
-	util.Done()
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func searchForTemplateFiles() (files map[string]string, fileNames []string, preselected []string) {
-	files = make(map[string]string)
-	if util.FileExists("./docker-compose.yml") {
-		files["Docker Compose config file"] = "./docker-compose.yml"
-		fileNames = append(fileNames, "./docker-compose.yml")
-		getFilesFromComposeFile("./docker-compose.yml", &files, &fileNames)
+func askForTemplate() string {
+	util.P("Loading template list ... ")
+	templateMetadataList := getTemplateMetadataList()
+	util.Done()
+	util.Pel()
+
+	if len(templateMetadataList) > 0 {
+		var items []string
+		var keys []string
+		for key, metadata := range templateMetadataList {
+			creationDate := time.Unix(0, int64(metadata.LastModifiedAt)).Format(timeFormat)
+			keys = append(keys, key)
+			items = append(items, metadata.Name+" (Saved at: "+creationDate+")")
+		}
+		index := util.MenuQuestionIndex("Which template do you want to load?", items)
+		return keys[index]
+	} else {
+		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	}
-	if util.FileExists("./README.md") {
-		files["Project README file"] = "./README.md"
-		fileNames = append(fileNames, "./README.md")
-	}
-	return
+	return ""
 }
 
-func getFilesFromComposeFile(path string, files *map[string]string, fileNames *[]string) {
-	util.P("Parsing file dependencies from compose file ... ")
-	composeFile, err := dcu.DeserializeFromFile(path)
-	if err != nil {
-		util.Error("Could not parse docker compose file", err, true)
-	}
-	*fileNames = append(*fileNames, dcu.GetVolumePathsFromComposeFile(composeFile)...)
-	*fileNames = append(*fileNames, dcu.GetEnvFilePathsFromComposeFile(composeFile)...)
+func showTemplateList() {
+	util.P("Loading template list ... ")
+	templateMetadataList := getTemplateMetadataList()
 	util.Done()
+	util.Pel()
+
+	if len(templateMetadataList) > 0 {
+		// Show list of saved templates
+		util.Heading("List of all templates:")
+		for _, metadata := range templateMetadataList {
+			creationDate := time.Unix(0, int64(metadata.LastModifiedAt)).Format(timeFormat)
+			util.Pl(metadata.Name + " (Saved at: " + creationDate + ")")
+		}
+		util.Pel()
+	} else {
+		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
+	}
+}
+
+func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
+	files, err := ioutil.ReadDir(util.GetCustomTemplatesPath())
+	if err != nil {
+		util.Error("Cannot access directory for custom templates", err, true)
+	}
+	templateMetadata := make(map[string]*model.CGProjectMetadata)
+	for _, f := range files {
+		if f.IsDir() {
+			templatePath := util.GetCustomTemplatesPath() + "/" + f.Name()
+			metadata := project.LoadProjectMetadata(
+				project.LoadFromDir(templatePath),
+			)
+			templateMetadata[templatePath] = metadata
+		}
+	}
+	return templateMetadata
+}
+
+func isTemplateExisting(name string) bool {
+	targetDir := util.GetCustomTemplatesPath() + "/" + name
+	if util.FileExists(targetDir) {
+		util.Error("Template with the name '"+name+"' already exists", nil, false)
+		return true
+	}
+	return false
+}
+
+func copyVolumesToTemplate(proj *model.CGProject, targetDir string) {
+	currentAbs, err := filepath.Abs(".")
+	if err != nil {
+		util.Error("Could not find absolute path of current dir", err, true)
+	}
+	for _, path := range proj.GetAllVolumePathsNormalized() {
+		pathAbs, err := filepath.Abs(path)
+		if err != nil {
+			util.Error("Could not find absolute path of volume dir", err, true)
+		}
+		pathRel, err := filepath.Rel(currentAbs, pathAbs)
+		if err != nil {
+			util.Error("Could not copy volume '"+path+"'", err, false)
+			continue
+		}
+		copy.Copy(path, targetDir+"/"+pathRel)
+	}
+}
+
+func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
+	currentAbs, err := filepath.Abs(".")
+	if err != nil {
+		util.Error("Could not find absolute path of current dir", err, true)
+	}
+	for _, path := range proj.GetAllVolumePathsNormalized() {
+		pathAbs, err := filepath.Abs(path)
+		if err != nil {
+			util.Error("Could not find absolute path of volume dir", err, true)
+		}
+		pathRel, err := filepath.Rel(currentAbs, pathAbs)
+		if err != nil {
+			util.Error("Could not copy volume '"+path+"'", err, false)
+			continue
+		}
+		copy.Copy(sourceDir+"/"+pathRel, path)
+	}
 }

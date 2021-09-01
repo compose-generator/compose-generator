@@ -11,10 +11,6 @@
             "type": "docs"
         },
         {
-            "path": "backend/Dockerfile",
-            "type": "docker"
-        },
-        {
             "path": "backend/Cargo.toml",
             "type": "config"
         }
@@ -49,9 +45,8 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./backend",
-            "variable": "ROCKET_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-rocket",
+            "variable": "ROCKET_SOURCE_DIRECTORY"
         }
     ]
 }

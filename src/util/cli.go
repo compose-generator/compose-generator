@@ -39,12 +39,12 @@ func IsPrivileged() bool {
 // DockerComposeUp executes 'docker compose up' in the current directory
 func DockerComposeUp(detached bool) {
 	Pel()
-	Pl("Running docker-compose ... ")
+	Pl("Running docker compose ... ")
 	Pel()
 
-	cmd := exec.Command("docker-compose", "up", "--remove-orphans")
+	cmd := exec.Command("docker", "compose", "up", "--remove-orphans")
 	if detached {
-		cmd = exec.Command("docker-compose", "up", "-d", "--remove-orphans")
+		cmd = exec.Command("docker", "compose", "up", "-d", "--remove-orphans")
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -83,7 +83,7 @@ func ExecuteOnLinuxWithCustomVolume(c string, volumePath string) {
 
 // ClearScreen errases the console contents
 func ClearScreen() {
-	var cmd = getClearScreenCommand()
+	cmd := getClearScreenCommand()
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }

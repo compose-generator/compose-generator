@@ -2,15 +2,25 @@ package model
 
 // GenerateConfig represents a configuration file, which can be passed to the generate command
 type GenerateConfig struct {
-	ProjectName    string          `yaml:"project_name"`
-	ComposeVersion string          `yaml:"compose_version,omitempty"`
-	AlsoProduction bool            `yaml:"also_production,omitempty"`
-	ServiceConfig  []ServiceConfig `yaml:"services,omitempty"`
+	ProjectName     string          `yaml:"project_name"`
+	ProductionReady bool            `yaml:"production_ready,omitempty"`
+	ServiceConfig   []ServiceConfig `yaml:"services,omitempty"`
+	FromFile        bool
 }
 
 // ServiceConfig represents a collection of services within a GenerateConfig
 type ServiceConfig struct {
-	Type    string            `yaml:"type"`
-	Service string            `yaml:"service"`
-	Params  map[string]string `yaml:"params,omitempty"`
+	Type   string            `yaml:"type"`
+	Name   string            `yaml:"name"`
+	Params map[string]string `yaml:"params,omitempty"`
+}
+
+func (c GenerateConfig) GetServiceConfigurationsByName(templateType string) []ServiceConfig {
+	services := []ServiceConfig{}
+	for _, service := range c.ServiceConfig {
+		if service.Type == templateType {
+			services = append(services, service)
+		}
+	}
+	return services
 }
