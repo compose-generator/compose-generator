@@ -9,10 +9,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "backend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [
@@ -33,9 +29,8 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./backend",
-            "variable": "PHP_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-php",
+            "variable": "PHP_SOURCE_DIRECTORY"
         }
     ]
 }

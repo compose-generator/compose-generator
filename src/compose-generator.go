@@ -34,10 +34,9 @@ func main() {
 			&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "No safety checks", Value: false},
 			&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template", Value: false},
 			&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file", Value: false},
-			&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project", Value: false},
 		},
 		Action: func(c *cli.Context) error {
-			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
+			cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"))
 			return nil
 		},
 		Commands: []*cli.Command{
@@ -52,10 +51,9 @@ func main() {
 					&cli.BoolFlag{Name: "force", Aliases: []string{"f"}, Usage: "Skip safety checks", Value: false},
 					&cli.BoolFlag{Name: "with-instructions", Aliases: []string{"i"}, Usage: "Generates a README.md file with instructions to use the template", Value: false},
 					&cli.BoolFlag{Name: "run", Aliases: []string{"r"}, Usage: "Run docker-compose after creating the compose file", Value: false},
-					&cli.BoolFlag{Name: "with-dockerfile", Aliases: []string{"w"}, Usage: "Generates the Dockerfile for your project", Value: false},
 				},
 				Action: func(c *cli.Context) error {
-					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"), c.Bool("with-dockerfile"))
+					cmd.Generate(c.Path("config"), c.Bool("advanced"), c.Bool("run"), c.Bool("detached"), c.Bool("force"), c.Bool("with-instructions"))
 					return nil
 				},
 			},
@@ -132,12 +130,8 @@ func main() {
 				Name:    "install",
 				Aliases: []string{"i", "in"},
 				Usage:   "Installs Docker and Docker Compose with a single command",
-				Flags: []cli.Flag{
-					&cli.BoolFlag{Name: "only-compose", Aliases: []string{"c"}, Usage: "Only install Docker Compose", Value: false},
-					&cli.BoolFlag{Name: "only-docker", Aliases: []string{"d"}, Usage: "Only install Docker", Value: false},
-				},
 				Action: func(c *cli.Context) error {
-					cmd.Install(c.Bool("only-compose"), c.Bool("only-docker"))
+					cmd.Install()
 					return nil
 				},
 			},

@@ -2,6 +2,7 @@ package util
 
 import (
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -32,7 +33,7 @@ func GetCustomTemplatesPath() string {
 		return "/usr/lib/compose-generator/templates" // Linux
 	}
 	filename, _ := osext.Executable()
-	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filepath.ToSlash(filename)
 	filename = filename[:strings.LastIndex(filename, "/")]
 	if FileExists(filename + "/templates") {
 		return filename + "/templates" // Windows + Docker
@@ -46,7 +47,7 @@ func GetPredefinedServicesPath() string {
 		return "/usr/lib/compose-generator/predefined-services" // Linux
 	}
 	filename, _ := osext.Executable()
-	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filepath.ToSlash(filename)
 	filename = filename[:strings.LastIndex(filename, "/")]
 	if FileExists(filename + "/predefined-services") {
 		return filename + "/predefined-services" // Windows + Docker

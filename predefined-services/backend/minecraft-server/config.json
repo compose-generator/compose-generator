@@ -86,8 +86,7 @@
         {
             "text": "Custom path for Minecraft data volume?",
             "defaultValue": "./volumes/minecraft-data",
-            "variable": "VOLUME_MINECRAFT_DATA",
-            "withDockerfile": true
+            "variable": "VOLUME_MINECRAFT_DATA"
         }
     ]
 }

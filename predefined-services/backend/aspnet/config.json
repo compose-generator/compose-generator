@@ -13,10 +13,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "backend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [
@@ -43,9 +39,8 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
-            "variable": "ASPNET_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-aspnet",
+            "variable": "ASPNET_SOURCE_DIRECTORY"
         }
     ]
 }
