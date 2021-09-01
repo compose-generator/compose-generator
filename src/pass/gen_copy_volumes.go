@@ -36,29 +36,30 @@ func GenerateCopyVolumes(project *model.CGProject) {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func copyVolume(volume *types.ServiceVolumeConfig, sourcePath string, dstPath string) {
-	// If srcPath does not exist, simply create a directory at dstPath
 	if !util.FileExists(sourcePath) {
+		// If srcPath does not exist, simply create a directory at dstPath
 		if os.MkdirAll(dstPath, 0755) != nil {
 			util.Warning("Could not create volume dir")
 		}
-		return
+	} else {
+		// Copy volume
+		copy.Copy(sourcePath, dstPath)
 	}
-	// Copy volume
-	copy.Copy(sourcePath, dstPath)
 	// Set the volume bind path to the destination
 	volume.Source = dstPath
 }
 
 func copyBuildDir(build *types.BuildConfig, sourcePath string, dstPath string) {
-	// If srcPath does not exist, simply create a directory at dstPath
 	if !util.FileExists(sourcePath) {
+		// If srcPath does not exist, simply create a directory at dstPath
 		if os.MkdirAll(dstPath, 0755) != nil {
 			util.Warning("Could not create volume dir")
 		}
 		return
+	} else {
+		// Copy volume
+		copy.Copy(sourcePath, dstPath)
 	}
-	// Copy volume
-	copy.Copy(sourcePath, dstPath)
 	// Set the volume bind path to the destination
 	build.Context = dstPath
 }
