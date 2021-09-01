@@ -8,7 +8,7 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // GenerateSecrets generates all secrets for a stack
-func GenerateSecrets(project *model.CGProject, config *model.GenerateConfig) {
+func GenerateSecrets(project *model.CGProject) {
 	util.P("Generating secrets ... ")
 
 	util.Done()

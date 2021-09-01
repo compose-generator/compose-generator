@@ -25,6 +25,17 @@ type SelectedTemplates struct {
 	TlsHelperService []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
+func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
+	templates := []PredefinedTemplateConfig{}
+	templates = append(templates, t.FrontendServices...)
+	templates = append(templates, t.BackendServices...)
+	templates = append(templates, t.DatabaseServices...)
+	templates = append(templates, t.DbAdminService...)
+	templates = append(templates, t.ProxyServices...)
+	templates = append(templates, t.TlsHelperService...)
+	return templates
+}
+
 // GetTotal returns the total number of selected templates
 func (t SelectedTemplates) GetTotal() int {
 	count := len(t.FrontendServices)

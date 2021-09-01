@@ -13,14 +13,15 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Generate transforms the selected templates list and the enriched project to a composition
-func Generate(project *model.CGProject, config *model.GenerateConfig, selectedTemplates *model.SelectedTemplates) {
+func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	util.Pel()
 	templateCount := selectedTemplates.GetTotal()
 	if templateCount > 0 {
 		util.P("Generating configuration from " + strconv.Itoa(templateCount) + " templates ... ")
 		// Prepare
 		project.Composition = &types.Project{
-			Services: types.Services{},
+			WorkingDir: "./",
+			Services:   types.Services{},
 		}
 		if project.WithReadme {
 			instructionsHeaderPath := util.GetPredefinedServicesPath() + "/INSTRUCTIONS_HEADER.md"
@@ -30,27 +31,27 @@ func Generate(project *model.CGProject, config *model.GenerateConfig, selectedTe
 		// Generate services from selected templates
 		// Generate frontends
 		for _, template := range selectedTemplates.FrontendServices {
-			generateService(project, config, selectedTemplates, template, model.TemplateTypeFrontend, template.Name)
+			generateService(project, selectedTemplates, template, model.TemplateTypeFrontend, template.Name)
 		}
 		// Generate backends
 		for _, template := range selectedTemplates.BackendServices {
-			generateService(project, config, selectedTemplates, template, model.TemplateTypeBackend, template.Name)
+			generateService(project, selectedTemplates, template, model.TemplateTypeBackend, template.Name)
 		}
 		// Generate databases
 		for _, template := range selectedTemplates.DatabaseServices {
-			generateService(project, config, selectedTemplates, template, model.TemplateTypeDatabase, template.Name)
+			generateService(project, selectedTemplates, template, model.TemplateTypeDatabase, template.Name)
 		}
 		// Generate db admins
 		for _, template := range selectedTemplates.DbAdminService {
-			generateService(project, config, selectedTemplates, template, model.TemplateTypeDbAdmin, template.Name)
+			generateService(project, selectedTemplates, template, model.TemplateTypeDbAdmin, template.Name)
 		}
 		// Generate proxies
 		for _, template := range selectedTemplates.ProxyServices {
-			generateService(project, config, selectedTemplates, template, model.TemplateTypeProxy, template.Name)
+			generateService(project, selectedTemplates, template, model.TemplateTypeProxy, template.Name)
 		}
 		// Generate tls helpers
 		for _, template := range selectedTemplates.TlsHelperService {
-			generateService(project, config, selectedTemplates, template, model.TemplateTypeTlsHelper, template.Name)
+			generateService(project, selectedTemplates, template, model.TemplateTypeTlsHelper, template.Name)
 		}
 		util.Done()
 	} else {
@@ -62,7 +63,6 @@ func Generate(project *model.CGProject, config *model.GenerateConfig, selectedTe
 
 func generateService(
 	proj *model.CGProject,
-	config *model.GenerateConfig,
 	selectedTemplates *model.SelectedTemplates,
 	template model.PredefinedTemplateConfig,
 	templateType string,
@@ -77,6 +77,10 @@ func generateService(
 		project.LoadFromDir(template.Dir),
 		project.LoadFromComposeFile("service.yml"),
 	)
+	// Change to build context path to contain more information
+	if service.Build != nil && service.Build.Context != "" {
+		service.Build.Context = template.Dir + "/" + service.Build.Context
+	}
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)
 	// Add child readme files

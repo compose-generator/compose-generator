@@ -57,7 +57,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-spring-gradle",
             "variable": "SPRING_GRADLE_SOURCE_DIRECTORY"
         }
     ]

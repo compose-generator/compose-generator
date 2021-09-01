@@ -42,7 +42,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-telegram-bot",
             "variable": "TELEGRAM_BOT_SOURCE_DIRECTORY"
         }
     ]

@@ -45,7 +45,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-rocket",
             "variable": "ROCKET_SOURCE_DIRECTORY"
         }
     ]

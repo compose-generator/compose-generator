@@ -39,7 +39,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-aspnet",
             "variable": "ASPNET_SOURCE_DIRECTORY"
         }
     ]

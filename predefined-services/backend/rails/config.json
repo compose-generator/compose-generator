@@ -46,7 +46,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-rails",
             "variable": "RAILS_SOURCE_DIRECTORY"
         }
     ]

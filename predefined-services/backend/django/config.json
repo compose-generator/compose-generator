@@ -49,7 +49,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-django",
             "variable": "DJANGO_SOURCE_DIRECTORY"
         }
     ]

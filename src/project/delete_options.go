@@ -1,6 +1,9 @@
 package project
 
-import "strings"
+import (
+	"path/filepath"
+	"strings"
+)
 
 type DeleteOptions struct {
 	ComposeFileName string
@@ -20,7 +23,7 @@ func applyDeleteOptions(options ...DeleteOption) DeleteOptions {
 		opt(&opts)
 	}
 	// Validate and corrent the passed options
-	opts.WorkingDir = strings.ReplaceAll(opts.WorkingDir, "\\", "/")
+	opts.WorkingDir = filepath.ToSlash(opts.WorkingDir)
 	if !strings.HasSuffix(opts.WorkingDir, "/") {
 		opts.WorkingDir += "/"
 	}

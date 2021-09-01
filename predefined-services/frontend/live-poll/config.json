@@ -50,7 +50,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./frontend",
+            "defaultValue": "./frontend-live-poll",
             "variable": "LIVE_POLL_SOURCE_DIRECTORY",
             "advanced": true
         }

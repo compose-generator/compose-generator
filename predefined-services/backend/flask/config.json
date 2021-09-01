@@ -41,7 +41,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-flask",
             "variable": "FLASK_SOURCE_DIRECTORY"
         }
     ]

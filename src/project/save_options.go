@@ -1,6 +1,9 @@
 package project
 
-import "strings"
+import (
+	"path/filepath"
+	"strings"
+)
 
 type SaveOptions struct {
 	WorkingDir      string
@@ -20,7 +23,7 @@ func applySaveOptions(options ...SaveOption) SaveOptions {
 		opt(&opts)
 	}
 	// Validate and corrent the passed options
-	opts.WorkingDir = strings.ReplaceAll(opts.WorkingDir, "\\", "/")
+	opts.WorkingDir = filepath.ToSlash(opts.WorkingDir)
 	if !strings.HasSuffix(opts.WorkingDir, "/") {
 		opts.WorkingDir += "/"
 	}

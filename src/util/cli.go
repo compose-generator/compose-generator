@@ -83,7 +83,7 @@ func ExecuteOnLinuxWithCustomVolume(c string, volumePath string) {
 
 // ClearScreen errases the console contents
 func ClearScreen() {
-	var cmd = getClearScreenCommand()
+	cmd := getClearScreenCommand()
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }

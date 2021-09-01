@@ -56,11 +56,10 @@ func Generate(
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
-		util.Pl("Running Docker Compose now ...")
-		util.Pel()
 		util.DockerComposeUp(flagDetached)
 		return
 	}
+
 	// Print success message
 	util.Pel()
 	util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
@@ -98,8 +97,9 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 	}
 
 	// Execute passes
-	pass.Generate(project, config, selectedTemplates)
-	pass.GenerateSecrets(project, config)
-	pass.GenerateExecServiceInitCommands(project, config)
-	pass.GenerateExecDemoAppInitCommands(project, config)
+	pass.Generate(project, selectedTemplates)
+	pass.GenerateSecrets(project)
+	pass.GenerateCopyVolumes(project)
+	pass.GenerateExecServiceInitCommands(project, selectedTemplates)
+	pass.GenerateExecDemoAppInitCommands(project, selectedTemplates)
 }

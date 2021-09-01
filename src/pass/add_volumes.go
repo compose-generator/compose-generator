@@ -54,7 +54,7 @@ func askForExternalVolume(service *spec.ServiceConfig, project *model.CGProject,
 
 		// Ask for inner path
 		volumeInner := util.TextQuestion("Directory / file inside the container:")
-		volumeInner = strings.ReplaceAll(volumeInner, "\\", "/")
+		volumeInner = filepath.ToSlash(volumeInner)
 
 		// Ask for read-only
 		readOnly := false

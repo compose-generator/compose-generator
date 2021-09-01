@@ -23,7 +23,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./frontend",
+            "defaultValue": "./frontend-website",
             "variable": "CW_SOURCE_DIRECTORY"
         }
     ]

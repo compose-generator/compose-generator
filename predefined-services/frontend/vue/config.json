@@ -29,7 +29,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./frontend",
+            "defaultValue": "./frontend-vue",
             "variable": "VUE_SOURCE_DIRECTORY"
         }
     ]

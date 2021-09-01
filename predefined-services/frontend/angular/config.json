@@ -26,7 +26,7 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./frontend",
+            "defaultValue": "./frontend-angular",
             "variable": "ANGULAR_SOURCE_DIRECTORY"
         }
     ]

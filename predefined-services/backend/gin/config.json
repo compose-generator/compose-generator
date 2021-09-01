@@ -40,7 +40,7 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
+            "defaultValue": "./backend-gin",
             "variable": "GIN_SOURCE_DIRECTORY"
         }
     ]
