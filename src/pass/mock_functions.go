@@ -8,6 +8,7 @@ import (
 
 // Function list for mocking
 var TextQuestionWithDefault = util.TextQuestionWithDefault
+var TextQuestionWithDefaultAndSuggestions = util.TextQuestionWithDefaultAndSuggestions
 var YesNoQuestion = util.YesNoQuestion
 var MenuQuestion = util.MenuQuestion
 var MultiSelectMenuQuestion = util.MultiSelectMenuQuestion
@@ -18,3 +19,4 @@ var P = util.P
 var Done = util.Done
 var Success = util.Success
 var FileExists = util.FileExists
+var IsDir = util.IsDir
