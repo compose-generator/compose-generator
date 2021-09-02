@@ -58,17 +58,17 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
 		// Add image config to service
 		service.Image = registry + image
 		service.Name = serviceType + "-" + imageBaseName
-		service.ContainerName = project.ContainerName + "-" + serviceType + "-" + imageBaseName
 	}
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func searchRemoteImage(registry string, image string) bool {
-	util.P("\nSearching image ... ")
+	util.Pel()
+	util.P("Searching image ... ")
 	manifest, err := diu.GetImageManifest(registry + image)
 	if err != nil {
-		color.Red(" not found or no access\n")
+		util.Error(" not found or no access", nil, false)
 		chooseAgain := util.YesNoQuestion("Choose another image (Y) or proceed anyway (n)?", true)
 		util.Pel()
 		return chooseAgain
