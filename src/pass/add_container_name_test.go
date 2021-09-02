@@ -10,11 +10,16 @@ import (
 
 func TestAddContainerName(t *testing.T) {
 	// Create test data
-	service := &types.ServiceConfig{}
-	project := &model.CGProject{}
 	testContainerName := "Test container name"
+	oldContainerName := "Old container name"
+	service := &types.ServiceConfig{
+		ContainerName: oldContainerName,
+	}
+	project := &model.CGProject{}
 	// Mock user input
 	TextQuestionWithDefault = func(question, defaultValue string) string {
+		assert.Equal(t, "How do you want to call your container (best practice: lower, kebab cased):", question)
+		assert.Equal(t, oldContainerName, defaultValue)
 		return testContainerName
 	}
 	// Execute test

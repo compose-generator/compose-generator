@@ -7,9 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/compose-generator/diu"
-	"github.com/fatih/color"
-
 	spec "github.com/compose-spec/compose-go/types"
 )
 
@@ -17,13 +14,13 @@ import (
 
 // AddBuildOrImage asks the user if he/she wants to build from source or add a predefined image to a service
 func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
-	fromSource := util.YesNoQuestion("Build from source?", false)
+	fromSource := YesNoQuestion("Build from source?", false)
 	if fromSource { // Build from source
 		// Ask for build path
-		dockerfilePath := util.TextQuestionWithDefault("Where is your Dockerfile located?", "./Dockerfile")
+		dockerfilePath := TextQuestionWithDefault("Where is your Dockerfile located?", "./Dockerfile")
 		// Check if Dockerfile exists
-		if !util.FileExists(dockerfilePath) {
-			util.Error("The Dockerfile could not be found", nil, true)
+		if !FileExists(dockerfilePath) {
+			Error("The Dockerfile could not be found", nil, true)
 		}
 		// Add build config to service
 		service.Build = &spec.BuildConfig{
@@ -36,7 +33,7 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
 		chooseAgain := true
 		for chooseAgain {
 			// Ask for registry
-			registry = util.TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
+			registry = TextQuestionWithDefault("From which registry do you want to pick?", "docker.io")
 			if registry == "docker.io" {
 				registry = ""
 			} else {
@@ -44,13 +41,13 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
 			}
 
 			// Ask for image
-			image = util.TextQuestionWithDefault("Which Image do you want to use? (e.g. chillibits/ccom:0.8.0)", "hello-world")
+			image = TextQuestionWithDefault("Which Image do you want to use? (e.g. chillibits/ccom:0.8.0)", "hello-world")
 
 			chooseAgain = searchRemoteImage(registry, image)
 		}
 
 		options := []string{"frontend", "backend", "database", "db-admin"}
-		serviceType := util.MenuQuestion("Which type is the closest match for this service?", options)
+		serviceType := MenuQuestion("Which type is the closest match for this service?", options)
 
 		imageBaseName := path.Base(image)
 		imageBaseName = strings.Split(imageBaseName, ":")[0]
@@ -64,15 +61,16 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func searchRemoteImage(registry string, image string) bool {
-	util.Pel()
-	util.P("Searching image ... ")
-	manifest, err := diu.GetImageManifest(registry + image)
+	Pel()
+	P("Searching image ... ")
+	manifest, err := GetImageManifest(registry + image)
 	if err != nil {
-		util.Error(" not found or no access", nil, false)
-		chooseAgain := util.YesNoQuestion("Choose another image (Y) or proceed anyway (n)?", true)
+		Error(" not found or no access", nil, false)
+		chooseAgain := YesNoQuestion("Choose another image (Y) or proceed anyway (n)?", true)
 		util.Pel()
 		return chooseAgain
 	}
-	color.Green(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)\n\n")
+	Success(" found - " + strconv.Itoa(len(manifest.SchemaV2Manifest.Layers)) + " layer(s)")
+	Pel()
 	return false
 }
