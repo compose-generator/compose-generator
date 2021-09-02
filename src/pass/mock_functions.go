@@ -22,3 +22,4 @@ var Done = util.Done
 var Success = util.Success
 var FileExists = util.FileExists
 var IsDir = util.IsDir
+var ExecuteOnLinux = util.ExecuteOnLinux
