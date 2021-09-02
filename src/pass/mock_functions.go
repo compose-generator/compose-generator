@@ -7,8 +7,10 @@ import (
 )
 
 // Function list for mocking
+var TextQuestion = util.TextQuestion
 var TextQuestionWithDefault = util.TextQuestionWithDefault
 var TextQuestionWithDefaultAndSuggestions = util.TextQuestionWithDefaultAndSuggestions
+var TextQuestionWithValidator = util.TextQuestionWithValidator
 var YesNoQuestion = util.YesNoQuestion
 var MenuQuestion = util.MenuQuestion
 var MultiSelectMenuQuestion = util.MultiSelectMenuQuestion
