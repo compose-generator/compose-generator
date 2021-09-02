@@ -85,6 +85,13 @@ func TestAddBuildOrImage3(t *testing.T) {
 		Name:  "backend-spice",
 		Image: "ghcr.io/chillibits/spice:0.3.0",
 	}
+	testManifest := diu.DockerManifest{
+		SchemaV2Manifest: diu.SchemaV2Manifest{
+			Layers: []diu.Layer{
+				{}, {}, {}, {}, {}, {}, {},
+			},
+		},
+	}
 	// Mock functions
 	textQuestionCallCounter := 0
 	TextQuestionWithDefault = func(question, defaultValue string) (result string) {
@@ -117,6 +124,17 @@ func TestAddBuildOrImage3(t *testing.T) {
 		assert.Equal(t, "Which type is the closest match for this service?", label)
 		assert.EqualValues(t, []string{"frontend", "backend", "database", "db-admin"}, items)
 		return "backend"
+	}
+	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+		assert.Equal(t, "ghcr.io/chillibits/spice:0.3.0", image)
+		return testManifest, nil
+	}
+	Pel = func() {}
+	P = func(text string) {
+		assert.Equal(t, "Searching image ... ", text)
+	}
+	Success = func(text string) {
+		assert.Equal(t, " found - 7 layer(s)", text)
 	}
 	// Execute test
 	AddBuildOrImage(service, project)
@@ -151,10 +169,11 @@ func TestSearchRemoteImage1(t *testing.T) {
 		return false
 	}
 	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+		assert.Equal(t, "ghcr.io/chillibits/compose-generator", image)
 		return testManifest, nil
 	}
 	// Execute test
-	result := searchRemoteImage("docker.io", "chillibits/compose-generator")
+	result := searchRemoteImage("ghcr.io/", "chillibits/compose-generator")
 	// Assert
 	assert.False(t, result)
 	assert.Equal(t, 2, pelCallCount)
@@ -181,10 +200,11 @@ func TestSearchRemoteImage2(t *testing.T) {
 		return false
 	}
 	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+		assert.Equal(t, "chillibits/compose-generator", image)
 		return diu.DockerManifest{}, errors.New("Could not parse manifest")
 	}
 	// Execute test
-	result := searchRemoteImage("docker.io", "chillibits/compose-generator")
+	result := searchRemoteImage("", "chillibits/compose-generator")
 	// Assert
 	assert.False(t, result)
 	assert.Equal(t, 1, pelCallCount)
@@ -211,10 +231,11 @@ func TestSearchRemoteImage3(t *testing.T) {
 		return true
 	}
 	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+		assert.Equal(t, "chillibits/compose-generator", image)
 		return diu.DockerManifest{}, errors.New("Could not parse manifest")
 	}
 	// Execute test
-	result := searchRemoteImage("docker.io", "chillibits/compose-generator")
+	result := searchRemoteImage("", "chillibits/compose-generator")
 	// Assert
 	assert.True(t, result)
 	assert.Equal(t, 1, pelCallCount)

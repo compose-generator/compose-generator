@@ -10,6 +10,7 @@ import (
 var TextQuestionWithDefault = util.TextQuestionWithDefault
 var YesNoQuestion = util.YesNoQuestion
 var MenuQuestion = util.MenuQuestion
+var MultiSelectMenuQuestion = util.MultiSelectMenuQuestion
 var Error = util.Error
 var GetImageManifest = diu.GetImageManifest
 var Pel = util.Pel

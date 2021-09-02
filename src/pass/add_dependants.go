@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
@@ -11,14 +10,13 @@ import (
 
 // AddDependants asks the user if he/she wants to let other services depend on a service
 func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
-	if util.YesNoQuestion("Do you want other services depend on the new one?", false) {
-		util.Pel()
-		selectedServices := util.MultiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
+	if YesNoQuestion("Do you want other services depend on the new one?", false) {
+		Pel()
+		selectedServices := MultiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
 		// Add service dependencies
 		for _, name := range selectedServices {
 			otherService, err := project.Composition.GetService(name)
 			if err != nil {
-				util.Error("Selected service '"+name+"' was not found", err, false)
 				continue
 			}
 			// Create map if not exists
@@ -30,6 +28,6 @@ func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 				Condition: spec.ServiceConditionStarted,
 			}
 		}
-		util.Pel()
+		Pel()
 	}
 }
