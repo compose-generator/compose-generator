@@ -2,22 +2,22 @@
 package pass
 
 import (
-	"compose-generator/util"
 	"os"
 )
 
+const downloadUrl = "https://get.docker.com"
+
 // InstallDocker installs Docker on the system
 func InstallDocker() {
-	if util.IsPrivileged() {
-		const downloadUrl = "https://get.docker.com"
-		util.P("Installing Docker ... ")
+	if IsPrivileged() {
+		P("Installing Docker ... ")
 		filePath := os.TempDir() + "/install-docker.sh"
-		err := util.DownloadFile(downloadUrl, filePath)
+		err := DownloadFile(downloadUrl, filePath)
 		if err != nil {
-			util.Error("Download of Docker install script failed", err, true)
+			Error("Download of Docker install script failed", err, true)
 		}
-		util.ExecuteAndWait("chmod", "+x", filePath)
-		util.ExecuteAndWait("sh", filePath)
-		util.Done()
+		ExecuteAndWait("chmod", "+x", filePath)
+		ExecuteAndWait("sh", filePath)
+		Done()
 	}
 }

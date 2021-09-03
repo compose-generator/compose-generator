@@ -62,7 +62,7 @@ func Generate(
 
 	// Print success message
 	util.Pel()
-	util.SuccessMessage("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+	util.Success("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------

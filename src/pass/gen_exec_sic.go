@@ -14,13 +14,13 @@ func GenerateExecServiceInitCommands(project *model.CGProject, selectedTemplates
 		if len(template.ServiceInitCmd) > 0 {
 			// Retrieve service init commands
 			cmds := []string{}
-			for _, cmd := range template.DemoAppInitCmd {
+			for _, cmd := range template.ServiceInitCmd {
 				cmds = append(cmds, util.ReplaceVarsInString(cmd, project.Vars))
 			}
 			// Execute service init commands for this template
-			util.P("Generating configuration for " + template.Label + " ... ")
-			util.ExecuteOnLinux(strings.Join(cmds, ";"))
-			util.Done()
+			P("Generating configuration for " + template.Label + " ... ")
+			ExecuteOnLinux(strings.Join(cmds, ";"))
+			Done()
 		}
 	}
 }

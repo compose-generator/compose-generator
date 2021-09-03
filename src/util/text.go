@@ -35,8 +35,8 @@ func Heading(text string) {
 	green.Println(text)
 }
 
-// SuccessMessage prints a success message to console
-func SuccessMessage(text string) {
+// Success prints a success message to console
+func Success(text string) {
 	green := color.New(color.FgGreen).Add(color.Italic)
 	green.Println(text)
 }

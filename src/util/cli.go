@@ -52,6 +52,14 @@ func DockerComposeUp(detached bool) {
 	cmd.Wait()
 }
 
+// ExecuteWithOutput runs a command and prints the output to the console immediately
+func ExecuteWithOutput(c string) {
+	cmd := exec.Command(c)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
+}
+
 // ExecuteAndWait executes a command and wait till the execution is complete
 func ExecuteAndWait(c ...string) {
 	cmd := exec.Command(c[0], c[1:]...)
