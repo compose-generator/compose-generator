@@ -10,6 +10,13 @@ import (
 	"github.com/docker/docker/client"
 )
 
+var CreateDockerNetwork = func(client *client.Client, networkName string) error {
+	_, err := client.NetworkCreate(context.Background(), networkName, types.NetworkCreate{
+		Internal: false,
+	})
+	return err
+}
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // AddNetworks asks the user if he/she wants to add some networks to the configuration
@@ -75,16 +82,14 @@ func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject
 
 func askForNewNetwork(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	// Ask user to add a new network
-	networkName := util.TextQuestion("How do you want to call the new network?")
-	external := util.YesNoQuestion("Do you want to create it as an external network and link it in?", false)
+	networkName := TextQuestion("How do you want to call the new network?")
+	external := YesNoQuestion("Do you want to create it as an external network and link it in?", false)
 	externalConfig := spec.External{}
 	if external {
 		// Create external network
-		_, err := client.NetworkCreate(context.Background(), networkName, types.NetworkCreate{
-			Internal: false,
-		})
+		err := CreateDockerNetwork(client, networkName)
 		if err != nil {
-			util.Error("External network could not be created", err, false)
+			Error("External network could not be created", err, false)
 			return
 		}
 		externalConfig = spec.External{
@@ -95,6 +100,9 @@ func askForNewNetwork(service *spec.ServiceConfig, project *model.CGProject, cli
 	// Create maps if not exists
 	if service.Networks == nil {
 		service.Networks = make(map[string]*spec.ServiceNetworkConfig)
+	}
+	if project.Composition == nil {
+		project.Composition = &spec.Project{}
 	}
 	if project.Composition.Networks == nil {
 		project.Composition.Networks = make(spec.Networks)
