@@ -6,9 +6,98 @@ import (
 	"testing"
 
 	spec "github.com/compose-spec/compose-go/types"
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestAskForExternalNetwork1(t *testing.T) {
+	// Test data
+	testNetworkName := "Renamed network"
+	project := &model.CGProject{}
+	service := &spec.ServiceConfig{}
+	expectedProject := &model.CGProject{
+		Composition: &spec.Project{
+			Networks: spec.Networks{
+				testNetworkName: spec.NetworkConfig{
+					Name: testNetworkName,
+					External: spec.External{
+						Name:     "Existing network 2",
+						External: true,
+					},
+				},
+			},
+		},
+	}
+	expectedService := &spec.ServiceConfig{
+		Networks: map[string]*spec.ServiceNetworkConfig{
+			testNetworkName: nil,
+		},
+	}
+	cli, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		assert.Fail(t, "Could not create Docker client for testing")
+	}
+	// Mock functions
+	ListDockerNetworks = func(client *client.Client) ([]types.NetworkResource, error) {
+		return []types.NetworkResource{
+			{
+				Name: "Existing network 1",
+			},
+			{
+				Name: "Existing network 2",
+			},
+		}, nil
+	}
+	MenuQuestionIndex = func(label string, items []string) int {
+		assert.Equal(t, "Which one?", label)
+		assert.EqualValues(t, []string{"Existing network 1", "Existing network 2"}, items)
+		return 1
+	}
+	TextQuestionWithDefault = func(question, defaultValue string) string {
+		assert.Equal(t, "How do you want to call the network internally?", question)
+		assert.Equal(t, "Existing network 2", defaultValue)
+		return testNetworkName
+	}
+	Error = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of Error")
+	}
+	// Execute test
+	askForExternalNetwork(service, project, cli)
+	// Assert
+	assert.Equal(t, expectedService, service)
+	assert.Equal(t, expectedProject, project)
+}
+
+func TestAskForExternalNetwork2(t *testing.T) {
+	// Test data
+	project := &model.CGProject{}
+	service := &spec.ServiceConfig{}
+	expectedProject := &model.CGProject{}
+	expectedService := &spec.ServiceConfig{}
+	cli, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		assert.Fail(t, "Could not create Docker client for testing")
+	}
+	// Mock functions
+	ListDockerNetworks = func(client *client.Client) ([]types.NetworkResource, error) {
+		return []types.NetworkResource{}, nil
+	}
+	MenuQuestionIndex = func(label string, items []string) int {
+		assert.Fail(t, "Unexpected call of MenuQuestionIndex")
+		return 0
+	}
+	Error = func(description string, err error, exit bool) {
+		assert.Equal(t, "There is no external network existing", description)
+		assert.Nil(t, err)
+		assert.False(t, exit)
+	}
+	// Execute test
+	askForExternalNetwork(service, project, cli)
+	// Assert
+	assert.Equal(t, expectedService, service)
+	assert.Equal(t, expectedProject, project)
+}
 
 func TestAskForNewNetwork1(t *testing.T) {
 	// Test data

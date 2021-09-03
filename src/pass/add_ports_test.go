@@ -84,9 +84,8 @@ func TestAddPorts2(t *testing.T) {
 	project := &model.CGProject{}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
-	pelCallCount := 0
 	Pel = func() {
-		pelCallCount++
+		assert.Fail(t, "Unexpected call of Pel")
 	}
 	YesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to expose ports of your service?", question)
@@ -97,5 +96,4 @@ func TestAddPorts2(t *testing.T) {
 	AddPorts(service, project)
 	// Assert
 	assert.Equal(t, expectedService, service)
-	assert.Zero(t, pelCallCount)
 }

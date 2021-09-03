@@ -46,13 +46,11 @@ func TestAddRestart2(t *testing.T) {
 	service := &spec.ServiceConfig{}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
-	pelCallCount := 0
 	Pel = func() {
-		pelCallCount++
+		assert.Fail(t, "Unexpected call of Pel")
 	}
 	// Execute test
 	AddRestart(service, project)
 	// Assert
 	assert.Equal(t, expectedService, service)
-	assert.Zero(t, pelCallCount)
 }

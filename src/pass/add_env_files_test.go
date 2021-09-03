@@ -84,9 +84,8 @@ func TestAddEnvFiles2(t *testing.T) {
 	project := &model.CGProject{}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
-	pelCallCount := 0
 	Pel = func() {
-		pelCallCount++
+		assert.Fail(t, "Unexpected call of Pel")
 	}
 	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want to provide environment files to your service?", question)
@@ -97,5 +96,4 @@ func TestAddEnvFiles2(t *testing.T) {
 	AddEnvFiles(service, project)
 	// Assert
 	assert.Equal(t, expectedService, service)
-	assert.Zero(t, pelCallCount)
 }

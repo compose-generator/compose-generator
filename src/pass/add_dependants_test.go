@@ -93,13 +93,11 @@ func TestAddDependants2(t *testing.T) {
 	MultiSelectMenuQuestion = func(label string, items []string) (result []string) {
 		return []string{}
 	}
-	pelCallCount := 0
 	Pel = func() {
-		pelCallCount++
+		assert.Fail(t, "Unexpected call of Pel")
 	}
 	// Execute test
 	AddDependants(service, project)
 	// Assert
 	assert.Equal(t, expectedProject, project)
-	assert.Zero(t, pelCallCount)
 }

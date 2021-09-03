@@ -17,6 +17,10 @@ var CreateDockerNetwork = func(client *client.Client, networkName string) error 
 	return err
 }
 
+var ListDockerNetworks = func(client *client.Client) ([]types.NetworkResource, error) {
+	return client.NetworkList(context.Background(), types.NetworkListOptions{})
+}
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // AddNetworks asks the user if he/she wants to add some networks to the configuration
@@ -38,13 +42,13 @@ func AddNetworks(service *spec.ServiceConfig, project *model.CGProject, client *
 
 func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	// Search for external networks
-	externalNetworks, err := client.NetworkList(context.Background(), types.NetworkListOptions{})
+	externalNetworks, err := ListDockerNetworks(client)
 	if err != nil {
-		util.Error("Error parsing external networks", err, false)
+		Error("Error parsing external networks", err, false)
 		return
 	}
 	if len(externalNetworks) == 0 {
-		util.Error("There is no external network existing", nil, false)
+		Error("There is no external network existing", nil, false)
 		return
 	}
 	// Let the user choose one
@@ -52,15 +56,18 @@ func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject
 	for _, network := range externalNetworks {
 		menuItems = append(menuItems, network.Name)
 	}
-	index := util.MenuQuestionIndex("Which one?", menuItems)
+	index := MenuQuestionIndex("Which one?", menuItems)
 	selectedNetwork := externalNetworks[index]
 
 	// Ask for a custom name within the compose file
-	customName := util.TextQuestionWithDefault("How do you want to call the network internally?", selectedNetwork.Name)
+	customName := TextQuestionWithDefault("How do you want to call the network internally?", selectedNetwork.Name)
 
 	// Create maps if not exists
 	if service.Networks == nil {
 		service.Networks = make(map[string]*spec.ServiceNetworkConfig)
+	}
+	if project.Composition == nil {
+		project.Composition = &spec.Project{}
 	}
 	if project.Composition.Networks == nil {
 		project.Composition.Networks = make(spec.Networks)

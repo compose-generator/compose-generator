@@ -13,6 +13,7 @@ var TextQuestionWithDefaultAndSuggestions = util.TextQuestionWithDefaultAndSugge
 var TextQuestionWithValidator = util.TextQuestionWithValidator
 var YesNoQuestion = util.YesNoQuestion
 var MenuQuestion = util.MenuQuestion
+var MenuQuestionIndex = util.MenuQuestionIndex
 var MultiSelectMenuQuestion = util.MultiSelectMenuQuestion
 var Error = util.Error
 var GetImageManifest = diu.GetImageManifest

@@ -74,12 +74,9 @@ func TestInstallDocker3(t *testing.T) {
 	IsPrivileged = func() bool {
 		return false
 	}
-	pCallCount := 0
 	P = func(text string) {
-		pCallCount++
+		assert.Fail(t, "Unexpected call of P")
 	}
 	// Execute test
 	InstallDocker()
-	// Assert
-	assert.Zero(t, pCallCount)
 }
