@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 	"context"
 
 	spec "github.com/compose-spec/compose-go/types"
@@ -10,6 +9,7 @@ import (
 	"github.com/docker/docker/client"
 )
 
+// CreateDockerNetwork calls the Docker client to create a new network
 var CreateDockerNetwork = func(client *client.Client, networkName string) error {
 	_, err := client.NetworkCreate(context.Background(), networkName, types.NetworkCreate{
 		Internal: false,
@@ -17,22 +17,26 @@ var CreateDockerNetwork = func(client *client.Client, networkName string) error 
 	return err
 }
 
+// ListDockerNetworks calls the Docker client to list all available networks
 var ListDockerNetworks = func(client *client.Client) ([]types.NetworkResource, error) {
 	return client.NetworkList(context.Background(), types.NetworkListOptions{})
 }
+
+var askForExternalNetworkMockable = askForExternalNetwork
+var askForNewNetworkMockable = askForExternalNetwork
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // AddNetworks asks the user if he/she wants to add some networks to the configuration
 func AddNetworks(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
-	if util.YesNoQuestion("Do you want to add networks to your service?", false) {
-		util.Pel()
-		for ok := true; ok; ok = util.YesNoQuestion("Add another network?", true) {
-			globalNetwork := util.YesNoQuestion("Do you want to add an external network (y) or create a new one (N)?", false)
+	if YesNoQuestion("Do you want to add networks to your service?", false) {
+		Pel()
+		for ok := true; ok; ok = YesNoQuestion("Add another network?", true) {
+			globalNetwork := YesNoQuestion("Do you want to add an external network (y) or create a new one (N)?", false)
 			if globalNetwork {
-				askForExternalNetwork(service, project, client)
+				askForExternalNetworkMockable(service, project, client)
 			} else {
-				askForNewNetwork(service, project, client)
+				askForNewNetworkMockable(service, project, client)
 			}
 		}
 	}
