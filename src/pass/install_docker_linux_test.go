@@ -16,7 +16,6 @@ func TestInstallDocker1(t *testing.T) {
 	IsPrivileged = func() bool {
 		return true
 	}
-	// Execute test
 	P = func(text string) {
 		assert.Equal(t, "Installing Docker ... ", text)
 	}
@@ -34,6 +33,8 @@ func TestInstallDocker1(t *testing.T) {
 		assert.Equal(t, filePath, filepath)
 		return nil
 	}
+	// Execute test
+	InstallDocker()
 	// Assert
 	assert.Equal(t, 2, executeWaitCallCount)
 }
@@ -61,12 +62,12 @@ func TestInstallDocker2(t *testing.T) {
 		assert.Equal(t, filePath, filepath)
 		return errors.New(errorMessage)
 	}
+	ExecuteAndWait = func(c ...string) {}
 	// Execute test
 	InstallDocker()
 	// Assert
 	assert.Equal(t, 1, pCallCount)
 }
-
 
 func TestInstallDocker3(t *testing.T) {
 	// Mock functions
