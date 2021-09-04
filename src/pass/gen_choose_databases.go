@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -16,7 +15,10 @@ func GenerateChooseDatabases(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := config.GetServiceConfigurationsByName(model.TemplateTypeDatabase)
+		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeDatabase)
+		if project.Vars == nil {
+			project.Vars = make(map[string]string)
+		}
 		for _, template := range available.DatabaseServices {
 			for _, selectedConfig := range selectedServiceConfigs {
 				if template.Name == selectedConfig.Name {
@@ -37,17 +39,17 @@ func GenerateChooseDatabases(
 	} else {
 		// Generate from user input
 		availableDatabases := available.DatabaseServices
-		items := util.TemplateListToLabelList(availableDatabases)
-		itemsPreselected := util.TemplateListToPreselectedLabelList(availableDatabases, selected)
-		templateSelections := util.MultiSelectMenuQuestionIndex("Which database services do you need?", items, itemsPreselected)
+		items := TemplateListToLabelList(availableDatabases)
+		itemsPreselected := TemplateListToPreselectedLabelList(availableDatabases, selected)
+		templateSelections := MultiSelectMenuQuestionIndex("Which database services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			util.Pel()
+			Pel()
 			// Get selected template config
 			selectedConfig := available.DatabaseServices[index]
 			// Ask questions to the user
-			util.AskTemplateQuestions(project, &selectedConfig)
+			AskTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			util.AskForCustomVolumePaths(project, &selectedConfig)
+			AskForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.DatabaseServices = append(selected.DatabaseServices, selectedConfig)
 		}

@@ -148,8 +148,8 @@ func TemplateListToLabelList(templates []model.PredefinedTemplateConfig) (labels
 }
 
 // TemplateListToPreselectedLabelList retrieves a slice of all preselected other services for each service
-func TemplateListToPreselectedLabelList(templateList []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) (labels []string) {
-	for _, t := range templateList {
+func TemplateListToPreselectedLabelList(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) (labels []string) {
+	for _, t := range templates {
 		if t.Preselected == "false" {
 			continue
 		}

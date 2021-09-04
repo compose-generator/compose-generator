@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -16,7 +15,10 @@ func GenerateChooseTlsHelpers(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := config.GetServiceConfigurationsByName(model.TemplateTypeTlsHelper)
+		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeTlsHelper)
+		if project.Vars == nil {
+			project.Vars = make(map[string]string)
+		}
 		for _, template := range available.TlsHelperService {
 			for _, selectedConfig := range selectedServiceConfigs {
 				if template.Name == selectedConfig.Name {
@@ -37,17 +39,17 @@ func GenerateChooseTlsHelpers(
 	} else {
 		// Generate from user input
 		availableTlsHelpers := available.TlsHelperService
-		items := util.TemplateListToLabelList(availableTlsHelpers)
-		itemsPreselected := util.TemplateListToPreselectedLabelList(availableTlsHelpers, selected)
-		templateSelections := util.MultiSelectMenuQuestionIndex("Which tls helper services do you need?", items, itemsPreselected)
+		items := TemplateListToLabelList(availableTlsHelpers)
+		itemsPreselected := TemplateListToPreselectedLabelList(availableTlsHelpers, selected)
+		templateSelections := MultiSelectMenuQuestionIndex("Which tls helper services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			util.Pel()
+			Pel()
 			// Get selected template config
 			selectedConfig := available.TlsHelperService[index]
 			// Ask questions to the user
-			util.AskTemplateQuestions(project, &selectedConfig)
+			AskTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			util.AskForCustomVolumePaths(project, &selectedConfig)
+			AskForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.TlsHelperService = append(selected.TlsHelperService, selectedConfig)
 		}

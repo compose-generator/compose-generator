@@ -54,6 +54,7 @@ func TestAddNetworks1(t *testing.T) {
 			assert.Fail(t, "Unexpected call of askForNewNetwork")
 		}
 	}
+	Pel = func() {}
 	// Execute test
 	AddNetworks(service, project, cli)
 }

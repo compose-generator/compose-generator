@@ -16,6 +16,11 @@ func TestIsDevVersion(t *testing.T) {
 	}
 }
 
+func TestIsPreRelease(t *testing.T) {
+	result := IsPreRelease()
+	assert.False(t, result)
+}
+
 // -------------------------------------------- BuildVersion -------------------------------------------
 
 func TestBuildVersion(t *testing.T) {
