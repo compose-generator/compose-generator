@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/compose-generator/diu"
+	"github.com/sethvargo/go-password/password"
 	"gopkg.in/yaml.v2"
 )
 
@@ -43,6 +44,7 @@ var askForCustomVolumePaths = util.AskForCustomVolumePaths
 var unmarshalYaml = yaml.Unmarshal
 var openFile = os.Open
 var readAllFromFile = ioutil.ReadAll
+var generatePassword = password.Generate
 var getServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 	return config.GetServiceConfigurationsByName(templateType)
 }

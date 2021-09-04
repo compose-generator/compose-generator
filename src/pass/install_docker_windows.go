@@ -10,17 +10,17 @@ const downloadUrl = "https://desktop.docker.com/win/stable/Docker%20Desktop%20In
 // InstallDocker installs Docker on the system
 func InstallDocker() {
 	// Download Docker installer
-	P("Downloading Docker installer ... ")
+	p("Downloading Docker installer ... ")
 	filePath := os.TempDir() + "/DockerInstaller.exe"
-	err := DownloadFile(downloadUrl, filePath)
+	err := downloadFile(downloadUrl, filePath)
 	if err != nil {
-		Error("Download of Docker installer failed", err, true)
+		printError("Download of Docker installer failed", err, true)
 	}
-	Done()
+	done()
 
 	// Run Docker installer
-	Pl("Running installation ... ")
-	Pel()
+	pl("Running installation ... ")
+	pel()
 	executeWithOutput(filePath)
-	Pel()
+	pel()
 }

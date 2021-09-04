@@ -16,28 +16,28 @@ func TestInstallDockers1(t *testing.T) {
 	P = func(text string) {
 		assert.Equal(t, "Downloading Docker installer ... ", text)
 	}
-	DownloadFile = func(url string, filepath string) error {
+	downloadFile = func(url string, filepath string) error {
 		assert.Equal(t, downloadUrl, url)
 		assert.Equal(t, filePath, filepath)
 		return nil
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "Download of Docker installer failed", description)
 		assert.Nil(t, err)
 		assert.True(t, exit)
 	}
 	doneCallCount := 0
-	Done = func() {
+	done = func() {
 		doneCallCount++
 	}
-	Pl = func(text string) {
+	pl = func(text string) {
 		assert.Equal(t, "Running installation ... ", text)
 	}
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	ExecuteWithOutput = func(c string) {
+	executeWithOutput = func(c string) {
 		assert.Equal(t, filePath, c)
 	}
 	// Execute test
