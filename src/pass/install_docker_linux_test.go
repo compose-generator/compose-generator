@@ -75,7 +75,7 @@ func TestInstallDocker3(t *testing.T) {
 		return false
 	}
 	p = func(text string) {
-		assert.Fail(t, "Unexpected call of P")
+		assert.Fail(t, "Unexpected call of p")
 	}
 	// Execute test
 	InstallDocker()

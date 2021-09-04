@@ -78,7 +78,7 @@ func TestAddVolumes2(t *testing.T) {
 		return false
 	}
 	pel = func() {
-		assert.Fail(t, "Unexpected call of Pel")
+		assert.Fail(t, "Unexpected call of pel")
 	}
 	// Execute test
 	AddVolumes(service, project, cli)
@@ -198,7 +198,7 @@ func TestAskForExistingExternalVolume1(t *testing.T) {
 		}, nil
 	}
 	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of Error")
+		assert.Fail(t, "Unexpected call of printError")
 	}
 	menuQuestionIndex = func(label string, items []string) int {
 		assert.Equal(t, "Which one?", label)
@@ -210,7 +210,7 @@ func TestAskForExistingExternalVolume1(t *testing.T) {
 		return "./directory/inside/container.conf"
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
-		assert.Fail(t, "Unexpected call of YesNoQuestion")
+		assert.Fail(t, "Unexpected call of yesNoQuestion")
 		return false
 	}
 	// Execute test
@@ -274,7 +274,7 @@ func TestAskForExistingExternalVolume2(t *testing.T) {
 		}, nil
 	}
 	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of Error")
+		assert.Fail(t, "Unexpected call of printError")
 	}
 	menuQuestionIndex = func(label string, items []string) int {
 		assert.Equal(t, "Which one?", label)
@@ -354,10 +354,10 @@ func TestAskForNewExternalVolume1(t *testing.T) {
 		return nil
 	}
 	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of Error")
+		assert.Fail(t, "Unexpected call of printError")
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
-		assert.Fail(t, "Unexpected call of YesNoQuestion")
+		assert.Fail(t, "Unexpected call of yesNoQuestion")
 		return false
 	}
 	// Execute test
@@ -422,7 +422,7 @@ func TestAskForNewExternalVolume2(t *testing.T) {
 		return nil
 	}
 	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of Error")
+		assert.Fail(t, "Unexpected call of printError")
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to make the volume read-only?", question)
@@ -468,7 +468,7 @@ func TestAskForFileVolume1(t *testing.T) {
 		return innerDir
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
-		assert.Fail(t, "Unexpected call of YesNoQuestion")
+		assert.Fail(t, "Unexpected call of yesNoQuestion")
 		return false
 	}
 	// Execute test

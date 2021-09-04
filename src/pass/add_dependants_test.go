@@ -94,7 +94,7 @@ func TestAddDependants2(t *testing.T) {
 		return []string{}
 	}
 	pel = func() {
-		assert.Fail(t, "Unexpected call of Pel")
+		assert.Fail(t, "Unexpected call of pel")
 	}
 	// Execute test
 	AddDependants(service, project)

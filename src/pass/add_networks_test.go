@@ -75,7 +75,7 @@ func TestAddNetworks2(t *testing.T) {
 		return false
 	}
 	pel = func() {
-		assert.Fail(t, "Unexpected call of Pel")
+		assert.Fail(t, "Unexpected call of pel")
 	}
 	// Execute test
 	AddNetworks(service, project, cli)
@@ -132,7 +132,7 @@ func TestAskForExternalNetwork1(t *testing.T) {
 		return testNetworkName
 	}
 	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of Error")
+		assert.Fail(t, "Unexpected call of printError")
 	}
 	// Execute test
 	askForExternalNetwork(service, project, cli)
@@ -242,7 +242,7 @@ func TestAskForNewNetwork2(t *testing.T) {
 	}
 	// Mock functions
 	CreateDockerNetwork = func(_ *client.Client, networkName string) error {
-		assert.Fail(t, "Unexpected call of CreateDockerNetwork")
+		assert.Fail(t, "Unexpected call of createDockerNetwork")
 		return errors.New("Error")
 	}
 	textQuestion = func(question string) string {

@@ -85,7 +85,7 @@ func TestAddPorts2(t *testing.T) {
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
 	pel = func() {
-		assert.Fail(t, "Unexpected call of Pel")
+		assert.Fail(t, "Unexpected call of pel")
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to expose ports of your service?", question)

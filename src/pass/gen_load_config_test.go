@@ -51,7 +51,7 @@ func TestLoadGenerateConfig1(t *testing.T) {
 		return false
 	}
 	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of Error")
+		assert.Fail(t, "Unexpected call of printError")
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, "")

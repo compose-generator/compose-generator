@@ -69,7 +69,7 @@ func TestAddDepends2(t *testing.T) {
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
 	pel = func() {
-		assert.Fail(t, "Unexpected call of Pel")
+		assert.Fail(t, "Unexpected call of pel")
 	}
 	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want your service depend on other services?", question)
