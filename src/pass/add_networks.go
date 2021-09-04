@@ -23,7 +23,7 @@ var ListDockerNetworks = func(client *client.Client) ([]types.NetworkResource, e
 }
 
 var askForExternalNetworkMockable = askForExternalNetwork
-var askForNewNetworkMockable = askForExternalNetwork
+var askForNewNetworkMockable = askForNewNetwork
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
