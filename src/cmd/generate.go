@@ -54,6 +54,9 @@ func Generate(
 	project.SaveProject(proj)
 	util.Done()
 
+	// Print generated secrets
+	pass.GeneratePrintSecrets(proj)
+
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)

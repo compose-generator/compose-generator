@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/compose-generator/diu"
+	"github.com/fatih/color"
 	"github.com/sethvargo/go-password/password"
 	"gopkg.in/yaml.v2"
 )
@@ -30,6 +31,7 @@ var pl = util.Pl
 var pel = util.Pel
 var done = util.Done
 var success = util.Success
+var printSecretValue = color.Yellow
 var fileExists = util.FileExists
 var isDir = util.IsDir
 var executeOnLinux = util.ExecuteOnLinux
