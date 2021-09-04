@@ -3,8 +3,11 @@ package pass
 import (
 	"compose-generator/model"
 	"compose-generator/util"
+	"io/ioutil"
+	"os"
 
 	"github.com/compose-generator/diu"
+	"gopkg.in/yaml.v2"
 )
 
 // Function list for mocking
@@ -20,6 +23,7 @@ var MultiSelectMenuQuestionIndex = util.MultiSelectMenuQuestionIndex
 var MultiSelectMenuQuestion = util.MultiSelectMenuQuestion
 var Error = util.Error
 var GetImageManifest = diu.GetImageManifest
+var Heading = util.Heading
 var P = util.P
 var Pl = util.Pl
 var Pel = util.Pel
@@ -36,6 +40,9 @@ var TemplateListToLabelList = util.TemplateListToLabelList
 var TemplateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
 var AskTemplateQuestions = util.AskTemplateQuestions
 var AskForCustomVolumePaths = util.AskForCustomVolumePaths
+var UnmarshalYaml = yaml.Unmarshal
+var OpenFile = os.Open
+var ReadAllFromFile = ioutil.ReadAll
 var GetServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 	return config.GetServiceConfigurationsByName(templateType)
 }
