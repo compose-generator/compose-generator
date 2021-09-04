@@ -136,8 +136,11 @@ func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProje
 		ReadOnly: readOnly,
 	})
 	// Add the volume to the project-wide volume section
+	if project.Composition == nil {
+		project.Composition = &spec.Project{}
+	}
 	if project.Composition.Volumes == nil {
-		project.Composition.Volumes = make(spec.Volumes)
+		project.Composition.Volumes = spec.Volumes{}
 	}
 	project.Composition.Volumes[name] = spec.VolumeConfig{
 		Name: name,

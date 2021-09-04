@@ -299,6 +299,143 @@ func TestAskForExistingExternalVolume2(t *testing.T) {
 
 // --------------------------------------------- askForExistingExternalVolume ---------------------------------------------
 
+func TestAskForNewExternalVolume1(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			AdvancedConfig: false,
+		},
+	}
+	service := &spec.ServiceConfig{}
+	expectedService := &spec.ServiceConfig{
+		Volumes: []spec.ServiceVolumeConfig{
+			{
+				Source:   "Test volume",
+				Target:   "file-inside-container.spice",
+				Type:     spec.VolumeTypeVolume,
+				ReadOnly: false,
+			},
+		},
+	}
+	expectedProject := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			AdvancedConfig: false,
+		},
+		Composition: &spec.Project{
+			Volumes: spec.Volumes{
+				"Test volume": {
+					Name: "Test volume",
+					External: spec.External{
+						Name:     "Test volume",
+						External: true,
+					},
+				},
+			},
+		},
+	}
+	cli, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		assert.Fail(t, "Could not create Docker client for testing")
+	}
+	// Mock functions
+	textQuestionCallCount := 0
+	TextQuestion = func(question string) string {
+		textQuestionCallCount++
+		if textQuestionCallCount == 1 {
+			assert.Equal(t, "How do you want to call your external volume?", question)
+			return "Test volume"
+		} else {
+			assert.Equal(t, "Directory / file inside the container:", question)
+			return "file-inside-container.spice"
+		}
+	}
+	CreateDockerVolume = func(client *client.Client, volumeName string) error {
+		assert.Equal(t, "Test volume", volumeName)
+		return nil
+	}
+	Error = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of Error")
+	}
+	YesNoQuestion = func(question string, defaultValue bool) bool {
+		assert.Fail(t, "Unexpected call of YesNoQuestion")
+		return false
+	}
+	// Execute test
+	askForNewExternalVolume(service, project, cli)
+	// Assert
+	assert.Equal(t, expectedService, service)
+	assert.Equal(t, expectedProject, project)
+}
+
+func TestAskForNewExternalVolume2(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			AdvancedConfig: true,
+		},
+	}
+	service := &spec.ServiceConfig{}
+	expectedService := &spec.ServiceConfig{
+		Volumes: []spec.ServiceVolumeConfig{
+			{
+				Source:   "Test volume",
+				Target:   "file-inside-container.spice",
+				Type:     spec.VolumeTypeVolume,
+				ReadOnly: true,
+			},
+		},
+	}
+	expectedProject := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			AdvancedConfig: true,
+		},
+		Composition: &spec.Project{
+			Volumes: spec.Volumes{
+				"Test volume": {
+					Name: "Test volume",
+					External: spec.External{
+						Name:     "Test volume",
+						External: true,
+					},
+				},
+			},
+		},
+	}
+	cli, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		assert.Fail(t, "Could not create Docker client for testing")
+	}
+	// Mock functions
+	textQuestionCallCount := 0
+	TextQuestion = func(question string) string {
+		textQuestionCallCount++
+		if textQuestionCallCount == 1 {
+			assert.Equal(t, "How do you want to call your external volume?", question)
+			return "Test volume"
+		} else {
+			assert.Equal(t, "Directory / file inside the container:", question)
+			return "file-inside-container.spice"
+		}
+	}
+	CreateDockerVolume = func(client *client.Client, volumeName string) error {
+		assert.Equal(t, "Test volume", volumeName)
+		return nil
+	}
+	Error = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of Error")
+	}
+	YesNoQuestion = func(question string, defaultValue bool) bool {
+		assert.Equal(t, "Do you want to make the volume read-only?", question)
+		assert.False(t, defaultValue)
+		return true
+	}
+	// Execute test
+	askForNewExternalVolume(service, project, cli)
+	// Assert
+	assert.Equal(t, expectedService, service)
+	assert.Equal(t, expectedProject, project)
+}
+
 // ----------------------------------------------- askForNewExternalVolume ------------------------------------------------
 
 func TestAskForFileVolume1(t *testing.T) {
