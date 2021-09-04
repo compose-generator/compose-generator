@@ -15,7 +15,7 @@ func GenerateChooseDatabases(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeDatabase)
+		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeDatabase)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
@@ -39,17 +39,17 @@ func GenerateChooseDatabases(
 	} else {
 		// Generate from user input
 		availableDatabases := available.DatabaseServices
-		items := TemplateListToLabelList(availableDatabases)
-		itemsPreselected := TemplateListToPreselectedLabelList(availableDatabases, selected)
-		templateSelections := MultiSelectMenuQuestionIndex("Which database services do you need?", items, itemsPreselected)
+		items := templateListToLabelList(availableDatabases)
+		itemsPreselected := templateListToPreselectedLabelList(availableDatabases, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which database services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			Pel()
+			pel()
 			// Get selected template config
 			selectedConfig := available.DatabaseServices[index]
 			// Ask questions to the user
-			AskTemplateQuestions(project, &selectedConfig)
+			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			AskForCustomVolumePaths(project, &selectedConfig)
+			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.DatabaseServices = append(selected.DatabaseServices, selectedConfig)
 		}

@@ -15,7 +15,7 @@ func GenerateChooseFrontends(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeFrontend)
+		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeFrontend)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
@@ -39,17 +39,17 @@ func GenerateChooseFrontends(
 	} else {
 		// Generate from user input
 		availableFrontends := available.FrontendServices
-		items := TemplateListToLabelList(availableFrontends)
-		itemsPreselected := TemplateListToPreselectedLabelList(availableFrontends, selected)
-		templateSelections := MultiSelectMenuQuestionIndex("Which frontend services do you need?", items, itemsPreselected)
+		items := templateListToLabelList(availableFrontends)
+		itemsPreselected := templateListToPreselectedLabelList(availableFrontends, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which frontend services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			Pel()
+			pel()
 			// Get selected template config
 			selectedConfig := available.FrontendServices[index]
 			// Ask questions to the user
-			AskTemplateQuestions(project, &selectedConfig)
+			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			AskForCustomVolumePaths(project, &selectedConfig)
+			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.FrontendServices = append(selected.FrontendServices, selectedConfig)
 		}

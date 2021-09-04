@@ -42,15 +42,15 @@ func TestAddDepends1(t *testing.T) {
 	}
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want your service depend on other services?", question)
 		assert.False(t, defaultValue)
 		return true
 	}
-	MultiSelectMenuQuestion = func(label string, items []string) (result []string) {
+	multiSelectMenuQuestion = func(label string, items []string) (result []string) {
 		assert.Equal(t, "Which ones?", label)
 		assert.EqualValues(t, []string{"Service 1", "Service 2", "Service 3"}, items)
 		return []string{"Service 2", "Service 1"}
@@ -68,10 +68,10 @@ func TestAddDepends2(t *testing.T) {
 	project := &model.CGProject{}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
-	Pel = func() {
-		assert.Fail(t, "Unexpected call of Pel")
+	pel = func() {
+		assert.Fail(t, "Unexpected call of pel")
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want your service depend on other services?", question)
 		assert.False(t, defaultValue)
 		return false

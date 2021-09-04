@@ -17,10 +17,10 @@ func TestAddName1(t *testing.T) {
 	testName := "Test name"
 	testContainerName := "test-name"
 	// Mock user input
-	TextQuestionWithDefault = func(question, defaultValue string) string {
+	textQuestionWithDefault = func(question, defaultValue string) string {
 		return testName
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Fail(t, "Error function was called")
 	}
 	// Execute test
@@ -47,14 +47,14 @@ func TestAddName2(t *testing.T) {
 	}
 	// Mock user input
 	callCounter := 0
-	TextQuestionWithDefault = func(question, defaultValue string) string {
+	textQuestionWithDefault = func(question, defaultValue string) string {
 		callCounter++
 		if callCounter == 2 {
 			return testName2
 		}
 		return testName1
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		if callCounter == 2 {
 			assert.Fail(t, "Error function was called")
 		} else {

@@ -32,11 +32,11 @@ func TestAddPorts1(t *testing.T) {
 	}
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
 	yesNoCallCount := 0
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		yesNoCallCount++
 		switch yesNoCallCount {
 		case 1:
@@ -53,7 +53,7 @@ func TestAddPorts1(t *testing.T) {
 		return true
 	}
 	textQuestionCallCount := 0
-	TextQuestionWithValidator = func(question string, fn survey.Validator) string {
+	textQuestionWithValidator = func(question string, fn survey.Validator) string {
 		textQuestionCallCount++
 		switch textQuestionCallCount {
 		case 1:
@@ -84,10 +84,10 @@ func TestAddPorts2(t *testing.T) {
 	project := &model.CGProject{}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
-	Pel = func() {
-		assert.Fail(t, "Unexpected call of Pel")
+	pel = func() {
+		assert.Fail(t, "Unexpected call of pel")
 	}
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to expose ports of your service?", question)
 		assert.False(t, defaultValue)
 		return false

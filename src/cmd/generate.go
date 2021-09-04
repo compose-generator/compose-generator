@@ -39,7 +39,7 @@ func Generate(
 		},
 		ForceConfig: flagForce,
 		Vars:        make(map[string]string),
-		Secrets:     make(map[string]string),
+		Secrets:     []model.ProjectSecret{},
 	}
 	config := &model.GenerateConfig{}
 
@@ -53,6 +53,9 @@ func Generate(
 	util.P("Saving project ... ")
 	project.SaveProject(proj)
 	util.Done()
+
+	// Print generated secrets
+	pass.GeneratePrintSecrets(proj)
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -83,8 +86,8 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		FrontendServices: []model.PredefinedTemplateConfig{},
 		BackendServices:  []model.PredefinedTemplateConfig{},
 		DatabaseServices: []model.PredefinedTemplateConfig{},
-		DbAdminServices:   []model.PredefinedTemplateConfig{},
-		ProxyService:    []model.PredefinedTemplateConfig{},
+		DbAdminServices:  []model.PredefinedTemplateConfig{},
+		ProxyService:     []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
 	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)
@@ -98,7 +101,7 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 
 	// Execute passes
 	pass.Generate(project, selectedTemplates)
-	pass.GenerateSecrets(project)
+	pass.GenerateSecrets(project, selectedTemplates)
 	pass.GenerateCopyVolumes(project)
 	pass.GenerateExecServiceInitCommands(project, selectedTemplates)
 	pass.GenerateExecDemoAppInitCommands(project, selectedTemplates)

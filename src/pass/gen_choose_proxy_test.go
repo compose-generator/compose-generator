@@ -61,7 +61,7 @@ func TestGenerateChooseProxies1(t *testing.T) {
 		},
 	}
 	// Mock functions
-	GetServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
+	getServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 		assert.Equal(t, model.TemplateTypeProxy, templateType)
 		return []model.ServiceConfig{
 			{
@@ -129,27 +129,27 @@ func TestGenerateChooseProxies2(t *testing.T) {
 		},
 	}
 	// Mock functions
-	TemplateListToLabelList = func(templates []model.PredefinedTemplateConfig) []string {
+	templateListToLabelList = func(templates []model.PredefinedTemplateConfig) []string {
 		assert.Equal(t, expectedSelected.ProxyService, templates)
 		return []string{"Test Proxy"}
 	}
-	TemplateListToPreselectedLabelList = func(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) []string {
+	templateListToPreselectedLabelList = func(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) []string {
 		assert.Equal(t, expectedSelected.ProxyService, templates)
 		return []string{}
 	}
-	MultiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
+	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
 		assert.Equal(t, "Which proxy services do you need?", label)
 		assert.Equal(t, []string{"Test Proxy"}, items)
 		return []int{0}
 	}
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	AskTemplateQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
+	askTemplateQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 		assert.Equal(t, available.ProxyService[0], *template)
 	}
-	AskForCustomVolumePaths = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
+	askForCustomVolumePaths = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 		assert.Equal(t, available.ProxyService[0], *template)
 	}
 	// Execute test

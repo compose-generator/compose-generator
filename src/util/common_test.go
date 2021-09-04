@@ -1,7 +1,6 @@
 package util
 
 import (
-	"compose-generator/model"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,27 +17,6 @@ func TestReplaceVarsInString(t *testing.T) {
 	input := "Lorem ${{var1}} dolor sit amet, ${{var2}} sadipscing elitr, ${{var3}} diam nonumy"
 	output := ReplaceVarsInString(input, vars)
 	assert.Equal(t, "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy", output)
-}
-
-// ------------------------------------------ GenerateSecrets ------------------------------------------
-
-func TestGenerateSecretsAndReplaceInString(t *testing.T) {
-	var secrets = []model.Secret{
-		{
-			Name:     "MySQL root password",
-			Variable: "_PW_MYSQL_ROOT",
-			Length:   50,
-		},
-		{
-			Name:     "MySQL application password",
-			Variable: "_PW_MYSQL_APPLICATION",
-			Length:   30,
-		},
-	}
-	content := "Here goes the root pw: ${{_PW_MYSQL_ROOT}}\nand here goes the app pw: ${{_PW_MYSQL_APPLICATION}}"
-	secretsMap := generateSecretsAndReplaceInString(&content, secrets)
-	assert.Equal(t, 50, len(secretsMap["MySQL root password"]))
-	assert.Equal(t, 30, len(secretsMap["MySQL application password"]))
 }
 
 // ------------------------------------------ TestSliceContainsString ------------------------------------------

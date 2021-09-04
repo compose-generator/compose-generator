@@ -15,7 +15,7 @@ func GenerateChooseDbAdmins(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeDbAdmin)
+		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeDbAdmin)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
@@ -39,17 +39,17 @@ func GenerateChooseDbAdmins(
 	} else {
 		// Generate from user input
 		availableDbAdmins := available.DbAdminServices
-		items := TemplateListToLabelList(availableDbAdmins)
-		itemsPreselected := TemplateListToPreselectedLabelList(availableDbAdmins, selected)
-		templateSelections := MultiSelectMenuQuestionIndex("Which db admin services do you need?", items, itemsPreselected)
+		items := templateListToLabelList(availableDbAdmins)
+		itemsPreselected := templateListToPreselectedLabelList(availableDbAdmins, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which db admin services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			Pel()
+			pel()
 			// Get selected template config
 			selectedConfig := available.DbAdminServices[index]
 			// Ask questions to the user
-			AskTemplateQuestions(project, &selectedConfig)
+			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			AskForCustomVolumePaths(project, &selectedConfig)
+			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.DbAdminServices = append(selected.DbAdminServices, selectedConfig)
 		}

@@ -34,10 +34,10 @@ var askForNewExternalVolumeMockable = askForNewExternalVolume
 
 // AddVolumes ask the user if he/she wants to add volumes to the configuration
 func AddVolumes(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
-	if YesNoQuestion("Do you want to add volumes to your service?", false) {
-		Pel()
-		for ok := true; ok; ok = YesNoQuestion("Add another volume?", true) {
-			globalVolume := YesNoQuestion("Do you want to add an existing external volume (y) or link a directory / file (N)?", false)
+	if yesNoQuestion("Do you want to add volumes to your service?", false) {
+		pel()
+		for ok := true; ok; ok = yesNoQuestion("Add another volume?", true) {
+			globalVolume := yesNoQuestion("Do you want to add an existing external volume (y) or link a directory / file (N)?", false)
 			if globalVolume {
 				askForExternalVolumeMockable(service, project, client)
 			} else {
@@ -50,7 +50,7 @@ func AddVolumes(service *spec.ServiceConfig, project *model.CGProject, client *c
 // ---------------------------------------------------------------- Private functions --------------------------------------------------------------
 
 func askForExternalVolume(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
-	if YesNoQuestion("Do you want to select an existing one (Y) or do you want to create one (n)?", true) {
+	if yesNoQuestion("Do you want to select an existing one (Y) or do you want to create one (n)?", true) {
 		askForExistingExternalVolumeMockable(service, project, client)
 	} else {
 		askForNewExternalVolumeMockable(service, project, client)
@@ -61,11 +61,11 @@ func askForExistingExternalVolume(service *spec.ServiceConfig, project *model.CG
 	// Search for external volumes
 	externalVolumes, err := ListDockerVolumes(client)
 	if err != nil {
-		Error("Error parsing external volumes", err, false)
+		printError("Error parsing external volumes", err, false)
 		return
 	}
 	if externalVolumes.Volumes == nil || len(externalVolumes.Volumes) == 0 {
-		Error("There is no external volume existing", nil, false)
+		printError("There is no external volume existing", nil, false)
 		return
 	}
 	// Let the user choose one
@@ -73,17 +73,17 @@ func askForExistingExternalVolume(service *spec.ServiceConfig, project *model.CG
 	for _, volume := range externalVolumes.Volumes {
 		menuItems = append(menuItems, volume.Name+" | Driver: "+volume.Driver)
 	}
-	index := MenuQuestionIndex("Which one?", menuItems)
+	index := menuQuestionIndex("Which one?", menuItems)
 	selectedVolume := externalVolumes.Volumes[index]
 
 	// Ask for inner path
-	volumeInner := TextQuestion("Directory / file inside the container:")
+	volumeInner := textQuestion("Directory / file inside the container:")
 	volumeInner = filepath.ToSlash(volumeInner)
 
 	// Ask for read-only
 	readOnly := false
 	if project.AdvancedConfig {
-		readOnly = YesNoQuestion("Do you want to make the volume read-only?", false)
+		readOnly = yesNoQuestion("Do you want to make the volume read-only?", false)
 	}
 
 	// Add the volume to the service
@@ -111,21 +111,21 @@ func askForExistingExternalVolume(service *spec.ServiceConfig, project *model.CG
 
 func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
 	// Ask user for volume name
-	name := TextQuestion("How do you want to call your external volume?")
+	name := textQuestion("How do you want to call your external volume?")
 	// Add external volume
 	err := CreateDockerVolume(client, name)
 	if err != nil {
-		Error("Could not create external volume", err, false)
+		printError("Could not create external volume", err, false)
 		return
 	}
 
 	// Ask for inner path
-	volumeInner := TextQuestion("Directory / file inside the container:")
+	volumeInner := textQuestion("Directory / file inside the container:")
 
 	// Ask for read-only
 	readOnly := false
 	if project.AdvancedConfig {
-		readOnly = YesNoQuestion("Do you want to make the volume read-only?", false)
+		readOnly = yesNoQuestion("Do you want to make the volume read-only?", false)
 	}
 
 	// Add the volume to the service
@@ -153,7 +153,7 @@ func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProje
 
 func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
 	// Ask for outer path
-	volumeOuter := TextQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) []string {
+	volumeOuter := textQuestionWithSuggestions("Directory / file on host machine:", func(toComplete string) []string {
 		files, _ := filepath.Glob(toComplete + "*")
 		return files
 	})
@@ -163,13 +163,13 @@ func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
 	}
 
 	// Ask for inner path
-	volumeInner := TextQuestion("Directory / file inside the container:")
+	volumeInner := textQuestion("Directory / file inside the container:")
 	volumeInner = strings.TrimSpace(volumeInner)
 
 	// Ask for read-only
 	readOnly := false
 	if project.AdvancedConfig {
-		readOnly = YesNoQuestion("Do you want to make the volume read-only?", false)
+		readOnly = yesNoQuestion("Do you want to make the volume read-only?", false)
 	}
 
 	service.Volumes = append(service.Volumes, spec.ServiceVolumeConfig{

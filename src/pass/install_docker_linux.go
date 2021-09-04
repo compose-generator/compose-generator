@@ -9,15 +9,15 @@ const downloadUrl = "https://get.docker.com"
 
 // InstallDocker installs Docker on the system
 func InstallDocker() {
-	if IsPrivileged() {
-		P("Installing Docker ... ")
+	if isPrivileged() {
+		p("Installing Docker ... ")
 		filePath := os.TempDir() + "/install-docker.sh"
-		err := DownloadFile(downloadUrl, filePath)
+		err := downloadFile(downloadUrl, filePath)
 		if err != nil {
-			Error("Download of Docker install script failed", err, true)
+			printError("Download of Docker install script failed", err, true)
 		}
-		ExecuteAndWait("chmod", "+x", filePath)
-		ExecuteAndWait("sh", filePath)
-		Done()
+		executeAndWait("chmod", "+x", filePath)
+		executeAndWait("sh", filePath)
+		done()
 	}
 }

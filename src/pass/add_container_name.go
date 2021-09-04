@@ -10,5 +10,5 @@ import (
 
 // AddContainerName asks the user if he/she wants to set the container name of a service
 func AddContainerName(service *spec.ServiceConfig, project *model.CGProject) {
-	service.ContainerName = TextQuestionWithDefault("How do you want to call your container (best practice: lower, kebab cased):", service.ContainerName)
+	service.ContainerName = textQuestionWithDefault("How do you want to call your container (best practice: lower, kebab cased):", service.ContainerName)
 }

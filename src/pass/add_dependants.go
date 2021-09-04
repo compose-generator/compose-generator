@@ -10,9 +10,9 @@ import (
 
 // AddDependants asks the user if he/she wants to let other services depend on a service
 func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
-	if YesNoQuestion("Do you want other services depend on the new one?", false) {
-		Pel()
-		selectedServices := MultiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
+	if yesNoQuestion("Do you want other services depend on the new one?", false) {
+		pel()
+		selectedServices := multiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
 		// Add service dependencies
 		for _, name := range selectedServices {
 			otherService, err := project.Composition.GetService(name)
@@ -28,6 +28,6 @@ func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 				Condition: spec.ServiceConditionStarted,
 			}
 		}
-		Pel()
+		pel()
 	}
 }

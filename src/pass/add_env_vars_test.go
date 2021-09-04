@@ -24,11 +24,11 @@ func TestAddEnvVars(t *testing.T) {
 	}
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
 	yesNoCallCount := 0
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		yesNoCallCount++
 		switch yesNoCallCount {
 		case 1:
@@ -44,14 +44,14 @@ func TestAddEnvVars(t *testing.T) {
 		}
 		return true
 	}
-	TextQuestionWithValidator = func(question string, fn survey.Validator) string {
+	textQuestionWithValidator = func(question string, fn survey.Validator) string {
 		assert.Equal(t, "Variable name (BEST_PRACTICE_IS_CAPS):", question)
 		if yesNoCallCount == 1 {
 			return "VARIABLE1_NAME"
 		}
 		return "VARIABLE2_NAME"
 	}
-	TextQuestion = func(question string) string {
+	textQuestion = func(question string) string {
 		assert.Equal(t, "Variable value:", question)
 		if yesNoCallCount == 1 {
 			return "value 1"
