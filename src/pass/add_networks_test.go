@@ -21,7 +21,7 @@ func TestAddNetworks1(t *testing.T) {
 		assert.Fail(t, "Could not create Docker client for testing")
 	}
 	yesNoCallCount := 0
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		yesNoCallCount++
 		switch yesNoCallCount {
 		case 1:
@@ -54,7 +54,7 @@ func TestAddNetworks1(t *testing.T) {
 			assert.Fail(t, "Unexpected call of askForNewNetwork")
 		}
 	}
-	Pel = func() {}
+	pel = func() {}
 	// Execute test
 	AddNetworks(service, project, cli)
 }
@@ -69,12 +69,12 @@ func TestAddNetworks2(t *testing.T) {
 	if err != nil {
 		assert.Fail(t, "Could not create Docker client for testing")
 	}
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to add networks to your service?", question)
 		assert.False(t, defaultValue)
 		return false
 	}
-	Pel = func() {
+	pel = func() {
 		assert.Fail(t, "Unexpected call of Pel")
 	}
 	// Execute test
@@ -121,17 +121,17 @@ func TestAskForExternalNetwork1(t *testing.T) {
 			},
 		}, nil
 	}
-	MenuQuestionIndex = func(label string, items []string) int {
+	menuQuestionIndex = func(label string, items []string) int {
 		assert.Equal(t, "Which one?", label)
 		assert.EqualValues(t, []string{"Existing network 1", "Existing network 2"}, items)
 		return 1
 	}
-	TextQuestionWithDefault = func(question, defaultValue string) string {
+	textQuestionWithDefault = func(question, defaultValue string) string {
 		assert.Equal(t, "How do you want to call the network internally?", question)
 		assert.Equal(t, "Existing network 2", defaultValue)
 		return testNetworkName
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Fail(t, "Unexpected call of Error")
 	}
 	// Execute test
@@ -155,11 +155,11 @@ func TestAskForExternalNetwork2(t *testing.T) {
 	ListDockerNetworks = func(client *client.Client) ([]types.NetworkResource, error) {
 		return []types.NetworkResource{}, nil
 	}
-	MenuQuestionIndex = func(label string, items []string) int {
+	menuQuestionIndex = func(label string, items []string) int {
 		assert.Fail(t, "Unexpected call of MenuQuestionIndex")
 		return 0
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "There is no external network existing", description)
 		assert.Nil(t, err)
 		assert.False(t, exit)
@@ -203,11 +203,11 @@ func TestAskForNewNetwork1(t *testing.T) {
 		assert.Equal(t, testNetworkName, networkName)
 		return nil
 	}
-	TextQuestion = func(question string) string {
+	textQuestion = func(question string) string {
 		assert.Equal(t, "How do you want to call the new network?", question)
 		return testNetworkName
 	}
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to create it as an external network and link it in?", question)
 		assert.False(t, defaultValue)
 		return true
@@ -245,16 +245,16 @@ func TestAskForNewNetwork2(t *testing.T) {
 		assert.Fail(t, "Unexpected call of CreateDockerNetwork")
 		return errors.New("Error")
 	}
-	TextQuestion = func(question string) string {
+	textQuestion = func(question string) string {
 		assert.Equal(t, "How do you want to call the new network?", question)
 		return testNetworkName
 	}
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to create it as an external network and link it in?", question)
 		assert.False(t, defaultValue)
 		return false
 	}
-	Error = func(description string, err error, exit bool) {}
+	printError = func(description string, err error, exit bool) {}
 	// Execute test
 	askForNewNetwork(service, project, cli)
 	// Assert

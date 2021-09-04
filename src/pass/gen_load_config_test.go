@@ -31,26 +31,26 @@ func TestLoadGenerateConfig1(t *testing.T) {
 		ProductionReady: false,
 	}
 	// Mock functions
-	Heading = func(text string) {
+	heading = func(text string) {
 		assert.Equal(t, "Welcome to Compose Generator! 👋", text)
 	}
-	Pl = func(text string) {
+	pl = func(text string) {
 		assert.Equal(t, "Please continue by answering a few questions:", text)
 	}
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	TextQuestion = func(question string) string {
+	textQuestion = func(question string) string {
 		assert.Equal(t, "What is the name of your project:", question)
 		return projectName
 	}
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want the output to be production-ready?", question)
 		assert.False(t, defaultValue)
 		return false
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Fail(t, "Unexpected call of Error")
 	}
 	// Execute test
@@ -107,18 +107,18 @@ func TestLoadGenerateConfig2(t *testing.T) {
 		},
 	}
 	// Mock functions
-	FileExists = func(path string) bool {
+	fileExists = func(path string) bool {
 		assert.Equal(t, configPath, path)
 		return true
 	}
-	OpenFile = func(name string) (*os.File, error) {
+	openFile = func(name string) (*os.File, error) {
 		assert.Equal(t, configPath, name)
 		return nil, nil
 	}
-	ReadAllFromFile = func(r io.Reader) ([]byte, error) {
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
 		return []byte{}, nil
 	}
-	UnmarshalYaml = func(in []byte, out interface{}) error {
+	unmarshalYaml = func(in []byte, out interface{}) error {
 		return nil
 	}
 	// Execute test

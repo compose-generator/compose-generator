@@ -11,9 +11,9 @@ import (
 // AddRestart asks the user if he/she wants to add the restart attribute to the configuration
 func AddRestart(service *spec.ServiceConfig, project *model.CGProject) {
 	if project.AdvancedConfig {
-		Pel()
+		pel()
 		items := []string{"always", "on-failure", "unless-stopped", "no"}
-		service.Restart = MenuQuestion("When should the service get restarted?", items)
-		Pel()
+		service.Restart = menuQuestion("When should the service get restarted?", items)
+		pel()
 	}
 }

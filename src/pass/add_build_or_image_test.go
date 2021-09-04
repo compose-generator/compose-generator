@@ -24,21 +24,21 @@ func TestAddBuildOrImage1(t *testing.T) {
 		},
 	}
 	// Mock functions
-	TextQuestionWithDefault = func(question, defaultValue string) (result string) {
+	textQuestionWithDefault = func(question, defaultValue string) (result string) {
 		assert.Equal(t, "Where is your Dockerfile located?", question)
 		assert.Equal(t, "./Dockerfile", defaultValue)
 		return "./Dockerfile"
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Build from source?", question)
 		assert.False(t, defaultValue)
 		return true
 	}
-	Error = func(description string, err error, exit bool) {}
-	FileExists = func(path string) bool {
+	printError = func(description string, err error, exit bool) {}
+	fileExists = func(path string) bool {
 		return true
 	}
-	MenuQuestion = func(label string, items []string) (result string) {
+	menuQuestion = func(label string, items []string) (result string) {
 		return ""
 	}
 	// Execute test
@@ -52,25 +52,25 @@ func TestAddBuildOrImage2(t *testing.T) {
 	project := &model.CGProject{}
 	service := &spec.ServiceConfig{}
 	// Mock functions
-	TextQuestionWithDefault = func(question, defaultValue string) (result string) {
+	textQuestionWithDefault = func(question, defaultValue string) (result string) {
 		assert.Equal(t, "Where is your Dockerfile located?", question)
 		assert.Equal(t, "./Dockerfile", defaultValue)
 		return "./Dockerfile"
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Build from source?", question)
 		assert.False(t, defaultValue)
 		return true
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "The Dockerfile could not be found", description)
 		assert.Nil(t, err)
 		assert.True(t, exit)
 	}
-	FileExists = func(path string) bool {
+	fileExists = func(path string) bool {
 		return false
 	}
-	MenuQuestion = func(label string, items []string) (result string) {
+	menuQuestion = func(label string, items []string) (result string) {
 		return ""
 	}
 	// Execute test
@@ -94,7 +94,7 @@ func TestAddBuildOrImage3(t *testing.T) {
 	}
 	// Mock functions
 	textQuestionCallCounter := 0
-	TextQuestionWithDefault = func(question, defaultValue string) (result string) {
+	textQuestionWithDefault = func(question, defaultValue string) (result string) {
 		textQuestionCallCounter++
 		if textQuestionCallCounter == 1 {
 			assert.Equal(t, "From which registry do you want to pick?", question)
@@ -107,33 +107,33 @@ func TestAddBuildOrImage3(t *testing.T) {
 		}
 		return
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Build from source?", question)
 		assert.False(t, defaultValue)
 		return false
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "The Dockerfile could not be found", description)
 		assert.Nil(t, err)
 		assert.True(t, exit)
 	}
-	FileExists = func(path string) bool {
+	fileExists = func(path string) bool {
 		return false
 	}
-	MenuQuestion = func(label string, items []string) (result string) {
+	menuQuestion = func(label string, items []string) (result string) {
 		assert.Equal(t, "Which type is the closest match for this service?", label)
 		assert.EqualValues(t, []string{"frontend", "backend", "database", "db-admin"}, items)
 		return "backend"
 	}
-	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+	getImageManifest = func(image string) (diu.DockerManifest, error) {
 		assert.Equal(t, "ghcr.io/chillibits/spice:0.3.0", image)
 		return testManifest, nil
 	}
-	Pel = func() {}
-	P = func(text string) {
+	pel = func() {}
+	p = func(text string) {
 		assert.Equal(t, "Searching image ... ", text)
 	}
-	Success = func(text string) {
+	success = func(text string) {
 		assert.Equal(t, " found - 7 layer(s)", text)
 	}
 	// Execute test
@@ -155,20 +155,20 @@ func TestSearchRemoteImage1(t *testing.T) {
 	}
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	P = func(text string) {
+	p = func(text string) {
 		assert.Equal(t, "Searching image ... ", text)
 	}
-	Success = func(text string) {
+	success = func(text string) {
 		assert.Equal(t, " found - 7 layer(s)", text)
 	}
-	Error = func(description string, err error, exit bool) {}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	printError = func(description string, err error, exit bool) {}
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		return false
 	}
-	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+	getImageManifest = func(image string) (diu.DockerManifest, error) {
 		assert.Equal(t, "ghcr.io/chillibits/compose-generator", image)
 		return testManifest, nil
 	}
@@ -182,24 +182,24 @@ func TestSearchRemoteImage1(t *testing.T) {
 func TestSearchRemoteImage2(t *testing.T) {
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	P = func(text string) {
+	p = func(text string) {
 		assert.Equal(t, "Searching image ... ", text)
 	}
-	Success = func(text string) {}
-	Error = func(description string, err error, exit bool) {
+	success = func(text string) {}
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, " not found or no access", description)
 		assert.Nil(t, err)
 		assert.False(t, exit)
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Choose another image (Y) or proceed anyway (n)?", question)
 		assert.True(t, defaultValue)
 		return false
 	}
-	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+	getImageManifest = func(image string) (diu.DockerManifest, error) {
 		assert.Equal(t, "chillibits/compose-generator", image)
 		return diu.DockerManifest{}, errors.New("Could not parse manifest")
 	}
@@ -213,24 +213,24 @@ func TestSearchRemoteImage2(t *testing.T) {
 func TestSearchRemoteImage3(t *testing.T) {
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	P = func(text string) {
+	p = func(text string) {
 		assert.Equal(t, "Searching image ... ", text)
 	}
-	Success = func(text string) {}
-	Error = func(description string, err error, exit bool) {
+	success = func(text string) {}
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, " not found or no access", description)
 		assert.Nil(t, err)
 		assert.False(t, exit)
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Choose another image (Y) or proceed anyway (n)?", question)
 		assert.True(t, defaultValue)
 		return true
 	}
-	GetImageManifest = func(image string) (diu.DockerManifest, error) {
+	getImageManifest = func(image string) (diu.DockerManifest, error) {
 		assert.Equal(t, "chillibits/compose-generator", image)
 		return diu.DockerManifest{}, errors.New("Could not parse manifest")
 	}

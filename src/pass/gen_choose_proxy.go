@@ -15,7 +15,7 @@ func GenerateChooseProxies(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeProxy)
+		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeProxy)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
@@ -39,17 +39,17 @@ func GenerateChooseProxies(
 	} else {
 		// Generate from user input
 		availableProxies := available.ProxyService
-		items := TemplateListToLabelList(availableProxies)
-		itemsPreselected := TemplateListToPreselectedLabelList(availableProxies, selected)
-		templateSelections := MultiSelectMenuQuestionIndex("Which proxy services do you need?", items, itemsPreselected)
+		items := templateListToLabelList(availableProxies)
+		itemsPreselected := templateListToPreselectedLabelList(availableProxies, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which proxy services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			Pel()
+			pel()
 			// Get selected template config
 			selectedConfig := available.ProxyService[index]
 			// Ask questions to the user
-			AskTemplateQuestions(project, &selectedConfig)
+			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			AskForCustomVolumePaths(project, &selectedConfig)
+			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.ProxyService = append(selected.ProxyService, selectedConfig)
 		}

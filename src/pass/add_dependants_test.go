@@ -58,18 +58,18 @@ func TestAddDependants1(t *testing.T) {
 		},
 	}
 	// Mock functions
-	YesNoQuestion = func(question string, defaultValue bool) bool {
+	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want other services depend on the new one?", question)
 		assert.False(t, defaultValue)
 		return true
 	}
-	MultiSelectMenuQuestion = func(label string, items []string) (result []string) {
+	multiSelectMenuQuestion = func(label string, items []string) (result []string) {
 		assert.Equal(t, "Which ones?", label)
 		assert.EqualValues(t, []string{"Service 1", "Service 2", "Service 3"}, items)
 		return []string{"Service 1", "Service 3"}
 	}
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
 	// Execute test
@@ -85,15 +85,15 @@ func TestAddDependants2(t *testing.T) {
 	service := &spec.ServiceConfig{}
 	expectedProject := &model.CGProject{}
 	// Mock functions
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want other services depend on the new one?", question)
 		assert.False(t, defaultValue)
 		return false
 	}
-	MultiSelectMenuQuestion = func(label string, items []string) (result []string) {
+	multiSelectMenuQuestion = func(label string, items []string) (result []string) {
 		return []string{}
 	}
-	Pel = func() {
+	pel = func() {
 		assert.Fail(t, "Unexpected call of Pel")
 	}
 	// Execute test

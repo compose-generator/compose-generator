@@ -21,10 +21,10 @@ func TestAddRestart1(t *testing.T) {
 	}
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
-	MenuQuestion = func(label string, items []string) string {
+	menuQuestion = func(label string, items []string) string {
 		assert.Equal(t, "When should the service get restarted?", label)
 		assert.EqualValues(t, []string{"always", "on-failure", "unless-stopped", "no"}, items)
 		return "unless-stopped"
@@ -46,7 +46,7 @@ func TestAddRestart2(t *testing.T) {
 	service := &spec.ServiceConfig{}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
-	Pel = func() {
+	pel = func() {
 		assert.Fail(t, "Unexpected call of Pel")
 	}
 	// Execute test

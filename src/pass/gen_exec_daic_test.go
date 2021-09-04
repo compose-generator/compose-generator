@@ -30,7 +30,7 @@ func TestGenerateExecDemoAppInitCommands1(t *testing.T) {
 	}
 	// Mock functions
 	executeLinuxCallCount := 0
-	ExecuteOnLinux = func(c string) {
+	executeOnLinux = func(c string) {
 		executeLinuxCallCount++
 		if executeLinuxCallCount == 1 {
 			assert.Equal(t, "ls .;mkdir test", c)
@@ -39,11 +39,11 @@ func TestGenerateExecDemoAppInitCommands1(t *testing.T) {
 		}
 	}
 	doneCalled := false
-	Done = func() {
+	done = func() {
 		doneCalled = true
 	}
 	pCallCount := 0
-	P = func(text string) {
+	p = func(text string) {
 		pCallCount++
 		if pCallCount == 1 {
 			assert.Equal(t, "Generating demo app for Angular ... ", text)
@@ -70,7 +70,7 @@ func TestGenerateExecDemoAppInitCommands2(t *testing.T) {
 	}
 	// Mock functions
 	doneCalled := false
-	Done = func() {
+	done = func() {
 		doneCalled = true
 	}
 	// Execute test

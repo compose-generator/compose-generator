@@ -21,6 +21,6 @@ func InstallDocker() {
 	// Run Docker installer
 	Pl("Running installation ... ")
 	Pel()
-	ExecuteWithOutput(filePath)
+	executeWithOutput(filePath)
 	Pel()
 }

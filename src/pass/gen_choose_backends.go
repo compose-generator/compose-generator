@@ -15,7 +15,7 @@ func GenerateChooseBackends(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeBackend)
+		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeBackend)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
@@ -39,17 +39,17 @@ func GenerateChooseBackends(
 	} else {
 		// Generate from user input
 		availableBackends := available.BackendServices
-		items := TemplateListToLabelList(availableBackends)
-		itemsPreselected := TemplateListToPreselectedLabelList(availableBackends, selected)
-		templateSelections := MultiSelectMenuQuestionIndex("Which backends services do you need?", items, itemsPreselected)
+		items := templateListToLabelList(availableBackends)
+		itemsPreselected := templateListToPreselectedLabelList(availableBackends, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which backends services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			Pel()
+			pel()
 			// Get selected template config
 			selectedConfig := available.BackendServices[index]
 			// Ask questions to the user
-			AskTemplateQuestions(project, &selectedConfig)
+			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			AskForCustomVolumePaths(project, &selectedConfig)
+			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.BackendServices = append(selected.BackendServices, selectedConfig)
 		}

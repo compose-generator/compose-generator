@@ -11,33 +11,33 @@ import (
 func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, configPath string) {
 	if configPath == "" {
 		// Welcome Message
-		Heading("Welcome to Compose Generator! 👋")
-		Pl("Please continue by answering a few questions:")
-		Pel()
+		heading("Welcome to Compose Generator! 👋")
+		pl("Please continue by answering a few questions:")
+		pel()
 
 		// Ask the user for the config information
-		config.ProjectName = TextQuestion("What is the name of your project:")
+		config.ProjectName = textQuestion("What is the name of your project:")
 		if config.ProjectName == "" {
-			Error("You must specify a project name!", nil, true)
+			printError("You must specify a project name!", nil, true)
 		}
-		config.ProductionReady = YesNoQuestion("Do you want the output to be production-ready?", false)
+		config.ProductionReady = yesNoQuestion("Do you want the output to be production-ready?", false)
 		config.FromFile = false
 	} else {
 		// Take the given config file and load config from there
-		if FileExists(configPath) {
-			yamlFile, err := OpenFile(configPath)
+		if fileExists(configPath) {
+			yamlFile, err := openFile(configPath)
 			if err != nil {
-				Error("Could not load config file. Permissions granted?", err, true)
+				printError("Could not load config file. Permissions granted?", err, true)
 			}
-			content, err := ReadAllFromFile(yamlFile)
+			content, err := readAllFromFile(yamlFile)
 			if err != nil {
-				Error("Could not load config file. Permissions granted?", err, true)
+				printError("Could not load config file. Permissions granted?", err, true)
 			}
 			// Parse yaml
-			UnmarshalYaml(content, &config)
+			unmarshalYaml(content, &config)
 			config.FromFile = true
 		} else {
-			Error("Config file could not be found", nil, true)
+			printError("Config file could not be found", nil, true)
 		}
 	}
 

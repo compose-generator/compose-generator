@@ -21,11 +21,11 @@ func TestAddEnvFiles1(t *testing.T) {
 	}
 	// Mock functions
 	pelCallCount := 0
-	Pel = func() {
+	pel = func() {
 		pelCallCount++
 	}
 	yesNoCallCount := 0
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		yesNoCallCount++
 		switch yesNoCallCount {
 		case 1:
@@ -41,7 +41,7 @@ func TestAddEnvFiles1(t *testing.T) {
 		}
 		return true
 	}
-	TextQuestionWithDefaultAndSuggestions = func(question, defaultValue string, fn util.Suggest) string {
+	textQuestionWithDefaultAndSuggestions = func(question, defaultValue string, fn util.Suggest) string {
 		assert.Equal(t, "Where is your env file located?", question)
 		assert.Equal(t, "environment.env", defaultValue)
 		if yesNoCallCount == 1 {
@@ -49,7 +49,7 @@ func TestAddEnvFiles1(t *testing.T) {
 		}
 		return "environment.env"
 	}
-	FileExists = func(path string) bool {
+	fileExists = func(path string) bool {
 		if yesNoCallCount == 1 {
 			assert.Equal(t, "./test/env.env", path)
 		} else {
@@ -58,7 +58,7 @@ func TestAddEnvFiles1(t *testing.T) {
 		}
 		return true
 	}
-	IsDir = func(path string) bool {
+	isDir = func(path string) bool {
 		if yesNoCallCount == 1 {
 			assert.Equal(t, "./test/env.env", path)
 		} else {
@@ -66,7 +66,7 @@ func TestAddEnvFiles1(t *testing.T) {
 		}
 		return false
 	}
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "File is not valid. Please select another file", description)
 		assert.Nil(t, err)
 		assert.False(t, exit)
@@ -84,10 +84,10 @@ func TestAddEnvFiles2(t *testing.T) {
 	project := &model.CGProject{}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
-	Pel = func() {
+	pel = func() {
 		assert.Fail(t, "Unexpected call of Pel")
 	}
-	YesNoQuestion = func(question string, defaultValue bool) (result bool) {
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want to provide environment files to your service?", question)
 		assert.False(t, defaultValue)
 		return false
