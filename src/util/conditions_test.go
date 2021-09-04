@@ -19,7 +19,7 @@ var templateData = &model.SelectedTemplates{
 }
 
 var templateData2 = &model.SelectedTemplates{
-	DbAdminService: []model.PredefinedTemplateConfig{
+	DbAdminServices: []model.PredefinedTemplateConfig{
 		{Label: "PhpMyAdmin", Name: "phpmyadmin"},
 	},
 	TlsHelperService: []model.PredefinedTemplateConfig{

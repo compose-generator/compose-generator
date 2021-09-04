@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -16,8 +15,11 @@ func GenerateChooseDbAdmins(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := config.GetServiceConfigurationsByName(model.TemplateTypeDbAdmin)
-		for _, template := range available.DbAdminService {
+		selectedServiceConfigs := GetServiceConfigurationsByName(config, model.TemplateTypeDbAdmin)
+		if project.Vars == nil {
+			project.Vars = make(map[string]string)
+		}
+		for _, template := range available.DbAdminServices {
 			for _, selectedConfig := range selectedServiceConfigs {
 				if template.Name == selectedConfig.Name {
 					// Add vars to project
@@ -29,27 +31,27 @@ func GenerateChooseDbAdmins(
 						}
 					}
 					// Add template to selected templates
-					selected.DbAdminService = append(selected.DbAdminService, template)
+					selected.DbAdminServices = append(selected.DbAdminServices, template)
 					break
 				}
 			}
 		}
 	} else {
 		// Generate from user input
-		availableDbAdmins := available.DbAdminService
-		items := util.TemplateListToLabelList(availableDbAdmins)
-		itemsPreselected := util.TemplateListToPreselectedLabelList(availableDbAdmins, selected)
-		templateSelections := util.MultiSelectMenuQuestionIndex("Which db admin services do you need?", items, itemsPreselected)
+		availableDbAdmins := available.DbAdminServices
+		items := TemplateListToLabelList(availableDbAdmins)
+		itemsPreselected := TemplateListToPreselectedLabelList(availableDbAdmins, selected)
+		templateSelections := MultiSelectMenuQuestionIndex("Which db admin services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			util.Pel()
+			Pel()
 			// Get selected template config
-			selectedConfig := available.DbAdminService[index]
+			selectedConfig := available.DbAdminServices[index]
 			// Ask questions to the user
-			util.AskTemplateQuestions(project, &selectedConfig)
+			AskTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			util.AskForCustomVolumePaths(project, &selectedConfig)
+			AskForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
-			selected.DbAdminService = append(selected.DbAdminService, selectedConfig)
+			selected.DbAdminServices = append(selected.DbAdminServices, selectedConfig)
 		}
 	}
 }

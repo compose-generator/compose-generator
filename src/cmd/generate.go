@@ -83,8 +83,8 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		FrontendServices: []model.PredefinedTemplateConfig{},
 		BackendServices:  []model.PredefinedTemplateConfig{},
 		DatabaseServices: []model.PredefinedTemplateConfig{},
-		DbAdminService:   []model.PredefinedTemplateConfig{},
-		ProxyServices:    []model.PredefinedTemplateConfig{},
+		DbAdminServices:   []model.PredefinedTemplateConfig{},
+		ProxyService:    []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
 	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)

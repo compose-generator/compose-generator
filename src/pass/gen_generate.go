@@ -42,11 +42,11 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 			generateService(project, selectedTemplates, template, model.TemplateTypeDatabase, template.Name)
 		}
 		// Generate db admins
-		for _, template := range selectedTemplates.DbAdminService {
+		for _, template := range selectedTemplates.DbAdminServices {
 			generateService(project, selectedTemplates, template, model.TemplateTypeDbAdmin, template.Name)
 		}
 		// Generate proxies
-		for _, template := range selectedTemplates.ProxyServices {
+		for _, template := range selectedTemplates.ProxyService {
 			generateService(project, selectedTemplates, template, model.TemplateTypeProxy, template.Name)
 		}
 		// Generate tls helpers
