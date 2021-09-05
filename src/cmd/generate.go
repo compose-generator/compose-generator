@@ -101,6 +101,7 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 
 	// Execute passes
 	pass.Generate(project, selectedTemplates)
+	pass.GenerateResolveDependencyGroups(project, selectedTemplates)
 	pass.GenerateSecrets(project, selectedTemplates)
 	pass.GenerateCopyVolumes(project)
 	pass.GenerateExecServiceInitCommands(project, selectedTemplates)
