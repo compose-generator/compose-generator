@@ -6,19 +6,61 @@ import (
 	"compose-generator/pass"
 	"compose-generator/project"
 	"compose-generator/util"
+
+	"github.com/urfave/cli/v2"
 )
+
+// Cli flags for the generate command
+var GenerateCliFlags = []cli.Flag{
+	&cli.BoolFlag{
+		Name:    "advanced",
+		Aliases: []string{"a"},
+		Usage:   "Generate compose file in advanced mode",
+		Value:   false,
+	},
+	&cli.PathFlag{
+		Name:    "config",
+		Aliases: []string{"c"},
+		Usage:   "Pass a configuration as a `FILE` with predefined answers. Works good for CI",
+	},
+	&cli.BoolFlag{
+		Name:    "detached",
+		Aliases: []string{"d"},
+		Usage:   "Run docker-compose detached after creating the compose file",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "force",
+		Aliases: []string{"f"},
+		Usage:   "Skip safety checks",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "with-instructions",
+		Aliases: []string{"i"},
+		Usage:   "Generates a README.md file with instructions to use the template",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "run",
+		Aliases: []string{"r"},
+		Usage:   "Run docker-compose after creating the compose file",
+		Value:   false,
+	},
+}
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Generate a docker compose configuration
-func Generate(
-	configPath string,
-	flagAdvanced bool,
-	flagRun bool,
-	flagDetached bool,
-	flagForce bool,
-	flagWithInstructions bool,
-) {
+func Generate(c *cli.Context) error {
+	// Extract flags
+	configPath := c.Path("config")
+	flagAdvanced := c.Bool("advanced")
+	flagRun := c.Bool("run")
+	flagDetached := c.Bool("detached")
+	flagForce := c.Bool("force")
+	flagWithInstructions := c.Bool("with-instructions")
+
 	// Check if CCom is installed
 	util.EnsureCComIsInstalled()
 
@@ -57,15 +99,14 @@ func Generate(
 	// Print generated secrets
 	pass.GeneratePrintSecrets(proj)
 
-	// Run if the corresponding flag is set
+	// Run if the corresponding flag is set. Otherwise, print success message
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
-		return
+	} else {
+		util.Pel()
+		util.Success("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
 	}
-
-	// Print success message
-	util.Pel()
-	util.Success("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+	return nil
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------

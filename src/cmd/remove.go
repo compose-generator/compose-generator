@@ -8,19 +8,55 @@ import (
 	"errors"
 
 	spec "github.com/compose-spec/compose-go/types"
+	"github.com/urfave/cli/v2"
 )
+
+// Cli flags for the remove command
+var RemoveCliFlags = []cli.Flag{
+	&cli.BoolFlag{
+		Name:    "advanced",
+		Aliases: []string{"a"},
+		Usage:   "Show questions for advanced customization",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "force",
+		Aliases: []string{"f"},
+		Usage:   "Skip safety checks",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "run",
+		Aliases: []string{"r"},
+		Usage:   "Run docker-compose after creating the compose file",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "detached",
+		Aliases: []string{"d"},
+		Usage:   "Run docker-compose detached after creating the compose file",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "with-volumes",
+		Aliases: []string{"v"},
+		Usage:   "Remove associated volumes",
+		Value:   false,
+	},
+}
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Remove services from an existing compose file
-func Remove(
-	serviceNames []string,
-	flagRun bool,
-	flagDetached bool,
-	flagWithVolumes bool,
-	flagForce bool,
-	flagAdvanced bool,
-) {
+func Remove(c *cli.Context) error {
+	// Extract flags
+	serviceNames := c.Args().Slice()
+	flagRun := c.Bool("run")
+	flagDetached := c.Bool("detached")
+	flagWithVolumes := c.Bool("with-volumes")
+	flagForce := c.Bool("force")
+	flagAdvanced := c.Bool("advanced")
+
 	// Clear the screen for CG output
 	util.ClearScreen()
 
@@ -65,6 +101,7 @@ func Remove(
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 	}
+	return nil
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------

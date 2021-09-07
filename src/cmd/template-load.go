@@ -5,72 +5,49 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"time"
 
 	"github.com/otiai10/copy"
+	"github.com/urfave/cli/v2"
 )
 
 const (
 	timeFormat = "Jan-02-06 3:04:05 PM"
 )
 
-// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
-
-// SaveTemplate copies the compose configuration from the current directory to a central templates directory
-func SaveTemplate(
-	name string,
-	flagStash bool,
-	flagForce bool,
-	flagWithDockerfile bool,
-) {
-	// Load project
-	util.P("Loading project ... ")
-	proj := project.LoadProject()
-	proj.ForceConfig = flagForce
-	util.Done()
-
-	// Ask for template name
-	if name == "" {
-		for another := true; another; another = isTemplateExisting(proj.Name) {
-			name = util.TextQuestionWithDefault("How would you like to call your template:", proj.Name)
-			proj.Name = name
-		}
-	}
-
-	// Create the new template
-	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	os.MkdirAll(targetDir, 0755)
-
-	// Copy volumes over to the new template dir
-	util.P("Copying volumes ... ")
-	copyVolumesToTemplate(proj, targetDir)
-	util.Done()
-
-	// Save the project to the templates dir
-	util.P("Saving project ... ")
-	project.SaveProject(
-		proj,
-		project.SaveIntoDir(targetDir),
-	)
-	util.Done()
-
-	// Delete the original project if the stash flag is set
-	if flagStash {
-		util.P("Stashing project ... ")
-		project.DeleteProject(proj)
-		util.Done()
-	}
+// Cli flags for the template load command
+var TemplateLoadCliFlags = []cli.Flag{
+	&cli.BoolFlag{
+		Name:    "force",
+		Aliases: []string{"f"},
+		Usage:   "No safety checks",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "show",
+		Aliases: []string{"s"},
+		Usage:   "Do not load a template. Instead only list all templates and terminate",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "with-dockerfile",
+		Aliases: []string{"w"},
+		Usage:   "Also load the Dockerfile from the template (if existing)",
+		Value:   false,
+	},
 }
 
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
+
 // LoadTemplate copies a template from the central templates directory to the working directory
-func LoadTemplate(
-	dirName string,
-	flagForce bool,
-	flagShow bool,
-	withDockerfile bool,
-) {
+func LoadTemplate(c *cli.Context) error {
+	// Extract flags
+	dirName := c.Args().Get(0)
+	flagForce := c.Bool("force")
+	flagShow := c.Bool("show")
+	//withDockerfile := c.Bool("with-dockerfile")
+
 	if flagShow {
 		showTemplateList()
 	} else {
@@ -107,6 +84,7 @@ func LoadTemplate(
 		)
 		util.Done()
 	}
+	return nil
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -168,34 +146,6 @@ func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
 		}
 	}
 	return templateMetadata
-}
-
-func isTemplateExisting(name string) bool {
-	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	if util.FileExists(targetDir) {
-		util.Error("Template with the name '"+name+"' already exists", nil, false)
-		return true
-	}
-	return false
-}
-
-func copyVolumesToTemplate(proj *model.CGProject, targetDir string) {
-	currentAbs, err := filepath.Abs(".")
-	if err != nil {
-		util.Error("Could not find absolute path of current dir", err, true)
-	}
-	for _, path := range proj.GetAllVolumePathsNormalized() {
-		pathAbs, err := filepath.Abs(path)
-		if err != nil {
-			util.Error("Could not find absolute path of volume dir", err, true)
-		}
-		pathRel, err := filepath.Rel(currentAbs, pathAbs)
-		if err != nil {
-			util.Error("Could not copy volume '"+path+"'", err, false)
-			continue
-		}
-		copy.Copy(path, targetDir+"/"+pathRel)
-	}
 }
 
 func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
