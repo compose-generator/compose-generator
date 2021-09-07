@@ -154,12 +154,17 @@ nfpms:
     overrides:
       rpm:
         dependencies:
+          - ccom
           - redhat-lsb
       apk:
-        dependencies: []
+        dependencies:
+          - ccom
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
+      - src: /usr/bin/cg
+        dst: /usr/bin/compose-generator
+        type: symlink
     empty_folders:
       - /usr/lib/compose-generator/templates
 release:
