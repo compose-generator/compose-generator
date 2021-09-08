@@ -2,12 +2,8 @@
     "label": "React",
     "preselected": "false",
     "demoAppInitCmd": [
-        "mkdir tmp",
-        "mv ${{REACT_SOURCE_DIRECTORY}}/* ./tmp",
-        "npx create-react-app ${{REACT_SOURCE_DIRECTORY}}",
-        "mv ./tmp/* ${{REACT_SOURCE_DIRECTORY}}",
-        "rm -rf ./tmp",
-        "rm -rf ${{REACT_SOURCE_DIRECTORY}}/node_modules"
+        "sudo npx create-react-app tmp",
+        "mv ./tmp/* ${{REACT_SOURCE_DIRECTORY}}"
     ],
     "files": [
         {

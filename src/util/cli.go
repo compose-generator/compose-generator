@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
@@ -79,7 +80,8 @@ func ExecuteOnLinux(c string) {
 	imageVersion := getToolboxImageVersion()
 	// Start docker container
 	absolutePath, _ := os.Getwd()
-	ExecuteAndWaitWithOutput("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	result := ExecuteAndWaitWithOutput("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	fmt.Println(result)
 }
 
 // ExecuteOnLinuxWithCustomVolume runs a command in an isolated Linux environment with a custom volume mount

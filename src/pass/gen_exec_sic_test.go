@@ -33,9 +33,9 @@ func TestGenerateExecServiceInitCommands1(t *testing.T) {
 	executeOnLinux = func(c string) {
 		executeLinuxCallCount++
 		if executeLinuxCallCount == 1 {
-			assert.Equal(t, "ls .;mkdir test", c)
+			assert.Equal(t, "ls . && mkdir test", c)
 		} else {
-			assert.Equal(t, "cd ./spring-gradle;touch env.env", c)
+			assert.Equal(t, "cd ./spring-gradle && touch env.env", c)
 		}
 	}
 	doneCalled := false

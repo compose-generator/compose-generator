@@ -46,7 +46,7 @@ func main() {
 			},
 			{
 				Name:    "remove",
-				Aliases: []string{"r", "rm", "rem"},
+				Aliases: []string{"r", "rm"},
 				Usage:   "Removes a service from an existing compose file",
 				Flags:   cmd.RemoveCliFlags,
 				Action:  cmd.Remove,
