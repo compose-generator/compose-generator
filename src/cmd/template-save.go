@@ -44,10 +44,10 @@ func SaveTemplate(c *cli.Context) error {
 	//flagWithDockerfile := c.Bool("with-dockerfile")
 
 	// Load project
-	util.P("Loading project ... ")
+	spinner := util.StartProcess("Loading project ...")
 	proj := project.LoadProject()
 	proj.ForceConfig = flagForce
-	util.Done()
+	util.StopProcess(spinner)
 
 	// Ask for template name
 	if name == "" {
@@ -62,23 +62,23 @@ func SaveTemplate(c *cli.Context) error {
 	os.MkdirAll(targetDir, 0755)
 
 	// Copy volumes over to the new template dir
-	util.P("Copying volumes ... ")
+	spinner = util.StartProcess("Copying volumes ...")
 	copyVolumesToTemplate(proj, targetDir)
-	util.Done()
+	util.StopProcess(spinner)
 
 	// Save the project to the templates dir
-	util.P("Saving project ... ")
+	spinner = util.StartProcess("Saving project ...")
 	project.SaveProject(
 		proj,
 		project.SaveIntoDir(targetDir),
 	)
-	util.Done()
+	util.StopProcess(spinner)
 
 	// Delete the original project if the stash flag is set
 	if flagStash {
-		util.P("Stashing project ... ")
+		spinner := util.StartProcess("Stashing project ...")
 		project.DeleteProject(proj)
-		util.Done()
+		util.StopProcess(spinner)
 	}
 
 	return nil

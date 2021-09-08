@@ -65,22 +65,22 @@ func Add(c *cli.Context) error {
 	}
 
 	// Load project
-	util.P("Loading project ... ")
+	spinner := util.StartProcess("Loading project ...")
 	proj := project.LoadProject(
 		project.LoadFromComposeFile(composeFilePath),
 	)
 	proj.AdvancedConfig = flagAdvanced
 	proj.ForceConfig = flagForce
-	util.Done()
+	util.StopProcess(spinner)
 	util.Pel()
 
 	// Add custom service
 	AddCustomService(proj)
 
 	// Save project
-	util.P("Saving project ... ")
+	spinner = util.StartProcess("Saving project ...")
 	project.SaveProject(proj)
-	util.Done()
+	util.StopProcess(spinner)
 	util.Pel()
 
 	// Run if the corresponding flag is set

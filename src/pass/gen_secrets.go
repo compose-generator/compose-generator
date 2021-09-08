@@ -8,7 +8,7 @@ import (
 
 // GenerateSecrets generates all secrets for a stack
 func GenerateSecrets(project *model.CGProject, selected *model.SelectedTemplates) {
-	p("Generating secrets ... ")
+	spinner := startProcess("Generating secrets ...")
 	for _, template := range selected.GetAll() {
 		for _, secret := range template.Secrets {
 			// Generate secret
@@ -23,5 +23,5 @@ func GenerateSecrets(project *model.CGProject, selected *model.SelectedTemplates
 			})
 		}
 	}
-	done()
+	stopProcess(spinner)
 }

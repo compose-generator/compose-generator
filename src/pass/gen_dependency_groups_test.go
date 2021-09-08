@@ -4,6 +4,7 @@ import (
 	"compose-generator/model"
 	"testing"
 
+	"github.com/briandowns/spinner"
 	spec "github.com/compose-spec/compose-go/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -59,20 +60,22 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 		},
 	}
 	// Mock functions
-	pCallCount := 0
-	p = func(text string) {
-		pCallCount++
-		assert.Equal(t, "Resolving group dependencies ... ", text)
+	startProcessCallCount := 0
+	startProcess = func(text string) (s *spinner.Spinner) {
+		startProcessCallCount++
+		assert.Equal(t, "Resolving group dependencies ...", text)
+		return nil
 	}
-	doneCallCount := 0
-	done = func() {
-		doneCallCount++
+	stopProcessCallCount := 0
+	stopProcess = func(s *spinner.Spinner) {
+		stopProcessCallCount++
+		assert.Nil(t, s)
 	}
 	// Execute test
 	GenerateResolveDependencyGroups(project, selected)
 	// Assert
-	assert.Equal(t, 1, pCallCount)
-	assert.Equal(t, 1, doneCallCount)
+	assert.Equal(t, 1, startProcessCallCount)
+	assert.Equal(t, 1, stopProcessCallCount)
 	assert.Equal(t, expectedProject, project)
 }
 

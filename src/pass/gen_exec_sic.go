@@ -18,9 +18,9 @@ func GenerateExecServiceInitCommands(project *model.CGProject, selectedTemplates
 				cmds = append(cmds, util.ReplaceVarsInString(cmd, project.Vars))
 			}
 			// Execute service init commands for this template
-			p("Generating configuration for " + template.Label + " ... ")
+			spinner := startProcess("Generating configuration for " + template.Label + " ...")
 			executeOnLinux(strings.Join(cmds, " && "))
-			done()
+			stopProcess(spinner)
 		}
 	}
 }

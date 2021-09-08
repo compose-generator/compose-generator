@@ -12,7 +12,7 @@ var replaceGroupDependencyMockable = replaceGroupDependency
 
 // GenerateResolveDependencyGroups resolves group dependencies like 'database' or 'frontend' to concrete service dependencies
 func GenerateResolveDependencyGroups(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
-	p("Resolving group dependencies ... ")
+	spinner := startProcess("Resolving group dependencies ...")
 	for _, service := range project.Composition.Services {
 		// Search for frontend group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeFrontend]; ok {
@@ -39,7 +39,7 @@ func GenerateResolveDependencyGroups(project *model.CGProject, selectedTemplates
 			replaceGroupDependencyMockable(&service, selectedTemplates.TlsHelperService, model.TemplateTypeTlsHelper)
 		}
 	}
-	done()
+	stopProcess(spinner)
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

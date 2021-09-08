@@ -64,25 +64,25 @@ func LoadTemplate(c *cli.Context) error {
 		}
 
 		// Load project
-		util.P("Loading project ... ")
+		spinner := util.StartProcess("Loading project ...")
 		proj := project.LoadProject(
 			project.LoadFromDir(sourceDir),
 		)
 		proj.ForceConfig = flagForce
-		util.Done()
+		util.StopProcess(spinner)
 
 		// Copy volumes over to the new template dir
-		util.P("Copying volumes ...")
+		spinner = util.StartProcess("Copying volumes ...")
 		copyVolumesFromTemplate(proj, sourceDir)
-		util.Done()
+		util.StopProcess(spinner)
 
 		// Save the project to the current dir
-		util.P("Saving project ... ")
+		spinner = util.StartProcess("Saving project ...")
 		project.SaveProject(
 			proj,
 			project.SaveIntoDir("."),
 		)
-		util.Done()
+		util.StopProcess(spinner)
 	}
 	return nil
 }
@@ -90,9 +90,9 @@ func LoadTemplate(c *cli.Context) error {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func askForTemplate() string {
-	util.P("Loading template list ... ")
+	spinner := util.StartProcess("Loading template list ...")
 	templateMetadataList := getTemplateMetadataList()
-	util.Done()
+	util.StopProcess(spinner)
 	util.Pel()
 
 	if len(templateMetadataList) > 0 {
@@ -112,9 +112,9 @@ func askForTemplate() string {
 }
 
 func showTemplateList() {
-	util.P("Loading template list ... ")
+	spinner := util.StartProcess("Loading template list ...")
 	templateMetadataList := getTemplateMetadataList()
-	util.Done()
+	util.StopProcess(spinner)
 	util.Pel()
 
 	if len(templateMetadataList) > 0 {

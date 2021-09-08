@@ -67,14 +67,14 @@ func Remove(c *cli.Context) error {
 	}
 
 	// Load project
-	util.P("Loading project ... ")
+	spinner := util.StartProcess("Loading project ...")
 	proj := project.LoadProject(
 		project.LoadFromComposeFile(composeFilePath),
 	)
 	proj.AdvancedConfig = flagAdvanced
 	proj.ForceConfig = flagForce
 	proj.WithVolumesConfig = flagWithVolumes
-	util.Done()
+	util.StopProcess(spinner)
 	util.Pel()
 
 	// Ask for services to remove
@@ -92,9 +92,9 @@ func Remove(c *cli.Context) error {
 	}
 
 	// Save project
-	util.P("Saving project ... ")
+	spinner = util.StartProcess("Saving project ...")
 	project.SaveProject(proj)
-	util.Done()
+	util.StopProcess(spinner)
 	util.Pel()
 
 	// Run if the corresponding flag is set

@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/briandowns/spinner"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,8 +17,9 @@ func TestInstallDocker1(t *testing.T) {
 	isPrivileged = func() bool {
 		return true
 	}
-	p = func(text string) {
-		assert.Equal(t, "Installing Docker ... ", text)
+	startProcess = func(text string) (s *spinner.Spinner) {
+		assert.Equal(t, "Installing Docker ...", text)
+		return nil
 	}
 	executeWaitCallCount := 0
 	executeAndWait = func(c ...string) {
@@ -47,9 +49,10 @@ func TestInstallDocker2(t *testing.T) {
 	isPrivileged = func() bool {
 		return true
 	}
-	pCallCount := 0
-	p = func(text string) {
-		pCallCount++
+	startProcessCallCount := 0
+	startProcess = func(text string) (s *spinner.Spinner) {
+		startProcessCallCount++
+		return nil
 	}
 	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "Download of Docker install script failed", description)
@@ -66,7 +69,7 @@ func TestInstallDocker2(t *testing.T) {
 	// Execute test
 	InstallDocker()
 	// Assert
-	assert.Equal(t, 1, pCallCount)
+	assert.Equal(t, 1, startProcessCallCount)
 }
 
 func TestInstallDocker3(t *testing.T) {
@@ -74,8 +77,9 @@ func TestInstallDocker3(t *testing.T) {
 	isPrivileged = func() bool {
 		return false
 	}
-	p = func(text string) {
+	startProcess = func(text string) (s *spinner.Spinner) {
 		assert.Fail(t, "Unexpected call of p")
+		return nil
 	}
 	// Execute test
 	InstallDocker()

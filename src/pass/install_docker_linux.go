@@ -10,7 +10,7 @@ const downloadUrl = "https://get.docker.com"
 // InstallDocker installs Docker on the system
 func InstallDocker() {
 	if isPrivileged() {
-		p("Installing Docker ... ")
+		spinner := startProcess("Installing Docker ...")
 		filePath := os.TempDir() + "/install-docker.sh"
 		err := downloadFile(downloadUrl, filePath)
 		if err != nil {
@@ -18,6 +18,6 @@ func InstallDocker() {
 		}
 		executeAndWait("chmod", "+x", filePath)
 		executeAndWait("sh", filePath)
-		done()
+		stopProcess(spinner)
 	}
 }

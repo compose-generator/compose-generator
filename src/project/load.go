@@ -119,7 +119,7 @@ func loadComposeFileSingleService(
 	if err != nil {
 		util.Error("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", err, true)
 	}
-	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil)
+	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil, true)
 	if err != nil {
 		util.Error("Unable to load '"+templateTypeName+"-"+serviceName+"'", err, true)
 	}

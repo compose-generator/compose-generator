@@ -92,9 +92,9 @@ func Generate(c *cli.Context) error {
 	generateProject(proj, config)
 
 	// Save project
-	util.P("Saving project ... ")
+	spinner := util.StartProcess("Saving project ...")
 	project.SaveProject(proj)
-	util.Done()
+	util.StopProcess(spinner)
 
 	// Print generated secrets
 	pass.GeneratePrintSecrets(proj)
@@ -118,9 +118,9 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 	}
 
 	// Parse available service templates
-	util.P("Loading predefined service templates ... ")
+	spinner := util.StartProcess("Loading predefined service templates ...")
 	availableTemplates := parser.GetAvailablePredefinedTemplates()
-	util.Done()
+	util.StopProcess(spinner)
 
 	// Generate composition
 	selectedTemplates := &model.SelectedTemplates{

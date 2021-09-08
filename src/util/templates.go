@@ -54,14 +54,14 @@ func CheckForServiceTemplateUpdate() {
 
 	// Download update if necessary
 	if shouldUpdate {
-		P("Downloading predefined services update ... ")
+		spinner := StartProcess("Downloading predefined services update ...")
 		DownloadFile(fileUrl, outputPath)
 		filepath, err := filepath.Abs(predefinedTemplatesDir)
 		if err != nil {
 			Error("Could not build path", err, true)
 		}
 		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
-		Done()
+		StopProcess(spinner)
 	}
 }
 
