@@ -4,6 +4,7 @@ import (
 	"compose-generator/model"
 	"testing"
 
+	"github.com/briandowns/spinner"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,12 +45,14 @@ func TestGenerateSecrets(t *testing.T) {
 		},
 	}
 	// Mock functions
-	p = func(text string) {
-		assert.Equal(t, "Generating secrets ... ", text)
+	startProcess = func(text string) (s *spinner.Spinner) {
+		assert.Equal(t, "Generating secrets ...", text)
+		return nil
 	}
-	doneCallCount := 0
-	done = func() {
-		doneCallCount++
+	stopProcessCallCount := 0
+	stopProcess = func(s *spinner.Spinner) {
+		assert.Nil(t, s)
+		stopProcessCallCount++
 	}
 	generatePasswordCallCount := 0
 	generatePassword = func(length, numDigits, numSymbols int, noUpper, allowRepeat bool) (string, error) {
@@ -68,6 +71,6 @@ func TestGenerateSecrets(t *testing.T) {
 	// Execute test
 	GenerateSecrets(project, selected)
 	// Assert
-	assert.Equal(t, 1, doneCallCount)
+	assert.Equal(t, 1, stopProcessCallCount)
 	assert.Equal(t, expectedProject, project)
 }

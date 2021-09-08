@@ -14,10 +14,10 @@ import (
 
 // Generate transforms the selected templates list and the enriched project to a composition
 func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
-	util.Pel()
+	pel()
 	templateCount := selectedTemplates.GetTotal()
 	if templateCount > 0 {
-		util.P("Generating configuration from " + strconv.Itoa(templateCount) + " templates ... ")
+		spinner := startProcess("Generating configuration from " + strconv.Itoa(templateCount) + " template(s) ...")
 		// Prepare
 		project.Composition = &types.Project{
 			WorkingDir: "./",
@@ -53,9 +53,9 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 		for _, template := range selectedTemplates.TlsHelperService {
 			generateService(project, selectedTemplates, template, model.TemplateTypeTlsHelper, template.Name)
 		}
-		util.Done()
+		stopProcess(spinner)
 	} else {
-		util.Error("No templates selected. Aborting ...", nil, true)
+		printError("No templates selected. Aborting ...", nil, true)
 	}
 }
 

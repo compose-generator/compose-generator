@@ -18,9 +18,9 @@ func GenerateExecDemoAppInitCommands(project *model.CGProject, selectedTemplates
 				cmds = append(cmds, util.ReplaceVarsInString(cmd, project.Vars))
 			}
 			// Execute demo app init commands for this template
-			p("Generating demo app for " + template.Label + " ... ")
-			executeOnLinux(strings.Join(cmds, ";"))
-			done()
+			spinner := startProcess("Generating demo app for " + template.Label + " ...")
+			executeOnLinux(strings.Join(cmds, " && "))
+			stopProcess(spinner)
 		}
 	}
 }

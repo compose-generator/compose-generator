@@ -15,7 +15,7 @@ import (
 
 // GenerateCopyVolumes reads the volume paths from the composition and copies them over to the current work dir
 func GenerateCopyVolumes(project *model.CGProject) {
-	p("Copying volumes ... ")
+	spinner := startProcess("Copying volumes ...")
 	for serviceIndex, service := range project.Composition.Services {
 		for volumeIndex, volume := range service.Volumes {
 			srcPath := filepath.ToSlash(volume.Source)
@@ -30,7 +30,7 @@ func GenerateCopyVolumes(project *model.CGProject) {
 			copyBuildDir(service.Build, srcPath, dstPath)
 		}
 	}
-	done()
+	stopProcess(spinner)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------

@@ -13,8 +13,9 @@ func TestInstallDockers1(t *testing.T) {
 	// Test data
 	filePath := os.TempDir() + "/DockerInstaller.exe"
 	// Mock functions
-	P = func(text string) {
-		assert.Equal(t, "Downloading Docker installer ... ", text)
+	startProcess = func(text string) (s *spinner.Spinner) {
+		assert.Equal(t, "Downloading Docker installer ...", text)
+		return nil
 	}
 	downloadFile = func(url string, filepath string) error {
 		assert.Equal(t, downloadUrl, url)
@@ -52,8 +53,9 @@ func TestInstallDocker2(t *testing.T) {
 	filePath := os.TempDir() + "/DockerInstaller.exe"
 	errorMessage := "Test download error"
 	// Mock functions
-	P = func(text string) {
-		assert.Equal(t, "Downloading Docker installer ... ", text)
+	startProcess = func(text string) (s *spinner.Spinner) {
+		assert.Equal(t, "Downloading Docker installer ...", text)
+		return nil
 	}
 	DownloadFile = func(url string, filepath string) error {
 		assert.Equal(t, downloadUrl, url)
