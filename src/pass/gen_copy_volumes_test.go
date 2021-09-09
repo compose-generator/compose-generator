@@ -2,14 +2,18 @@ package pass
 
 import (
 	"compose-generator/model"
+	"errors"
+	"os"
 	"testing"
 
 	"github.com/briandowns/spinner"
 	"github.com/compose-spec/compose-go/types"
+	spec "github.com/compose-spec/compose-go/types"
+	"github.com/otiai10/copy"
 	"github.com/stretchr/testify/assert"
 )
 
-
+// ---------------------------------------- GenerateCopyVolumes ----------------------------------------
 
 func TestGenerateCopyVolumes1(t *testing.T) {
 	// Test data
@@ -117,4 +121,183 @@ func TestGenerateCopyVolumes2(t *testing.T) {
 	GenerateCopyVolumes(project)
 	// Assert
 	assert.Equal(t, 1, stopProcessCallCount)
+}
+
+// -------------------------------------------- copyVolume ---------------------------------------------
+
+func TestCopyVolume1(t *testing.T) {
+	// Test data
+	templatesPath := "../predefined-templates"
+	volume := &spec.ServiceVolumeConfig{
+		Type:   types.VolumeTypeBind,
+		Source: templatesPath + "/type/template/volumes/volume1",
+		Target: "/test/target/in/container",
+	}
+	srcPath := "../predefined-templates/path/type/template/volumes/volume1"
+	dstPath := "volumes/volume1"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, srcPath, path)
+		return false
+	}
+	mkdirAll = func(path string, perm os.FileMode) error {
+		assert.Equal(t, dstPath, path)
+		assert.Equal(t, os.FileMode(0755), perm)
+		return nil
+	}
+	printWarning = func(description string) {
+		assert.Fail(t, "Unexpected call of printWarning")
+	}
+	// Execute test
+	copyVolume(volume, srcPath, dstPath)
+	// Assert
+	assert.Equal(t, dstPath, volume.Source)
+}
+
+func TestCopyVolume2(t *testing.T) {
+	// Test data
+	templatesPath := "../predefined-templates"
+	volume := &spec.ServiceVolumeConfig{
+		Type:   types.VolumeTypeBind,
+		Source: templatesPath + "/type/template/volumes/volume1",
+		Target: "/test/target/in/container",
+	}
+	srcPath := "../predefined-templates/path/type/template/volumes/volume1"
+	dstPath := "volumes/volume1"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, srcPath, path)
+		return false
+	}
+	mkdirAll = func(path string, perm os.FileMode) error {
+		assert.Equal(t, dstPath, path)
+		assert.Equal(t, os.FileMode(0755), perm)
+		return errors.New("MkdirAll error")
+	}
+	printWarning = func(description string) {
+		assert.Equal(t, "Could not create volume dir", description)
+	}
+	// Execute test
+	copyVolume(volume, srcPath, dstPath)
+	// Assert
+	assert.Equal(t, dstPath, volume.Source)
+}
+
+func TestCopyVolume3(t *testing.T) {
+	// Test data
+	templatesPath := "../predefined-templates"
+	volume := &spec.ServiceVolumeConfig{
+		Type:   types.VolumeTypeBind,
+		Source: templatesPath + "/type/template/volumes/volume1",
+		Target: "/test/target/in/container",
+	}
+	srcPath := "../predefined-templates/path/type/template/volumes/volume1"
+	dstPath := "volumes/volume1"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, srcPath, path)
+		return true
+	}
+	mkdirAll = func(path string, perm os.FileMode) error {
+		assert.Equal(t, dstPath, path)
+		assert.Equal(t, os.FileMode(0755), perm)
+		return errors.New("MkdirAll error")
+	}
+	copyFile = func(src, dest string, opt ...copy.Options) error {
+		assert.Equal(t, srcPath, src)
+		assert.Equal(t, dstPath, dest)
+		return nil
+	}
+	// Execute test
+	copyVolume(volume, srcPath, dstPath)
+	// Assert
+	assert.Equal(t, dstPath, volume.Source)
+}
+
+// ------------------------------------------- copyBuildDir --------------------------------------------
+
+func TestCopyBuildDir1(t *testing.T) {
+	// Test data
+	templatesPath := "../predefined-templates"
+	buildDir := &spec.BuildConfig{
+		Context:    templatesPath + "/type/template/backend",
+		Dockerfile: "Dockerfile",
+	}
+	srcPath := "../predefined-templates/path/type/template/volumes/volume1"
+	dstPath := "volumes/volume1"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, srcPath, path)
+		return false
+	}
+	mkdirAll = func(path string, perm os.FileMode) error {
+		assert.Equal(t, dstPath, path)
+		assert.Equal(t, os.FileMode(0755), perm)
+		return nil
+	}
+	printWarning = func(description string) {
+		assert.Fail(t, "Unexpected call of printWarning")
+	}
+	// Execute test
+	copyBuildDir(buildDir, srcPath, dstPath)
+	// Assert
+	assert.Equal(t, dstPath, buildDir.Context)
+}
+
+func TestCopyBuildDir2(t *testing.T) {
+	// Test data
+	templatesPath := "../predefined-templates"
+	buildDir := &spec.BuildConfig{
+		Context:    templatesPath + "/type/template/backend",
+		Dockerfile: "Dockerfile",
+	}
+	srcPath := "../predefined-templates/path/type/template/volumes/volume1"
+	dstPath := "volumes/volume1"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, srcPath, path)
+		return false
+	}
+	mkdirAll = func(path string, perm os.FileMode) error {
+		assert.Equal(t, dstPath, path)
+		assert.Equal(t, os.FileMode(0755), perm)
+		return errors.New("MkdirAll error")
+	}
+	printWarning = func(description string) {
+		assert.Equal(t, "Could not create volume dir", description)
+	}
+	// Execute test
+	copyBuildDir(buildDir, srcPath, dstPath)
+	// Assert
+	assert.Equal(t, dstPath, buildDir.Context)
+}
+
+func TestCopyBuildDir3(t *testing.T) {
+	// Test data
+	templatesPath := "../predefined-templates"
+	buildDir := &spec.BuildConfig{
+		Context:    templatesPath + "/type/template/backend",
+		Dockerfile: "Dockerfile",
+	}
+	srcPath := "../predefined-templates/path/type/template/volumes/volume1"
+	dstPath := "volumes/volume1"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, srcPath, path)
+		return true
+	}
+	mkdirAll = func(path string, perm os.FileMode) error {
+		assert.Equal(t, dstPath, path)
+		assert.Equal(t, os.FileMode(0755), perm)
+		return errors.New("MkdirAll error")
+	}
+	copyFile = func(src, dest string, opt ...copy.Options) error {
+		assert.Equal(t, srcPath, src)
+		assert.Equal(t, dstPath, dest)
+		return nil
+	}
+	// Execute test
+	copyBuildDir(buildDir, srcPath, dstPath)
+	// Assert
+	assert.Equal(t, dstPath, buildDir.Context)
 }
