@@ -6,13 +6,15 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+var getServicesWhichUseNetworkMockable = getServicesWhichUseNetwork
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 	for networkName := range service.Networks {
 		// Get project-wide network config by the name of the network
 		networkConfig := project.Composition.Networks[networkName]
-		otherServices := getServicesWhichUseNetwork(networkName, service, project)
+		otherServices := getServicesWhichUseNetworkMockable(networkName, service, project)
 		canBeRemoved := networkConfig.External.External && len(otherServices) == 0 || !networkConfig.External.External && len(otherServices) <= 1
 		// Go to next if condition is not fulfilled
 		if !canBeRemoved {

@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/briandowns/spinner"
-	"github.com/compose-spec/compose-go/types"
 	spec "github.com/compose-spec/compose-go/types"
 	"github.com/otiai10/copy"
 	"github.com/stretchr/testify/assert"
@@ -19,13 +18,13 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 	// Test data
 	templatesPath := "../predefined-templates/path"
 	project := &model.CGProject{
-		Composition: &types.Project{
-			Services: types.Services{
+		Composition: &spec.Project{
+			Services: spec.Services{
 				{
 					Name: "Service 1",
-					Volumes: []types.ServiceVolumeConfig{
+					Volumes: []spec.ServiceVolumeConfig{
 						{
-							Type:   types.VolumeTypeBind,
+							Type:   spec.VolumeTypeBind,
 							Source: templatesPath + "/type/template/volumes/volume1",
 							Target: "/test/target/in/container",
 						},
@@ -33,9 +32,9 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 				},
 				{
 					Name: "Service 2",
-					Volumes: []types.ServiceVolumeConfig{
+					Volumes: []spec.ServiceVolumeConfig{
 						{
-							Type:   types.VolumeTypeBind,
+							Type:   spec.VolumeTypeBind,
 							Source: templatesPath + "/type/template/volumes/volume2",
 							Target: "/test/target/in/other/container",
 						},
@@ -55,7 +54,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 		assert.Nil(t, s)
 	}
 	copyVolumeCallCount := 0
-	copyVolumeMockable = func(volume *types.ServiceVolumeConfig, srcPath, dstPath string) {
+	copyVolumeMockable = func(volume *spec.ServiceVolumeConfig, srcPath, dstPath string) {
 		copyVolumeCallCount++
 		if copyVolumeCallCount == 1 {
 			assert.Equal(t, project.Composition.Services[0].Volumes[0], *volume)
@@ -67,7 +66,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 			assert.Equal(t, "volumes/volume2", dstPath)
 		}
 	}
-	copyBuildDirMockable = func(build *types.BuildConfig, srcPath, dstPath string) {
+	copyBuildDirMockable = func(build *spec.BuildConfig, srcPath, dstPath string) {
 		assert.Fail(t, "Unexpected call of copyBuildDir")
 	}
 	getPredefinedServicesPath = func() string {
@@ -84,11 +83,11 @@ func TestGenerateCopyVolumes2(t *testing.T) {
 	// Test data
 	templatesPath := "../predefined-templates"
 	project := &model.CGProject{
-		Composition: &types.Project{
-			Services: types.Services{
+		Composition: &spec.Project{
+			Services: spec.Services{
 				{
 					Name: "Service 1",
-					Build: &types.BuildConfig{
+					Build: &spec.BuildConfig{
 						Context:    templatesPath + "/type/template/frontend",
 						Dockerfile: "Dockerfile",
 					},
@@ -106,10 +105,10 @@ func TestGenerateCopyVolumes2(t *testing.T) {
 		stopProcessCallCount++
 		assert.Nil(t, s)
 	}
-	copyVolumeMockable = func(volume *types.ServiceVolumeConfig, srcPath, dstPath string) {
+	copyVolumeMockable = func(volume *spec.ServiceVolumeConfig, srcPath, dstPath string) {
 		assert.Fail(t, "Unexpected call of copyVolume")
 	}
-	copyBuildDirMockable = func(build *types.BuildConfig, srcPath, dstPath string) {
+	copyBuildDirMockable = func(build *spec.BuildConfig, srcPath, dstPath string) {
 		assert.Equal(t, project.Composition.Services[0].Build, build)
 		assert.Equal(t, "../predefined-templates/type/template/frontend", srcPath)
 		assert.Equal(t, "frontend", dstPath)
@@ -129,7 +128,7 @@ func TestCopyVolume1(t *testing.T) {
 	// Test data
 	templatesPath := "../predefined-templates"
 	volume := &spec.ServiceVolumeConfig{
-		Type:   types.VolumeTypeBind,
+		Type:   spec.VolumeTypeBind,
 		Source: templatesPath + "/type/template/volumes/volume1",
 		Target: "/test/target/in/container",
 	}
@@ -158,7 +157,7 @@ func TestCopyVolume2(t *testing.T) {
 	// Test data
 	templatesPath := "../predefined-templates"
 	volume := &spec.ServiceVolumeConfig{
-		Type:   types.VolumeTypeBind,
+		Type:   spec.VolumeTypeBind,
 		Source: templatesPath + "/type/template/volumes/volume1",
 		Target: "/test/target/in/container",
 	}
@@ -187,7 +186,7 @@ func TestCopyVolume3(t *testing.T) {
 	// Test data
 	templatesPath := "../predefined-templates"
 	volume := &spec.ServiceVolumeConfig{
-		Type:   types.VolumeTypeBind,
+		Type:   spec.VolumeTypeBind,
 		Source: templatesPath + "/type/template/volumes/volume1",
 		Target: "/test/target/in/container",
 	}
