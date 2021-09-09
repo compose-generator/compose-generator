@@ -45,11 +45,7 @@ func TestRemoveNetworks1(t *testing.T) {
 	callCount := 0
 	getServicesWhichUseNetworkMockable = func(networkName string, service *spec.ServiceConfig, project *model.CGProject) []spec.ServiceConfig {
 		callCount++
-		if callCount == 1 {
-			assert.Equal(t, "test-net", networkName)
-		} else {
-			assert.Equal(t, "second-net", networkName)
-		}
+		assert.Contains(t, []string{"test-net", "second-net"}, networkName)
 		return []spec.ServiceConfig{}
 	}
 	// Execute test
@@ -154,9 +150,6 @@ func TestGetServicesWhichUseNetwork(t *testing.T) {
 				},
 			},
 		},
-	}
-	getServicesWhichUseNetworkMockable = func(networkName string, service *spec.ServiceConfig, project *model.CGProject) []spec.ServiceConfig {
-		return []spec.ServiceConfig{}
 	}
 	// Execute test
 	result := getServicesWhichUseNetwork(networkName, service, project)
