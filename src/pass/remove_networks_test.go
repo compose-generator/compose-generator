@@ -138,6 +138,12 @@ func TestGetServicesWhichUseNetwork(t *testing.T) {
 						"test-net": {},
 					},
 				},
+				{
+					Name: "current-service",
+					Networks: map[string]*spec.ServiceNetworkConfig{
+						"test-net": {},
+					},
+				},
 			},
 			Networks: spec.Networks{
 				"test-net": {
@@ -148,6 +154,9 @@ func TestGetServicesWhichUseNetwork(t *testing.T) {
 				},
 			},
 		},
+	}
+	getServicesWhichUseNetworkMockable = func(networkName string, service *spec.ServiceConfig, project *model.CGProject) []spec.ServiceConfig {
+		return []spec.ServiceConfig{}
 	}
 	// Execute test
 	result := getServicesWhichUseNetwork(networkName, service, project)

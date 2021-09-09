@@ -39,6 +39,7 @@ var fileExists = util.FileExists
 var isDir = util.IsDir
 var getPredefinedServicesPath = util.GetPredefinedServicesPath
 var mkdirAll = os.MkdirAll
+var removeAll = os.RemoveAll
 var executeOnLinux = util.ExecuteOnLinux
 var isPrivileged = util.IsPrivileged
 var executeAndWait = util.ExecuteAndWait
