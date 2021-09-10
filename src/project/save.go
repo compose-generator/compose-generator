@@ -78,6 +78,14 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 		for _, key := range keys {
 			content += key + "=" + *envVars[key] + "\n"
 		}
+		// Replace vars
+		content = util.ReplaceVarsInString(content, project.Vars)
+		// Replace secrets
+		secretMap := make(map[string]string)
+		for _, secret := range project.Secrets {
+			secretMap[secret.Variable] = secret.Value
+		}
+		content = util.ReplaceVarsInString(content, secretMap)
 		// Write to disk
 		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0755); err != nil {
 			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)

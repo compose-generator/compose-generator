@@ -2,12 +2,7 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
-	"io/ioutil"
-	"os"
 	"strings"
-
-	"gopkg.in/yaml.v2"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -16,39 +11,42 @@ import (
 func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, configPath string) {
 	if configPath == "" {
 		// Welcome Message
-		util.Heading("Welcome to Compose Generator! 👋")
-		util.Pl("Please continue by answering a few questions:")
-		util.Pel()
+		heading("Welcome to Compose Generator! 👋")
+		pl("Please continue by answering a few questions:")
+		pel()
 
 		// Ask the user for the config information
-		config.ProjectName = util.TextQuestion("What is the name of your project:")
+		config.ProjectName = textQuestion("What is the name of your project:")
 		if config.ProjectName == "" {
-			util.Error("You must specify a project name!", nil, true)
+			printError("You must specify a project name!", nil, true)
 		}
-		config.ProductionReady = util.YesNoQuestion("Do you want the output to be production-ready?", false)
+		config.ProductionReady = yesNoQuestion("Do you want the output to be production-ready?", false)
 		config.FromFile = false
 	} else {
 		// Take the given config file and load config from there
-		if util.FileExists(configPath) {
-			yamlFile, err1 := os.Open(configPath)
-			content, err2 := ioutil.ReadAll(yamlFile)
-			if err1 != nil {
-				util.Error("Could not load config file. Permissions granted?", err1, true)
+		if fileExists(configPath) {
+			yamlFile, err := openFile(configPath)
+			if err != nil {
+				printError("Could not load config file. Permissions granted?", err, true)
 			}
-			if err2 != nil {
-				util.Error("Could not load config file. Permissions granted?", err2, true)
+			content, err := readAllFromFile(yamlFile)
+			if err != nil {
+				printError("Could not load config file. Permissions granted?", err, true)
 			}
 			// Parse yaml
-			yaml.Unmarshal(content, &config)
+			unmarshalYaml(content, &config)
 			config.FromFile = true
 		} else {
-			util.Error("Config file could not be found", nil, true)
+			printError("Config file could not be found", nil, true)
 		}
 	}
 
 	project.Name = config.ProjectName
 	project.ProductionReady = config.ProductionReady
 	project.ContainerName = strings.ReplaceAll(strings.ToLower(project.Name), " ", "-")
+	if project.Vars == nil {
+		project.Vars = make(map[string]string)
+	}
 	project.Vars["PROJECT_NAME"] = project.Name
 	project.Vars["PROJECT_NAME_CONTAINER"] = project.ContainerName
 }

@@ -3,7 +3,9 @@ package util
 import (
 	"fmt"
 	"os"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 )
 
@@ -24,9 +26,19 @@ func Pel() {
 	fmt.Println()
 }
 
-// Done prints 'done' in green to the console
-func Done() {
-	color.Green("done")
+// StartProcess displays a loading animation until StopProcess is called
+func StartProcess(text string) (s *spinner.Spinner) {
+	s = spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Suffix = " " + text
+	s.FinalMSG = color.GreenString("⠿") + " " + text + color.GreenString(" done\n")
+	s.HideCursor = true
+	s.Start()
+	return
+}
+
+// StopProcess stops the spinner, which was started by calling StartProcess
+func StopProcess(s *spinner.Spinner) {
+	s.Stop()
 }
 
 // Heading prints heading to console
@@ -35,8 +47,8 @@ func Heading(text string) {
 	green.Println(text)
 }
 
-// SuccessMessage prints a success message to console
-func SuccessMessage(text string) {
+// Success prints a success message to console
+func Success(text string) {
 	green := color.New(color.FgGreen).Add(color.Italic)
 	green.Println(text)
 }

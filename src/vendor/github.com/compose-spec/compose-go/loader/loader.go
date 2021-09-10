@@ -23,7 +23,6 @@ import (
 	"path"
 	"path/filepath"
 	"reflect"
-	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -49,6 +48,8 @@ type Options struct {
 	SkipInterpolation bool
 	// Skip normalization
 	SkipNormalization bool
+	// Resolve paths
+	ResolvePaths bool
 	// Skip consistency check
 	SkipConsistencyCheck bool
 	// Skip extends
@@ -101,6 +102,11 @@ func (ct *cycleTracker) Add(filename, service string) error {
 // the `environment` section
 func WithDiscardEnvFiles(opts *Options) {
 	opts.discardEnvFiles = true
+}
+
+// WithSkipValidation sets the Options to skip validation when loading sections
+func WithSkipValidation(opts *Options) {
+	opts.SkipValidation = true
 }
 
 // ParseYAML reads the bytes from a file, parses the bytes into a mapping
@@ -199,7 +205,7 @@ func Load(configDetails types.ConfigDetails, options ...func(*Options)) (*types.
 	}
 
 	if !opts.SkipNormalization {
-		err = normalize(project)
+		err = normalize(project, opts.ResolvePaths)
 		if err != nil {
 			return nil, err
 		}
@@ -216,21 +222,14 @@ func Load(configDetails types.ConfigDetails, options ...func(*Options)) (*types.
 }
 
 func parseConfig(b []byte, opts *Options) (map[string]interface{}, error) {
-	if !opts.SkipInterpolation {
-		withoutFullLineComments := removeYamlComments(string(b))
-		substituted, err := opts.Interpolate.Substitute(withoutFullLineComments, template.Mapping(opts.Interpolate.LookupValue))
-		if err != nil {
-			return nil, err
-		}
-		b = []byte(substituted)
+	yaml, err := ParseYAML(b)
+	if err != nil {
+		return nil, err
 	}
-
-	return ParseYAML(b)
-}
-
-// removeYamlComments drop all full line comments from the yaml file, so we don't try to apply string substitutions on most of the irrelevant places
-func removeYamlComments(content string) string {
-	return regexp.MustCompile(`(?m)^[ \t]*#.*\n*`).ReplaceAllString(content, "")
+	if !opts.SkipInterpolation {
+		return interp.Interpolate(yaml, *opts.Interpolate)
+	}
+	return yaml, err
 }
 
 func groupXFieldsIntoExtensions(dict map[string]interface{}) map[string]interface{} {
@@ -261,7 +260,7 @@ func loadSections(filename string, config map[string]interface{}, configDetails 
 		return nil, err
 	}
 
-	cfg.Networks, err = LoadNetworks(getSection(config, "networks"), configDetails.Version)
+	cfg.Networks, err = LoadNetworks(getSection(config, "networks"))
 	if err != nil {
 		return nil, err
 	}
@@ -269,11 +268,11 @@ func loadSections(filename string, config map[string]interface{}, configDetails 
 	if err != nil {
 		return nil, err
 	}
-	cfg.Secrets, err = LoadSecrets(getSection(config, "secrets"), configDetails)
+	cfg.Secrets, err = LoadSecrets(getSection(config, "secrets"), configDetails, opts.ResolvePaths)
 	if err != nil {
 		return nil, err
 	}
-	cfg.Configs, err = LoadConfigObjs(getSection(config, "configs"), configDetails)
+	cfg.Configs, err = LoadConfigObjs(getSection(config, "configs"), configDetails, opts.ResolvePaths)
 	if err != nil {
 		return nil, err
 	}
@@ -426,6 +425,14 @@ func formatInvalidKeyError(keyPrefix string, key interface{}) error {
 func LoadServices(filename string, servicesDict map[string]interface{}, workingDir string, lookupEnv template.Mapping, opts *Options) ([]types.ServiceConfig, error) {
 	var services []types.ServiceConfig
 
+	x, ok := servicesDict["extensions"]
+	if ok {
+		// as a top-level attribute, "services" doesn't support extensions, and a service can be named `x-foo`
+		for k, v := range x.(map[string]interface{}) {
+			servicesDict[k] = v
+		}
+	}
+
 	for name := range servicesDict {
 		serviceConfig, err := loadServiceWithExtends(filename, name, servicesDict, workingDir, lookupEnv, opts, &cycleTracker{})
 		if err != nil {
@@ -443,7 +450,7 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 		return nil, err
 	}
 
-	serviceConfig, err := LoadService(name, servicesDict[name].(map[string]interface{}), workingDir, lookupEnv)
+	serviceConfig, err := LoadService(name, servicesDict[name].(map[string]interface{}), workingDir, lookupEnv, opts.ResolvePaths)
 	if err != nil {
 		return nil, err
 	}
@@ -514,7 +521,7 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 
 // LoadService produces a single ServiceConfig from a compose file Dict
 // the serviceDict is not validated if directly used. Use Load() to enable validation
-func LoadService(name string, serviceDict map[string]interface{}, workingDir string, lookupEnv template.Mapping) (*types.ServiceConfig, error) {
+func LoadService(name string, serviceDict map[string]interface{}, workingDir string, lookupEnv template.Mapping, resolvePaths bool) (*types.ServiceConfig, error) {
 	serviceConfig := &types.ServiceConfig{}
 	if err := Transform(serviceDict, serviceConfig); err != nil {
 		return nil, err
@@ -525,8 +532,18 @@ func LoadService(name string, serviceDict map[string]interface{}, workingDir str
 		return nil, err
 	}
 
-	if err := resolveVolumePaths(serviceConfig.Volumes, workingDir, lookupEnv); err != nil {
-		return nil, err
+	for i, volume := range serviceConfig.Volumes {
+		if volume.Type != "bind" {
+			continue
+		}
+
+		if volume.Source == "" {
+			return nil, errors.New(`invalid mount config for type "bind": field Source must not be empty`)
+		}
+
+		if resolvePaths {
+			serviceConfig.Volumes[i] = resolveVolumePath(volume, workingDir, lookupEnv)
+		}
 	}
 
 	return serviceConfig, nil
@@ -561,30 +578,19 @@ func resolveEnvironment(serviceConfig *types.ServiceConfig, workingDir string, l
 	return nil
 }
 
-func resolveVolumePaths(volumes []types.ServiceVolumeConfig, workingDir string, lookupEnv template.Mapping) error {
-	for i, volume := range volumes {
-		if volume.Type != "bind" {
-			continue
-		}
-
-		if volume.Source == "" {
-			return errors.New(`invalid mount config for type "bind": field Source must not be empty`)
-		}
-
-		filePath := expandUser(volume.Source, lookupEnv)
-		// Check if source is an absolute path (either Unix or Windows), to
-		// handle a Windows client with a Unix daemon or vice-versa.
-		//
-		// Note that this is not required for Docker for Windows when specifying
-		// a local Windows path, because Docker for Windows translates the Windows
-		// path into a valid path within the VM.
-		if !path.IsAbs(filePath) && !isAbs(filePath) {
-			filePath = absPath(workingDir, filePath)
-		}
-		volume.Source = filePath
-		volumes[i] = volume
+func resolveVolumePath(volume types.ServiceVolumeConfig, workingDir string, lookupEnv template.Mapping) types.ServiceVolumeConfig {
+	filePath := expandUser(volume.Source, lookupEnv)
+	// Check if source is an absolute path (either Unix or Windows), to
+	// handle a Windows client with a Unix daemon or vice-versa.
+	//
+	// Note that this is not required for Docker for Windows when specifying
+	// a local Windows path, because Docker for Windows translates the Windows
+	// path into a valid path within the VM.
+	if !path.IsAbs(filePath) && !isAbs(filePath) {
+		filePath = absPath(workingDir, filePath)
 	}
-	return nil
+	volume.Source = filePath
+	return volume
 }
 
 // TODO: make this more robust
@@ -620,7 +626,7 @@ func transformUlimits(data interface{}) (interface{}, error) {
 
 // LoadNetworks produces a NetworkConfig map from a compose file Dict
 // the source Dict is not validated if directly used. Use Load() to enable validation
-func LoadNetworks(source map[string]interface{}, version string) (map[string]types.NetworkConfig, error) {
+func LoadNetworks(source map[string]interface{}) (map[string]types.NetworkConfig, error) {
 	networks := make(map[string]types.NetworkConfig)
 	err := Transform(source, &networks)
 	if err != nil {
@@ -688,13 +694,13 @@ func LoadVolumes(source map[string]interface{}) (map[string]types.VolumeConfig, 
 
 // LoadSecrets produces a SecretConfig map from a compose file Dict
 // the source Dict is not validated if directly used. Use Load() to enable validation
-func LoadSecrets(source map[string]interface{}, details types.ConfigDetails) (map[string]types.SecretConfig, error) {
+func LoadSecrets(source map[string]interface{}, details types.ConfigDetails, resolvePaths bool) (map[string]types.SecretConfig, error) {
 	secrets := make(map[string]types.SecretConfig)
 	if err := Transform(source, &secrets); err != nil {
 		return secrets, err
 	}
 	for name, secret := range secrets {
-		obj, err := loadFileObjectConfig(name, "secret", types.FileObjectConfig(secret), details)
+		obj, err := loadFileObjectConfig(name, "secret", types.FileObjectConfig(secret), details, resolvePaths)
 		if err != nil {
 			return nil, err
 		}
@@ -706,13 +712,13 @@ func LoadSecrets(source map[string]interface{}, details types.ConfigDetails) (ma
 
 // LoadConfigObjs produces a ConfigObjConfig map from a compose file Dict
 // the source Dict is not validated if directly used. Use Load() to enable validation
-func LoadConfigObjs(source map[string]interface{}, details types.ConfigDetails) (map[string]types.ConfigObjConfig, error) {
+func LoadConfigObjs(source map[string]interface{}, details types.ConfigDetails, resolvePaths bool) (map[string]types.ConfigObjConfig, error) {
 	configs := make(map[string]types.ConfigObjConfig)
 	if err := Transform(source, &configs); err != nil {
 		return configs, err
 	}
 	for name, config := range configs {
-		obj, err := loadFileObjectConfig(name, "config", types.FileObjectConfig(config), details)
+		obj, err := loadFileObjectConfig(name, "config", types.FileObjectConfig(config), details, resolvePaths)
 		if err != nil {
 			return nil, err
 		}
@@ -722,7 +728,7 @@ func LoadConfigObjs(source map[string]interface{}, details types.ConfigDetails) 
 	return configs, nil
 }
 
-func loadFileObjectConfig(name string, objType string, obj types.FileObjectConfig, details types.ConfigDetails) (types.FileObjectConfig, error) {
+func loadFileObjectConfig(name string, objType string, obj types.FileObjectConfig, details types.ConfigDetails, resolvePaths bool) (types.FileObjectConfig, error) {
 	// if "external: true"
 	switch {
 	case obj.External.External:
@@ -745,7 +751,9 @@ func loadFileObjectConfig(name string, objType string, obj types.FileObjectConfi
 			return obj, errors.Errorf("%[1]s %[2]s: %[1]s.driver and %[1]s.file conflict; only use %[1]s.driver", objType, name)
 		}
 	default:
-		obj.File = absPath(details.WorkingDir, obj.File)
+		if resolvePaths {
+			obj.File = absPath(details.WorkingDir, obj.File)
+		}
 	}
 
 	return obj, nil

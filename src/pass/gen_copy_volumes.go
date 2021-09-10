@@ -15,7 +15,7 @@ import (
 
 // GenerateCopyVolumes reads the volume paths from the composition and copies them over to the current work dir
 func GenerateCopyVolumes(project *model.CGProject) {
-	util.P("Copying volumes ... ")
+	spinner := startProcess("Copying volumes ...")
 	for serviceIndex, service := range project.Composition.Services {
 		for volumeIndex, volume := range service.Volumes {
 			srcPath := filepath.ToSlash(volume.Source)
@@ -30,13 +30,13 @@ func GenerateCopyVolumes(project *model.CGProject) {
 			copyBuildDir(service.Build, srcPath, dstPath)
 		}
 	}
-	util.Done()
+	stopProcess(spinner)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func copyVolume(volume *types.ServiceVolumeConfig, sourcePath string, dstPath string) {
-	if !util.FileExists(sourcePath) {
+	if !fileExists(sourcePath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		if os.MkdirAll(dstPath, 0755) != nil {
 			util.Warning("Could not create volume dir")
@@ -50,7 +50,7 @@ func copyVolume(volume *types.ServiceVolumeConfig, sourcePath string, dstPath st
 }
 
 func copyBuildDir(build *types.BuildConfig, sourcePath string, dstPath string) {
-	if !util.FileExists(sourcePath) {
+	if !fileExists(sourcePath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		if os.MkdirAll(dstPath, 0755) != nil {
 			util.Warning("Could not create volume dir")

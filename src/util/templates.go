@@ -12,7 +12,7 @@ import (
 // CheckForServiceTemplateUpdate checks if any updates are available for the predefined service templates
 func CheckForServiceTemplateUpdate() {
 	// Skip on dev version
-	if Version == "dev" {
+	if IsDevVersion() {
 		return
 	}
 	// Create predefined templates dir if not exitsts
@@ -54,14 +54,14 @@ func CheckForServiceTemplateUpdate() {
 
 	// Download update if necessary
 	if shouldUpdate {
-		P("Downloading predefined services update ... ")
+		spinner := StartProcess("Downloading predefined services update ...")
 		DownloadFile(fileUrl, outputPath)
 		filepath, err := filepath.Abs(predefinedTemplatesDir)
 		if err != nil {
 			Error("Could not build path", err, true)
 		}
 		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
-		Done()
+		StopProcess(spinner)
 	}
 }
 
@@ -148,8 +148,8 @@ func TemplateListToLabelList(templates []model.PredefinedTemplateConfig) (labels
 }
 
 // TemplateListToPreselectedLabelList retrieves a slice of all preselected other services for each service
-func TemplateListToPreselectedLabelList(templateList []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) (labels []string) {
-	for _, t := range templateList {
+func TemplateListToPreselectedLabelList(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) (labels []string) {
+	for _, t := range templates {
 		if t.Preselected == "false" {
 			continue
 		}

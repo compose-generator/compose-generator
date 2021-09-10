@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -16,7 +15,10 @@ func GenerateChooseBackends(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := config.GetServiceConfigurationsByName(model.TemplateTypeBackend)
+		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeBackend)
+		if project.Vars == nil {
+			project.Vars = make(map[string]string)
+		}
 		for _, template := range available.BackendServices {
 			for _, selectedConfig := range selectedServiceConfigs {
 				if template.Name == selectedConfig.Name {
@@ -37,17 +39,17 @@ func GenerateChooseBackends(
 	} else {
 		// Generate from user input
 		availableBackends := available.BackendServices
-		items := util.TemplateListToLabelList(availableBackends)
-		itemsPreselected := util.TemplateListToPreselectedLabelList(availableBackends, selected)
-		templateSelections := util.MultiSelectMenuQuestionIndex("Which backends services do you need?", items, itemsPreselected)
+		items := templateListToLabelList(availableBackends)
+		itemsPreselected := templateListToPreselectedLabelList(availableBackends, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which backends services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			util.Pel()
+			pel()
 			// Get selected template config
 			selectedConfig := available.BackendServices[index]
 			// Ask questions to the user
-			util.AskTemplateQuestions(project, &selectedConfig)
+			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			util.AskForCustomVolumePaths(project, &selectedConfig)
+			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
 			selected.BackendServices = append(selected.BackendServices, selectedConfig)
 		}

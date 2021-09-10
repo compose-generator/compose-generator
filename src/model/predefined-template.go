@@ -20,8 +20,8 @@ type SelectedTemplates struct {
 	FrontendServices []PredefinedTemplateConfig `json:"frontend,omitempty"`
 	BackendServices  []PredefinedTemplateConfig `json:"backend,omitempty"`
 	DatabaseServices []PredefinedTemplateConfig `json:"database,omitempty"`
-	DbAdminService   []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
-	ProxyServices    []PredefinedTemplateConfig `json:"proxy,omitempty"`
+	DbAdminServices  []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
+	ProxyService     []PredefinedTemplateConfig `json:"proxy,omitempty"`
 	TlsHelperService []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
@@ -30,8 +30,8 @@ func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
 	templates = append(templates, t.FrontendServices...)
 	templates = append(templates, t.BackendServices...)
 	templates = append(templates, t.DatabaseServices...)
-	templates = append(templates, t.DbAdminService...)
-	templates = append(templates, t.ProxyServices...)
+	templates = append(templates, t.DbAdminServices...)
+	templates = append(templates, t.ProxyService...)
 	templates = append(templates, t.TlsHelperService...)
 	return templates
 }
@@ -41,8 +41,8 @@ func (t SelectedTemplates) GetTotal() int {
 	count := len(t.FrontendServices)
 	count += len(t.BackendServices)
 	count += len(t.DatabaseServices)
-	count += len(t.DbAdminService)
-	count += len(t.ProxyServices)
+	count += len(t.DbAdminServices)
+	count += len(t.ProxyService)
 	count += len(t.TlsHelperService)
 	return count
 }
@@ -52,8 +52,8 @@ type AvailableTemplates struct {
 	FrontendServices []PredefinedTemplateConfig
 	BackendServices  []PredefinedTemplateConfig
 	DatabaseServices []PredefinedTemplateConfig
-	DbAdminService   []PredefinedTemplateConfig
-	ProxyServices    []PredefinedTemplateConfig
+	DbAdminServices  []PredefinedTemplateConfig
+	ProxyService     []PredefinedTemplateConfig
 	TlsHelperService []PredefinedTemplateConfig
 }
 

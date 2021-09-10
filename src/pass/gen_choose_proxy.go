@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -16,8 +15,11 @@ func GenerateChooseProxies(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := config.GetServiceConfigurationsByName(model.TemplateTypeProxy)
-		for _, template := range available.ProxyServices {
+		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeProxy)
+		if project.Vars == nil {
+			project.Vars = make(map[string]string)
+		}
+		for _, template := range available.ProxyService {
 			for _, selectedConfig := range selectedServiceConfigs {
 				if template.Name == selectedConfig.Name {
 					// Add vars to project
@@ -29,27 +31,27 @@ func GenerateChooseProxies(
 						}
 					}
 					// Add template to selected templates
-					selected.ProxyServices = append(selected.ProxyServices, template)
+					selected.ProxyService = append(selected.ProxyService, template)
 					break
 				}
 			}
 		}
 	} else {
 		// Generate from user input
-		availableProxies := available.ProxyServices
-		items := util.TemplateListToLabelList(availableProxies)
-		itemsPreselected := util.TemplateListToPreselectedLabelList(availableProxies, selected)
-		templateSelections := util.MultiSelectMenuQuestionIndex("Which proxy services do you need?", items, itemsPreselected)
+		availableProxies := available.ProxyService
+		items := templateListToLabelList(availableProxies)
+		itemsPreselected := templateListToPreselectedLabelList(availableProxies, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which proxy services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
-			util.Pel()
+			pel()
 			// Get selected template config
-			selectedConfig := available.ProxyServices[index]
+			selectedConfig := available.ProxyService[index]
 			// Ask questions to the user
-			util.AskTemplateQuestions(project, &selectedConfig)
+			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
-			util.AskForCustomVolumePaths(project, &selectedConfig)
+			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
-			selected.ProxyServices = append(selected.ProxyServices, selectedConfig)
+			selected.ProxyService = append(selected.ProxyService, selectedConfig)
 		}
 	}
 }

@@ -13,7 +13,7 @@ type CGProject struct {
 	ReadmeChildPaths  []string
 	ForceConfig       bool
 	WithVolumesConfig bool
-	Secrets           map[string]string
+	Secrets           []ProjectSecret
 	Vars              map[string]string
 	Ports             []int
 }
@@ -122,17 +122,8 @@ func (p CGProject) GetAllEnvFilePathsNormalized() []string {
 	return normalizedPaths
 }
 
-func (p CGProject) ApplyAllVars() {
-
-}
-
-func (p CGProject) ApplyAllSecrets() {
-	for _, service := range p.Composition.Services {
-		// Replace all secrets in all env vars
-		for index, envVar := range service.Environment {
-			for secretKey, secretValue := range p.Secrets {
-				*service.Environment[index] = strings.ReplaceAll(*envVar, "${"+secretKey+"}", secretValue)
-			}
-		}
-	}
+type ProjectSecret struct {
+	Name     string
+	Variable string
+	Value    string
 }

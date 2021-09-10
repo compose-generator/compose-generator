@@ -140,6 +140,7 @@ nfpms:
   - id: publish
     file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     maintainer: Marc Auberer <marc.auberer@chillibits.com>
+    vendor: ChilliBits
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.compose-generator.com
     license: Apache 2.0
@@ -151,15 +152,22 @@ nfpms:
     dependencies:
       - ccom
       - lsb-release
+    conflicts:
+      - cgvg
     overrides:
       rpm:
         dependencies:
+          - ccom
           - redhat-lsb
       apk:
-        dependencies: []
+        dependencies:
+          - ccom
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
+      - src: /usr/bin/cg
+        dst: /usr/bin/compose-generator
+        type: symlink
     empty_folders:
       - /usr/lib/compose-generator/templates
 release:

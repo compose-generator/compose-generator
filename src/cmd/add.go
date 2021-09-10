@@ -8,17 +8,47 @@ import (
 
 	spec "github.com/compose-spec/compose-go/types"
 	"github.com/docker/docker/client"
+	"github.com/urfave/cli/v2"
 )
+
+// Cli flags for the add command
+var AddCliFlags = []cli.Flag{
+	&cli.BoolFlag{
+		Name:    "advanced",
+		Aliases: []string{"a"},
+		Usage:   "Generate compose file in advanced mode",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "run",
+		Aliases: []string{"r"},
+		Usage:   "Run docker-compose after creating the compose file",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "detached",
+		Aliases: []string{"d"},
+		Usage:   "Run docker-compose detached after creating the compose file",
+		Value:   false,
+	},
+	&cli.BoolFlag{
+		Name:    "force",
+		Aliases: []string{"f"},
+		Usage:   "Skip safety checks",
+		Value:   false,
+	},
+}
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // Add a service to an existing compose file
-func Add(
-	flagAdvanced bool,
-	flagRun bool,
-	flagDetached bool,
-	flagForce bool,
-) {
+func Add(c *cli.Context) error {
+	// Extract flags
+	flagAdvanced := c.Bool("advanced")
+	flagRun := c.Bool("run")
+	flagDetached := c.Bool("detached")
+	flagForce := c.Bool("force")
+
 	// Check if CCom is installed
 	util.EnsureCComIsInstalled()
 
@@ -35,27 +65,30 @@ func Add(
 	}
 
 	// Load project
-	util.P("Loading project ... ")
+	spinner := util.StartProcess("Loading project ...")
 	proj := project.LoadProject(
 		project.LoadFromComposeFile(composeFilePath),
 	)
 	proj.AdvancedConfig = flagAdvanced
-	util.Done()
+	proj.ForceConfig = flagForce
+	util.StopProcess(spinner)
 	util.Pel()
 
 	// Add custom service
 	AddCustomService(proj)
 
 	// Save project
-	util.P("Saving project ... ")
+	spinner = util.StartProcess("Saving project ...")
 	project.SaveProject(proj)
-	util.Done()
+	util.StopProcess(spinner)
 	util.Pel()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 	}
+
+	return nil
 }
 
 // AddCustomService adds a fully customizable service to the project
