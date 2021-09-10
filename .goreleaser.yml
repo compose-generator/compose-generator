@@ -164,8 +164,8 @@ nfpms:
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
-      - src: /usr/bin/cg
-        dst: /usr/bin/compose-generator
+      - src: /usr/bin/compose-generator
+        dst: /usr/bin/cg
         type: symlink
     empty_folders:
       - /usr/lib/compose-generator/templates
