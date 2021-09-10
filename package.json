@@ -35,6 +35,6 @@
     "url": "https://github.com/compose-generator/compose-generator/releases/download/{{version}}/compose-generator_{{platform}}_{{arch}}.tar.gz"
   },
   "dependencies": {
-    "@gzuidhof/go-npm": "^0.1.13"
+    "@compose-generator/go-npm": "~0.9.0"
   }
 }
