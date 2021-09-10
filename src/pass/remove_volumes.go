@@ -2,29 +2,29 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
-	"os"
 	"path/filepath"
 	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+var isVolumeUsedByOtherServicesMockable = isVolumeUsedByOtherServices
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // RemoveVolumes removes all volumes of a service
 func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
-	deleteFromDisk := util.YesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false)
+	deleteFromDisk := yesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false)
 	for _, volume := range service.Volumes {
 		// Check if volume exists
-		if !util.FileExists(volume.Source) {
+		if !fileExists(volume.Source) {
 			continue // Volume is either a external volume or was already deleted
 		}
 		// Check if the volume is used by other services
-		if !isVolumeUsedByOtherServices(&volume, service, project) {
+		if !isVolumeUsedByOtherServicesMockable(&volume, service, project) {
 			// Delete volume recursively
 			if deleteFromDisk {
-				os.RemoveAll(volume.Source)
+				removeAll(volume.Source)
 			}
 			// Remove in project-wide volumes section
 			delete(project.Composition.Volumes, volume.Source)

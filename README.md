@@ -19,11 +19,13 @@
 ## Documentation
 Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).
 
-## Usage
-You can use the Compose Generator CLI by directly installing it on your Docker host system, install it via npm or by generating your compose file with the Compose Generator Docker container on the fly.
+### Install Compose Generator
+To install Compose Generator on your system, please visit the [installation section](https://www.compose-generator.com/install/linux/) in the documentation. Compose Generator is available for the latest versions of Alpine, CentOS, Debian, Fedora, Raspbian, Ubuntu and Windows. If you want to install Compose Generator manually by downloading a package file, please take a look at the table below.
 
-### Install Compose Generator CLI
-To install Compose Generator on your system, please visit the [installation section](https://www.compose-generator.com/install/linux/) in the documentation. Compose Generator is available for the latest versions of Alpine, CentOS, Debian, Fedora, Raspbian, Ubuntu, Windows. If you want to install Compose Generator manually, please look at the table below.
+After installing, you can use Compose Generator in the terminal like this:
+```sh
+$ compose-generator [<command>]
+```
 
 ## QuickStart with Docker
 *Note for Windows users: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
@@ -33,7 +35,7 @@ $ docker run --rm -it -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
 ```
 
 ## Supported host systems & file downloads
-There are also downloadable packages available for all supported platforms:
+There are downloadable packages available for all supported platforms:
 
 | **Platform**                | **x86_64 / amd64**                                                                     | **i386**                                                                             | **armv5**                                                                              | **armv6**                                                                              | **armv7**                                                                              | **arm64**                                                                              |
 |-----------------------------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
