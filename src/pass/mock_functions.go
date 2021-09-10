@@ -2,6 +2,7 @@ package pass
 
 import (
 	"compose-generator/model"
+	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
 	"os"
@@ -54,6 +55,8 @@ var unmarshalYaml = yaml.Unmarshal
 var openFile = os.Open
 var readAllFromFile = ioutil.ReadAll
 var generatePassword = password.Generate
+var loadTemplateService = project.LoadTemplateService
+var sliceContainsString = util.SliceContainsString
 var getServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 	return config.GetServiceConfigurationsByName(templateType)
 }

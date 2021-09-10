@@ -3,12 +3,13 @@ package pass
 import (
 	"compose-generator/model"
 	"compose-generator/project"
-	"compose-generator/util"
 	"path/filepath"
 	"strconv"
 
 	"github.com/compose-spec/compose-go/types"
 )
+
+var generateServiceMockable = generateService
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -24,34 +25,34 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 			Services:   types.Services{},
 		}
 		if project.WithReadme {
-			instructionsHeaderPath := util.GetPredefinedServicesPath() + "/INSTRUCTIONS_HEADER.md"
+			instructionsHeaderPath := getPredefinedServicesPath() + "/INSTRUCTIONS_HEADER.md"
 			project.ReadmeChildPaths = append(project.ReadmeChildPaths, instructionsHeaderPath)
 		}
 
 		// Generate services from selected templates
 		// Generate frontends
 		for _, template := range selectedTemplates.FrontendServices {
-			generateService(project, selectedTemplates, template, model.TemplateTypeFrontend, template.Name)
+			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeFrontend, template.Name)
 		}
 		// Generate backends
 		for _, template := range selectedTemplates.BackendServices {
-			generateService(project, selectedTemplates, template, model.TemplateTypeBackend, template.Name)
+			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeBackend, template.Name)
 		}
 		// Generate databases
 		for _, template := range selectedTemplates.DatabaseServices {
-			generateService(project, selectedTemplates, template, model.TemplateTypeDatabase, template.Name)
+			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeDatabase, template.Name)
 		}
 		// Generate db admins
 		for _, template := range selectedTemplates.DbAdminServices {
-			generateService(project, selectedTemplates, template, model.TemplateTypeDbAdmin, template.Name)
+			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeDbAdmin, template.Name)
 		}
 		// Generate proxies
 		for _, template := range selectedTemplates.ProxyService {
-			generateService(project, selectedTemplates, template, model.TemplateTypeProxy, template.Name)
+			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeProxy, template.Name)
 		}
 		// Generate tls helpers
 		for _, template := range selectedTemplates.TlsHelperService {
-			generateService(project, selectedTemplates, template, model.TemplateTypeTlsHelper, template.Name)
+			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeTlsHelper, template.Name)
 		}
 		stopProcess(spinner)
 	} else {
@@ -69,7 +70,7 @@ func generateService(
 	serviceName string,
 ) {
 	// Load service configuration
-	service := project.LoadTemplateService(
+	service := loadTemplateService(
 		proj,
 		selectedTemplates,
 		templateType,
@@ -89,7 +90,7 @@ func generateService(
 	}
 	// Add gitignore patterns
 	for _, envFilePath := range template.GetFilePathsByType("env") {
-		if !util.SliceContainsString(proj.GitignorePatterns, envFilePath) {
+		if !sliceContainsString(proj.GitignorePatterns, envFilePath) {
 			proj.GitignorePatterns = append(proj.GitignorePatterns, envFilePath)
 		}
 	}

@@ -39,7 +39,7 @@ func TestRemoveVolumes1(t *testing.T) {
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you really want to delete all attached volumes of 'current-service' on disk?", question)
 		assert.False(t, defaultValue)
-		return false
+		return true
 	}
 	fileExistsCallCount := 0
 	fileExists = func(path string) bool {
@@ -56,14 +56,21 @@ func TestRemoveVolumes1(t *testing.T) {
 		assert.Equal(t, project, proj)
 		return false
 	}
+	removeAllCallCount := 0
 	removeAll = func(path string) error {
-		assert.Fail(t, "Unexpected call of removeAll")
+		removeAllCallCount++
+		if removeAllCallCount == 1 {
+			assert.Equal(t, "./volumes/test-volume", path)
+		} else {
+			assert.Equal(t, "test", path)
+		}
 		return nil
 	}
 	// Execute test
 	RemoveVolumes(service, project)
 	// Assert
 	assert.Equal(t, 2, fileExistsCallCount)
+	assert.Equal(t, 2, removeAllCallCount)
 	assert.Equal(t, expectedProject, project)
 }
 
@@ -133,9 +140,7 @@ func TestIsVolumeUsedByOtherServices1(t *testing.T) {
 	volume := &spec.ServiceVolumeConfig{
 		Source: "./volumes/frontend-react",
 	}
-	service := &spec.ServiceConfig{
-		Name: "current-service",
-	}
+	service := &spec.ServiceConfig{}
 	project := &model.CGProject{
 		Composition: &spec.Project{
 			Services: spec.Services{
@@ -167,7 +172,9 @@ func TestIsVolumeUsedByOtherServices2(t *testing.T) {
 	volume := &spec.ServiceVolumeConfig{
 		Source: "./volumes/database-orientdb",
 	}
-	service := &spec.ServiceConfig{}
+	service := &spec.ServiceConfig{
+		Name: "current-service",
+	}
 	project := &model.CGProject{
 		Composition: &spec.Project{
 			Services: spec.Services{
