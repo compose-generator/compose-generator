@@ -55,7 +55,9 @@ func CheckForServiceTemplateUpdate() {
 	// Download update if necessary
 	if shouldUpdate {
 		spinner := StartProcess("Downloading predefined services update ...")
-		DownloadFile(fileUrl, outputPath)
+		if err := DownloadFile(fileUrl, outputPath); err != nil {
+			Error("Failed to download predefined services update. Please check your internet connection", err, true)
+		}
 		filepath, err := filepath.Abs(predefinedTemplatesDir)
 		if err != nil {
 			Error("Could not build path", err, true)
