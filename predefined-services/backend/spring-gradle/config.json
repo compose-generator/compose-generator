@@ -18,10 +18,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "backend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [
@@ -35,7 +31,7 @@
         {
             "text": "Spring version",
             "type": 2,
-            "defaultValue": "2.5.0",
+            "defaultValue": "2.5.3",
             "variable": "SPRING_GRADLE_VERSION"
         },
         {
@@ -61,9 +57,8 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
-            "variable": "SPRING_GRADLE_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-spring-gradle",
+            "variable": "SPRING_GRADLE_SOURCE_DIRECTORY"
         }
     ]
 }

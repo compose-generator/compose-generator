@@ -7,6 +7,31 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Test data
+var templateData = &model.SelectedTemplates{
+	FrontendServices: []model.PredefinedTemplateConfig{
+		{Label: "Angular", Name: "angular"},
+		{Label: "Vue", Name: "vue"},
+	},
+	BackendServices: []model.PredefinedTemplateConfig{
+		{Label: "Wordpress", Name: "wordpress"},
+	},
+}
+
+var templateData2 = &model.SelectedTemplates{
+	DbAdminServices: []model.PredefinedTemplateConfig{
+		{Label: "PhpMyAdmin", Name: "phpmyadmin"},
+	},
+	TlsHelperService: []model.PredefinedTemplateConfig{
+		{Label: "Lets Encrypt Companion", Name: "letsencrypt"},
+	},
+}
+
+var varMap = map[string]string{
+	"FOO": "test",
+	"BAR": "test1",
+}
+
 // ---------------------------------------------------------------- EvaluateConditionalSection ---------------------------------------------------------------
 
 func TestEvaluateConditionalSection_True1(t *testing.T) {
@@ -46,21 +71,6 @@ func TestEvaluateConditionalSection_False2(t *testing.T) {
 
 // ---------------------------------------------------------------- EvaluateCondition ---------------------------------------------------------------
 
-var templateData = map[string][]model.ServiceTemplateConfig{
-	"frontend": {
-		{Label: "Angular", Name: "angular"},
-		{Label: "Vue", Name: "vue"},
-	},
-	"backend": {
-		{Label: "Wordpress", Name: "wordpress"},
-	},
-	"database": {},
-}
-var varMap = map[string]string{
-	"FOO": "test",
-	"BAR": "test1",
-}
-
 func TestEvaluateCondition_True1(t *testing.T) {
 	condition := "has services.frontend"
 	result := EvaluateCondition(condition, templateData, varMap)
@@ -93,23 +103,14 @@ func TestEvaluateCondition_False2(t *testing.T) {
 
 // ----------------------------------------------------------------- PrepareDataInput ---------------------------------------------------------------
 
-var templateData2 = map[string][]model.ServiceTemplateConfig{
-	"db-admin": {
-		{Label: "PhpMyAdmin", Name: "phpmyadmin"},
-	},
-	"tls-helper": {
-		{Label: "Lets Encrypt Companion", Name: "letsencrypt"},
-	},
-}
-
 func TestPrepareInputData1(t *testing.T) {
-	result := PrepareInputData(templateData, varMap)
-	expected := "{\"services\":{\"backend\":[{\"label\":\"Wordpress\",\"name\":\"wordpress\"}],\"frontend\":[{\"label\":\"Angular\",\"name\":\"angular\"},{\"label\":\"Vue\",\"name\":\"vue\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
+	result := prepareInputData(templateData, varMap)
+	expected := "{\"services\":{\"frontend\":[{\"label\":\"Angular\",\"name\":\"angular\"},{\"label\":\"Vue\",\"name\":\"vue\"}],\"backend\":[{\"label\":\"Wordpress\",\"name\":\"wordpress\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
 	assert.Equal(t, expected, result)
 }
 
 func TestPrepareInputData2(t *testing.T) {
-	result := PrepareInputData(templateData2, varMap)
+	result := prepareInputData(templateData2, varMap)
 	expected := "{\"services\":{\"dbadmin\":[{\"label\":\"PhpMyAdmin\",\"name\":\"phpmyadmin\"}],\"tlshelper\":[{\"label\":\"Lets Encrypt Companion\",\"name\":\"letsencrypt\"}]},\"var\":{\"BAR\":\"test1\",\"FOO\":\"test\"}}"
 	assert.Equal(t, expected, result)
 }
@@ -117,6 +118,6 @@ func TestPrepareInputData2(t *testing.T) {
 // -------------------------------------------------------------- CheckIfCComIsInstalled ------------------------------------------------------------
 
 func TestCheckIfCComIsInstalled(t *testing.T) {
-	CheckIfCComIsInstalled()
+	EnsureCComIsInstalled()
 	assert.True(t, true)
 }

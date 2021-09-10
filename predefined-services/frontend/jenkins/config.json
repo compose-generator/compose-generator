@@ -28,7 +28,7 @@
             "advanced": true
         },
         {
-            "text": "Which version of Gitea do you want to use?",
+            "text": "Which version of Jenkins do you want to use?",
             "type": 2,
             "defaultValue": "lts",
             "variable": "JENKINS_VERSION"

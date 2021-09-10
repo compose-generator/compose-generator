@@ -11,10 +11,6 @@
             "type": "docs"
         },
         {
-            "path": "backend/Dockerfile",
-            "type": "docker"
-        },
-        {
             "path": "backend/Cargo.toml",
             "type": "config"
         }
@@ -42,16 +38,15 @@
         {
             "text": "Which version of Rust do you want to use?",
             "type": 2,
-            "defaultValue": "1.52",
+            "defaultValue": "1.54",
             "variable": "ROCKET_RUST_VERSION"
         }
     ],
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./backend",
-            "variable": "ROCKET_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-rocket",
+            "variable": "ROCKET_SOURCE_DIRECTORY"
         }
     ]
 }

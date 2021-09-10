@@ -1,7 +1,6 @@
 package util
 
 import (
-	"crypto/tls"
 	"io"
 	"net/http"
 	"os"
@@ -12,9 +11,7 @@ import (
 // DownloadFile downloads a file by its url
 func DownloadFile(url string, filepath string) error {
 	// Ignore untrusted authorities
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
+	tr := &http.Transport{}
 	client := &http.Client{Transport: tr}
 
 	// Download file

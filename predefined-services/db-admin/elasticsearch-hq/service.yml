@@ -1,5 +1,5 @@
 image: elastichq/elasticsearch-hq:${{ELASTICSEARCH_HQ_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-adminer
+container_name: ${{PROJECT_NAME_CONTAINER}}-dbadmin-elasticsearch-hq
 networks:
 #? if services.database contains name == "elasticsearch" {
 #   - elasticsearch-elasticsearchhq

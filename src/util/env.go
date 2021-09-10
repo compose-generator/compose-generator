@@ -2,24 +2,13 @@ package util
 
 import (
 	"os"
-	"strconv"
+	"path/filepath"
 	"strings"
 
 	"github.com/kardianos/osext"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
-
-// PrintSafetyWarning checks if commonly used files are already existing and warns the user about it
-func PrintSafetyWarning(existingCount int) {
-	Pel()
-	Warning(strconv.Itoa(existingCount) + " output files already exist. By continuing, those files will be overwritten!")
-	result := YesNoQuestion("Do you want to continue?", true)
-	if !result {
-		os.Exit(0)
-	}
-	Pel()
-}
 
 // IsDockerizedEnvironment checks if Compose Generator runs within a dockerized environment
 func IsDockerizedEnvironment() bool {
@@ -32,7 +21,7 @@ func GetCustomTemplatesPath() string {
 		return "/usr/lib/compose-generator/templates" // Linux
 	}
 	filename, _ := osext.Executable()
-	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filepath.ToSlash(filename)
 	filename = filename[:strings.LastIndex(filename, "/")]
 	if FileExists(filename + "/templates") {
 		return filename + "/templates" // Windows + Docker
@@ -46,7 +35,7 @@ func GetPredefinedServicesPath() string {
 		return "/usr/lib/compose-generator/predefined-services" // Linux
 	}
 	filename, _ := osext.Executable()
-	filename = strings.ReplaceAll(filename, "\\", "/")
+	filename = filepath.ToSlash(filename)
 	filename = filename[:strings.LastIndex(filename, "/")]
 	if FileExists(filename + "/predefined-services") {
 		return filename + "/predefined-services" // Windows + Docker

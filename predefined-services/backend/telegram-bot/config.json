@@ -15,10 +15,6 @@
             "type": "env"
         },
         {
-            "path": "backend/Dockerfile",
-            "type": "docker"
-        },
-        {
             "path": "backend/bot.py",
             "type": "config"
         }
@@ -46,9 +42,8 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
-            "variable": "TELEGRAM_BOT_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-telegram-bot",
+            "variable": "TELEGRAM_BOT_SOURCE_DIRECTORY"
         }
     ]
 }

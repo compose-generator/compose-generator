@@ -1,0 +1,68 @@
+{
+    "label": "QuestDB",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your QuestDB database?",
+            "type": 2,
+            "defaultValue": "9000",
+            "validator": "port",
+            "variable": "QUESTDB_API_PORT"
+        },
+        {
+            "text": "Do you want to enable the endpoint for Postgres wire protocol?",
+            "type": 3,
+            "options": ["yes", "no"],
+            "defaultValue": "no",
+            "variable": "QUESTDB_ENABLE_PG_WIRE_PORT",
+            "advanced": true
+        },
+        {
+            "text": "Do you want to enable the endpoint for InfluxDB line protocol?",
+            "type": 3,
+            "options": ["yes", "no"],
+            "defaultValue": "no",
+            "variable": "QUESTDB_ENABLE_INFLUX_LINE_ENDPOINT",
+            "advanced": true
+        },
+        {
+            "text": "Do you want to enable the health endpoint of QuestDB?",
+            "type": 3,
+            "options": ["yes", "no"],
+            "defaultValue": "no",
+            "variable": "QUESTDB_ENABLE_HEALTH_ENDPOINT",
+            "advanced": true
+        },
+        {
+            "text": "Which QuestDB version do you want to use?",
+            "type": 2,
+            "defaultValue": "6.0.4",
+            "variable": "QUESTDB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for QuestDB data volume?",
+            "defaultValue": "./volumes/questdb-data",
+            "variable": "VOLUME_QUESTDB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for QuestDB config volume?",
+            "defaultValue": "./volumes/questdb-config",
+            "variable": "VOLUME_QUESTDB_CONFIG",
+            "advanced": true
+        }
+    ]
+}

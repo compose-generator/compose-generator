@@ -3,5 +3,3 @@ container_name: ${{PROJECT_NAME_CONTAINER}}-backend-live-poll
 restart: always
 ports:
   - ${{LIVE_POLL_PORT}}:80
-env_file:
-  - environment.env

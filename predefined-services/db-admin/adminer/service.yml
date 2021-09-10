@@ -10,9 +10,16 @@ networks:
 #? if services.database contains name == "mariadb" {
 #   - mariadb-adminer
 #? }
+#? if services.database contains name == "elasticsearch" {
+#   - elasticsearch-adminer
+#? }
 ports:
   - ${{ADMINER_PORT}}:8080
 env_file:
   - environment.env
 depends_on:
-  - database
+  - database-mysql
+  - database-mariadb
+  - database-postgres
+  - database-elasticsearch
+  - database-mongodb

@@ -6,7 +6,6 @@ builds:
       - linux
       - windows
       - darwin
-      - freebsd
     goarch:
       - amd64
       - arm
@@ -20,12 +19,13 @@ builds:
       - -s -w -X compose-generator/util.Version={{ .Version }} -X compose-generator/util.Commit={{ .Commit }} -X compose-generator/util.Date={{ .CommitDate }} -X compose-generator/util.BuiltBy=github-actions
 dockers:
   - image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}
-      - ghcr.io/compose-generator/compose-generator:latest
-      - chillibits/compose-generator:{{ .Version }}
-      - chillibits/compose-generator:latest
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
+      - ghcr.io/compose-generator/compose-generator:latest-amd64
+      - chillibits/compose-generator:{{ .Version }}-amd64
+      - chillibits/compose-generator:latest-amd64
     dockerfile: Dockerfile
     use: buildx
+    goarch: amd64
     extra_files:
       - predefined-services
     build_flag_templates:
@@ -36,17 +36,110 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=amd64
       - --platform=linux/amd64
+  - image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
+      - ghcr.io/compose-generator/compose-generator:latest-i386
+      - chillibits/compose-generator:{{ .Version }}-i386
+      - chillibits/compose-generator:latest-i386
+    dockerfile: Dockerfile
+    use: buildx
+    goarch: 386
+    extra_files:
+      - predefined-services
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=386
+      - --platform=linux/i386
+  - image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:latest-arm32v6
+      - chillibits/compose-generator:{{ .Version }}-arm32v6
+      - chillibits/compose-generator:latest-arm32v6
+    dockerfile: Dockerfile
+    use: buildx
+    goarch: arm
+    goarm: 6
+    extra_files:
+      - predefined-services
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=armv6
+      - --platform=linux/arm/v6
+  - image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+      - ghcr.io/compose-generator/compose-generator:latest-arm32v7
+      - chillibits/compose-generator:{{ .Version }}-arm32v7
+      - chillibits/compose-generator:latest-arm32v7
+    dockerfile: Dockerfile
+    use: buildx
+    goarch: arm
+    goarm: 7
+    extra_files:
+      - predefined-services
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://www.compose-generator.com
+      - --label=org.opencontainers.image.source=https://github.com/compose-generator/compose-generator
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=Apache 2.0
+      - --build-arg=ARCH=armv7
+      - --platform=linux/arm/v7
+docker_manifests:
+  - name_template: chillibits/compose-generator:{{ .Version }}
+    image_templates:
+      - chillibits/compose-generator:{{ .Version }}-amd64
+      - chillibits/compose-generator:{{ .Version }}-i386
+      - chillibits/compose-generator:{{ .Version }}-arm32v6
+      - chillibits/compose-generator:{{ .Version }}-arm32v7
+  - name_template: chillibits/compose-generator:latest
+    image_templates:
+      - chillibits/compose-generator:{{ .Version }}-amd64
+      - chillibits/compose-generator:{{ .Version }}-i386
+      - chillibits/compose-generator:{{ .Version }}-arm32v6
+      - chillibits/compose-generator:{{ .Version }}-arm32v7
+  - name_template: ghcr.io/compose-generator/compose-generator:{{ .Version }}
+    image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+  - name_template: ghcr.io/compose-generator/compose-generator:latest
+    image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
 archives:
-  - files:
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    files:
       - LICENSE
       - predefined-services/*
     format_overrides:
       - goos: windows
         format: zip
+checksum:
+  name_template: '{{ .ProjectName }}_checksums.txt'
 nfpms:
   - id: publish
+    file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     maintainer: Marc Auberer <marc.auberer@chillibits.com>
+    vendor: ChilliBits
     description: Easy to use cli to generate Docker Compose YAML configuration files.
     homepage: https://www.compose-generator.com
     license: Apache 2.0
@@ -58,15 +151,22 @@ nfpms:
     dependencies:
       - ccom
       - lsb-release
+    conflicts:
+      - cgvg
     overrides:
       rpm:
         dependencies:
+          - ccom
           - redhat-lsb
       apk:
-        dependencies: []
+        dependencies:
+          - ccom
     contents:
       - src: predefined-services/*
         dst: /usr/lib/compose-generator/predefined-services/
+      - src: /usr/bin/compose-generator
+        dst: /usr/bin/cg
+        type: symlink
     empty_folders:
       - /usr/lib/compose-generator/templates
 release:
@@ -74,7 +174,14 @@ release:
   prerelease: auto
   extra_files:
     - glob: ./bin/predefined-services.tar.gz
+  footer: |
+    ---
+    
+    __Visit [www.compose-generator.com](https://www.compose-generator.com) to test the new features!__
 announce:
   twitter:
     enabled: true
-    message_template: 'Compose Generator {{.Tag}} is now available! Check out the new features: compose-generator.com!'
+    message_template: 'Compose Generator {{ .Tag }} is now available! Check out the new features: compose-generator.com!'
+milestones:
+  - close: true
+    fail_on_error: false

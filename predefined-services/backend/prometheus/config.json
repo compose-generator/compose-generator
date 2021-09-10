@@ -1,0 +1,36 @@
+{
+    "label": "Prometheus",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Prometheus instance?",
+            "type": 2,
+            "defaultValue": "9090",
+            "validator": "port",
+            "variable": "PROMETHEUS_PORT"
+        },
+        {
+            "text": "Which version of Prometheus do you want to use?",
+            "type": 2,
+            "defaultValue": "2.29.1",
+            "variable": "PROMETHEUS_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Prometheus config directory?",
+            "defaultValue": "./volumes/prometheus-config",
+            "variable": "VOLUME_PROMETHEUS_CONFIG"
+        }
+    ]
+}

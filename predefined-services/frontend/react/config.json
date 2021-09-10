@@ -2,11 +2,9 @@
     "label": "React",
     "preselected": "false",
     "demoAppInitCmd": [
-        "mkdir tmp",
-        "mv ${{REACT_SOURCE_DIRECTORY}}/* ./tmp",
-        "npx create-react-app ${{REACT_SOURCE_DIRECTORY}}",
+        "create-react-app tmp",
         "mv ./tmp/* ${{REACT_SOURCE_DIRECTORY}}",
-        "rm -rf ./tmp",
+        "rm -rf tmp",
         "rm -rf ${{REACT_SOURCE_DIRECTORY}}/node_modules"
     ],
     "files": [
@@ -17,10 +15,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "frontend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [
@@ -35,9 +29,8 @@
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./frontend",
-            "variable": "REACT_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./frontend-react",
+            "variable": "REACT_SOURCE_DIRECTORY"
         }
     ]
 }

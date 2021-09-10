@@ -54,7 +54,7 @@ func TextQuestionWithDefault(question string, defaultValue string) (result strin
 }
 
 // TextQuestionWithSuggestions prints simple text question with a suggestion function
-func TextQuestionWithSuggestions(question string, fn suggest) (result string) {
+func TextQuestionWithSuggestions(question string, fn Suggest) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 		Suggest: fn,
@@ -64,7 +64,7 @@ func TextQuestionWithSuggestions(question string, fn suggest) (result string) {
 }
 
 // TextQuestionWithDefaultAndSuggestions prints simple text question with default value and a suggestion function
-func TextQuestionWithDefaultAndSuggestions(question string, defaultValue string, fn suggest) (result string) {
+func TextQuestionWithDefaultAndSuggestions(question string, defaultValue string, fn Suggest) (result string) {
 	prompt := &survey.Input{
 		Message: question,
 		Default: defaultValue,
@@ -144,7 +144,7 @@ func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []s
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 // Function for settings suggestions to a question for autocompletion
-type suggest func(toComplete string) []string
+type Suggest func(toComplete string) []string
 
 func handleInterrupt(err error) {
 	if err == terminal.InterruptErr {

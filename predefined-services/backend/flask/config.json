@@ -15,10 +15,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "backend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [
@@ -45,9 +41,8 @@
     "volumes": [
         {
             "text": "Custom path for backend source directory?",
-            "defaultValue": "./backend",
-            "variable": "FLASK_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-flask",
+            "variable": "FLASK_SOURCE_DIRECTORY"
         }
     ]
 }

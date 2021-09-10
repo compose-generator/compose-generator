@@ -9,10 +9,6 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "backend/Dockerfile",
-            "type": "docker"
         }
     ],
     "questions": [
@@ -26,16 +22,15 @@
         {
             "text": "Which version of PHP do you want to use?",
             "type": 2,
-            "defaultValue": "8.0",
+            "defaultValue": "8.1",
             "variable": "PHP_VERSION"
         }
     ],
     "volumes": [
         {
             "text": "Custom path for source directory?",
-            "defaultValue": "./backend",
-            "variable": "PHP_SOURCE_DIRECTORY",
-            "withDockerfile": true
+            "defaultValue": "./backend-php",
+            "variable": "PHP_SOURCE_DIRECTORY"
         }
     ]
 }
