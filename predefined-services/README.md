@@ -30,7 +30,8 @@ It consists of following parts:
 	- `type`: Type of the file. Needs to be one of: `service`, `env`, `docs` or `config`
 - `questions` - Lists of quesions, which the cli will ask the user.
 	- `text` - Question itself (keep it as short as possible).
-	- `type` - 1 = Yes/No question, 2 = Text question
+	- `type` - 1 = Yes/No question, 2 = Text question, 3 = Menu question
+	- `options` - String array with answer options (Only when type is 3)
 	- `defaultValue` - Default value of the question (Will be displayed in braces after the question)
 	- `validator` - Validate the user input. All validators are listed in the section about [input validators](#input-validators).
 	- `var` - Name of the variable, which the answer of the question will be assigned to.

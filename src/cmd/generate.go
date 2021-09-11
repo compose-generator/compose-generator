@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the generate command
+// GenerateCliFlags are the cli flags for the generate command
 var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "advanced",

@@ -60,10 +60,9 @@ func TestGenerateSecrets(t *testing.T) {
 		if generatePasswordCallCount == 1 {
 			assert.Equal(t, 50, length)
 			return "tkzN4rfQMDWgpLWcQp5sWLWgHVXgWG9maFgUaG9x3u7t5sg3z2", nil
-		} else {
-			assert.Equal(t, 30, length)
-			return "HTRqX9Cb72LHSM4LahwVTtWQktFwx6", nil
 		}
+		assert.Equal(t, 30, length)
+		return "HTRqX9Cb72LHSM4LahwVTtWQktFwx6", nil
 	}
 	printError = func(description string, err error, exit bool) {
 		assert.Fail(t, "Unexpected call of printError")

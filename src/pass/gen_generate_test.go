@@ -127,15 +127,15 @@ func TestGenerateService1(t *testing.T) {
 		Files: []model.File{
 			{
 				Path: "./docs.md",
-				Type: "docs",
+				Type: model.FileTypeDocs,
 			},
 			{
 				Path: "./env.env",
-				Type: "env",
+				Type: model.FileTypeEnv,
 			},
 			{
 				Path: "./env.env",
-				Type: "env",
+				Type: model.FileTypeEnv,
 			},
 		},
 	}
@@ -170,10 +170,9 @@ func TestGenerateService1(t *testing.T) {
 		if sliceContainsStringCallCount == 1 {
 			assert.Nil(t, slice)
 			return false
-		} else {
-			assert.EqualValues(t, []string{"./env.env"}, slice)
-			return true
 		}
+		assert.EqualValues(t, []string{"./env.env"}, slice)
+		return true
 	}
 	// Execute test
 	generateService(proj, selectedTemplates, template, templateType, serviceName)

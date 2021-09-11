@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the add command
+// AddCliFlags are the cli flags for the add command
 var AddCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "advanced",

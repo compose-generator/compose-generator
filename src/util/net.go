@@ -16,17 +16,25 @@ func DownloadFile(url string, filepath string) error {
 
 	// Download file
 	resp, err := client.Get(url)
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			Error("Error closing downloaded file", err, true)
+		}
+	}()
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
 	// Create the file
 	out, err := os.Create(filepath)
+	defer func() {
+		if err := out.Close(); err != nil {
+			Error("Error closing downloaded file", err, true)
+		}
+	}()
 	if err != nil {
 		return err
 	}
-	defer out.Close()
 
 	// Write the body to file
 	_, err = io.Copy(out, resp.Body)

@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the remove command
+// RemoveCliFlags are the cli flags for the remove command
 var RemoveCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "advanced",
