@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the template save command
+// TemplateSaveCliFlags are the cli flags for the template save command
 var TemplateSaveCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "stash",

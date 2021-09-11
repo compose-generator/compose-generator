@@ -16,7 +16,7 @@ const (
 	timeFormat = "Jan-02-06 3:04:05 PM"
 )
 
-// Cli flags for the template load command
+// TemplateLoadCliFlags are the cli flags for the template load command
 var TemplateLoadCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "force",
