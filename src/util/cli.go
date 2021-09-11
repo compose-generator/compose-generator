@@ -47,28 +47,33 @@ func DockerComposeUp(detached bool) {
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Start()
-	cmd.Wait()
+	if err := cmd.Start(); err != nil {
+		Error("Could not execute docker compose", err, true)
+	}
+	if err := cmd.Wait(); err != nil {
+		Error("Could not wait for docker compose", err, true)
+	}
 }
 
 // ExecuteWithOutput runs a command and prints the output to the console immediately
 func ExecuteWithOutput(c string) {
+	// #nosec G204
 	cmd := exec.Command(c)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Run()
+	if err := cmd.Run(); err != nil {
+		Error("Could not execute command", err, true)
+	}
 }
 
 // ExecuteAndWait executes a command and wait until the execution is complete
 func ExecuteAndWait(c ...string) {
-	// #nosec G201 G202 G203
+	// #nosec G204
 	cmd := exec.Command(c[0], c[1:]...)
-	err := cmd.Start()
-	if err != nil {
+	if err := cmd.Start(); err != nil {
 		Error("Could not execute command", err, true)
 	}
-	err = cmd.Wait()
-	if err != nil {
+	if err := cmd.Wait(); err != nil {
 		Error("Could not wait for command", err, true)
 	}
 }
@@ -81,6 +86,7 @@ func ExecuteOnToolbox(c string) {
 		Error("Could not find current working directory", err, true)
 	}
 	// Start docker container
+	// #nosec G204
 	err = exec.Command("docker", "run", "-i", "-v", workingDir+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c).Run()
 	if err != nil {
 		Error("Could not start toolbox", err, true)
@@ -91,32 +97,29 @@ func ExecuteOnToolbox(c string) {
 func ExecuteOnToolboxCustomVolume(c string, volumePath string) {
 	imageVersion := getToolboxImageVersion()
 	// Start docker container
+	// #nosec G204
 	cmd := exec.Command("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
-	err := cmd.Start()
-	if err != nil {
+	if err := cmd.Start(); err != nil {
 		Error("Could not start docker", err, true)
 	}
-	err = cmd.Wait()
-	if err != nil {
+	if err := cmd.Wait(); err != nil {
 		Error("Could not wait for docker", err, true)
 	}
 }
 
 // ClearScreen errases the console contents
 func ClearScreen() {
-	cmd := getClearScreenCommand()
+	cmd := exec.Command("clear")
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", "cls")
+	}
 	cmd.Stdout = os.Stdout
-	cmd.Run()
+	if err := cmd.Run(); err != nil {
+		Warning("Could not clear screen")
+	}
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
-
-func getClearScreenCommand() *exec.Cmd {
-	if runtime.GOOS == "windows" {
-		return exec.Command("cmd", "/c", "cls")
-	}
-	return exec.Command("clear")
-}
 
 func getToolboxImageVersion() string {
 	if IsDevVersion() || IsPreRelease() {

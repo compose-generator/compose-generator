@@ -13,7 +13,7 @@ var replaceGroupDependencyMockable = replaceGroupDependency
 // GenerateResolveDependencyGroups resolves group dependencies like 'database' or 'frontend' to concrete service dependencies
 func GenerateResolveDependencyGroups(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	spinner := startProcess("Resolving group dependencies ...")
-	for i := 0; i < len(project.Composition.Services); i++ {
+	for i := range project.Composition.Services {
 		service := &project.Composition.Services[i]
 		// Search for frontend group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeFrontend]; ok {

@@ -71,6 +71,7 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 
 func getConfigFromFile(dirPath string) (config model.PredefinedTemplateConfig) {
 	// Read JSON file
+	// #nosec G304
 	jsonFile, err := os.Open(dirPath + "/config.json")
 	if err != nil {
 		util.Error("Unable to load config file of template "+dirPath, err, true)

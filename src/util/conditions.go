@@ -17,6 +17,7 @@ func EvaluateConditionalSections(
 ) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
+	// #nosec G204
 	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -33,6 +34,7 @@ func EvaluateCondition(
 ) bool {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
+	// #nosec G204
 	cmd := exec.Command("ccom", "-m", "-s", "-d", dataString, condition)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
