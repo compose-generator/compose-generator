@@ -105,9 +105,8 @@ func askForTemplate() string {
 		}
 		index := util.MenuQuestionIndex("Which template do you want to load?", items)
 		return keys[index]
-	} else {
-		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	}
+	util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	return ""
 }
 

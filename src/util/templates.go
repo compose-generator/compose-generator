@@ -67,7 +67,7 @@ func CheckForServiceTemplateUpdate() {
 	}
 }
 
-// Asks the user all questions the predefined service contains and saves the answers to the project
+// AskTemplateQuestions asks the user all questions the predefined service contains and saves the answers to the project
 func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, question := range template.Questions {
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
