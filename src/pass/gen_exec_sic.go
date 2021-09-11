@@ -19,7 +19,7 @@ func GenerateExecServiceInitCommands(project *model.CGProject, selectedTemplates
 			}
 			// Execute service init commands for this template
 			spinner := startProcess("Generating configuration for " + template.Label + " ...")
-			executeOnLinux(strings.Join(cmds, " && "))
+			executeOnToolbox(strings.Join(cmds, " && "))
 			stopProcess(spinner)
 		}
 	}

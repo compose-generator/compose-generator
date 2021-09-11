@@ -85,11 +85,11 @@ func generateService(
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)
 	// Add child readme files
-	for _, readmePath := range template.GetFilePathsByType("docs") {
+	for _, readmePath := range template.GetFilePathsByType(model.FileTypeDocs) {
 		proj.ReadmeChildPaths = append(proj.ReadmeChildPaths, filepath.Join(template.Dir, readmePath))
 	}
 	// Add gitignore patterns
-	for _, envFilePath := range template.GetFilePathsByType("env") {
+	for _, envFilePath := range template.GetFilePathsByType(model.FileTypeEnv) {
 		if !sliceContainsString(proj.GitignorePatterns, envFilePath) {
 			proj.GitignorePatterns = append(proj.GitignorePatterns, envFilePath)
 		}

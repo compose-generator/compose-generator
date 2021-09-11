@@ -44,12 +44,14 @@ func GenerateCopyVolumes(project *model.CGProject) {
 func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
-		if mkdirAll(dstPath, 0755) != nil {
+		if mkdirAll(dstPath, 0750) != nil {
 			printWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
-		copyFile(srcPath, dstPath)
+		if err := copyFile(srcPath, dstPath); err != nil {
+			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
+		}
 	}
 	// Set the volume bind path to the destination
 	volume.Source = dstPath
@@ -58,12 +60,14 @@ func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath strin
 func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
-		if mkdirAll(dstPath, 0755) != nil {
+		if mkdirAll(dstPath, 0750) != nil {
 			printWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
-		copyFile(srcPath, dstPath)
+		if err := copyFile(srcPath, dstPath); err != nil {
+			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
+		}
 	}
 	// Set the volume bind path to the destination
 	build.Context = dstPath

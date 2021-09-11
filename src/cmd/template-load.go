@@ -162,6 +162,8 @@ func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
 			util.Error("Could not copy volume '"+path+"'", err, false)
 			continue
 		}
-		copy.Copy(sourceDir+"/"+pathRel, path)
+		if copy.Copy(sourceDir+"/"+pathRel, path) != nil {
+			util.Warning("Could not copy volumes from '" + sourceDir + "/" + pathRel + "' to '" + path + "'")
+		}
 	}
 }

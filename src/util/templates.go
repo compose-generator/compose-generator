@@ -18,7 +18,7 @@ func CheckForServiceTemplateUpdate() {
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
 	if !FileExists(predefinedTemplatesDir) {
-		if err := os.MkdirAll(predefinedTemplatesDir, 0755); err != nil {
+		if err := os.MkdirAll(predefinedTemplatesDir, 0750); err != nil {
 			Error("Could not create directory for predefined templates", err, true)
 		}
 	}
@@ -62,7 +62,7 @@ func CheckForServiceTemplateUpdate() {
 		if err != nil {
 			Error("Could not build path", err, true)
 		}
-		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
+		ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
 		StopProcess(spinner)
 	}
 }

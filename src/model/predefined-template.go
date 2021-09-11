@@ -10,6 +10,14 @@ const (
 	TemplateTypeTlsHelper = "tls-helper"
 )
 
+// FileTypeService, FileTypeEnv, FileTypeDocs and FileTypeConfig represent the different type options for template files
+const (
+	FileTypeService = "service"
+	FileTypeEnv     = "env"
+	FileTypeDocs    = "docs"
+	FileTypeConfig  = "config"
+)
+
 // QuestionTypeYesNo, QuestionTypeText and QuestionTypeMenu represent the different question types for predefined service templates
 const (
 	QuestionTypeYesNo = 1

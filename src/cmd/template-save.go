@@ -59,7 +59,9 @@ func SaveTemplate(c *cli.Context) error {
 
 	// Create the new template
 	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	os.MkdirAll(targetDir, 0755)
+	if err := os.MkdirAll(targetDir, 0750); err != nil {
+		util.Error("Could not create template dir", err, true)
+	}
 
 	// Copy volumes over to the new template dir
 	spinner = util.StartProcess("Copying volumes ...")
@@ -110,6 +112,8 @@ func copyVolumesToTemplate(proj *model.CGProject, targetDir string) {
 			util.Error("Could not copy volume '"+path+"'", err, false)
 			continue
 		}
-		copy.Copy(path, targetDir+"/"+pathRel)
+		if copy.Copy(path, targetDir+"/"+pathRel) != nil {
+			util.Warning("Could not copy volumes from '" + path + "' to '" + targetDir + "/" + pathRel + "'")
+		}
 	}
 }

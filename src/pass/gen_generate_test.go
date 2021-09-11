@@ -127,15 +127,15 @@ func TestGenerateService1(t *testing.T) {
 		Files: []model.File{
 			{
 				Path: "./docs.md",
-				Type: "docs",
+				Type: model.FileTypeDocs,
 			},
 			{
 				Path: "./env.env",
-				Type: "env",
+				Type: model.FileTypeEnv,
 			},
 			{
 				Path: "./env.env",
-				Type: "env",
+				Type: model.FileTypeEnv,
 			},
 		},
 	}

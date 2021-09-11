@@ -34,7 +34,9 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 				printError("Could not load config file. Permissions granted?", err, true)
 			}
 			// Parse yaml
-			unmarshalYaml(content, &config)
+			if err := unmarshalYaml(content, &config); err != nil {
+				printError("Could not unmarshal config file", err, true)
+			}
 			config.FromFile = true
 		} else {
 			printError("Config file could not be found", nil, true)
