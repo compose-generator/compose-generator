@@ -20,7 +20,7 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 		BackendServices:  []model.PredefinedTemplateConfig{},
 		DatabaseServices: []model.PredefinedTemplateConfig{},
 		DbAdminServices:  []model.PredefinedTemplateConfig{},
-		ProxyService:    []model.PredefinedTemplateConfig{},
+		ProxyService:     []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
 

@@ -67,7 +67,7 @@ func CheckForServiceTemplateUpdate() {
 	}
 }
 
-// Asks the user all questions the predefined service contains and saves the answers to the project
+// AskTemplateQuestions asks the user all questions the predefined service contains and saves the answers to the project
 func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, question := range template.Questions {
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
@@ -125,6 +125,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	}
 }
 
+// AskForCustomVolumePaths asks the user for custom volume paths for a template
 func AskForCustomVolumePaths(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, volume := range template.Volumes {
 		defaultValue := ReplaceVarsInString(volume.DefaultValue, project.Vars)

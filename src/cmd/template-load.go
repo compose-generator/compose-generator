@@ -16,7 +16,7 @@ const (
 	timeFormat = "Jan-02-06 3:04:05 PM"
 )
 
-// Cli flags for the template load command
+// TemplateLoadCliFlags are the cli flags for the template load command
 var TemplateLoadCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "force",
@@ -105,9 +105,8 @@ func askForTemplate() string {
 		}
 		index := util.MenuQuestionIndex("Which template do you want to load?", items)
 		return keys[index]
-	} else {
-		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	}
+	util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	return ""
 }
 
