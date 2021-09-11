@@ -66,7 +66,6 @@ jobs:
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           version: v0.178.0
           args: release --rm-dist
@@ -91,7 +90,6 @@ jobs:
 
   deploy-nexus:
     name: Deploy to Nexus
-    if: startsWith(github.ref, 'refs/tags/')
     needs: build-binaries
     runs-on: ubuntu-latest
     strategy:
@@ -144,7 +142,6 @@ jobs:
 
   build-win-installers:
     name: Build installers
-    if: startsWith(github.ref, 'refs/tags/')
     needs: build-binaries
     runs-on: windows-latest
     strategy:
