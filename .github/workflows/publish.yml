@@ -55,7 +55,7 @@ jobs:
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v4
         with:
-          gpg-private-key: ${{ secrets.GPG_PACKAGE_SIGNING }}
+          gpg_private_key: ${{ secrets.GPG_PACKAGE_SIGNING }}
           passphrase: ${{ secrets.GPG_PACKAGE_SIGNING_PASSPHRASE }}
 
       - name: Create predefined services archive
