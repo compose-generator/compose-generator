@@ -41,7 +41,7 @@ func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	if err != nil {
 		util.Error("Could not save "+opt.ComposeFileName, err, true)
 	}
-	err = ioutil.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0755)
+	err = ioutil.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0750)
 	if err != nil {
 		util.Error("Could not save "+opt.ComposeFileName, err, true)
 	}
@@ -87,7 +87,7 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 		}
 		content = util.ReplaceVarsInString(content, secretMap)
 		// Write to disk
-		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0755); err != nil {
+		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0750); err != nil {
 			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
 		}
 	}
@@ -100,7 +100,7 @@ func saveGitignore(project *model.CGProject, opt SaveOptions) {
 		for _, pattern := range project.GitignorePatterns {
 			content += pattern + "\n"
 		}
-		ioutil.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0755)
+		ioutil.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0750)
 	}
 }
 
@@ -121,7 +121,7 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 		// Replace vars
 		content = util.ReplaceVarsInString(content, project.Vars)
 		// Write to output file
-		ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0755)
+		ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0750)
 	}
 }
 

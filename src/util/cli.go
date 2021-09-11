@@ -63,8 +63,14 @@ func ExecuteWithOutput(c string) {
 func ExecuteAndWait(c ...string) {
 	// #nosec G201 G202 G203
 	cmd := exec.Command(c[0], c[1:]...)
-	cmd.Start()
-	cmd.Wait()
+	err := cmd.Start()
+	if err != nil {
+		Error("Could not execute command", err, true)
+	}
+	err = cmd.Wait()
+	if err != nil {
+		Error("Could not wait for command", err, true)
+	}
 }
 
 // ExecuteOnToolbox runs a command in an isolated Linux environment

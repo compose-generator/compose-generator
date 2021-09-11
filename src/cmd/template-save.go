@@ -59,7 +59,7 @@ func SaveTemplate(c *cli.Context) error {
 
 	// Create the new template
 	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	os.MkdirAll(targetDir, 0755)
+	os.MkdirAll(targetDir, 0750)
 
 	// Copy volumes over to the new template dir
 	spinner = util.StartProcess("Copying volumes ...")
