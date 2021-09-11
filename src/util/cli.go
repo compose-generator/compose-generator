@@ -61,6 +61,7 @@ func ExecuteWithOutput(c string) {
 
 // ExecuteAndWait executes a command and wait until the execution is complete
 func ExecuteAndWait(c ...string) {
+	// #nosec G201 G202 G203
 	cmd := exec.Command(c[0], c[1:]...)
 	cmd.Start()
 	cmd.Wait()
