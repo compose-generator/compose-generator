@@ -73,17 +73,23 @@ func getConfigFromFile(dirPath string) (config model.PredefinedTemplateConfig) {
 	// Read JSON file
 	// #nosec G304
 	jsonFile, err := os.Open(dirPath + "/config.json")
+	defer func() {
+		if err := jsonFile.Close(); err != nil {
+			util.Error("Error closing config file", err, true)
+		}
+	}()
 	if err != nil {
 		util.Error("Unable to load config file of template "+dirPath, err, true)
 	}
-	defer jsonFile.Close()
 
 	// Parse json to TemplateConfig struct
 	bytes, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
 		util.Error("Unable to load config file of template "+dirPath, err, true)
 	}
-	json.Unmarshal(bytes, &config)
+	if err := json.Unmarshal(bytes, &config); err != nil {
+		util.Error("Unable to unmarshal config file of template "+dirPath, err, true)
+	}
 	return
 }
 
