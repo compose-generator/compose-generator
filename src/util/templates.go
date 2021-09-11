@@ -18,7 +18,7 @@ func CheckForServiceTemplateUpdate() {
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
 	if !FileExists(predefinedTemplatesDir) {
-		if err := os.MkdirAll(predefinedTemplatesDir, 0755); err != nil {
+		if err := os.MkdirAll(predefinedTemplatesDir, 0750); err != nil {
 			Error("Could not create directory for predefined templates", err, true)
 		}
 	}
@@ -62,12 +62,12 @@ func CheckForServiceTemplateUpdate() {
 		if err != nil {
 			Error("Could not build path", err, true)
 		}
-		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
+		ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
 		StopProcess(spinner)
 	}
 }
 
-// Asks the user all questions the predefined service contains and saves the answers to the project
+// AskTemplateQuestions asks the user all questions the predefined service contains and saves the answers to the project
 func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, question := range template.Questions {
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
@@ -125,6 +125,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	}
 }
 
+// AskForCustomVolumePaths asks the user for custom volume paths for a template
 func AskForCustomVolumePaths(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, volume := range template.Volumes {
 		defaultValue := ReplaceVarsInString(volume.DefaultValue, project.Vars)

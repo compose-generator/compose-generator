@@ -1,5 +1,6 @@
 package model
 
+// TemplateTypeFrontend, TemplateTypeBackend, TemplateTypeDatabase, TemplateTypeProxy and TemplateTypeTlsHelper represent the different template types
 const (
 	TemplateTypeFrontend  = "frontend"
 	TemplateTypeBackend   = "backend"
@@ -9,13 +10,22 @@ const (
 	TemplateTypeTlsHelper = "tls-helper"
 )
 
+// FileTypeService, FileTypeEnv, FileTypeDocs and FileTypeConfig represent the different type options for template files
+const (
+	FileTypeService = "service"
+	FileTypeEnv     = "env"
+	FileTypeDocs    = "docs"
+	FileTypeConfig  = "config"
+)
+
+// QuestionTypeYesNo, QuestionTypeText and QuestionTypeMenu represent the different question types for predefined service templates
 const (
 	QuestionTypeYesNo = 1
 	QuestionTypeText  = 2
 	QuestionTypeMenu  = 3
 )
 
-// SelectedTemplate represents predefined service templates, which were selected by the user to add to the stack
+// SelectedTemplates represents predefined service templates, which were selected by the user to add to the stack
 type SelectedTemplates struct {
 	FrontendServices []PredefinedTemplateConfig `json:"frontend,omitempty"`
 	BackendServices  []PredefinedTemplateConfig `json:"backend,omitempty"`
@@ -25,6 +35,7 @@ type SelectedTemplates struct {
 	TlsHelperService []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
+// GetAll returns all templates of all types, mixed in a single slice
 func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
 	templates := []PredefinedTemplateConfig{}
 	templates = append(templates, t.FrontendServices...)
@@ -72,6 +83,7 @@ type PredefinedTemplateConfig struct {
 	Secrets        []Secret   `json:"secrets,omitempty"`
 }
 
+// GetFilePathsByType retrieves a slice with the file paths to all files of a template with a certain type
 func (t PredefinedTemplateConfig) GetFilePathsByType(fileType string) []string {
 	filteredFiles := []string{}
 	for _, file := range t.Files {
@@ -91,7 +103,7 @@ type File struct {
 // Question represents the JSON structure of a question of a predefined template
 type Question struct {
 	Text         string   `json:"text,omitempty"`
-	Type         int      `json:"type,omitempty"` // 1 = Yes/No; 2 = Text
+	Type         int      `json:"type,omitempty"`
 	DefaultValue string   `json:"defaultValue,omitempty"`
 	Options      []string `json:"options,omitempty"`
 	Validator    string   `json:"validator,omitempty"`

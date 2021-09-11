@@ -13,7 +13,9 @@ import (
 
 // P prints a normal text to the console
 func P(text string) {
-	color.New(color.FgWhite).Print(text)
+	if _, err := color.New(color.FgWhite).Print(text); err != nil {
+		Error("Could not print white text", err, false)
+	}
 }
 
 // Pl prints a normal text line to the console
@@ -44,13 +46,17 @@ func StopProcess(s *spinner.Spinner) {
 // Heading prints heading to console
 func Heading(text string) {
 	green := color.New(color.FgGreen).Add(color.Bold)
-	green.Println(text)
+	if _, err := green.Println(text); err != nil {
+		Error("Could not print heading", err, false)
+	}
 }
 
 // Success prints a success message to console
 func Success(text string) {
 	green := color.New(color.FgGreen).Add(color.Italic)
-	green.Println(text)
+	if _, err := green.Println(text); err != nil {
+		Error("Could not print success message", err, false)
+	}
 }
 
 // Error prints an error message

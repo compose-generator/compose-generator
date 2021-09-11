@@ -11,17 +11,17 @@ import (
 
 var validate *validator.Validate
 
+// GetValidatorByName returns a validator instance by its name
 func GetValidatorByName(validatorName string) survey.Validator {
 	if validatorName == "port" {
 		return PortValidator
-	} else {
-		return func(val interface{}) error {
-			validate := validator.New()
-			if validate.Var(val.(string), "required,"+validatorName) != nil {
-				return errors.New("please provide a valid input")
-			}
-			return nil
+	}
+	return func(val interface{}) error {
+		validate := validator.New()
+		if validate.Var(val.(string), "required,"+validatorName) != nil {
+			return errors.New("please provide a valid input")
 		}
+		return nil
 	}
 }
 

@@ -19,7 +19,7 @@ func GenerateExecDemoAppInitCommands(project *model.CGProject, selectedTemplates
 			}
 			// Execute demo app init commands for this template
 			spinner := startProcess("Generating demo app for " + template.Label + " ...")
-			executeOnLinux(strings.Join(cmds, " && "))
+			executeOnToolbox(strings.Join(cmds, " && "))
 			stopProcess(spinner)
 		}
 	}
