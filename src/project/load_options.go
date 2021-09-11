@@ -2,11 +2,13 @@ package project
 
 import "strings"
 
+// LoadOptions represents an option to the LoadProject function
 type LoadOptions struct {
 	WorkingDir      string
 	ComposeFileName string
 }
 
+// LoadOption represents a callback function option for the LoadProject function
 type LoadOption func(*LoadOptions)
 
 func applyLoadOptions(options ...LoadOption) LoadOptions {
@@ -27,12 +29,14 @@ func applyLoadOptions(options ...LoadOption) LoadOptions {
 	return opts
 }
 
+// LoadFromComposeFile is an option to set a custom compose file name
 func LoadFromComposeFile(value string) LoadOption {
 	return func(o *LoadOptions) {
 		o.ComposeFileName = value
 	}
 }
 
+// LoadFromDir is an option to set a dir where to load the project from
 func LoadFromDir(value string) LoadOption {
 	return func(o *LoadOptions) {
 		o.WorkingDir = value

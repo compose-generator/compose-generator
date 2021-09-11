@@ -344,10 +344,9 @@ func TestAskForNewExternalVolume1(t *testing.T) {
 		if textQuestionCallCount == 1 {
 			assert.Equal(t, "How do you want to call your external volume?", question)
 			return "Test volume"
-		} else {
-			assert.Equal(t, "Directory / file inside the container:", question)
-			return "file-inside-container.spice"
 		}
+		assert.Equal(t, "Directory / file inside the container:", question)
+		return "file-inside-container.spice"
 	}
 	CreateDockerVolume = func(client *client.Client, volumeName string) error {
 		assert.Equal(t, "Test volume", volumeName)
@@ -412,10 +411,9 @@ func TestAskForNewExternalVolume2(t *testing.T) {
 		if textQuestionCallCount == 1 {
 			assert.Equal(t, "How do you want to call your external volume?", question)
 			return "Test volume"
-		} else {
-			assert.Equal(t, "Directory / file inside the container:", question)
-			return "file-inside-container.spice"
 		}
+		assert.Equal(t, "Directory / file inside the container:", question)
+		return "file-inside-container.spice"
 	}
 	CreateDockerVolume = func(client *client.Client, volumeName string) error {
 		assert.Equal(t, "Test volume", volumeName)

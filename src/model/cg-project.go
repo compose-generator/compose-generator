@@ -6,6 +6,7 @@ import (
 	"github.com/compose-spec/compose-go/types"
 )
 
+// CGProject represents a Compose Generator project structure
 type CGProject struct {
 	CGProjectMetadata
 	Composition       *types.Project
@@ -18,6 +19,7 @@ type CGProject struct {
 	Ports             []int
 }
 
+// CGProjectMetadata represents the metadata that is attached to a CGProject
 type CGProjectMetadata struct {
 	Name            string
 	ContainerName   string
@@ -86,6 +88,7 @@ func (p CGProject) GetAllVolumePathsNormalized() []string {
 	return normalizedPaths
 }
 
+// GetAllEnvFilePaths returns all env file paths for the project
 func (p CGProject) GetAllEnvFilePaths() []string {
 	paths := []string{}
 	// Return empty list when no composition is attached
@@ -101,6 +104,7 @@ func (p CGProject) GetAllEnvFilePaths() []string {
 	return paths
 }
 
+// GetAllEnvFilePathsNormalized returns all env file paths for the project without nested and duplicate paths
 func (p CGProject) GetAllEnvFilePathsNormalized() []string {
 	paths := p.GetAllEnvFilePaths()
 	normalizedPaths := []string{}
@@ -122,6 +126,7 @@ func (p CGProject) GetAllEnvFilePathsNormalized() []string {
 	return normalizedPaths
 }
 
+// ProjectSecret represents a secret in a CGProject
 type ProjectSecret struct {
 	Name     string
 	Variable string

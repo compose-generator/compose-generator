@@ -125,6 +125,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	}
 }
 
+// AskForCustomVolumePaths asks the user for custom volume paths for a template
 func AskForCustomVolumePaths(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, volume := range template.Volumes {
 		defaultValue := ReplaceVarsInString(volume.DefaultValue, project.Vars)
