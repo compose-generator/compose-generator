@@ -31,7 +31,7 @@ func TestGenerateExecServiceInitCommands1(t *testing.T) {
 	}
 	// Mock functions
 	executeLinuxCallCount := 0
-	executeOnLinux = func(c string) {
+	executeOnToolbox = func(c string) {
 		executeLinuxCallCount++
 		if executeLinuxCallCount == 1 {
 			assert.Equal(t, "ls . && mkdir test", c)

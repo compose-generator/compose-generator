@@ -3,6 +3,8 @@ package util
 import (
 	"compose-generator/model"
 	"encoding/json"
+	"os/exec"
+	"strings"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -15,7 +17,12 @@ func EvaluateConditionalSections(
 ) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
-	return ExecuteAndWaitWithOutput("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
+	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		Error("Could not execute CCom", err, true)
+	}
+	return strings.TrimRight(string(output), "\r\n")
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
@@ -26,8 +33,12 @@ func EvaluateCondition(
 ) bool {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
-	result := ExecuteAndWaitWithOutput("ccom", "-m", "-s", "-d", dataString, condition)
-	return result == "true"
+	cmd := exec.Command("ccom", "-m", "-s", "-d", dataString, condition)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		Error("Could not execute CCom", err, true)
+	}
+	return strings.TrimRight(string(output), "\r\n") == "true"
 }
 
 // EnsureCComIsInstalled checks if CCom is present on the current machine

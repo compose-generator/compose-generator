@@ -5,7 +5,6 @@ import (
 	"os/exec"
 	"runtime"
 	"strconv"
-	"strings"
 
 	"github.com/cli/safeexec"
 )
@@ -60,33 +59,40 @@ func ExecuteWithOutput(c string) {
 	cmd.Run()
 }
 
-// ExecuteAndWait executes a command and wait till the execution is complete
+// ExecuteAndWait executes a command and wait until the execution is complete
 func ExecuteAndWait(c ...string) {
 	cmd := exec.Command(c[0], c[1:]...)
 	cmd.Start()
 	cmd.Wait()
 }
 
-// ExecuteAndWaitWithOutput executes a command and return the command output as string
-func ExecuteAndWaitWithOutput(c ...string) string {
-	cmd := exec.Command(c[0], c[1:]...)
-	output, _ := cmd.CombinedOutput()
-	return strings.TrimRight(string(output), "\r\n")
+// ExecuteOnToolbox runs a command in an isolated Linux environment
+func ExecuteOnToolbox(c string) {
+	imageVersion := getToolboxImageVersion()
+	workingDir, err := os.Getwd()
+	if err != nil {
+		Error("Could not find current working directory", err, true)
+	}
+	// Start docker container
+	err = exec.Command("docker", "run", "-i", "-v", workingDir+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c).Run()
+	if err != nil {
+		Error("Could not start toolbox", err, true)
+	}
 }
 
-// ExecuteOnLinux runs a command in an isolated Linux environment
-func ExecuteOnLinux(c string) {
+// ExecuteOnToolboxCustomVolume runs a command in an isolated Linux environment with a custom volume mount
+func ExecuteOnToolboxCustomVolume(c string, volumePath string) {
 	imageVersion := getToolboxImageVersion()
 	// Start docker container
-	absolutePath, _ := os.Getwd()
-	ExecuteAndWaitWithOutput("docker", "run", "-i", "-v", absolutePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
-}
-
-// ExecuteOnLinuxWithCustomVolume runs a command in an isolated Linux environment with a custom volume mount
-func ExecuteOnLinuxWithCustomVolume(c string, volumePath string) {
-	imageVersion := getToolboxImageVersion()
-	// Start docker container
-	ExecuteAndWait("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	cmd := exec.Command("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	err := cmd.Start()
+	if err != nil {
+		Error("Could not start docker", err, true)
+	}
+	err = cmd.Wait()
+	if err != nil {
+		Error("Could not wait for docker", err, true)
+	}
 }
 
 // ClearScreen errases the console contents

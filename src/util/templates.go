@@ -62,7 +62,7 @@ func CheckForServiceTemplateUpdate() {
 		if err != nil {
 			Error("Could not build path", err, true)
 		}
-		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
+		ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
 		StopProcess(spinner)
 	}
 }
