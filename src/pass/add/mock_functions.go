@@ -17,6 +17,7 @@ var menuQuestion = util.MenuQuestion
 var menuQuestionIndex = util.MenuQuestionIndex
 var multiSelectMenuQuestion = util.MultiSelectMenuQuestion
 var printError = util.Error
+var printWarning = util.Warning
 var getImageManifest = diu.GetImageManifest
 var p = util.P
 var pel = util.Pel

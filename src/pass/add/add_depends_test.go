@@ -46,7 +46,7 @@ func TestAddDepends1(t *testing.T) {
 		pelCallCount++
 	}
 	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
-		assert.Equal(t, "Do you want your service depend on other services?", question)
+		assert.Equal(t, "Do you want your service to depend on other services?", question)
 		assert.False(t, defaultValue)
 		return true
 	}
@@ -72,7 +72,7 @@ func TestAddDepends2(t *testing.T) {
 		assert.Fail(t, "Unexpected call of pel")
 	}
 	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
-		assert.Equal(t, "Do you want your service depend on other services?", question)
+		assert.Equal(t, "Do you want your service to depend on other services?", question)
 		assert.False(t, defaultValue)
 		return false
 	}

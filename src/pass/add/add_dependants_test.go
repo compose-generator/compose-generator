@@ -18,8 +18,12 @@ func TestAddDependants1(t *testing.T) {
 					DependsOn: make(spec.DependsOnConfig),
 				},
 				spec.ServiceConfig{
-					Name:      "Service 2",
-					DependsOn: make(spec.DependsOnConfig),
+					Name: "Service 2",
+					DependsOn: spec.DependsOnConfig{
+						"Service 1": {
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
 				},
 				spec.ServiceConfig{
 					Name:      "Service 3",
@@ -30,21 +34,26 @@ func TestAddDependants1(t *testing.T) {
 	}
 	service := &spec.ServiceConfig{
 		Name: "Service 0",
+		DependsOn: spec.DependsOnConfig{
+			"Service 2": {
+				Condition: spec.ServiceConditionStarted,
+			},
+		},
 	}
 	expectedProject := &model.CGProject{
 		Composition: &spec.Project{
 			Services: spec.Services{
 				spec.ServiceConfig{
-					Name: "Service 1",
+					Name:      "Service 1",
+					DependsOn: make(spec.DependsOnConfig),
+				},
+				spec.ServiceConfig{
+					Name: "Service 2",
 					DependsOn: spec.DependsOnConfig{
-						"Service 0": {
+						"Service 1": {
 							Condition: spec.ServiceConditionStarted,
 						},
 					},
-				},
-				spec.ServiceConfig{
-					Name:      "Service 2",
-					DependsOn: make(spec.DependsOnConfig),
 				},
 				spec.ServiceConfig{
 					Name: "Service 3",
@@ -72,11 +81,28 @@ func TestAddDependants1(t *testing.T) {
 	pel = func() {
 		pelCallCount++
 	}
+	printWarningCallCount := 0
+	printWarning = func(description string) {
+		printWarningCallCount++
+		assert.Equal(t, "Could not add dependency from 'Service 1' to 'Service 0' because it would cause a cycle", description)
+	}
+	checkForDependencyCycleCallCount := 0
+	checkForDependencyCycleMockable = func(currentService *spec.ServiceConfig, otherServiceName string, project *spec.Project) bool {
+		checkForDependencyCycleCallCount++
+		if checkForDependencyCycleCallCount == 1 {
+			assert.Equal(t, "Service 1", otherServiceName)
+			return true
+		}
+		assert.Equal(t, "Service 3", otherServiceName)
+		return false
+	}
 	// Execute test
 	AddDependants(service, project)
 	// Assert
 	assert.Equal(t, expectedProject, project)
 	assert.Equal(t, 2, pelCallCount)
+	assert.Equal(t, 1, printWarningCallCount)
+	assert.Equal(t, 2, checkForDependencyCycleCallCount)
 }
 
 func TestAddDependants2(t *testing.T) {

@@ -2,9 +2,12 @@ package pass
 
 import (
 	"compose-generator/model"
+	commonPass "compose-generator/pass/common"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
+
+var checkForDependencyCycleMockable = checkForDependencyCycle
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -19,9 +22,14 @@ func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 			if err != nil {
 				continue
 			}
+			// Check if the dependency would produce a cycle
+			if checkForDependencyCycleMockable(service, otherService.Name, project.Composition) {
+				printWarning("Could not add dependency from '" + otherService.Name + "' to '" + service.Name + "' because it would cause a cycle")
+				continue
+			}
 			// Create map if not exists
 			if otherService.DependsOn == nil {
-				service.DependsOn = make(spec.DependsOnConfig)
+				otherService.DependsOn = make(spec.DependsOnConfig)
 			}
 			// Add service dependency
 			otherService.DependsOn[service.Name] = spec.ServiceDependency{
@@ -39,7 +47,12 @@ Idea: when it is possible to get from the current service via a dependency path 
 dependency from the other service to the current one, because our directed graph would coutain a cycle. This algorithm only works when the original
 graph is acyclic. This is given as we check that in the beginning.
 */
-func checkForDependencyCycle(otherServiceName string, project *model.CGProject) bool {
-
+func checkForDependencyCycle(currentService *spec.ServiceConfig, otherServiceName string, project *spec.Project) bool {
+	for dependency := range currentService.DependsOn {
+		visitedServices := []string{currentService.Name, otherServiceName}
+		if commonPass.VisitServiceDependencies(project, dependency, &visitedServices) {
+			return true
+		}
+	}
 	return false
 }

@@ -69,7 +69,7 @@ func Error(description string, err error, exit bool) {
 
 // Warning prints an warning message
 func Warning(description string) {
-	color.Red("Warning: " + description)
+	color.HiYellow("Warning: " + description)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------

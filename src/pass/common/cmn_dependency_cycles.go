@@ -9,25 +9,15 @@ import (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
+// CommonCheckForDependencyCycles ensures that the project contains no dependency cycles
 func CommonCheckForDependencyCycles(project *model.CGProject) {
 	if hasDependencyCycles(project.Composition) {
 		util.Error("Configuration contains dependency cycles", nil, true)
 	}
 }
 
-// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
-
-func hasDependencyCycles(project *spec.Project) bool {
-	for _, service := range project.Services {
-		visitedServices := []string{service.Name}
-		if visitServiceDependencies(project, service.Name, &visitedServices) {
-			return true
-		}
-	}
-	return false
-}
-
-func visitServiceDependencies(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
+// VisitServiceDependencies checks a particular service for dependency cycles
+func VisitServiceDependencies(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
 	// Get service
 	service, err := p.GetService(currentServiceName)
 	if err != nil {
@@ -43,7 +33,19 @@ func visitServiceDependencies(p *spec.Project, currentServiceName string, visite
 				return true
 			}
 		}
-		return visitServiceDependencies(p, dependency, visitedServices)
+		return VisitServiceDependencies(p, dependency, visitedServices)
+	}
+	return false
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func hasDependencyCycles(project *spec.Project) bool {
+	for _, service := range project.Services {
+		visitedServices := []string{service.Name}
+		if VisitServiceDependencies(project, service.Name, &visitedServices) {
+			return true
+		}
 	}
 	return false
 }
