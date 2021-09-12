@@ -2,6 +2,7 @@ package util
 
 import (
 	"os"
+	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -13,6 +14,14 @@ import (
 // IsDockerizedEnvironment checks if Compose Generator runs within a dockerized environment
 func IsDockerizedEnvironment() bool {
 	return os.Getenv("COMPOSE_GENERATOR_DOCKERIZED") == "1"
+}
+
+// GetUsername returns the username of the current username. If it is not determinable it returns "unknown"
+func GetUsername() string {
+	if user, err := user.Current(); err == nil {
+		return user.Username
+	}
+	return "unknown"
 }
 
 // GetCustomTemplatesPath returns the path to the custom templates directory

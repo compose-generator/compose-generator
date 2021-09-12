@@ -4,7 +4,6 @@ import (
 	"compose-generator/model"
 	"compose-generator/util"
 	"io/ioutil"
-	"os/user"
 	"sort"
 	"time"
 
@@ -132,10 +131,7 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 
 func saveCGFile(project *model.CGProject, opt SaveOptions) {
 	// Get some information
-	project.LastModifiedBy = "unknown"
-	if user, err := user.Current(); err == nil {
-		project.LastModifiedBy = user.Name
-	}
+	project.LastModifiedBy = util.GetUsername()
 	project.LastModifiedAt = time.Now().UnixNano()
 
 	// Save config file
@@ -148,10 +144,7 @@ func saveCGFile(project *model.CGProject, opt SaveOptions) {
 	config.Set("created-at", project.CreatedAt)
 	config.Set("modified-by", project.LastModifiedBy)
 	config.Set("modified-at", project.LastModifiedAt)
-	config.SetConfigName(".cg")
-	config.SetConfigType("yml")
-	config.AddConfigPath(opt.WorkingDir)
-	if err := config.WriteConfig(); err != nil {
+	if err := config.WriteConfigAs(opt.WorkingDir + ".cg.yml"); err != nil {
 		util.Error("Could not write CG config file", err, true)
 	}
 }

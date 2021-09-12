@@ -6,6 +6,7 @@ import (
 	"compose-generator/pass"
 	"compose-generator/project"
 	"compose-generator/util"
+	"time"
 
 	"github.com/urfave/cli/v2"
 )
@@ -78,6 +79,8 @@ func Generate(c *cli.Context) error {
 			AdvancedConfig: flagAdvanced,
 			WithGitignore:  true,
 			WithReadme:     flagWithInstructions,
+			CreatedBy:      util.GetUsername(),
+			CreatedAt:      time.Now().UnixNano(),
 		},
 		ForceConfig: flagForce,
 		Vars:        make(map[string]string),
