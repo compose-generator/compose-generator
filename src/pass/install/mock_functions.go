@@ -3,6 +3,8 @@ package pass
 import "compose-generator/util"
 
 // Function list for mocking
+var pl = util.Pl
+var pel = util.Pel
 var printError = util.Error
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
