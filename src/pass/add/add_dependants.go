@@ -37,7 +37,7 @@ func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 /*
 Idea: when it is possible to get from the current service via a dependency path to the service with the name 'otherServiceName', we can't add a
 dependency from the other service to the current one, because our directed graph would coutain a cycle. This algorithm only works when the original
-graph is acyclic. This is given as we check that in the beginning
+graph is acyclic. This is given as we check that in the beginning.
 */
 func checkForDependencyCycle(otherServiceName string, project *model.CGProject) bool {
 

@@ -70,9 +70,11 @@ func LoadTemplateService(
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
+	// Check if file exists
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
 		util.Error("Compose file not found", nil, true)
 	}
+	// Parse compose file
 	content, err := ioutil.ReadFile(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
 		util.Error("Unable to parse '"+opt.ComposeFileName+"'", err, true)
@@ -95,6 +97,10 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	project.Composition, err = loader.Load(config)
 	if err != nil {
 		util.Error("Could not load project from the current directory", err, true)
+	}
+	// Validate compose project
+	if project.HasDependencyCycles() {
+		util.Error("Configuration contains dependency cycles", nil, true)
 	}
 }
 

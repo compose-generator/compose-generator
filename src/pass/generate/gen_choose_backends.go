@@ -1,8 +1,6 @@
 package pass
 
-import (
-	"compose-generator/model"
-)
+import "compose-generator/model"
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
