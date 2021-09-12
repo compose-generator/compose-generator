@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"compose-generator/model"
+	commonPass "compose-generator/pass/common"
 	removePass "compose-generator/pass/remove"
 	"compose-generator/project"
 	"compose-generator/util"
@@ -76,6 +77,9 @@ func Remove(c *cli.Context) error {
 	proj.WithVolumesConfig = flagWithVolumes
 	util.StopProcess(spinner)
 	util.Pel()
+
+	// Execute additional validation steps
+	commonPass.CommonCheckForDependencyCycles(proj)
 
 	// Ask for services to remove
 	if len(serviceNames) == 0 {

@@ -9,7 +9,7 @@ import (
 // FileExists checks if a file exists
 func FileExists(path string) bool {
 	_, err := os.Stat(path)
-	return os.IsExist(err)
+	return !os.IsNotExist(err)
 }
 
 // IsDir checks if a file is a directory
