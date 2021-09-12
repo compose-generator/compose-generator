@@ -126,38 +126,6 @@ func (p CGProject) GetAllEnvFilePathsNormalized() []string {
 	return normalizedPaths
 }
 
-// HasDependencyCycles checks if the compose project has a dependency cycle
-func (p CGProject) HasDependencyCycles() bool {
-	for _, service := range p.Composition.Services {
-		visitedServices := []string{}
-		visitedServices = append(visitedServices, service.Name)
-		if visitServiceDependencies(p.Composition, service.Name, &visitedServices) {
-			return true
-		}
-	}
-	return false
-}
-
-func visitServiceDependencies(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
-	// Get service
-	service, err := p.GetService(currentServiceName)
-	if err != nil {
-		return false
-	}
-	// Add current item to visited services list
-	*visitedServices = append(*visitedServices, currentServiceName)
-	// Visit dependencies
-	for dependency := range service.DependsOn {
-		for _, item := range *visitedServices {
-			if item == dependency {
-				return true
-			}
-		}
-		return visitServiceDependencies(p, dependency, visitedServices)
-	}
-	return false
-}
-
 // ProjectSecret represents a secret in a CGProject
 type ProjectSecret struct {
 	Name     string

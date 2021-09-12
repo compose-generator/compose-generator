@@ -98,10 +98,6 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	if err != nil {
 		util.Error("Could not load project from the current directory", err, true)
 	}
-	// Validate compose project
-	if project.HasDependencyCycles() {
-		util.Error("Configuration contains dependency cycles", nil, true)
-	}
 }
 
 func loadComposeFileSingleService(

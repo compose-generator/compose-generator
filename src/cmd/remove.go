@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"compose-generator/model"
-	pass "compose-generator/pass/remove"
+	removePass "compose-generator/pass/remove"
 	"compose-generator/project"
 	"compose-generator/util"
 	"errors"
@@ -122,9 +122,9 @@ func removeService(project *model.CGProject, serviceName string, withVolumes boo
 	}
 
 	// Execute passes on the service
-	pass.RemoveVolumes(&service, project)
-	pass.RemoveNetworks(&service, project)
-	pass.RemoveDependencies(&service, project)
+	removePass.RemoveVolumes(&service, project)
+	removePass.RemoveNetworks(&service, project)
+	removePass.RemoveDependencies(&service, project)
 
 	// Remove service from the project
 	project.Composition.Services = removeServiceFromProject(project.Composition.Services, index)
