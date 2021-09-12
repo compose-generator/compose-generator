@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/pass"
+	pass "compose-generator/pass/remove"
 	"compose-generator/project"
 	"compose-generator/util"
 	"errors"

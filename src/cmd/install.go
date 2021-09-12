@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"compose-generator/pass"
+	pass "compose-generator/pass/install"
 	"compose-generator/util"
 
 	"github.com/fatih/color"

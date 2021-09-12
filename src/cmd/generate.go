@@ -3,7 +3,7 @@ package cmd
 import (
 	"compose-generator/model"
 	"compose-generator/parser"
-	"compose-generator/pass"
+	pass "compose-generator/pass/generate"
 	"compose-generator/project"
 	"compose-generator/util"
 	"time"
