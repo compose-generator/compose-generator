@@ -28,10 +28,8 @@ func VisitServiceDependencies(p *spec.Project, currentServiceName string, visite
 	// Visit dependencies
 	for dependency := range service.DependsOn {
 		// Check if the service was already visited
-		for _, item := range *visitedServices {
-			if item == dependency {
-				return true
-			}
+		if util.SliceContainsString(*visitedServices, dependency) {
+			return true
 		}
 		return VisitServiceDependencies(p, dependency, visitedServices)
 	}

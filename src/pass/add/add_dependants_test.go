@@ -8,6 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// ------------------------------------------------------------------ AddDependants ----------------------------------------------------------------
+
 func TestAddDependants1(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
@@ -126,4 +128,98 @@ func TestAddDependants2(t *testing.T) {
 	AddDependants(service, project)
 	// Assert
 	assert.Equal(t, expectedProject, project)
+}
+
+// ------------------------------------------------------------- checkForDependencyCycle -----------------------------------------------------------
+
+func TestCheckForDependencyCycle1(t *testing.T) {
+	// Test data
+	otherServiceName := "second service"
+	currentService := &spec.ServiceConfig{
+		DependsOn: spec.DependsOnConfig{
+			"third service": {
+				Condition: spec.ServiceConditionStarted,
+			},
+			"second service": {
+				Condition: spec.ServiceConditionStarted,
+			},
+		},
+	}
+	project := &spec.Project{
+		Services: spec.Services{
+			{
+				Name: "first service",
+			},
+			{
+				Name: "second service",
+			},
+			{
+				Name: "third service",
+				DependsOn: spec.DependsOnConfig{
+					"first service": {
+						Condition: spec.ServiceConditionStarted,
+					},
+				},
+			},
+		},
+	}
+	// Mock functions
+	visitServiceDependenciesCallCount := 0
+	visitServiceDependencies = func(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
+		visitServiceDependenciesCallCount++
+		if visitServiceDependenciesCallCount == 1 {
+			assert.Equal(t, "third service", currentServiceName)
+			return false
+		}
+		assert.Equal(t, "second service", currentServiceName)
+		return true
+	}
+	// Execute test
+	result := checkForDependencyCycle(currentService, otherServiceName, project)
+	// Assert
+	assert.True(t, result)
+	assert.Equal(t, 2, visitServiceDependenciesCallCount)
+}
+
+func TestCheckForDependencyCycle2(t *testing.T) {
+	otherServiceName := "second service"
+	currentService := &spec.ServiceConfig{
+		DependsOn: spec.DependsOnConfig{
+			"third service": {
+				Condition: spec.ServiceConditionStarted,
+			},
+			"first service": {
+				Condition: spec.ServiceConditionStarted,
+			},
+		},
+	}
+	project := &spec.Project{
+		Services: spec.Services{
+			{
+				Name: "first service",
+			},
+			{
+				Name: "second service",
+			},
+			{
+				Name: "third service",
+			},
+		},
+	}
+	// Mock functions
+	visitServiceDependenciesCallCount := 0
+	visitServiceDependencies = func(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
+		visitServiceDependenciesCallCount++
+		if visitServiceDependenciesCallCount == 1 {
+			assert.Equal(t, "third service", currentServiceName)
+			return false
+		}
+		assert.Equal(t, "first service", currentServiceName)
+		return false
+	}
+	// Execute test
+	result := checkForDependencyCycle(currentService, otherServiceName, project)
+	// Assert
+	assert.False(t, result)
+	assert.Equal(t, 2, visitServiceDependenciesCallCount)
 }

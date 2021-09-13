@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	commonPass "compose-generator/pass/common"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
@@ -50,7 +49,7 @@ graph is acyclic. This is given as we check that in the beginning.
 func checkForDependencyCycle(currentService *spec.ServiceConfig, otherServiceName string, project *spec.Project) bool {
 	for dependency := range currentService.DependsOn {
 		visitedServices := []string{currentService.Name, otherServiceName}
-		if commonPass.VisitServiceDependencies(project, dependency, &visitedServices) {
+		if visitServiceDependencies(project, dependency, &visitedServices) {
 			return true
 		}
 	}

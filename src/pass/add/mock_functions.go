@@ -1,6 +1,7 @@
 package pass
 
 import (
+	commonPass "compose-generator/pass/common"
 	"compose-generator/util"
 
 	"github.com/compose-generator/diu"
@@ -24,3 +25,4 @@ var pel = util.Pel
 var success = util.Success
 var fileExists = util.FileExists
 var isDir = util.IsDir
+var visitServiceDependencies = commonPass.VisitServiceDependencies
