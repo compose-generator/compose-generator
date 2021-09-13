@@ -136,6 +136,7 @@ func TestCheckForDependencyCycle1(t *testing.T) {
 	// Test data
 	otherServiceName := "second service"
 	currentService := &spec.ServiceConfig{
+		Name: "current-service",
 		DependsOn: spec.DependsOnConfig{
 			"third service": {
 				Condition: spec.ServiceConditionStarted,
@@ -167,6 +168,7 @@ func TestCheckForDependencyCycle1(t *testing.T) {
 	visitServiceDependenciesCallCount := 0
 	visitServiceDependencies = func(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
 		visitServiceDependenciesCallCount++
+		assert.EqualValues(t, []string{currentService.Name, otherServiceName}, *visitedServices)
 		if visitServiceDependenciesCallCount == 1 {
 			assert.Equal(t, "third service", currentServiceName)
 			return false
@@ -184,6 +186,7 @@ func TestCheckForDependencyCycle1(t *testing.T) {
 func TestCheckForDependencyCycle2(t *testing.T) {
 	otherServiceName := "second service"
 	currentService := &spec.ServiceConfig{
+		Name: "current-service",
 		DependsOn: spec.DependsOnConfig{
 			"third service": {
 				Condition: spec.ServiceConditionStarted,
@@ -210,6 +213,7 @@ func TestCheckForDependencyCycle2(t *testing.T) {
 	visitServiceDependenciesCallCount := 0
 	visitServiceDependencies = func(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
 		visitServiceDependenciesCallCount++
+		assert.EqualValues(t, []string{currentService.Name, otherServiceName}, *visitedServices)
 		if visitServiceDependenciesCallCount == 1 {
 			assert.Equal(t, "third service", currentServiceName)
 			return false

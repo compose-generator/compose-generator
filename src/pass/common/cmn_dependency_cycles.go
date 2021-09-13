@@ -2,17 +2,19 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
+
+var hasDependencyCyclesMockable = hasDependencyCycles
+var visitServiceDependenciesMockable = VisitServiceDependencies
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // CommonCheckForDependencyCycles ensures that the project contains no dependency cycles
 func CommonCheckForDependencyCycles(project *model.CGProject) {
-	if hasDependencyCycles(project.Composition) {
-		util.Error("Configuration contains dependency cycles", nil, true)
+	if hasDependencyCyclesMockable(project.Composition) {
+		printError("Configuration contains dependency cycles", nil, true)
 	}
 }
 
@@ -28,7 +30,7 @@ func VisitServiceDependencies(p *spec.Project, currentServiceName string, visite
 	// Visit dependencies
 	for dependency := range service.DependsOn {
 		// Check if the service was already visited
-		if util.SliceContainsString(*visitedServices, dependency) {
+		if sliceContainsString(*visitedServices, dependency) {
 			return true
 		}
 		return VisitServiceDependencies(p, dependency, visitedServices)
@@ -41,7 +43,7 @@ func VisitServiceDependencies(p *spec.Project, currentServiceName string, visite
 func hasDependencyCycles(project *spec.Project) bool {
 	for _, service := range project.Services {
 		visitedServices := []string{service.Name}
-		if VisitServiceDependencies(project, service.Name, &visitedServices) {
+		if visitServiceDependenciesMockable(project, service.Name, &visitedServices) {
 			return true
 		}
 	}
