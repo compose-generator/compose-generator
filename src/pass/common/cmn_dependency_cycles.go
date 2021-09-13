@@ -2,6 +2,7 @@ package pass
 
 import (
 	"compose-generator/model"
+	"fmt"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
@@ -20,6 +21,7 @@ func CommonCheckForDependencyCycles(project *model.CGProject) {
 
 // VisitServiceDependencies checks a particular service for dependency cycles
 func VisitServiceDependencies(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
+	fmt.Println(currentServiceName)
 	// Get service
 	service, err := p.GetService(currentServiceName)
 	if err != nil {
@@ -33,7 +35,9 @@ func VisitServiceDependencies(p *spec.Project, currentServiceName string, visite
 		if sliceContainsString(*visitedServices, dependency) {
 			return true
 		}
-		return VisitServiceDependencies(p, dependency, visitedServices)
+		if VisitServiceDependencies(p, dependency, visitedServices) {
+			return true
+		}
 	}
 	return false
 }

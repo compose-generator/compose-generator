@@ -57,18 +57,62 @@ func TestCommonCheckForDependencyCycles2(t *testing.T) {
 // ------------------------------------------------------------- VisitServiceDependencies ----------------------------------------------------------
 
 func TestVisitServiceDependencies1(t *testing.T) {
-	/*// Test data
-	serviceName := ""
-	project := &spec.Project{}
-	visitedServices := &[]string{}
+	// Test data
+	serviceName := "service 1"
+	project := &spec.Project{
+		Services: spec.Services{
+			{
+				Name: "service 1",
+				DependsOn: spec.DependsOnConfig{
+					"service 2": {
+						Condition: spec.ServiceConditionStarted,
+					},
+				},
+			},
+			{
+				Name: "service 2",
+				DependsOn: spec.DependsOnConfig{
+					"service 3": {
+						Condition: spec.ServiceConditionStarted,
+					},
+				},
+			},
+			{
+				Name: "service 3",
+				DependsOn: spec.DependsOnConfig{
+					"service 1": {
+						Condition: spec.ServiceConditionStarted,
+					},
+				},
+			},
+		},
+	}
+	visitedServices := []string{}
 	// Mock functions
+	sliceContainsStringCallCount := 0
 	sliceContainsString = func(slice []string, i string) bool {
-
+		sliceContainsStringCallCount++
+		switch sliceContainsStringCallCount {
+		case 1:
+			assert.EqualValues(t, []string{"service 1"}, slice)
+			assert.Equal(t, "service 2", i)
+			return false
+		case 2:
+			assert.EqualValues(t, []string{"service 1", "service 2"}, slice)
+			assert.Equal(t, "service 3", i)
+			return false
+		case 3:
+			assert.EqualValues(t, []string{"service 1", "service 2", "service 3"}, slice)
+			assert.Equal(t, "service 1", i)
+			return true
+		}
+		return false
 	}
 	// Execute test
-	VisitServiceDependencies(project, serviceName, visitedServices)
-	// Assert*/
-
+	result := VisitServiceDependencies(project, serviceName, &visitedServices)
+	// Assert
+	assert.True(t, result)
+	assert.Equal(t, 3, sliceContainsStringCallCount)
 }
 
 // --------------------------------------------------------------- hasDependencyCycles -------------------------------------------------------------
