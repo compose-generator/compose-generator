@@ -169,12 +169,8 @@ func TestCheckForDependencyCycle1(t *testing.T) {
 	visitServiceDependencies = func(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
 		visitServiceDependenciesCallCount++
 		assert.EqualValues(t, []string{currentService.Name, otherServiceName}, *visitedServices)
-		if visitServiceDependenciesCallCount == 1 {
-			assert.Equal(t, "third service", currentServiceName)
-			return false
-		}
-		assert.Equal(t, "second service", currentServiceName)
-		return true
+		assert.Contains(t, []string{"second service", "third service"}, currentServiceName)
+		return visitServiceDependenciesCallCount != 1
 	}
 	// Execute test
 	result := checkForDependencyCycle(currentService, otherServiceName, project)
@@ -214,11 +210,7 @@ func TestCheckForDependencyCycle2(t *testing.T) {
 	visitServiceDependencies = func(p *spec.Project, currentServiceName string, visitedServices *[]string) bool {
 		visitServiceDependenciesCallCount++
 		assert.EqualValues(t, []string{currentService.Name, otherServiceName}, *visitedServices)
-		if visitServiceDependenciesCallCount == 1 {
-			assert.Equal(t, "third service", currentServiceName)
-			return false
-		}
-		assert.Equal(t, "first service", currentServiceName)
+		assert.Contains(t, []string{"first service", "third service"}, currentServiceName)
 		return false
 	}
 	// Execute test
