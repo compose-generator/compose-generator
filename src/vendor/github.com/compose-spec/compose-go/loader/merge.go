@@ -147,12 +147,21 @@ func toServicePortConfigsMap(s interface{}) (map[interface{}]interface{}, error)
 		return nil, errors.Errorf("not a servicePortConfig slice: %v", s)
 	}
 	m := map[interface{}]interface{}{}
+	type port struct {
+		target    uint32
+		published uint32
+		ip        string
+		protocol  string
+	}
+
 	for _, p := range ports {
-		k := p.Published
-		if k == 0 {
-			k = p.Target
+		mergeKey := port{
+			target:    p.Target,
+			published: p.Published,
+			ip:        p.HostIP,
+			protocol:  p.Protocol,
 		}
-		m[k] = p
+		m[mergeKey] = p
 	}
 	return m, nil
 }
@@ -194,7 +203,18 @@ func toServicePortConfigsSlice(dst reflect.Value, m map[interface{}]interface{})
 	for _, v := range m {
 		s = append(s, v.(types.ServicePortConfig))
 	}
-	sort.Slice(s, func(i, j int) bool { return s[i].Published < s[j].Published })
+	sort.Slice(s, func(i, j int) bool {
+		if s[i].Target != s[j].Target {
+			return s[i].Target < s[j].Target
+		}
+		if s[i].Published != s[j].Published {
+			return s[i].Published < s[j].Published
+		}
+		if s[i].HostIP != s[j].HostIP {
+			return s[i].HostIP < s[j].HostIP
+		}
+		return s[i].Protocol < s[j].Protocol
+	})
 	dst.Set(reflect.ValueOf(s))
 	return nil
 }

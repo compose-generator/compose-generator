@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/pass"
+	addPass "compose-generator/pass/add"
+	commonPass "compose-generator/pass/common"
 	"compose-generator/project"
 	"compose-generator/util"
 
@@ -74,6 +75,9 @@ func Add(c *cli.Context) error {
 	util.StopProcess(spinner)
 	util.Pel()
 
+	// Execute additional validation steps
+	commonPass.CommonCheckForDependencyCycles(proj)
+
 	// Add custom service
 	AddCustomService(proj)
 
@@ -102,17 +106,17 @@ func AddCustomService(project *model.CGProject) {
 	}
 
 	// Execute passes on the service
-	pass.AddBuildOrImage(&newService, project)
-	pass.AddName(&newService, project)
-	pass.AddContainerName(&newService, project)
-	pass.AddVolumes(&newService, project, client)
-	pass.AddNetworks(&newService, project, client)
-	pass.AddPorts(&newService, project)
-	pass.AddEnvVars(&newService, project)
-	pass.AddEnvFiles(&newService, project)
-	pass.AddRestart(&newService, project)
-	pass.AddDepends(&newService, project)
-	pass.AddDependants(&newService, project)
+	addPass.AddBuildOrImage(&newService, project)
+	addPass.AddName(&newService, project)
+	addPass.AddContainerName(&newService, project)
+	addPass.AddVolumes(&newService, project, client)
+	addPass.AddNetworks(&newService, project, client)
+	addPass.AddPorts(&newService, project)
+	addPass.AddEnvVars(&newService, project)
+	addPass.AddEnvFiles(&newService, project)
+	addPass.AddRestart(&newService, project)
+	addPass.AddDepends(&newService, project)
+	addPass.AddDependants(&newService, project)
 
 	// Add the new service to the project
 	project.Composition.Services = append(project.Composition.Services, newService)

@@ -3,13 +3,13 @@ package model
 import (
 	"strings"
 
-	"github.com/compose-spec/compose-go/types"
+	spec "github.com/compose-spec/compose-go/types"
 )
 
 // CGProject represents a Compose Generator project structure
 type CGProject struct {
 	CGProjectMetadata
-	Composition       *types.Project
+	Composition       *spec.Project
 	GitignorePatterns []string
 	ReadmeChildPaths  []string
 	ForceConfig       bool
@@ -43,7 +43,7 @@ func (p CGProject) GetAllVolumePaths() []string {
 	// Search for volume paths in all services
 	for _, service := range p.Composition.Services {
 		for _, volume := range service.Volumes {
-			if volume.Type == types.VolumeTypeBind {
+			if volume.Type == spec.VolumeTypeBind {
 				paths = append(paths, volume.Source)
 			}
 		}

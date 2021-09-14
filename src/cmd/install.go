@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"compose-generator/pass"
+	installPass "compose-generator/pass/install"
 	"compose-generator/util"
 
 	"github.com/fatih/color"
@@ -20,7 +20,7 @@ func Install(c *cli.Context) error {
 		util.Error("You are currently using the dockerized version of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", nil, true)
 	}
 
-	pass.InstallDocker()
+	installPass.InstallDocker()
 
 	// Check if installation was successful
 	if util.CommandExists("docker") {

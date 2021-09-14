@@ -21,6 +21,10 @@ func TestInstallDocker1(t *testing.T) {
 		assert.Equal(t, "Installing Docker ...", text)
 		return nil
 	}
+	stopProcessCallCount := 0
+	stopProcess = func(s *spinner.Spinner) {
+		stopProcessCallCount++
+	}
 	executeWaitCallCount := 0
 	executeAndWait = func(c ...string) {
 		executeWaitCallCount++
@@ -39,6 +43,7 @@ func TestInstallDocker1(t *testing.T) {
 	InstallDocker()
 	// Assert
 	assert.Equal(t, 2, executeWaitCallCount)
+	assert.Equal(t, 1, stopProcessCallCount)
 }
 
 func TestInstallDocker2(t *testing.T) {
@@ -53,6 +58,10 @@ func TestInstallDocker2(t *testing.T) {
 	startProcess = func(text string) (s *spinner.Spinner) {
 		startProcessCallCount++
 		return nil
+	}
+	stopProcessCallCount := 0
+	stopProcess = func(s *spinner.Spinner) {
+		stopProcessCallCount++
 	}
 	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "Download of Docker install script failed", description)
@@ -70,6 +79,7 @@ func TestInstallDocker2(t *testing.T) {
 	InstallDocker()
 	// Assert
 	assert.Equal(t, 1, startProcessCallCount)
+	assert.Equal(t, 1, stopProcessCallCount)
 }
 
 func TestInstallDocker3(t *testing.T) {
@@ -78,8 +88,11 @@ func TestInstallDocker3(t *testing.T) {
 		return false
 	}
 	startProcess = func(text string) (s *spinner.Spinner) {
-		assert.Fail(t, "Unexpected call of p")
+		assert.Fail(t, "Unexpected call of startProcess")
 		return nil
+	}
+	stopProcess = func(s *spinner.Spinner) {
+		assert.Fail(t, "Unexpected call of stopProcess")
 	}
 	// Execute test
 	InstallDocker()

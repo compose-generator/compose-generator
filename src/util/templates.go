@@ -17,6 +17,7 @@ func CheckForServiceTemplateUpdate() {
 	}
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
+	spinner := StartProcess("Checking for predefined service template updates ...")
 	if !FileExists(predefinedTemplatesDir) {
 		if err := os.MkdirAll(predefinedTemplatesDir, 0750); err != nil {
 			Error("Could not create directory for predefined templates", err, true)
@@ -51,10 +52,11 @@ func CheckForServiceTemplateUpdate() {
 	} else { // File does not exist => download directly
 		shouldUpdate = true
 	}
+	StopProcess(spinner)
 
 	// Download update if necessary
 	if shouldUpdate {
-		spinner := StartProcess("Downloading predefined services update ...")
+		spinner := StartProcess("Downloading predefined services update (this can take a while) ...")
 		if err := DownloadFile(fileUrl, outputPath); err != nil {
 			Error("Failed to download predefined services update. Please check your internet connection", err, true)
 		}

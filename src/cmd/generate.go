@@ -3,9 +3,10 @@ package cmd
 import (
 	"compose-generator/model"
 	"compose-generator/parser"
-	"compose-generator/pass"
+	genPass "compose-generator/pass/generate"
 	"compose-generator/project"
 	"compose-generator/util"
+	"time"
 
 	"github.com/urfave/cli/v2"
 )
@@ -78,6 +79,8 @@ func Generate(c *cli.Context) error {
 			AdvancedConfig: flagAdvanced,
 			WithGitignore:  true,
 			WithReadme:     flagWithInstructions,
+			CreatedBy:      util.GetUsername(),
+			CreatedAt:      time.Now().UnixNano(),
 		},
 		ForceConfig: flagForce,
 		Vars:        make(map[string]string),
@@ -86,7 +89,7 @@ func Generate(c *cli.Context) error {
 	config := &model.GenerateConfig{}
 
 	// Run passes
-	pass.LoadGenerateConfig(proj, config, configPath)
+	genPass.LoadGenerateConfig(proj, config, configPath)
 
 	// Enrich project with information
 	generateProject(proj, config)
@@ -97,7 +100,7 @@ func Generate(c *cli.Context) error {
 	util.StopProcess(spinner)
 
 	// Print generated secrets
-	pass.GeneratePrintSecrets(proj)
+	genPass.GeneratePrintSecrets(proj)
 
 	// Run if the corresponding flag is set. Otherwise, print success message
 	if flagRun || flagDetached {
@@ -131,20 +134,20 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		ProxyService:     []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
-	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)
-	pass.GenerateChooseBackends(project, availableTemplates, selectedTemplates, config)
-	pass.GenerateChooseDatabases(project, availableTemplates, selectedTemplates, config)
-	pass.GenerateChooseDbAdmins(project, availableTemplates, selectedTemplates, config)
+	genPass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)
+	genPass.GenerateChooseBackends(project, availableTemplates, selectedTemplates, config)
+	genPass.GenerateChooseDatabases(project, availableTemplates, selectedTemplates, config)
+	genPass.GenerateChooseDbAdmins(project, availableTemplates, selectedTemplates, config)
 	if project.ProductionReady {
-		pass.GenerateChooseProxies(project, availableTemplates, selectedTemplates, config)
-		pass.GenerateChooseTlsHelpers(project, availableTemplates, selectedTemplates, config)
+		genPass.GenerateChooseProxies(project, availableTemplates, selectedTemplates, config)
+		genPass.GenerateChooseTlsHelpers(project, availableTemplates, selectedTemplates, config)
 	}
 
 	// Execute passes
-	pass.Generate(project, selectedTemplates)
-	pass.GenerateResolveDependencyGroups(project, selectedTemplates)
-	pass.GenerateSecrets(project, selectedTemplates)
-	pass.GenerateCopyVolumes(project)
-	pass.GenerateExecServiceInitCommands(project, selectedTemplates)
-	pass.GenerateExecDemoAppInitCommands(project, selectedTemplates)
+	genPass.Generate(project, selectedTemplates)
+	genPass.GenerateResolveDependencyGroups(project, selectedTemplates)
+	genPass.GenerateSecrets(project, selectedTemplates)
+	genPass.GenerateCopyVolumes(project)
+	genPass.GenerateExecServiceInitCommands(project, selectedTemplates)
+	genPass.GenerateExecDemoAppInitCommands(project, selectedTemplates)
 }

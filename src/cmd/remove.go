@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/pass"
+	commonPass "compose-generator/pass/common"
+	removePass "compose-generator/pass/remove"
 	"compose-generator/project"
 	"compose-generator/util"
 	"errors"
@@ -77,6 +78,9 @@ func Remove(c *cli.Context) error {
 	util.StopProcess(spinner)
 	util.Pel()
 
+	// Execute additional validation steps
+	commonPass.CommonCheckForDependencyCycles(proj)
+
 	// Ask for services to remove
 	if len(serviceNames) == 0 {
 		serviceNames = proj.Composition.ServiceNames()
@@ -122,9 +126,9 @@ func removeService(project *model.CGProject, serviceName string, withVolumes boo
 	}
 
 	// Execute passes on the service
-	pass.RemoveVolumes(&service, project)
-	pass.RemoveNetworks(&service, project)
-	pass.RemoveDependencies(&service, project)
+	removePass.RemoveVolumes(&service, project)
+	removePass.RemoveNetworks(&service, project)
+	removePass.RemoveDependencies(&service, project)
 
 	// Remove service from the project
 	project.Composition.Services = removeServiceFromProject(project.Composition.Services, index)
