@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"os"
+	"os/user"
 
 	"github.com/fatih/color"
 	"github.com/kardianos/osext"
@@ -17,3 +18,4 @@ var exitProgram = os.Exit
 var getEnv = os.Getenv
 var fileExists = FileExists
 var executable = osext.Executable
+var currentUser = user.Current

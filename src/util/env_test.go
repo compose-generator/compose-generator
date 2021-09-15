@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"os/user"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -137,6 +138,35 @@ func TestGetCustomTemplatesPath4(t *testing.T) {
 	result := GetCustomTemplatesPath()
 	// Assert
 	assert.Equal(t, pathDev, result)
+}
+
+// ------------------------------------------------------------------ GetUsername ------------------------------------------------------------------
+
+func TestGetUsername1(t *testing.T) {
+	// Test data
+	username := "Marc"
+	// Mock functions
+	currentUser = func() (*user.User, error) {
+		user := &user.User{
+			Username: username,
+		}
+		return user, nil
+	}
+	// Execute test
+	result := GetUsername()
+	// Assert
+	assert.Equal(t, username, result)
+}
+
+func TestGetUsername2(t *testing.T) {
+	// Mock functions
+	currentUser = func() (*user.User, error) {
+		return nil, errors.New("Error")
+	}
+	// Execute test
+	result := GetUsername()
+	// Assert
+	assert.Equal(t, "unknown", result)
 }
 
 // ----------------------------------------------------------- GetPredefinedServicesPath -----------------------------------------------------------

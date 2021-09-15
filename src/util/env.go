@@ -1,7 +1,6 @@
 package util
 
 import (
-	"os/user"
 	"path/filepath"
 	"strings"
 )
@@ -15,7 +14,7 @@ func IsDockerizedEnvironment() bool {
 
 // GetUsername returns the username of the current username. If it is not determinable it returns "unknown"
 func GetUsername() string {
-	if user, err := user.Current(); err == nil {
+	if user, err := currentUser(); err == nil {
 		return user.Username
 	}
 	return "unknown"
