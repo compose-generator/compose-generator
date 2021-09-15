@@ -1,12 +1,13 @@
 package util
 
 import (
-	"os"
 	"time"
 
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 )
+
+var getErrorMessageMockable = getErrorMessage
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -24,7 +25,9 @@ func Pl(text string) {
 
 // Pel prints an empty line to the console
 func Pel() {
-	println()
+	if _, err := println(); err != nil {
+		printError("Could not print empty line", err, true)
+	}
 }
 
 // StartProcess displays a loading animation until StopProcess is called
@@ -60,9 +63,9 @@ func Success(text string) {
 
 // Error prints an error message
 func Error(description string, err error, exit bool) {
-	color.Red(getErrorMessage(description, err))
+	red(getErrorMessageMockable(description, err))
 	if exit {
-		os.Exit(1)
+		exitProgram(1)
 	}
 }
 

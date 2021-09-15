@@ -33,7 +33,7 @@ func TestPl(t *testing.T) {
 
 // ------------------------------------------------ Pel ------------------------------------------------
 
-func TestPel(t *testing.T) {
+func TestPel1(t *testing.T) {
 	// Mock functions
 	printlnCallCount := 0
 	println = func(a ...interface{}) (n int, err error) {
@@ -41,10 +41,87 @@ func TestPel(t *testing.T) {
 		assert.Zero(t, len(a))
 		return 0, nil
 	}
+	printError = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of printError")
+	}
 	// Execute test
 	Pel()
 	// Assert
 	assert.Equal(t, 1, printlnCallCount)
+}
+
+func TestPel2(t *testing.T) {
+	// Mock functions
+	printlnCallCount := 0
+	println = func(a ...interface{}) (n int, err error) {
+		printlnCallCount++
+		assert.Zero(t, len(a))
+		return 0, errors.New("Test")
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Equal(t, "Could not print empty line", description)
+		assert.NotNil(t, err)
+		assert.True(t, exit)
+	}
+	// Execute test
+	Pel()
+	// Assert
+	assert.Equal(t, 1, printlnCallCount)
+}
+
+// ----------------------------------------------- Error -----------------------------------------------
+
+func TestError1(t *testing.T) {
+	// Test data
+	description := "Error message"
+	errorMessage := "Error: " + description + " - Error message"
+	err := errors.New("Error message")
+	// Mock functions
+	redCallCount := 0
+	red = func(format string, a ...interface{}) {
+		redCallCount++
+		assert.Equal(t, errorMessage, format)
+	}
+	getErrorMessageMockable = func(desc string, err error) string {
+		assert.Equal(t, description, desc)
+		assert.NotNil(t, err)
+		return errorMessage
+	}
+	exitProgramCallCount := 0
+	exitProgram = func(code int) {
+		exitProgramCallCount++
+		assert.Equal(t, 1, code)
+	}
+	// Execute test
+	Error(description, err, true)
+	// Assert
+	assert.Equal(t, 1, redCallCount)
+	assert.Equal(t, 1, exitProgramCallCount)
+}
+
+func TestError2(t *testing.T) {
+	// Test data
+	description := "Error message"
+	errorMessage := "Error: " + description + " - Error message"
+	err := errors.New("Error message")
+	// Mock functions
+	redCallCount := 0
+	red = func(format string, a ...interface{}) {
+		redCallCount++
+		assert.Equal(t, errorMessage, format)
+	}
+	getErrorMessageMockable = func(desc string, err error) string {
+		assert.Equal(t, description, desc)
+		assert.NotNil(t, err)
+		return errorMessage
+	}
+	exitProgram = func(code int) {
+		assert.Fail(t, "Unexpected call of exitProgram")
+	}
+	// Execute test
+	Error(description, err, false)
+	// Assert
+	assert.Equal(t, 1, redCallCount)
 }
 
 // ---------------------------------------------- Warning ----------------------------------------------
