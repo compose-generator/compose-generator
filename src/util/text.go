@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -14,18 +13,18 @@ import (
 // P prints a normal text to the console
 func P(text string) {
 	if _, err := color.New(color.FgWhite).Print(text); err != nil {
-		Error("Could not print white text", err, false)
+		printError("Could not print white text", err, false)
 	}
 }
 
 // Pl prints a normal text line to the console
 func Pl(text string) {
-	color.White(text)
+	white(text)
 }
 
 // Pel prints an empty line to the console
 func Pel() {
-	fmt.Println()
+	println()
 }
 
 // StartProcess displays a loading animation until StopProcess is called
@@ -47,7 +46,7 @@ func StopProcess(s *spinner.Spinner) {
 func Heading(text string) {
 	green := color.New(color.FgGreen).Add(color.Bold)
 	if _, err := green.Println(text); err != nil {
-		Error("Could not print heading", err, false)
+		printError("Could not print heading", err, false)
 	}
 }
 
@@ -55,7 +54,7 @@ func Heading(text string) {
 func Success(text string) {
 	green := color.New(color.FgGreen).Add(color.Italic)
 	if _, err := green.Println(text); err != nil {
-		Error("Could not print success message", err, false)
+		printError("Could not print success message", err, false)
 	}
 }
 
@@ -69,7 +68,7 @@ func Error(description string, err error, exit bool) {
 
 // Warning prints an warning message
 func Warning(description string) {
-	color.HiYellow("Warning: " + description)
+	hiYellow("Warning: " + description)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
