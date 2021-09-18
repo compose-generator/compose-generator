@@ -1,0 +1,123 @@
+package model
+
+import (
+	"testing"
+
+	spec "github.com/compose-spec/compose-go/types"
+	"github.com/stretchr/testify/assert"
+)
+
+// ----------------------------------------------------------------- GetAllVolumePaths -------------------------------------------------------------
+
+func TestGetAllVolumePaths1(t *testing.T) {
+	// Test data
+	project := &CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "./volumes/mysql-data",
+							Target: "/mysql/data",
+						},
+						{
+							Type:   spec.VolumeTypeVolume,
+							Source: "postgres-data",
+							Target: "/postgres/data",
+						},
+					},
+				},
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "./volumes/wordpress-content",
+							Target: "/wordpress/content",
+						},
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "/bin/compose-generator",
+							Target: "/cg/compose-generator",
+						},
+					},
+				},
+			},
+		},
+	}
+	expectedResult := []string{"./volumes/mysql-data", "./volumes/wordpress-content", "/bin/compose-generator"}
+	// Execute test
+	result := project.GetAllVolumePaths()
+	// Assert
+	assert.Equal(t, 3, len(result))
+	assert.EqualValues(t, expectedResult, result)
+}
+
+func TestGetAllVolumePaths2(t *testing.T) {
+	// Test data
+	project := CGProject{}
+	// Execute test
+	result := project.GetAllVolumePaths()
+	// Assert
+	assert.Zero(t, len(result))
+}
+
+// ------------------------------------------------------------ GetAllVolumePathsNormalized --------------------------------------------------------
+
+func TestGetAllVolumePathsNormalized1(t *testing.T) {
+	// Test data
+	project := &CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "./volumes/mysql-data",
+							Target: "/mysql/data",
+						},
+						{
+							Type:   spec.VolumeTypeVolume,
+							Source: "postgres-data",
+							Target: "/postgres/data",
+						},
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "/bin/compose-generator",
+							Target: "/bin/compose-generator",
+						},
+					},
+				},
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "./volumes/wordpress-content",
+							Target: "/wordpress/content",
+						},
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "/bin/compose-generator",
+							Target: "/cg/compose-generator",
+						},
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "./volumes/mysql-data/config",
+							Target: "/mysql/config",
+						},
+					},
+				},
+			},
+		},
+	}
+	expectedResult := []string{"./volumes/mysql-data", "/bin/compose-generator", "./volumes/wordpress-content"}
+	// Mock functions
+
+	// Execute test
+	result := project.GetAllVolumePathsNormalized()
+	// Assert
+	assert.Equal(t, 3, len(result))
+	assert.EqualValues(t, expectedResult, result)
+}
+
+// ----------------------------------------------------------------- GetAllEnvFilePaths ------------------------------------------------------------
