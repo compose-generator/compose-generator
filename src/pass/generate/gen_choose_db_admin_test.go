@@ -61,7 +61,7 @@ func TestGenerateChooseDbAdmins1(t *testing.T) {
 		},
 	}
 	// Mock functions
-	getServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
+	getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 		assert.Equal(t, model.TemplateTypeDbAdmin, templateType)
 		return []model.ServiceConfig{
 			{

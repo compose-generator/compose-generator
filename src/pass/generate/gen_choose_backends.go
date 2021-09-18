@@ -13,7 +13,7 @@ func GenerateChooseBackends(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeBackend)
+		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeBackend)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}

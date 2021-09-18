@@ -15,7 +15,7 @@ func GenerateChooseProxies(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeProxy)
+		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeProxy)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}

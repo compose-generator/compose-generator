@@ -41,6 +41,6 @@ var readAllFromFile = ioutil.ReadAll
 var generatePassword = password.Generate
 var loadTemplateService = project.LoadTemplateService
 var sliceContainsString = util.SliceContainsString
-var getServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
-	return config.GetServiceConfigurationsByName(templateType)
+var getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
+	return config.GetServiceConfigurationsByType(templateType)
 }
