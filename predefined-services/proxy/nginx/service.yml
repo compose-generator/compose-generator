@@ -7,8 +7,6 @@ volumes:
   - ${{VOLUME_PROXY_CONFIG}}:/etc/nginx/conf.d
   - ${{VOLUME_PROXY_VHOSTS}}:/etc/nginx/vhost.d:ro
   - ${{VOLUME_PROXY_HTML}}:/usr/share/nginx/html
-networks:
-  - ${{PROJECT_NAME_CONTAINER}}
 ports:
   - 80:80
   - 443:443

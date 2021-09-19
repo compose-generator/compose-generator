@@ -1,6 +1,7 @@
 {
     "label": "Lets Encrypt Companion",
     "preselected": "true",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -13,17 +14,20 @@
     ],
     "questions": [
         {
-            "text": "TLS Certificate Host (e.g. test.example.com):",
-            "type": 2,
-            "validator": "hostname",
-            "variable": "TLS_DOMAIN_URL"
-        },
-        {
-            "text": "TLS Certificate E-Mail Address (e.g. admin@example.com):",
-            "defaultValue": "webmaster@${{TLS_DOMAIN_URL}}",
+            "text": "Default TLS Certificate E-Mail Address (e.g. admin@example.com):",
+            "defaultValue": "webmaster@example.com",
             "type": 2,
             "validator": "email",
-            "variable": "TLS_DOMAIN_EMAIL"
+            "variable": "TLS_DEFAULT_EMAIL"
+        }
+    ],
+    "proxy-questions": [
+        {
+            "text": "TLS Certificate E-Mail Address (e.g. admin@example.com):",
+            "defaultValue": "webmaster@example.com",
+            "type": 2,
+            "validator": "email",
+            "variable": "TLS_EMAIL"
         }
     ],
     "volumes": [

@@ -7,6 +7,9 @@
         'type': 'string',
         'required': True
     },
+    'proxied': {
+        'type': 'boolean'
+    },
     'demoAppInitCmd': {
         'type': 'list'
     },
@@ -31,6 +34,39 @@
         }
     },
     'questions': {
+        'type': 'list',
+        'schema': {
+            'type': 'dict',
+            'schema': {
+                'text': {
+                    'type': 'string',
+                    'required': True
+                },
+                'type': {
+                    'type': 'integer',
+                    'required': True,
+                    'allowed': [1, 2, 3]
+                },
+                'options': {
+                    'type': 'list'
+                },
+                'defaultValue': {
+                    'type': 'string'
+                },
+                'validator': {
+                    'type': 'string'
+                },
+                'variable': {
+                    'type': 'string',
+                    'required': True
+                },
+                'advanced': {
+                    'type': 'boolean'
+                }
+            }
+        }
+    },
+    'proxy-questions': {
         'type': 'list',
         'schema': {
             'type': 'dict',
