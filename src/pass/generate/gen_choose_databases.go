@@ -15,7 +15,7 @@ func GenerateChooseDatabases(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeDatabase)
+		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeDatabase)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}

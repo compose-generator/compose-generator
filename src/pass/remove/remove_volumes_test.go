@@ -2,6 +2,8 @@ package pass
 
 import (
 	"compose-generator/model"
+	"errors"
+	"path/filepath"
 	"testing"
 
 	spec "github.com/compose-spec/compose-go/types"
@@ -63,14 +65,21 @@ func TestRemoveVolumes1(t *testing.T) {
 			assert.Equal(t, "./volumes/test-volume", path)
 		} else {
 			assert.Equal(t, "test", path)
+			return errors.New("Error")
 		}
 		return nil
+	}
+	printWarningCallCount := 0
+	printWarning = func(description string) {
+		printWarningCallCount++
+		assert.Equal(t, "Could not remove volume at path 'test'", description)
 	}
 	// Execute test
 	RemoveVolumes(service, project)
 	// Assert
 	assert.Equal(t, 2, fileExistsCallCount)
 	assert.Equal(t, 2, removeAllCallCount)
+	assert.Equal(t, 1, printWarningCallCount)
 	assert.Equal(t, expectedProject, project)
 }
 
@@ -161,13 +170,52 @@ func TestIsVolumeUsedByOtherServices1(t *testing.T) {
 			},
 		},
 	}
+	// Mock functions
+	abs = func(path string) (string, error) {
+		assert.Equal(t, "./volumes/frontend-react", path)
+		return "", errors.New("Error")
+	}
+	// Execute test
+	result := isVolumeUsedByOtherServices(volume, service, project)
+	// Assert
+	assert.False(t, result)
+}
+
+func TestIsVolumeUsedByOtherServices2(t *testing.T) {
+	// Test data
+	volume := &spec.ServiceVolumeConfig{
+		Source: "./volumes/frontend-react",
+	}
+	service := &spec.ServiceConfig{}
+	project := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{
+					Name: "other-service",
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Source: "./volumes/../volumes/frontend-react",
+						},
+						{
+							Source: "../random-other.file",
+						},
+					},
+				},
+				{
+					Name: "current-service",
+				},
+			},
+		},
+	}
+	// Mock functions
+	abs = filepath.Abs
 	// Execute test
 	result := isVolumeUsedByOtherServices(volume, service, project)
 	// Assert
 	assert.True(t, result)
 }
 
-func TestIsVolumeUsedByOtherServices2(t *testing.T) {
+func TestIsVolumeUsedByOtherServices3(t *testing.T) {
 	// Test data
 	volume := &spec.ServiceVolumeConfig{
 		Source: "./volumes/database-orientdb",
@@ -195,13 +243,29 @@ func TestIsVolumeUsedByOtherServices2(t *testing.T) {
 			},
 		},
 	}
+	// Mock functions
+	absCallCount := 0
+	abs = func(path string) (string, error) {
+		absCallCount++
+		switch absCallCount {
+		case 1:
+			assert.Equal(t, "./volumes/database-orientdb", path)
+			return "/path/to/volumes/database-orientdb/config", nil
+		case 2:
+			assert.Equal(t, "../random-other.file", path)
+		case 3:
+			assert.Equal(t, "./volumes/database-orientdb/config", path)
+			return "/path/to/volumes/database-orientdb/config", nil
+		}
+		return "", errors.New("Error")
+	}
 	// Execute test
 	result := isVolumeUsedByOtherServices(volume, service, project)
 	// Assert
 	assert.True(t, result)
 }
 
-func TestIsVolumeUsedByOtherServices3(t *testing.T) {
+func TestIsVolumeUsedByOtherServices4(t *testing.T) {
 	// Test data
 	volume := &spec.ServiceVolumeConfig{
 		Source: "./volumes/backend-gin",
@@ -219,6 +283,8 @@ func TestIsVolumeUsedByOtherServices3(t *testing.T) {
 			},
 		},
 	}
+	// Mock functions
+	abs = filepath.Abs
 	// Execute test
 	result := isVolumeUsedByOtherServices(volume, service, project)
 	// Assert

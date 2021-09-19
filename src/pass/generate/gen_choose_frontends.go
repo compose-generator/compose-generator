@@ -15,7 +15,7 @@ func GenerateChooseFrontends(
 ) {
 	if config.FromFile {
 		// Generate from config file
-		selectedServiceConfigs := getServiceConfigurationsByName(config, model.TemplateTypeFrontend)
+		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeFrontend)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}

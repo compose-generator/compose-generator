@@ -75,10 +75,12 @@ type PredefinedTemplateConfig struct {
 	Dir            string     `json:"dir,omitempty"`
 	Type           string     `json:"type,omitempty"`
 	Preselected    string     `json:"preselected,omitempty"`
+	Proxied        bool       `json:"proxied,omitempty"`
 	DemoAppInitCmd []string   `json:"demoAppInitCmd,omitempty"`
 	ServiceInitCmd []string   `json:"serviceInitCmd,omitempty"`
 	Files          []File     `json:"files,omitempty"`
 	Questions      []Question `json:"questions,omitempty"`
+	ProxyQuestions []Question `json:"proxy-questions,omitempty"`
 	Volumes        []Volume   `json:"volumes,omitempty"`
 	Secrets        []Secret   `json:"secrets,omitempty"`
 }

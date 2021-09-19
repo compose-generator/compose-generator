@@ -2,7 +2,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"path/filepath"
 	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
@@ -38,7 +37,7 @@ func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func isVolumeUsedByOtherServices(volume *spec.ServiceVolumeConfig, service *spec.ServiceConfig, project *model.CGProject) bool {
-	volumeAbs, err := filepath.Abs(volume.Source)
+	volumeAbs, err := abs(volume.Source)
 	if err != nil {
 		return false
 	}
@@ -49,7 +48,7 @@ func isVolumeUsedByOtherServices(volume *spec.ServiceVolumeConfig, service *spec
 		}
 		// Search through volumes of all other services
 		for _, otherVolume := range otherService.Volumes {
-			otherVolumeAbs, err := filepath.Abs(otherVolume.Source)
+			otherVolumeAbs, err := abs(otherVolume.Source)
 			if err != nil {
 				continue
 			}

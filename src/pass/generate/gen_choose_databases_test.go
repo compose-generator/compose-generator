@@ -61,7 +61,7 @@ func TestGenerateChooseDatabases1(t *testing.T) {
 		},
 	}
 	// Mock functions
-	getServiceConfigurationsByName = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
+	getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 		assert.Equal(t, model.TemplateTypeDatabase, templateType)
 		return []model.ServiceConfig{
 			{

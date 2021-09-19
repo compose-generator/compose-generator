@@ -38,7 +38,7 @@ func EvaluateCondition(
 	cmd := exec.Command("ccom", "-m", "-s", "-d", dataString, condition)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		Warning("CCom returned with an error")
+		Warning("CCom returned with an error: " + string(output))
 	}
 	return strings.TrimRight(string(output), "\r\n") == "true"
 }

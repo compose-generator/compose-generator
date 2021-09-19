@@ -16,7 +16,7 @@ type ServiceConfig struct {
 }
 
 // GetServiceConfigurationsByName returns all specified service configurations by the name of their type
-func (c GenerateConfig) GetServiceConfigurationsByName(templateType string) []ServiceConfig {
+func (c GenerateConfig) GetServiceConfigurationsByType(templateType string) []ServiceConfig {
 	services := []ServiceConfig{}
 	for _, service := range c.ServiceConfig {
 		if service.Type == templateType {
