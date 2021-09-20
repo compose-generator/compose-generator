@@ -1,0 +1,7 @@
+image: sonatype/nexus3:${{NEXUS_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-nexus
+restart: always
+volumes:
+  - ${{VOLUME_NEXUS_DATA}}:/nexus-data
+ports:
+  - ${{NEXUS_PORT}}:8081

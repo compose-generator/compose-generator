@@ -1,0 +1,36 @@
+{
+    "label": "Nexus3",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Nexus instance?",
+            "type": 2,
+            "defaultValue": "8081",
+            "validator": "port",
+            "variable": "NEXUS_PORT"
+        },
+        {
+            "text": "Which version of Nexus do you want to use?",
+            "type": 2,
+            "defaultValue": "3.34.0",
+            "variable": "NEXUS_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Nexus data directory?",
+            "defaultValue": "./volumes/nexus-data",
+            "variable": "VOLUME_NEXUS_DATA"
+        }
+    ]
+}
