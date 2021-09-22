@@ -4,5 +4,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm i
 
-EXPOSE 8080
-CMD [ "node", "app.js" ]
+COPY . .
+
+EXPOSE 3000
+CMD [ "npm", "start" ]

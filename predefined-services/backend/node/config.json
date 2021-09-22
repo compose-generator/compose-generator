@@ -2,7 +2,9 @@
     "label": "Node.js",
     "preselected": "false",
     "demoAppInitCmd": [
-        "express ${{NODE_SOURCE_DIRECTORY}}"
+        "express example-app",
+        "mv -f ./example-app/* ./${{NODE_SOURCE_DIRECTORY}}/",
+        "rm -rf ./example-app"
     ],
     "files": [
         {
@@ -12,13 +14,17 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{NODE_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [
         {
             "text": "On which port you want to expose your Node.js instance?",
             "type": 2,
-            "defaultValue": "8080",
+            "defaultValue": "3000",
             "validator": "port",
             "variable": "NODE_PORT"
         },
