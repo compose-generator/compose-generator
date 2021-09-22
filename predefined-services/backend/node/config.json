@@ -1,0 +1,36 @@
+{
+    "label": "Node.js",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Node.js instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "NODE_PORT"
+        },
+        {
+            "text": "Which version of Node do you want to use?",
+            "type": 2,
+            "defaultValue": "16.9-alpine",
+            "variable": "NODE_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend-node",
+            "variable": "NODE_SOURCE_DIRECTORY"
+        }
+    ]
+}
