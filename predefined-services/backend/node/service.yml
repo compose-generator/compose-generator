@@ -9,4 +9,4 @@ networks:
 #!  - backend-database
 #! }
 ports:
-  - ${{NODE_PORT}}:80
+  - ${{NODE_PORT}}:8080

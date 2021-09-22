@@ -1,6 +1,9 @@
 {
     "label": "Node.js",
     "preselected": "false",
+    "demoAppInitCmd": [
+        "express ${{NODE_SOURCE_DIRECTORY}}"
+    ],
     "files": [
         {
             "path": "service.yml",
@@ -15,7 +18,7 @@
         {
             "text": "On which port you want to expose your Node.js instance?",
             "type": 2,
-            "defaultValue": "80",
+            "defaultValue": "8080",
             "validator": "port",
             "variable": "NODE_PORT"
         },
