@@ -31,7 +31,8 @@ func replaceVarsInFile(filePath string, vars map[string]string) {
 		// Read contents from file
 		content, err := readFile(filePath)
 		if err != nil {
-			util.Error("Unable to parse .gitignore file", err, true)
+			printError("Unable to read config file '"+filePath+"'", err, false)
+			return
 		}
 		contentStr := string(content)
 		// Replace all vars
@@ -40,7 +41,7 @@ func replaceVarsInFile(filePath string, vars map[string]string) {
 		}
 		// Write contents back
 		if err := writeFile(filePath, []byte(contentStr), 0600); err != nil {
-			util.Error("Unable to write config file '"+filePath+"' back to the disk", err, true)
+			printError("Unable to write config file '"+filePath+"' back to the disk", err, false)
 		}
 	}
 }

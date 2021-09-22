@@ -2,6 +2,8 @@ package pass
 
 import (
 	"compose-generator/model"
+	"errors"
+	"io/fs"
 	"testing"
 
 	"github.com/briandowns/spinner"
@@ -84,12 +86,108 @@ func TestGenerateReplaceVarsInConfigFiles(t *testing.T) {
 
 // --------------------------------------------------------------- ReplaceVarsInFile ---------------------------------------------------------------
 
-func TestReplaceVarsInFile(t *testing.T) {
+func TestReplaceVarsInFile1(t *testing.T) {
 	// Test data
-
+	filePath := "./work-dir/test/Dockerfile"
+	vars := map[string]string{
+		"NODE_VERSION": "3.14.1",
+		"NODE_PORT":    "3000",
+	}
 	// Mock functions
-
+	fileExists = func(path string) bool {
+		assert.Equal(t, filePath, path)
+		return true
+	}
+	readFile = func(filename string) ([]byte, error) {
+		assert.Equal(t, filePath, filename)
+		return []byte("Test with ${{NODE_PORT}} and ${{NODE_VERSION}}"), nil
+	}
+	writeFile = func(filename string, data []byte, perm fs.FileMode) error {
+		assert.Equal(t, filePath, filename)
+		assert.Equal(t, []byte("Test with 3000 and 3.14.1"), data)
+		assert.Equal(t, fs.FileMode(0600), perm)
+		return nil
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of printError")
+	}
 	// Execute test
+	replaceVarsInFile(filePath, vars)
+}
 
-	// Assert
+func TestReplaceVarsInFile2(t *testing.T) {
+	// Test data
+	filePath := "./work-dir/test/Dockerfile"
+	vars := map[string]string{}
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, filePath, path)
+		return false
+	}
+	readFile = func(filename string) ([]byte, error) {
+		assert.Fail(t, "Unexpected call of readFile")
+		return nil, nil
+	}
+	// Execute test
+	replaceVarsInFile(filePath, vars)
+}
+
+func TestReplaceVarsInFile3(t *testing.T) {
+	// Test data
+	filePath := "./work-dir/test/Dockerfile"
+	vars := map[string]string{
+		"NODE_VERSION": "3.14.1",
+		"NODE_PORT":    "3000",
+	}
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, filePath, path)
+		return true
+	}
+	readFile = func(filename string) ([]byte, error) {
+		assert.Equal(t, filePath, filename)
+		return nil, errors.New("Error message")
+	}
+	writeFile = func(filename string, data []byte, perm fs.FileMode) error {
+		assert.Fail(t, "Unexpected call of writeFile")
+		return nil
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Equal(t, "Unable to read config file './work-dir/test/Dockerfile'", description)
+		assert.Equal(t, "Error message", err.Error())
+		assert.False(t, exit)
+	}
+	// Execute test
+	replaceVarsInFile(filePath, vars)
+}
+
+func TestReplaceVarsInFile4(t *testing.T) {
+	// Test data
+	filePath := "./work-dir/test/Dockerfile"
+	vars := map[string]string{
+		"NODE_VERSION": "3.14.1",
+		"NODE_PORT":    "3000",
+	}
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, filePath, path)
+		return true
+	}
+	readFile = func(filename string) ([]byte, error) {
+		assert.Equal(t, filePath, filename)
+		return []byte("Test with ${{NODE_PORT}} and ${{NODE_VERSION}}"), nil
+	}
+	writeFile = func(filename string, data []byte, perm fs.FileMode) error {
+		assert.Equal(t, filePath, filename)
+		assert.Equal(t, []byte("Test with 3000 and 3.14.1"), data)
+		assert.Equal(t, fs.FileMode(0600), perm)
+		return errors.New("Error message")
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Equal(t, "Unable to write config file './work-dir/test/Dockerfile' back to the disk", description)
+		assert.Equal(t, "Error message", err.Error())
+		assert.False(t, exit)
+	}
+	// Execute test
+	replaceVarsInFile(filePath, vars)
 }
