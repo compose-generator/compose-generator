@@ -15,7 +15,11 @@
             "type": "docs"
         },
         {
-            "path": "backend/requirements.txt",
+            "path": "${{DJANGO_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{DJANGO_SOURCE_DIRECTORY}}/requirements.txt",
             "type": "config"
         }
     ],

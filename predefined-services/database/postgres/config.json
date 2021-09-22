@@ -19,7 +19,7 @@
             "type": "docs"
         },
         {
-            "path": "volumes/postgres-init/init-user-db.sh",
+            "path": "${{VOLUME_POSTGRES_INIT}}/init-user-db.sh",
             "type": "config"
         }
     ],

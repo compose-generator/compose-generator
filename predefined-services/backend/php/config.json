@@ -9,6 +9,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{PHP_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [

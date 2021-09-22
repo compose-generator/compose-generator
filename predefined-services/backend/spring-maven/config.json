@@ -18,6 +18,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{SPRING_MAVEN_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [

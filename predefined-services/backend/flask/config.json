@@ -15,6 +15,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{FLASK_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [
