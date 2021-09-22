@@ -1,0 +1,15 @@
+image: gitlab/gitlab-ce:${{GITLAB_VERSION}}-ce.0
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-gitlab
+restart: always
+volumes:
+  - ${{VOLUME_GITLAB_DATA}}:/var/opt/gitlab
+  - ${{VOLUME_GITLAB_CONFIG}}:/etc/gitlab
+  - ${{VOLUME_GITLAB_LOGS}}:/var/log/gitlab
+networks:
+#? if has services.database {
+#  - frontend-database
+#? }
+ports:
+  - ${{GITLAB_PORT_GIT}}:22
+  - ${{GITLAB_PORT_HTTPS}}:443
+  - ${{GITLAB_PORT_HTTP}}:80
