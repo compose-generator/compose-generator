@@ -26,7 +26,7 @@
         {
             "text": "Which version of PHP do you want to use?",
             "type": 2,
-            "defaultValue": "8.1",
+            "defaultValue": "8.0",
             "variable": "PHP_VERSION"
         }
     ],
