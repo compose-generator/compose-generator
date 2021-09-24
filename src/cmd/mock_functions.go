@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"compose-generator/parser"
+	add_pass "compose-generator/pass/add"
 	gen_pass "compose-generator/pass/generate"
 	install_pass "compose-generator/pass/install"
 	remove_pass "compose-generator/pass/remove"
 	"compose-generator/util"
+
+	"github.com/docker/docker/client"
 )
 
 var isDockerizedEnvironment = util.IsDockerizedEnvironment
@@ -16,11 +19,24 @@ var commandExists = util.CommandExists
 var getDockerVersion = util.GetDockerVersion
 var pel = util.Pel
 var yesNoQuestion = util.YesNoQuestion
+var textQuestionWithDefault = util.TextQuestionWithDefault
 var clearScreen = util.ClearScreen
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
 var getAvailablePredefinedTemplates = parser.GetAvailablePredefinedTemplates
+var newClientWithOpts = client.NewClientWithOpts
 
+var addBuildOrImagePass = add_pass.AddBuildOrImage
+var addNamePass = add_pass.AddName
+var addContainerNamePass = add_pass.AddContainerName
+var addVolumesPass = add_pass.AddVolumes
+var addNetworksPass = add_pass.AddNetworks
+var addPortsPass = add_pass.AddPorts
+var addEnvVarsPass = add_pass.AddEnvVars
+var addEnvFilesPass = add_pass.AddEnvFiles
+var addRestartPass = add_pass.AddRestart
+var addDependsPass = add_pass.AddDepends
+var addDependantsPass = add_pass.AddDependants
 var installDockerPass = install_pass.InstallDocker
 var removeVolumesPass = remove_pass.RemoveVolumes
 var removeNetworksPass = remove_pass.RemoveNetworks
