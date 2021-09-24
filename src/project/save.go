@@ -4,7 +4,6 @@ import (
 	"compose-generator/model"
 	"compose-generator/util"
 	"io/ioutil"
-	"os/user"
 	"sort"
 	"time"
 
@@ -41,7 +40,7 @@ func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	if err != nil {
 		util.Error("Could not save "+opt.ComposeFileName, err, true)
 	}
-	err = ioutil.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0755)
+	err = ioutil.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0600)
 	if err != nil {
 		util.Error("Could not save "+opt.ComposeFileName, err, true)
 	}
@@ -87,7 +86,7 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 		}
 		content = util.ReplaceVarsInString(content, secretMap)
 		// Write to disk
-		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0755); err != nil {
+		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0600); err != nil {
 			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
 		}
 	}
@@ -100,7 +99,9 @@ func saveGitignore(project *model.CGProject, opt SaveOptions) {
 		for _, pattern := range project.GitignorePatterns {
 			content += pattern + "\n"
 		}
-		ioutil.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0755)
+		if err := ioutil.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0600); err != nil {
+			util.Error("Could not write .gitignore file", err, true)
+		}
 	}
 }
 
@@ -110,6 +111,7 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 		content := ""
 		for _, path := range project.ReadmeChildPaths {
 			if util.FileExists(path) {
+				// #nosec G304
 				childContent, err := ioutil.ReadFile(path)
 				if err != nil {
 					util.Error("Could not load README.md from service template", err, false)
@@ -121,16 +123,15 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 		// Replace vars
 		content = util.ReplaceVarsInString(content, project.Vars)
 		// Write to output file
-		ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0755)
+		if err := ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0600); err != nil {
+			util.Error("Could not write README file", err, true)
+		}
 	}
 }
 
 func saveCGFile(project *model.CGProject, opt SaveOptions) {
 	// Get some information
-	project.LastModifiedBy = "unknown"
-	if user, err := user.Current(); err == nil {
-		project.LastModifiedBy = user.Name
-	}
+	project.LastModifiedBy = util.GetUsername()
 	project.LastModifiedAt = time.Now().UnixNano()
 
 	// Save config file
@@ -143,8 +144,7 @@ func saveCGFile(project *model.CGProject, opt SaveOptions) {
 	config.Set("created-at", project.CreatedAt)
 	config.Set("modified-by", project.LastModifiedBy)
 	config.Set("modified-at", project.LastModifiedAt)
-	config.SetConfigName(".cg")
-	config.SetConfigType("yml")
-	config.AddConfigPath(opt.WorkingDir)
-	config.WriteConfig()
+	if err := config.WriteConfigAs(opt.WorkingDir + ".cg.yml"); err != nil {
+		util.Error("Could not write CG config file", err, true)
+	}
 }

@@ -1,6 +1,7 @@
 {
     "label": "Nginx Reverse Proxy",
     "preselected": "true",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -9,6 +10,30 @@
         {
             "path": "README.md",
             "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Default virtual domain (e.g. example.com):",
+            "type": 2,
+            "validator": "email",
+            "variable": "PROXY_DEFAULT_DOMAIN"
+        }
+    ],
+    "proxy-questions": [
+        {
+            "text": "Virtual domain (e.g. admin@example.com):",
+            "defaultValue": "webmaster@example.com",
+            "type": 2,
+            "validator": "email",
+            "variable": "PROXY_VIRTUAL_EMAIL"
+        },
+        {
+            "text": "Virtual port:",
+            "defaultValue": "443",
+            "type": 2,
+            "validator": "port",
+            "variable": "PROXY_VIRTUAL_PORT"
         }
     ],
     "volumes": [

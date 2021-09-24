@@ -20,6 +20,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{RAILS_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [

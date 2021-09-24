@@ -7,6 +7,9 @@ import (
 	"github.com/AlecAivazis/survey/v2/terminal"
 )
 
+// Suggest is a function for settings suggestions to a question for autocompletion
+type Suggest func(toComplete string) []string
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // TextQuestion prints simple text question
@@ -94,6 +97,7 @@ func MenuQuestion(label string, items []string) (result string) {
 	return
 }
 
+// MenuQuestionWithDefault prints a selection of predefined items with default selections
 func MenuQuestionWithDefault(label string, items []string, defaultItem string) (result string) {
 	prompt := &survey.Select{
 		Message: label,
@@ -142,9 +146,6 @@ func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []s
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
-
-// Function for settings suggestions to a question for autocompletion
-type Suggest func(toComplete string) []string
 
 func handleInterrupt(err error) {
 	if err == terminal.InterruptErr {

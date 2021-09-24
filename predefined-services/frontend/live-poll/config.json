@@ -21,7 +21,7 @@
             "type": "docs"
         },
         {
-            "path": "frontend/environment.prod.ts",
+            "path": "${{LIVE_POLL_SOURCE_DIRECTORY}}/environment.prod.ts",
             "type": "config"
         }
     ],

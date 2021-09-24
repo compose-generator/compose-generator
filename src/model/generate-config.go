@@ -15,7 +15,8 @@ type ServiceConfig struct {
 	Params map[string]string `yaml:"params,omitempty"`
 }
 
-func (c GenerateConfig) GetServiceConfigurationsByName(templateType string) []ServiceConfig {
+// GetServiceConfigurationsByName returns all specified service configurations by the name of their type
+func (c GenerateConfig) GetServiceConfigurationsByType(templateType string) []ServiceConfig {
 	services := []ServiceConfig{}
 	for _, service := range c.ServiceConfig {
 		if service.Type == templateType {

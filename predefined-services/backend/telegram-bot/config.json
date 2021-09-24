@@ -15,7 +15,11 @@
             "type": "env"
         },
         {
-            "path": "backend/bot.py",
+            "path": "${{TELEGRAM_BOT_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{TELEGRAM_BOT_SOURCE_DIRECTORY}}/bot.py",
             "type": "config"
         }
     ],

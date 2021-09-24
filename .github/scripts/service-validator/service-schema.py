@@ -20,6 +20,9 @@
     'ports': {
         'type': 'list'
     },
+    'profiles': {
+        'type': 'list',
+    },
     'env_file': {
         'type': 'list'
     },

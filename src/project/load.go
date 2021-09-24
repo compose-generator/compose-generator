@@ -16,7 +16,7 @@ import (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// LoadProject loads the Docker compose project from the current directory
+// LoadProject loads a project from the disk
 func LoadProject(options ...LoadOption) *model.CGProject {
 	opts := applyLoadOptions(options...)
 
@@ -39,6 +39,7 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 	return project
 }
 
+// LoadProjectMetadata loads only the metadata of a project from the disk
 func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
 	opts := applyLoadOptions(options...)
 
@@ -54,6 +55,7 @@ func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
 	return metadata
 }
 
+// LoadTemplateService loads a project as a single service
 func LoadTemplateService(
 	project *model.CGProject,
 	selectedTemplates *model.SelectedTemplates,
@@ -68,9 +70,11 @@ func LoadTemplateService(
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
+	// Check if file exists
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
 		util.Error("Compose file not found", nil, true)
 	}
+	// Parse compose file
 	content, err := ioutil.ReadFile(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
 		util.Error("Unable to parse '"+opt.ComposeFileName+"'", err, true)
