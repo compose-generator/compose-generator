@@ -149,6 +149,7 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 	genPass.GenerateSecrets(project, selectedTemplates)
 	genPass.GenAddProfiles(project)
 	genPass.GenerateCopyVolumes(project)
+	genPass.GenerateReplaceVarsInConfigFiles(project, selectedTemplates)
 	genPass.GenerateExecServiceInitCommands(project, selectedTemplates)
 	genPass.GenerateExecDemoAppInitCommands(project, selectedTemplates)
 }

@@ -14,6 +14,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{GIN_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [
@@ -27,7 +31,7 @@
         {
             "text": "Which Go version do you want to use?",
             "type": 2,
-            "defaultValue": "1.16",
+            "defaultValue": "1.17",
             "variable": "GIN_GO_VERSION"
         },
         {

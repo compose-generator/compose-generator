@@ -89,7 +89,7 @@ func ExecuteOnToolbox(c string) {
 	// #nosec G204
 	err = exec.Command("docker", "run", "-i", "-v", workingDir+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c).Run()
 	if err != nil {
-		Error("Could not start toolbox", err, true)
+		Error("Toolbox terminated with an error", err, true)
 	}
 }
 
