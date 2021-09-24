@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/parser"
 	genPass "compose-generator/pass/generate"
 	"compose-generator/project"
 	"compose-generator/util"
@@ -67,7 +66,7 @@ func Generate(c *cli.Context) error {
 
 	// Clear screen if in interactive mode
 	if configPath == "" {
-		util.ClearScreen()
+		clearScreen()
 	}
 
 	// Check for predefined service templates updates
@@ -95,9 +94,9 @@ func Generate(c *cli.Context) error {
 	generateProject(proj, config)
 
 	// Save project
-	spinner := util.StartProcess("Saving project ...")
+	spinner := startProcess("Saving project ...")
 	project.SaveProject(proj)
-	util.StopProcess(spinner)
+	stopProcess(spinner)
 
 	// Print generated secrets
 	genPass.GeneratePrintSecrets(proj)
@@ -106,8 +105,8 @@ func Generate(c *cli.Context) error {
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 	} else {
-		util.Pel()
-		util.Success("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+		pel()
+		printSuccess("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
 	}
 	return nil
 }
@@ -117,13 +116,13 @@ func Generate(c *cli.Context) error {
 func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 	// Clear screen
 	if !config.FromFile {
-		util.ClearScreen()
+		clearScreen()
 	}
 
 	// Parse available service templates
-	spinner := util.StartProcess("Loading predefined service templates ...")
-	availableTemplates := parser.GetAvailablePredefinedTemplates()
-	util.StopProcess(spinner)
+	spinner := startProcess("Loading predefined service templates ...")
+	availableTemplates := getAvailablePredefinedTemplates()
+	stopProcess(spinner)
 
 	// Generate composition
 	selectedTemplates := &model.SelectedTemplates{
@@ -134,22 +133,22 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		ProxyService:     []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
-	genPass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)
-	genPass.GenerateChooseBackends(project, availableTemplates, selectedTemplates, config)
-	genPass.GenerateChooseDatabases(project, availableTemplates, selectedTemplates, config)
-	genPass.GenerateChooseDbAdmins(project, availableTemplates, selectedTemplates, config)
+	generateChooseFrontendsPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseBackendsPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseDatabasesPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseDbAdminsPass(project, availableTemplates, selectedTemplates, config)
 	if project.ProductionReady {
-		genPass.GenerateChooseProxies(project, availableTemplates, selectedTemplates, config)
-		genPass.GenerateChooseTlsHelpers(project, availableTemplates, selectedTemplates, config)
+		generateChooseProxiesPass(project, availableTemplates, selectedTemplates, config)
+		generateChooseTlsHelpersPass(project, availableTemplates, selectedTemplates, config)
 	}
 
 	// Execute passes
-	genPass.Generate(project, selectedTemplates)
-	genPass.GenerateResolveDependencyGroups(project, selectedTemplates)
-	genPass.GenerateSecrets(project, selectedTemplates)
-	genPass.GenAddProfiles(project)
-	genPass.GenerateCopyVolumes(project)
-	genPass.GenerateReplaceVarsInConfigFiles(project, selectedTemplates)
-	genPass.GenerateExecServiceInitCommands(project, selectedTemplates)
-	genPass.GenerateExecDemoAppInitCommands(project, selectedTemplates)
+	generatePass(project, selectedTemplates)
+	generateResolveDependencyGroupsPass(project, selectedTemplates)
+	generateSecretsPass(project, selectedTemplates)
+	genAddProfilesPass(project)
+	generateCopyVolumesPass(project)
+	generateReplaceVarsInConfigFilesPass(project, selectedTemplates)
+	generateExecServiceInitCommandsPass(project, selectedTemplates)
+	generateExecDemoAppInitCommandsPass(project, selectedTemplates)
 }
