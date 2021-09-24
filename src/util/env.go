@@ -1,6 +1,7 @@
 package util
 
 import (
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -18,6 +19,16 @@ func GetUsername() string {
 		return user.Username
 	}
 	return "unknown"
+}
+
+// GetDockerVersion retrives and returns the version of the installed Docker instance
+func GetDockerVersion() string {
+	cmd := exec.Command("docker", "-v")
+	dockerVersion, err := cmd.CombinedOutput()
+	if err != nil {
+		printError("Could not read Docker version", err, true)
+	}
+	return strings.TrimRight(string(dockerVersion), "\r\n")
 }
 
 // GetCustomTemplatesPath returns the path to the custom templates directory
