@@ -15,7 +15,11 @@
             "type": "docs"
         },
         {
-            "path": "backend/requirements.txt",
+            "path": "${{DJANGO_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{DJANGO_SOURCE_DIRECTORY}}/requirements.txt",
             "type": "config"
         }
     ],
@@ -30,7 +34,7 @@
         {
             "text": "Which Django version do you want to use?",
             "type": 2,
-            "defaultValue": "3.2.6",
+            "defaultValue": "3.2.7",
             "variable": "DJANGO_VERSION"
         },
         {
