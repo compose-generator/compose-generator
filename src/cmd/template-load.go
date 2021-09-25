@@ -4,7 +4,6 @@ import (
 	"compose-generator/model"
 	"compose-generator/project"
 	"compose-generator/util"
-	"io/ioutil"
 	"path/filepath"
 	"time"
 
@@ -113,34 +112,35 @@ func askForTemplate() string {
 }
 
 func showTemplateList() {
-	spinner := util.StartProcess("Loading template list ...")
+	spinner := startProcess("Loading template list ...")
 	templateMetadataList := getTemplateMetadataListMockable()
-	util.StopProcess(spinner)
-	util.Pel()
+	stopProcess(spinner)
+	pel()
 
 	if len(templateMetadataList) > 0 {
 		// Show list of saved templates
-		util.Heading("List of all templates:")
+		printHeading("List of all templates:")
 		for _, metadata := range templateMetadataList {
 			creationDate := time.Unix(0, int64(metadata.LastModifiedAt)).Format(timeFormat)
-			util.Pl(metadata.Name + " (Saved at: " + creationDate + ")")
+			pl(metadata.Name + " (Saved at: " + creationDate + ")")
 		}
-		util.Pel()
+		pel()
 	} else {
-		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
+		printError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	}
 }
 
 func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
-	files, err := ioutil.ReadDir(util.GetCustomTemplatesPath())
+	files, err := readDir(getCustomTemplatesPath())
 	if err != nil {
-		util.Error("Cannot access directory for custom templates", err, true)
+		printError("Cannot access directory for custom templates", err, true)
+		return nil
 	}
 	templateMetadata := make(map[string]*model.CGProjectMetadata)
 	for _, f := range files {
 		if f.IsDir() {
-			templatePath := util.GetCustomTemplatesPath() + "/" + f.Name()
-			metadata := project.LoadProjectMetadata(
+			templatePath := getCustomTemplatesPath() + "/" + f.Name()
+			metadata := loadProjectMetadata(
 				project.LoadFromDir(templatePath),
 			)
 			templateMetadata[templatePath] = metadata

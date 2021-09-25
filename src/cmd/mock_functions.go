@@ -6,7 +6,9 @@ import (
 	gen_pass "compose-generator/pass/generate"
 	install_pass "compose-generator/pass/install"
 	remove_pass "compose-generator/pass/remove"
+	"compose-generator/project"
 	"compose-generator/util"
+	"io/ioutil"
 
 	"github.com/docker/docker/client"
 )
@@ -14,9 +16,11 @@ import (
 var isDockerizedEnvironment = util.IsDockerizedEnvironment
 var printError = util.Error
 var printSuccess = util.Success
+var printHeading = util.Heading
 var printSuccessMessage = util.Success
 var commandExists = util.CommandExists
 var getDockerVersion = util.GetDockerVersion
+var pl = util.Pl
 var pel = util.Pel
 var yesNoQuestion = util.YesNoQuestion
 var textQuestionWithDefault = util.TextQuestionWithDefault
@@ -26,6 +30,9 @@ var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
 var getAvailablePredefinedTemplates = parser.GetAvailablePredefinedTemplates
 var newClientWithOpts = client.NewClientWithOpts
+var getCustomTemplatesPath = util.GetCustomTemplatesPath
+var readDir = ioutil.ReadDir
+var loadProjectMetadata = project.LoadProjectMetadata
 
 var addBuildOrImagePass = add_pass.AddBuildOrImage
 var addNamePass = add_pass.AddName
