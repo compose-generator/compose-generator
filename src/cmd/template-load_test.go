@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/briandowns/spinner"
+	spec "github.com/compose-spec/compose-go/types"
+	"github.com/otiai10/copy"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -208,4 +210,116 @@ func TestGetTemplateMetatdataList2(t *testing.T) {
 	result := getTemplateMetadataList()
 	// Assert
 	assert.Nil(t, result)
+}
+
+// ------------------------------------------------------------- copyVolumesFromTemplate -----------------------------------------------------------
+
+func TestCopyVolumesFromTemplate1(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Source: "./volume1",
+							Type:   spec.VolumeTypeBind,
+						},
+						{
+							Source: "./volume1/volume2",
+							Type:   spec.VolumeTypeBind,
+						},
+					},
+				},
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Source: "../volume3",
+							Type:   spec.VolumeTypeBind,
+						},
+						{
+							Source: "../volume4",
+							Type:   spec.VolumeTypeBind,
+						},
+					},
+				},
+			},
+		},
+	}
+	sourceDir := "."
+	// Mock functions
+	absCallCount := 0
+	abs = func(path string) (string, error) {
+		absCallCount++
+		switch absCallCount {
+		case 1:
+			assert.Equal(t, ".", path)
+			return "/usr/lib/compose-generator/templates", nil
+		case 2:
+			assert.Equal(t, "./volume1", path)
+			return "/usr/lib/compose-generator/templates/Template 1/volume1", nil
+		case 3:
+			assert.Equal(t, "../volume3", path)
+			return "/usr/lib/compose-generator/templates/Template 2/volume3", nil
+		case 4:
+			assert.Equal(t, "../volume4", path)
+			return "", errors.New("Error message")
+		}
+		return "", nil
+	}
+	rel = func(basepath, targpath string) (string, error) {
+		assert.Equal(t, "/usr/lib/compose-generator/templates", basepath)
+		switch targpath {
+		case "/usr/lib/compose-generator/templates/Template 1/volume1":
+			return "./Template 1/volume1", nil
+		case "/usr/lib/compose-generator/templates/Template 2/volume3":
+			return "./Template 2/volume3", nil
+		}
+		return "", nil
+	}
+	copyDirCallCount := 0
+	copyDir = func(src, dest string, opt ...copy.Options) error {
+		copyDirCallCount++
+		assert.Zero(t, len(opt))
+		if copyDirCallCount == 1 {
+			assert.Equal(t, "././Template 1/volume1", src)
+			assert.Equal(t, "./volume1", dest)
+			return nil
+		} else {
+			assert.Equal(t, "././Template 2/volume3", src)
+			assert.Equal(t, "../volume3", dest)
+		}
+		return errors.New("Error message")
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Equal(t, "Could not find absolute path of volume dir", description)
+		assert.Equal(t, "Error message", err.Error())
+		assert.True(t, exit)
+	}
+	printWarning = func(description string) {
+		assert.Equal(t, "Could not copy volumes from '././Template 2/volume3' to '../volume3'", description)
+	}
+	// Execute test
+	copyVolumesFromTemplate(project, sourceDir)
+	// Assert
+	assert.Equal(t, 4, absCallCount)
+	assert.Equal(t, 2, copyDirCallCount)
+}
+
+func TestCopyVolumesFromTemplate2(t *testing.T) {
+	// Test data
+	project := &model.CGProject{}
+	sourceDir := "."
+	// Mock functions
+	abs = func(path string) (string, error) {
+		assert.Equal(t, ".", path)
+		return "", errors.New("Error message")
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Equal(t, "Could not find absolute path of current dir", description)
+		assert.Equal(t, "Error message", err.Error())
+		assert.True(t, exit)
+	}
+	// Execute test
+	copyVolumesFromTemplate(project, sourceDir)
 }

@@ -4,10 +4,8 @@ import (
 	"compose-generator/model"
 	"compose-generator/project"
 	"compose-generator/util"
-	"path/filepath"
 	"time"
 
-	"github.com/otiai10/copy"
 	"github.com/urfave/cli/v2"
 )
 
@@ -150,22 +148,24 @@ func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
 }
 
 func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
-	currentAbs, err := filepath.Abs(".")
+	currentAbs, err := abs(".")
 	if err != nil {
-		util.Error("Could not find absolute path of current dir", err, true)
+		printError("Could not find absolute path of current dir", err, true)
+		return
 	}
 	for _, path := range proj.GetAllVolumePathsNormalized() {
-		pathAbs, err := filepath.Abs(path)
+		pathAbs, err := abs(path)
 		if err != nil {
-			util.Error("Could not find absolute path of volume dir", err, true)
+			printError("Could not find absolute path of volume dir", err, true)
+			return
 		}
-		pathRel, err := filepath.Rel(currentAbs, pathAbs)
+		pathRel, err := rel(currentAbs, pathAbs)
 		if err != nil {
-			util.Error("Could not copy volume '"+path+"'", err, false)
+			printError("Could not copy volume '"+path+"'", err, false)
 			continue
 		}
-		if copy.Copy(sourceDir+"/"+pathRel, path) != nil {
-			util.Warning("Could not copy volumes from '" + sourceDir + "/" + pathRel + "' to '" + path + "'")
+		if copyDir(sourceDir+"/"+pathRel, path) != nil {
+			printWarning("Could not copy volumes from '" + sourceDir + "/" + pathRel + "' to '" + path + "'")
 		}
 	}
 }

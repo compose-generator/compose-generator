@@ -9,12 +9,16 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
+	"path/filepath"
+
+	"github.com/otiai10/copy"
 
 	"github.com/docker/docker/client"
 )
 
 var isDockerizedEnvironment = util.IsDockerizedEnvironment
 var printError = util.Error
+var printWarning = util.Warning
 var printSuccess = util.Success
 var printHeading = util.Heading
 var printSuccessMessage = util.Success
@@ -33,6 +37,9 @@ var newClientWithOpts = client.NewClientWithOpts
 var getCustomTemplatesPath = util.GetCustomTemplatesPath
 var readDir = ioutil.ReadDir
 var loadProjectMetadata = project.LoadProjectMetadata
+var abs = filepath.Abs
+var rel = filepath.Rel
+var copyDir = copy.Copy
 
 var addBuildOrImagePass = add_pass.AddBuildOrImage
 var addNamePass = add_pass.AddName
