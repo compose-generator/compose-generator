@@ -271,9 +271,11 @@ func TestCopyVolumesFromTemplate1(t *testing.T) {
 		assert.Equal(t, "/usr/lib/compose-generator/templates", basepath)
 		switch targpath {
 		case "/usr/lib/compose-generator/templates/Template 1/volume1":
+			assert.Equal(t, "/usr/lib/compose-generator/templates/Template 1/volume1", targpath)
 			return "./Template 1/volume1", nil
 		case "/usr/lib/compose-generator/templates/Template 2/volume3":
-			return "./Template 2/volume3", nil
+			assert.Equal(t, "/usr/lib/compose-generator/templates/Template 2/volume3", targpath)
+			return "", errors.New("Error message 1")
 		}
 		return "", nil
 	}
@@ -291,10 +293,18 @@ func TestCopyVolumesFromTemplate1(t *testing.T) {
 		}
 		return errors.New("Error message")
 	}
+	printErrorCallCount := 0
 	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Could not find absolute path of volume dir", description)
-		assert.Equal(t, "Error message", err.Error())
-		assert.True(t, exit)
+		printErrorCallCount++
+		if printErrorCallCount == 1 {
+			assert.Equal(t, "Could not copy volume '../volume3'", description)
+			assert.Equal(t, "Error message 1", err.Error())
+			assert.False(t, exit)
+		} else {
+			assert.Equal(t, "Could not find absolute path of volume dir", description)
+			assert.Equal(t, "Error message", err.Error())
+			assert.True(t, exit)
+		}
 	}
 	printWarning = func(description string) {
 		assert.Equal(t, "Could not copy volumes from '././Template 2/volume3' to '../volume3'", description)
@@ -303,7 +313,8 @@ func TestCopyVolumesFromTemplate1(t *testing.T) {
 	copyVolumesFromTemplate(project, sourceDir)
 	// Assert
 	assert.Equal(t, 4, absCallCount)
-	assert.Equal(t, 2, copyDirCallCount)
+	assert.Equal(t, 1, copyDirCallCount)
+	assert.Equal(t, 2, printErrorCallCount)
 }
 
 func TestCopyVolumesFromTemplate2(t *testing.T) {

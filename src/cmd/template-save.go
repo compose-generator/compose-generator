@@ -5,9 +5,7 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"os"
-	"path/filepath"
 
-	"github.com/otiai10/copy"
 	"github.com/urfave/cli/v2"
 )
 
@@ -89,31 +87,31 @@ func SaveTemplate(c *cli.Context) error {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func isTemplateExisting(name string) bool {
-	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	if util.FileExists(targetDir) {
-		util.Error("Template with the name '"+name+"' already exists", nil, false)
+	targetDir := getCustomTemplatesPath() + "/" + name
+	if fileExists(targetDir) {
+		printError("Template with the name '"+name+"' already exists", nil, false)
 		return true
 	}
 	return false
 }
 
 func copyVolumesToTemplate(proj *model.CGProject, targetDir string) {
-	currentAbs, err := filepath.Abs(".")
+	currentAbs, err := abs(".")
 	if err != nil {
-		util.Error("Could not find absolute path of current dir", err, true)
+		printError("Could not find absolute path of current dir", err, true)
 	}
 	for _, path := range proj.GetAllVolumePathsNormalized() {
-		pathAbs, err := filepath.Abs(path)
+		pathAbs, err := abs(path)
 		if err != nil {
-			util.Error("Could not find absolute path of volume dir", err, true)
+			printError("Could not find absolute path of volume dir", err, true)
 		}
-		pathRel, err := filepath.Rel(currentAbs, pathAbs)
+		pathRel, err := rel(currentAbs, pathAbs)
 		if err != nil {
-			util.Error("Could not copy volume '"+path+"'", err, false)
+			printError("Could not copy volume '"+path+"'", err, false)
 			continue
 		}
-		if copy.Copy(path, targetDir+"/"+pathRel) != nil {
-			util.Warning("Could not copy volumes from '" + path + "' to '" + targetDir + "/" + pathRel + "'")
+		if copyDir(path, targetDir+"/"+pathRel) != nil {
+			printWarning("Could not copy volumes from '" + path + "' to '" + targetDir + "/" + pathRel + "'")
 		}
 	}
 }
