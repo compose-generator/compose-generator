@@ -107,6 +107,7 @@ func Generate(c *cli.Context) error {
 	} else {
 		pel()
 		printSuccess("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+		pel()
 	}
 	return nil
 }
