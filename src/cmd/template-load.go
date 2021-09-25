@@ -38,6 +38,8 @@ var TemplateLoadCliFlags = []cli.Flag{
 	},
 }
 
+var getTemplateMetadataListMockable = getTemplateMetadataList
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // LoadTemplate copies a template from the central templates directory to the working directory
@@ -90,10 +92,10 @@ func LoadTemplate(c *cli.Context) error {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func askForTemplate() string {
-	spinner := util.StartProcess("Loading template list ...")
-	templateMetadataList := getTemplateMetadataList()
-	util.StopProcess(spinner)
-	util.Pel()
+	spinner := startProcess("Loading template list ...")
+	templateMetadataList := getTemplateMetadataListMockable()
+	stopProcess(spinner)
+	pel()
 
 	if len(templateMetadataList) > 0 {
 		var items []string
@@ -103,16 +105,16 @@ func askForTemplate() string {
 			keys = append(keys, key)
 			items = append(items, metadata.Name+" (Saved at: "+creationDate+")")
 		}
-		index := util.MenuQuestionIndex("Which template do you want to load?", items)
+		index := menuQuestionIndex("Which template do you want to load?", items)
 		return keys[index]
 	}
-	util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
+	printError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	return ""
 }
 
 func showTemplateList() {
 	spinner := util.StartProcess("Loading template list ...")
-	templateMetadataList := getTemplateMetadataList()
+	templateMetadataList := getTemplateMetadataListMockable()
 	util.StopProcess(spinner)
 	util.Pel()
 

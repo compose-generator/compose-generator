@@ -20,6 +20,7 @@ var getDockerVersion = util.GetDockerVersion
 var pel = util.Pel
 var yesNoQuestion = util.YesNoQuestion
 var textQuestionWithDefault = util.TextQuestionWithDefault
+var menuQuestionIndex = util.MenuQuestionIndex
 var clearScreen = util.ClearScreen
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
