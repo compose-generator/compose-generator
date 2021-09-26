@@ -131,60 +131,63 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 }
 
 func AskTemplateProxyQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
-	proxyVars := make(model.Vars)
-	for _, question := range selectedTemplates.GetAllProxyQuestions() {
-		// Replace vars
-		text := ReplaceVarsInString(question.Text, project.Vars)
-		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
-		// Replace current service variables
-		text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_LABEL}}", template.Label)
-		text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_NAME}}", template.Name)
-		defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_LABEL}}", template.Label)
-		defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_NAME}}", template.Name)
+	// Ask proxy questions only if the service wants to get proxied
+	if template.Proxied {
+		proxyVars := make(model.Vars)
+		for _, question := range selectedTemplates.GetAllProxyQuestions() {
+			// Replace vars
+			text := ReplaceVarsInString(question.Text, project.Vars)
+			defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
+			// Replace current service variables
+			text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+			text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_NAME}}", template.Name)
+			defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+			defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_NAME}}", template.Name)
 
-		// Only ask advanced questions when the project was created in advanced mode
-		if project.AdvancedConfig || !question.Advanced {
-			// Question can be answered
-			switch question.Type {
-			case model.QuestionTypeYesNo:
-				// Ask a yes/no question
-				defaultValue, err := strconv.ParseBool(defaultValue)
-				if err != nil {
-					Error("Mistake in proxy question configuration. Default value of yes/no question was no bool", err, true)
-				}
-				answer := YesNoQuestion(text, defaultValue)
-				proxyVars[question.Variable] = strconv.FormatBool(answer)
-			case model.QuestionTypeText:
-				// Ask a text question
-				answer := ""
-				if question.Validator != "" {
-					// Ask a text question with validator
-					validator := GetValidatorByName(question.Validator)
-					answer = TextQuestionWithDefaultAndValidator(text, defaultValue, validator)
-					if question.Validator == "port" {
-						port, err := strconv.Atoi(answer)
-						if err != nil {
-							Error("Internal error", err, true)
-						}
-						project.Ports = append(project.Ports, port)
+			// Only ask advanced questions when the project was created in advanced mode
+			if project.AdvancedConfig || !question.Advanced {
+				// Question can be answered
+				switch question.Type {
+				case model.QuestionTypeYesNo:
+					// Ask a yes/no question
+					defaultValue, err := strconv.ParseBool(defaultValue)
+					if err != nil {
+						Error("Mistake in proxy question configuration. Default value of yes/no question was no bool", err, true)
 					}
-				} else {
-					// Ask a text question without validator
-					answer = TextQuestionWithDefault(text, defaultValue)
+					answer := YesNoQuestion(text, defaultValue)
+					proxyVars[question.Variable] = strconv.FormatBool(answer)
+				case model.QuestionTypeText:
+					// Ask a text question
+					answer := ""
+					if question.Validator != "" {
+						// Ask a text question with validator
+						validator := GetValidatorByName(question.Validator)
+						answer = TextQuestionWithDefaultAndValidator(text, defaultValue, validator)
+						if question.Validator == "port" {
+							port, err := strconv.Atoi(answer)
+							if err != nil {
+								Error("Internal error", err, true)
+							}
+							project.Ports = append(project.Ports, port)
+						}
+					} else {
+						// Ask a text question without validator
+						answer = TextQuestionWithDefault(text, defaultValue)
+					}
+					proxyVars[question.Variable] = answer
+				case model.QuestionTypeMenu:
+					// Ask a menu question
+					answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
+					proxyVars[question.Variable] = answer
 				}
-				proxyVars[question.Variable] = answer
-			case model.QuestionTypeMenu:
-				// Ask a menu question
-				answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
-				proxyVars[question.Variable] = answer
+			} else {
+				// Advanced question falls back to default value
+				proxyVars[question.Variable] = question.DefaultValue
 			}
-		} else {
-			// Advanced question falls back to default value
-			proxyVars[question.Variable] = question.DefaultValue
 		}
+		// Add collected proxy vars to project
+		project.ProxyVars[template.Name] = proxyVars
 	}
-	// Add collected proxy vars to project
-	project.ProxyVars[template.Name] = proxyVars
 }
 
 // AskForCustomVolumePaths asks the user for custom volume paths for a template

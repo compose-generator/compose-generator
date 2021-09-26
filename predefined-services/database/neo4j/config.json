@@ -1,6 +1,7 @@
 {
     "label": "Neo4j",
     "preselected": "false",
+    "proxied": "true",
     "files": [
         {
             "path": "service.yml",

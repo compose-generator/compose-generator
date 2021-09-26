@@ -1,6 +1,7 @@
 {
     "label": "Gin",
     "preselected": "false",
+    "proxied": "true",
     "demoAppInitCmd": [
         "cd ${{GIN_SOURCE_DIRECTORY}}",
         "go mod init ${{GIN_APP_NAME}}",

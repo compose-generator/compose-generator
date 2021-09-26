@@ -13,3 +13,5 @@ depends_on:
   - proxy
 profiles:
   - production
+networks:
+  - proxy-tls

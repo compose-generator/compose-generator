@@ -1,6 +1,7 @@
 {
     "label": "RedisInsight",
     "preselected": "services.database contains name == \"redis\"",
+    "proxied": "true",
     "files": [
         {
             "path": "service.yml",

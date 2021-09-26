@@ -1,6 +1,7 @@
 {
     "label": "Spring Gradle",
     "preselected": "false",
+    "proxied": "true",
     "demoAppInitCmd": [
         "curl https://start.spring.io/starter.zip -d applicationName=${{PROJECT_NAME}} -d packageName=${{SPRING_GRADLE_PACKAGE_NAME}} -d dependencies=${{SPRING_GRADLE_DEPENDENCIES}} -d type=gradle-project -d language=${{SPRING_GRADLE_LANGUAGE}} -d bootVersion=${{SPRING_GRADLE_VERSION}} -o ${{SPRING_GRADLE_SOURCE_DIRECTORY}}/${{PROJECT_NAME_CONTAINER}}.zip",
         "unzip -q ${{SPRING_GRADLE_SOURCE_DIRECTORY}}/${{PROJECT_NAME_CONTAINER}}.zip -d ${{SPRING_GRADLE_SOURCE_DIRECTORY}}",

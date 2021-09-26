@@ -1,6 +1,7 @@
 {
     "label": "ASP.NET",
     "preselected": "false",
+    "proxied": "true",
     "demoAppInitCmd": [
         "cd ${{ASPNET_SOURCE_DIRECTORY}}",
         "dotnet new webapp"

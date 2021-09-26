@@ -1,6 +1,7 @@
 {
     "label": "Node.js",
     "preselected": "false",
+    "proxied": "true",
     "demoAppInitCmd": [
         "express example-app",
         "mv -f ./example-app/* ./${{NODE_SOURCE_DIRECTORY}}/",

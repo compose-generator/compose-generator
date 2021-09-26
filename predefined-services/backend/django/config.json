@@ -1,6 +1,7 @@
 {
     "label": "Django",
     "preselected": "false",
+    "proxied": "true",
     "demoAppInitCmd": [
         "django-admin startproject ${{DJANGO_APP_NAME}} ./${{DJANGO_SOURCE_DIRECTORY}}",
         "chmod -R 777 ./${{DJANGO_SOURCE_DIRECTORY}}"

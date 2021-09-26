@@ -1,6 +1,7 @@
 {
     "label": "Ruby on Rails",
     "preselected": "false",
+    "proxied": "true",
     "demoAppInitCmd": [
         "rails new ${{RAILS_APP_NAME}} --webpack=react",
         "shopt -s dotglob",

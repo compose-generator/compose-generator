@@ -12,6 +12,8 @@ ports:
   - 443:443
 profiles:
   - production
+networks:
+  - proxy-tls
 labels:
 #? if services.tlshelper contains name == "letsencrypt" {
 #   - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy

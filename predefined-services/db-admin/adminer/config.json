@@ -1,6 +1,7 @@
 {
     "label": "Adminer",
     "preselected": "services.database contains name == \"postgres\"",
+    "proxied": "true",
     "files": [
         {
             "path": "service.yml",
