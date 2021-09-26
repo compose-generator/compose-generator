@@ -1,7 +1,7 @@
 {
     "label": "Live-Poll",
     "preselected": "false",
-    "proxied": "true",
+    "proxied": true,
     "serviceInitCmd": [
         "git clone https://github.com/livepoll/live-poll.git tmp",
         "mv tmp/* ${{LIVE_POLL_SOURCE_DIRECTORY}}",

@@ -1,7 +1,7 @@
 {
     "label": "PostgreSQL",
     "preselected": "services.frontend contains name == \"gitea\" | services.frontend contains name == \"sonarqube\" | services.frontend contains name == \"jira\" | services.frontend contains name == \"bitbucket\"",
-    "proxied": "false",
+    "proxied": false,
     "serviceInitCmd": [
         "cd ${{VOLUME_POSTGRES_INIT}}",
         "dos2unix init-user-db.sh"

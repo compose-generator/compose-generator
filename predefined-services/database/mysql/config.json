@@ -1,7 +1,7 @@
 {
     "label": "MySQL",
     "preselected": "services.frontend contains name == \"wordpress\" | services.frontend contains name == \"nextcloud\" | services.frontend contains name == \"owncloud\" | services.backend contains name == \"live-poll-api\"",
-    "proxied": "false",
+    "proxied": false,
     "files": [
         {
             "path": "service.yml",

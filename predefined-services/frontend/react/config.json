@@ -1,7 +1,7 @@
 {
     "label": "React",
     "preselected": "false",
-    "proxied": "true",
+    "proxied": true,
     "demoAppInitCmd": [
         "create-react-app tmp",
         "mv ./tmp/* ${{REACT_SOURCE_DIRECTORY}}",

@@ -1,7 +1,7 @@
 {
     "label": "Owncloud",
     "preselected": "false",
-    "proxied": "true",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",

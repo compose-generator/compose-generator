@@ -1,7 +1,7 @@
 {
     "label": "Angular",
     "preselected": "false",
-    "proxied": "true",
+    "proxied": true,
     "demoAppInitCmd": [
         "ng new demo-app --directory ${{ANGULAR_SOURCE_DIRECTORY}} --style=less --skip-git --skip-tests --skip-install"
     ],

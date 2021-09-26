@@ -15,6 +15,10 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 		proxyService := getServiceRef(project.Composition, "proxy-"+selectedTemplates.ProxyService[0].Name)
 		if proxyService == nil {
 			printError("Proxy service cannot be found for network inserting", nil, true)
+			return
+		}
+		if proxyService.Networks == nil {
+			proxyService.Networks = make(map[string]*spec.ServiceNetworkConfig)
 		}
 		// Couple every proxied frontend, backend, database and dbadmin service with the proxy in a network
 		for _, template := range selectedTemplates.GetAll() {
@@ -26,8 +30,11 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 					continue
 				}
 				// Add network to proxy and current service
-				service.Networks[networkName] = &spec.ServiceNetworkConfig{}
-				proxyService.Networks[networkName] = &spec.ServiceNetworkConfig{}
+				if service.Networks == nil {
+					service.Networks = make(map[string]*spec.ServiceNetworkConfig)
+				}
+				service.Networks[networkName] = nil
+				proxyService.Networks[networkName] = nil
 			}
 		}
 	}

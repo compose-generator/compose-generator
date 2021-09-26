@@ -1,7 +1,7 @@
 {
     "label": "Minecraft Server",
     "preselected": "false",
-    "proxied": "false",
+    "proxied": false,
     "files": [
         {
             "path": "service.yml",
