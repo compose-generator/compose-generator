@@ -82,7 +82,8 @@ func Generate(c *cli.Context) error {
 			CreatedAt:      time.Now().UnixNano(),
 		},
 		ForceConfig: flagForce,
-		Vars:        make(map[string]string),
+		Vars:        make(model.Vars),
+		ProxyVars:   make(map[string]model.Vars),
 		Secrets:     []model.ProjectSecret{},
 	}
 	config := &model.GenerateConfig{}
@@ -134,14 +135,14 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		ProxyService:     []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
-	generateChooseFrontendsPass(project, availableTemplates, selectedTemplates, config)
-	generateChooseBackendsPass(project, availableTemplates, selectedTemplates, config)
-	generateChooseDatabasesPass(project, availableTemplates, selectedTemplates, config)
-	generateChooseDbAdminsPass(project, availableTemplates, selectedTemplates, config)
 	if project.ProductionReady {
 		generateChooseProxiesPass(project, availableTemplates, selectedTemplates, config)
 		generateChooseTlsHelpersPass(project, availableTemplates, selectedTemplates, config)
 	}
+	generateChooseFrontendsPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseBackendsPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseDatabasesPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseDbAdminsPass(project, availableTemplates, selectedTemplates, config)
 
 	// Execute passes
 	generatePass(project, selectedTemplates)

@@ -22,11 +22,11 @@
     ],
     "proxy-questions": [
         {
-            "text": "Virtual domain (e.g. admin@example.com):",
-            "defaultValue": "webmaster@example.com",
+            "text": "Virtual domain (e.g. example.com):",
+            "defaultValue": "${{PROXY_DEFAULT_DOMAIN}}",
             "type": 2,
             "validator": "hostname",
-            "variable": "PROXY_VIRTUAL_EMAIL"
+            "variable": "PROXY_VIRTUAL_DOMAIN"
         },
         {
             "text": "Virtual port:",

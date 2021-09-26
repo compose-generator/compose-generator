@@ -15,9 +15,12 @@ type CGProject struct {
 	ForceConfig       bool
 	WithVolumesConfig bool
 	Secrets           []ProjectSecret
-	Vars              map[string]string
+	Vars              Vars
+	ProxyVars         map[string]Vars
 	Ports             []int
 }
+
+type Vars map[string]string
 
 // CGProjectMetadata represents the metadata that is attached to a CGProject
 type CGProjectMetadata struct {
