@@ -1,4 +1,4 @@
-image: jwilder/nginx-proxy:alpine
+image: jwilder/nginx-proxy:${{PROXY_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-proxy-nginx
 restart: always
 volumes:

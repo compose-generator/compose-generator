@@ -18,6 +18,13 @@
             "type": 2,
             "validator": "hostname",
             "variable": "PROXY_DEFAULT_DOMAIN"
+        },
+        {
+            "text": "Which version of of JWilder Nginx Proxy do you want to use?",
+            "defaultValue": "0.8.0",
+            "type": 2,
+            "variable": "PROXY_VERSION",
+            "advanced": true
         }
     ],
     "proxy-questions": [
