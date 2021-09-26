@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -74,8 +75,9 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	for _, question := range template.Questions {
 		text := ReplaceVarsInString(question.Text, project.Vars)
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
-		// If the port is already in use, find unused one
+
 		if question.Validator == "port" {
+			// If the port is already in use, find unused one
 			port, err := strconv.Atoi(defaultValue)
 			if err != nil {
 				Error("Could not convert port to integer. Please check template", err, true)
@@ -131,19 +133,15 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 func AskTemplateProxyQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
 	proxyVars := make(model.Vars)
 	for _, question := range selectedTemplates.GetAllProxyQuestions() {
+		// Replace vars
 		text := ReplaceVarsInString(question.Text, project.Vars)
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
-		// If the port is already in use, find unused one
-		if question.Validator == "port" {
-			port, err := strconv.Atoi(defaultValue)
-			if err != nil {
-				Error("Could not convert port to integer. Please check template", err, true)
-			}
-			for SliceContainsInt(project.Ports, port) {
-				port++
-			}
-			defaultValue = strconv.Itoa(port)
-		}
+		// Replace current service variables
+		text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+		text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_NAME}}", template.Name)
+		defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+		defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_NAME}}", template.Name)
+
 		// Only ask advanced questions when the project was created in advanced mode
 		if project.AdvancedConfig || !question.Advanced {
 			// Question can be answered

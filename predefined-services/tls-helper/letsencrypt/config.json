@@ -14,7 +14,7 @@
     ],
     "questions": [
         {
-            "text": "Default TLS Certificate E-Mail Address (e.g. admin@${{PROXY_DEFAULT_DOMAIN}}):",
+            "text": "Default TLS Certificate E-Mail Address:",
             "defaultValue": "webmaster@${{PROXY_DEFAULT_DOMAIN}}",
             "type": 2,
             "validator": "email",
@@ -23,7 +23,7 @@
     ],
     "proxy-questions": [
         {
-            "text": "TLS Certificate E-Mail Address (e.g. admin@${{PROXY_DEFAULT_DOMAIN}}):",
+            "text": "TLS Certificate E-Mail Address:",
             "defaultValue": "webmaster@${{PROXY_DEFAULT_DOMAIN}}",
             "type": 2,
             "validator": "email",
