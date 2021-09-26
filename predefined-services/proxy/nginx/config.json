@@ -25,6 +25,22 @@
             "type": 2,
             "variable": "PROXY_VERSION",
             "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for HTTP?",
+            "defaultValue": "80",
+            "type": 2,
+            "validator": "port",
+            "variable": "PROXY_HTTP_PORT",
+            "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for HTTPS?",
+            "defaultValue": "443",
+            "type": 2,
+            "validator": "port",
+            "variable": "PROXY_HTTPS_PORT",
+            "advanced": true
         }
     ],
     "proxy-questions": [

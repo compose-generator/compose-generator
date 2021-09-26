@@ -35,6 +35,8 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 				}
 				service.Networks[networkName] = nil
 				proxyService.Networks[networkName] = nil
+				// Remove all exposed ports from the proxied service
+				service.Ports = []spec.ServicePortConfig{}
 			}
 		}
 	}
