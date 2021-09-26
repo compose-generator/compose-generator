@@ -17,7 +17,7 @@
             "text": "Default virtual domain (e.g. example.com):",
             "type": 2,
             "validator": "hostname",
-            "variable": "PROXY_DEFAULT_DOMAIN"
+            "variable": "DEFAULT_HOST"
         },
         {
             "text": "Which version of of JWilder Nginx Proxy do you want to use?",
@@ -30,16 +30,16 @@
     "proxy-questions": [
         {
             "text": "Virtual domain:",
-            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{PROXY_DEFAULT_DOMAIN}}",
+            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{DEFAULT_HOST}}",
             "type": 2,
             "validator": "hostname",
-            "variable": "PROXY_VIRTUAL_DOMAIN"
+            "variable": "VIRTUAL_HOST"
         },
         {
             "text": "Virtual port:",
             "type": 2,
             "validator": "port",
-            "variable": "PROXY_VIRTUAL_PORT"
+            "variable": "VIRTUAL_PORT"
         }
     ],
     "volumes": [

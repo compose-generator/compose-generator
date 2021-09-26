@@ -15,7 +15,7 @@
     "questions": [
         {
             "text": "Default TLS Certificate E-Mail Address:",
-            "defaultValue": "webmaster@${{PROXY_DEFAULT_DOMAIN}}",
+            "defaultValue": "webmaster@${{DEFAULT_HOST}}",
             "type": 2,
             "validator": "email",
             "variable": "TLS_DEFAULT_EMAIL"
@@ -24,13 +24,13 @@
     "proxy-questions": [
         {
             "text": "Let's Encrypt host:",
-            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{PROXY_DEFAULT_DOMAIN}}",
+            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{DEFAULT_HOST}}",
             "type": 2,
             "validator": "hostname",
             "variable": "LETSENCRYPT_HOST"
         },{
             "text": "TLS Certificate E-Mail Address:",
-            "defaultValue": "webmaster@${{PROXY_DEFAULT_DOMAIN}}",
+            "defaultValue": "webmaster@${{DEFAULT_HOST}}",
             "type": 2,
             "validator": "email",
             "variable": "TLS_EMAIL"
