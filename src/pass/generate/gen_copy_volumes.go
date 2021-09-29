@@ -47,7 +47,8 @@ func GenerateCopyVolumes(project *model.CGProject) {
 func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
-		if mkdirAll(dstPath, 0750) != nil {
+		// #nosec G301
+		if mkdirAll(dstPath, 0770) != nil {
 			printWarning("Could not create volume dir")
 		}
 	} else {
@@ -64,7 +65,7 @@ func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
-		if mkdirAll(dstPath, 0777) != nil {
+		if mkdirAll(dstPath, 0770) != nil {
 			printWarning("Could not create volume dir")
 		}
 	} else {
