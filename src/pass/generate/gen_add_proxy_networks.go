@@ -46,9 +46,9 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 
 func getServiceRef(project *spec.Project, serviceName string) *spec.ServiceConfig {
 	for index := range project.Services {
-		service := project.Services[index]
+		service := &project.Services[index]
 		if service.Name == serviceName {
-			return &service
+			return service
 		}
 	}
 	return nil
