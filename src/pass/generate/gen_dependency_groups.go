@@ -6,8 +6,6 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
-var replaceGroupDependencyMockable = replaceGroupDependency
-
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // GenerateResolveDependencyGroups resolves group dependencies like 'database' or 'frontend' to concrete service dependencies
@@ -17,27 +15,27 @@ func GenerateResolveDependencyGroups(project *model.CGProject, selectedTemplates
 		service := &project.Composition.Services[i]
 		// Search for frontend group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeFrontend]; ok {
-			replaceGroupDependencyMockable(service, selectedTemplates.FrontendServices, model.TemplateTypeFrontend)
+			replaceGroupDependency(service, selectedTemplates.FrontendServices, model.TemplateTypeFrontend)
 		}
 		// Search for backend group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeBackend]; ok {
-			replaceGroupDependencyMockable(service, selectedTemplates.BackendServices, model.TemplateTypeBackend)
+			replaceGroupDependency(service, selectedTemplates.BackendServices, model.TemplateTypeBackend)
 		}
 		// Search for database group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeDatabase]; ok {
-			replaceGroupDependencyMockable(service, selectedTemplates.DatabaseServices, model.TemplateTypeDatabase)
+			replaceGroupDependency(service, selectedTemplates.DatabaseServices, model.TemplateTypeDatabase)
 		}
 		// Search for dbadmin group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeDbAdmin]; ok {
-			replaceGroupDependencyMockable(service, selectedTemplates.DbAdminServices, model.TemplateTypeDbAdmin)
+			replaceGroupDependency(service, selectedTemplates.DbAdminServices, model.TemplateTypeDbAdmin)
 		}
 		// Search for proxy group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeProxy]; ok {
-			replaceGroupDependencyMockable(service, selectedTemplates.ProxyService, model.TemplateTypeProxy)
+			replaceGroupDependency(service, selectedTemplates.ProxyService, model.TemplateTypeProxy)
 		}
 		// Search for tlshelper group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeTlsHelper]; ok {
-			replaceGroupDependencyMockable(service, selectedTemplates.TlsHelperService, model.TemplateTypeTlsHelper)
+			replaceGroupDependency(service, selectedTemplates.TlsHelperService, model.TemplateTypeTlsHelper)
 		}
 	}
 	stopProcess(spinner)

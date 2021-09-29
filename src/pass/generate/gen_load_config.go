@@ -19,6 +19,7 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 		config.ProjectName = textQuestion("What is the name of your project:")
 		if config.ProjectName == "" {
 			printError("You must specify a project name!", nil, true)
+			return
 		}
 		config.ProductionReady = yesNoQuestion("Do you want the output to be production-ready?", false)
 		config.FromFile = false
@@ -28,18 +29,22 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 			yamlFile, err := openFile(configPath)
 			if err != nil {
 				printError("Could not load config file. Permissions granted?", err, true)
+				return
 			}
 			content, err := readAllFromFile(yamlFile)
 			if err != nil {
 				printError("Could not load config file. Permissions granted?", err, true)
+				return
 			}
 			// Parse yaml
 			if err := unmarshalYaml(content, &config); err != nil {
 				printError("Could not unmarshal config file", err, true)
+				return
 			}
 			config.FromFile = true
 		} else {
 			printError("Config file could not be found", nil, true)
+			return
 		}
 	}
 
