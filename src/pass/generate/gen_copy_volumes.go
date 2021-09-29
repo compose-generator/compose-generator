@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/compose-spec/compose-go/types"
+	"github.com/otiai10/copy"
 )
 
 var copyVolumeMockable = copyVolume
@@ -48,12 +49,15 @@ func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath strin
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
-		if mkdirAll(dstPath, 0770) != nil {
+		if mkdirAll(dstPath, 0777) != nil {
 			printWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
-		if err := copyFile(srcPath, dstPath); err != nil {
+		opt := copy.Options{
+			AddPermission: 0777,
+		}
+		if err := copyFile(srcPath, dstPath, opt); err != nil {
 			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
 		}
 	}
@@ -65,12 +69,15 @@ func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
-		if mkdirAll(dstPath, 0770) != nil {
+		if mkdirAll(dstPath, 0777) != nil {
 			printWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
-		if err := copyFile(srcPath, dstPath); err != nil {
+		opt := copy.Options{
+			AddPermission: 0777,
+		}
+		if err := copyFile(srcPath, dstPath, opt); err != nil {
 			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
 		}
 	}
