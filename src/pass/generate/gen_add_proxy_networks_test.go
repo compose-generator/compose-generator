@@ -46,6 +46,11 @@ func TestGenerateAddProxyNetworks1(t *testing.T) {
 				Proxied: true,
 				Type:    model.TemplateTypeBackend,
 			},
+			{
+				Name:    "spring-gradle",
+				Proxied: true,
+				Type:    model.TemplateTypeBackend,
+			},
 		},
 		ProxyService: []model.PredefinedTemplateConfig{
 			{
@@ -99,6 +104,8 @@ func TestGenerateAddProxyNetworks1(t *testing.T) {
 		case 2:
 			assert.Equal(t, "backend-spring-maven", serviceName)
 			return &project.Composition.Services[2]
+		case 3:
+			assert.Equal(t, "backend-spring-gradle", serviceName)
 		}
 		return nil
 	}
@@ -106,7 +113,7 @@ func TestGenerateAddProxyNetworks1(t *testing.T) {
 	GenerateAddProxyNetworks(project, selectedTemplates)
 	// Assert
 	assert.Equal(t, expectedProject, project)
-	assert.Equal(t, 2, getServiceRefCallCount)
+	assert.Equal(t, 3, getServiceRefCallCount)
 }
 
 func TestGenerateAddProxyNetworks2(t *testing.T) {
@@ -124,6 +131,41 @@ func TestGenerateAddProxyNetworks2(t *testing.T) {
 	}
 	// Execute test
 	GenerateAddProxyNetworks(project, selectedTemplates)
+}
+
+func TestGenerateAddProxyNetworks3(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			ProductionReady: true,
+		},
+	}
+	selectedTemplates := &model.SelectedTemplates{
+		ProxyService: []model.PredefinedTemplateConfig{
+			{
+				Name: "nginx",
+				Type: model.TemplateTypeProxy,
+			},
+		},
+	}
+	// Mock functions
+	getServiceRefCallCount := 0
+	getServiceRefMockable = func(project *spec.Project, serviceName string) *spec.ServiceConfig {
+		getServiceRefCallCount++
+		return nil
+	}
+	printErrorCallCount := 0
+	printError = func(description string, err error, exit bool) {
+		printErrorCallCount++
+		assert.Equal(t, "Proxy service cannot be found for network inserting", description)
+		assert.Nil(t, err)
+		assert.True(t, exit)
+	}
+	// Execute test
+	GenerateAddProxyNetworks(project, selectedTemplates)
+	// Assert
+	assert.Equal(t, 1, getServiceRefCallCount)
+	assert.Equal(t, 1, printErrorCallCount)
 }
 
 // ------------------------------------------------------------------ getServiceRef ----------------------------------------------------------------
