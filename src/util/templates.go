@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -72,9 +73,11 @@ func CheckForServiceTemplateUpdate() {
 // AskTemplateQuestions asks the user all questions the predefined service contains and saves the answers to the project
 func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, question := range template.Questions {
+		text := ReplaceVarsInString(question.Text, project.Vars)
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
-		// If the port is already in use, find unused one
+
 		if question.Validator == "port" {
+			// If the port is already in use, find unused one
 			port, err := strconv.Atoi(defaultValue)
 			if err != nil {
 				Error("Could not convert port to integer. Please check template", err, true)
@@ -94,7 +97,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 				if err != nil {
 					Error("Mistake in predefined template '"+template.Name+"'. Default value of yes/no question was no bool", err, true)
 				}
-				answer := YesNoQuestion(question.Text, defaultValue)
+				answer := YesNoQuestion(text, defaultValue)
 				project.Vars[question.Variable] = strconv.FormatBool(answer)
 			case model.QuestionTypeText:
 				// Ask a text question
@@ -102,7 +105,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 				if question.Validator != "" {
 					// Ask a text question with validator
 					validator := GetValidatorByName(question.Validator)
-					answer = TextQuestionWithDefaultAndValidator(question.Text, defaultValue, validator)
+					answer = TextQuestionWithDefaultAndValidator(text, defaultValue, validator)
 					if question.Validator == "port" {
 						port, err := strconv.Atoi(answer)
 						if err != nil {
@@ -112,18 +115,78 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 					}
 				} else {
 					// Ask a text question without validator
-					answer = TextQuestionWithDefault(question.Text, defaultValue)
+					answer = TextQuestionWithDefault(text, defaultValue)
 				}
 				project.Vars[question.Variable] = answer
 			case model.QuestionTypeMenu:
 				// Ask a menu question
-				answer := MenuQuestionWithDefault(question.Text, question.Options, question.DefaultValue)
+				answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
 				project.Vars[question.Variable] = answer
 			}
 		} else {
 			// Advanced question falls back to default value
 			project.Vars[question.Variable] = question.DefaultValue
 		}
+	}
+}
+
+func AskTemplateProxyQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
+	// Ask proxy questions only if the service wants to get proxied
+	if template.Proxied {
+		proxyVars := make(model.Vars)
+		for _, question := range selectedTemplates.GetAllProxyQuestions() {
+			// Replace vars
+			text := ReplaceVarsInString(question.Text, project.Vars)
+			defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
+			// Replace current service variables
+			text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+			text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_NAME}}", template.Name)
+			defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+			defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_NAME}}", template.Name)
+
+			// Only ask advanced questions when the project was created in advanced mode
+			if project.AdvancedConfig || !question.Advanced {
+				// Question can be answered
+				switch question.Type {
+				case model.QuestionTypeYesNo:
+					// Ask a yes/no question
+					defaultValue, err := strconv.ParseBool(defaultValue)
+					if err != nil {
+						Error("Mistake in proxy question configuration. Default value of yes/no question was no bool", err, true)
+					}
+					answer := YesNoQuestion(text, defaultValue)
+					proxyVars[question.Variable] = strconv.FormatBool(answer)
+				case model.QuestionTypeText:
+					// Ask a text question
+					answer := ""
+					if question.Validator != "" {
+						// Ask a text question with validator
+						validator := GetValidatorByName(question.Validator)
+						answer = TextQuestionWithDefaultAndValidator(text, defaultValue, validator)
+						if question.Validator == "port" {
+							port, err := strconv.Atoi(answer)
+							if err != nil {
+								Error("Internal error", err, true)
+							}
+							project.Ports = append(project.Ports, port)
+						}
+					} else {
+						// Ask a text question without validator
+						answer = TextQuestionWithDefault(text, defaultValue)
+					}
+					proxyVars[question.Variable] = answer
+				case model.QuestionTypeMenu:
+					// Ask a menu question
+					answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
+					proxyVars[question.Variable] = answer
+				}
+			} else {
+				// Advanced question falls back to default value
+				proxyVars[question.Variable] = question.DefaultValue
+			}
+		}
+		// Add collected proxy vars to project
+		project.ProxyVars[template.Name] = proxyVars
 	}
 }
 

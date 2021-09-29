@@ -58,6 +58,17 @@ func (t SelectedTemplates) GetTotal() int {
 	return count
 }
 
+func (t SelectedTemplates) GetAllProxyQuestions() []Question {
+	questions := []Question{}
+	for _, template := range t.ProxyService {
+		questions = append(questions, template.ProxyQuestions...)
+	}
+	for _, template := range t.TlsHelperService {
+		questions = append(questions, template.ProxyQuestions...)
+	}
+	return questions
+}
+
 // AvailableTemplates represents all available predefined service templates
 type AvailableTemplates struct {
 	FrontendServices []PredefinedTemplateConfig

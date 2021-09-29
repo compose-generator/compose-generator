@@ -1,6 +1,7 @@
 {
     "label": "Vue",
     "preselected": "false",
+    "proxied": true,
     "demoAppInitCmd": [
         "vue create -dnf ${{PROJECT_NAME_CONTAINER}}",
         "rm -rf ${{PROJECT_NAME_CONTAINER}}/node_modules",

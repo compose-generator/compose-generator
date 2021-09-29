@@ -1,6 +1,7 @@
 {
     "label": "Cassandra",
     "preselected": "false",
+    "proxied": false,
     "files": [
         {
             "path": "service.yml",

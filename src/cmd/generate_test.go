@@ -10,8 +10,6 @@ import (
 
 // ------------------------------------------------------------------- Generate --------------------------------------------------------------------
 
-
-
 // ---------------------------------------------------------------- generateProject ----------------------------------------------------------------
 
 func TestGenerateProject1(t *testing.T) {
@@ -93,9 +91,13 @@ func TestGenerateProject1(t *testing.T) {
 	generateSecretsPass = func(project *model.CGProject, selected *model.SelectedTemplates) {
 		generateSecretsPassCallCount++
 	}
-	genAddProfilesPassCallCount := 0
-	genAddProfilesPass = func(project *model.CGProject) {
-		genAddProfilesPassCallCount++
+	generateAddProfilesPassCallCount := 0
+	generateAddProfilesPass = func(project *model.CGProject) {
+		generateAddProfilesPassCallCount++
+	}
+	generateAddProxyNetworksCallCount := 0
+	generateAddProxyNetworks = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+		generateAddProxyNetworksCallCount++
 	}
 	generateCopyVolumesPassCallCount := 0
 	generateCopyVolumesPass = func(project *model.CGProject) {
@@ -126,7 +128,8 @@ func TestGenerateProject1(t *testing.T) {
 	assert.Equal(t, 1, generatePassCallCount)
 	assert.Equal(t, 1, generateResolveDependencyGroupsPassCallCount)
 	assert.Equal(t, 1, generateSecretsPassCallCount)
-	assert.Equal(t, 1, genAddProfilesPassCallCount)
+	assert.Equal(t, 1, generateAddProfilesPassCallCount)
+	assert.Equal(t, 1, generateAddProxyNetworksCallCount)
 	assert.Equal(t, 1, generateCopyVolumesPassCallCount)
 	assert.Equal(t, 1, generateReplaceVarsInConfigFilesPassCallCount)
 	assert.Equal(t, 1, generateExecServiceInitCommandsPassCallCount)
@@ -212,9 +215,13 @@ func TestGenerateProject2(t *testing.T) {
 	generateSecretsPass = func(project *model.CGProject, selected *model.SelectedTemplates) {
 		generateSecretsPassCallCount++
 	}
-	genAddProfilesPassCallCount := 0
-	genAddProfilesPass = func(project *model.CGProject) {
-		genAddProfilesPassCallCount++
+	generateAddProfilesPassCallCount := 0
+	generateAddProfilesPass = func(project *model.CGProject) {
+		generateAddProfilesPassCallCount++
+	}
+	generateAddProxyNetworksCallCount := 0
+	generateAddProxyNetworks = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+		generateAddProxyNetworksCallCount++
 	}
 	generateCopyVolumesPassCallCount := 0
 	generateCopyVolumesPass = func(project *model.CGProject) {
@@ -245,7 +252,8 @@ func TestGenerateProject2(t *testing.T) {
 	assert.Equal(t, 1, generatePassCallCount)
 	assert.Equal(t, 1, generateResolveDependencyGroupsPassCallCount)
 	assert.Equal(t, 1, generateSecretsPassCallCount)
-	assert.Equal(t, 1, genAddProfilesPassCallCount)
+	assert.Equal(t, 1, generateAddProfilesPassCallCount)
+	assert.Equal(t, 1, generateAddProxyNetworksCallCount)
 	assert.Equal(t, 1, generateCopyVolumesPassCallCount)
 	assert.Equal(t, 1, generateReplaceVarsInConfigFilesPassCallCount)
 	assert.Equal(t, 1, generateExecServiceInitCommandsPassCallCount)

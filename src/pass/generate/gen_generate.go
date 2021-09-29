@@ -82,6 +82,11 @@ func generateService(
 	if service.Build != nil && service.Build.Context != "" {
 		service.Build.Context = template.Dir + "/" + service.Build.Context
 	}
+	// Add env variables for proxy questions
+	for varName := range proj.ProxyVars[template.Name] {
+		varValue := proj.ProxyVars[template.Name][varName]
+		service.Environment[varName] = &varValue
+	}
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)
 	// Add child readme files

@@ -1,6 +1,7 @@
 {
     "label": "Uptime Kuma",
     "preselected": "false",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",

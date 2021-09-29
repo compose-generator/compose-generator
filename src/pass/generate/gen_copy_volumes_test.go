@@ -141,7 +141,7 @@ func TestCopyVolume1(t *testing.T) {
 	}
 	mkdirAll = func(path string, perm os.FileMode) error {
 		assert.Equal(t, dstPath, path)
-		assert.Equal(t, os.FileMode(0750), perm)
+		assert.Equal(t, os.FileMode(0777), perm)
 		return nil
 	}
 	printWarning = func(description string) {
@@ -170,7 +170,7 @@ func TestCopyVolume2(t *testing.T) {
 	}
 	mkdirAll = func(path string, perm os.FileMode) error {
 		assert.Equal(t, dstPath, path)
-		assert.Equal(t, os.FileMode(0750), perm)
+		assert.Equal(t, os.FileMode(0777), perm)
 		return errors.New("MkdirAll error")
 	}
 	printWarning = func(description string) {
@@ -199,7 +199,7 @@ func TestCopyVolume3(t *testing.T) {
 	}
 	mkdirAll = func(path string, perm os.FileMode) error {
 		assert.Equal(t, dstPath, path)
-		assert.Equal(t, os.FileMode(0750), perm)
+		assert.Equal(t, os.FileMode(0777), perm)
 		return errors.New("MkdirAll error")
 	}
 	copyFile = func(src, dest string, opt ...copy.Options) error {
@@ -231,7 +231,7 @@ func TestCopyBuildDir1(t *testing.T) {
 	}
 	mkdirAll = func(path string, perm os.FileMode) error {
 		assert.Equal(t, dstPath, path)
-		assert.Equal(t, os.FileMode(0750), perm)
+		assert.Equal(t, os.FileMode(0777), perm)
 		return nil
 	}
 	printWarning = func(description string) {
@@ -259,7 +259,7 @@ func TestCopyBuildDir2(t *testing.T) {
 	}
 	mkdirAll = func(path string, perm os.FileMode) error {
 		assert.Equal(t, dstPath, path)
-		assert.Equal(t, os.FileMode(0750), perm)
+		assert.Equal(t, os.FileMode(0777), perm)
 		return errors.New("MkdirAll error")
 	}
 	printWarning = func(description string) {
@@ -287,7 +287,7 @@ func TestCopyBuildDir3(t *testing.T) {
 	}
 	mkdirAll = func(path string, perm os.FileMode) error {
 		assert.Equal(t, dstPath, path)
-		assert.Equal(t, os.FileMode(0750), perm)
+		assert.Equal(t, os.FileMode(0777), perm)
 		return errors.New("MkdirAll error")
 	}
 	copyFile = func(src, dest string, opt ...copy.Options) error {

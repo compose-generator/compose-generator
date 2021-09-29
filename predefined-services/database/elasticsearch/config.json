@@ -1,6 +1,7 @@
 {
     "label": "Elasticsearch",
     "preselected": "false",
+    "proxied": false,
     "files": [
         {
             "path": "service.yml",

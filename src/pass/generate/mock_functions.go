@@ -34,6 +34,7 @@ var copyFile = copy.Copy
 var templateListToLabelList = util.TemplateListToLabelList
 var templateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
 var askTemplateQuestions = util.AskTemplateQuestions
+var askTemplateProxyQuestions = util.AskTemplateProxyQuestions
 var askForCustomVolumePaths = util.AskForCustomVolumePaths
 var unmarshalYaml = yaml.Unmarshal
 var openFile = os.Open
