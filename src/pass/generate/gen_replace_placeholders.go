@@ -3,11 +3,11 @@ package pass
 import (
 	"compose-generator/model"
 	"compose-generator/util"
+	"path/filepath"
 	"strings"
 )
 
 var replaceVarsInFileMockable = replaceVarsInFile
-var replaceConditionalSectionsInFileMockable = replaceConditionalSectionsInFile
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -17,12 +17,12 @@ func GenerateReplacePlaceholdersInConfigFiles(project *model.CGProject, selected
 		// Replace vars for all config files in this template
 		spinner := startProcess("Applying custom config for " + template.Label + " ...")
 		for _, configFile := range template.GetFilePathsByType(model.FileTypeConfig) {
-			filePath := project.Composition.WorkingDir + "/" + util.ReplaceVarsInString(configFile, project.Vars)
+			filePath := filepath.Clean(project.Composition.WorkingDir + util.ReplaceVarsInString(configFile, project.Vars))
 			if fileExists(filePath) {
 				// Replace all vars in file if it exists
 				replaceVarsInFileMockable(filePath, project.Vars)
 				// Replace conditional sections in file if it exists
-				replaceConditionalSectionsInFileMockable(filePath, selectedTemplates, project.Vars)
+				evaluateConditionalSections(filePath, selectedTemplates, project.Vars)
 			}
 		}
 		stopProcess(spinner)
@@ -47,9 +47,4 @@ func replaceVarsInFile(filePath string, vars map[string]string) {
 	if err := writeFile(filePath, []byte(contentStr), 0600); err != nil {
 		printError("Unable to write config file '"+filePath+"' back to the disk", err, false)
 	}
-}
-
-func replaceConditionalSectionsInFile(filePath string, selectedTemplates *model.SelectedTemplates, vars map[string]string) {
-	// Evaluate conditional sections
-	evaluateConditionalSections(filePath, selectedTemplates, vars)
 }

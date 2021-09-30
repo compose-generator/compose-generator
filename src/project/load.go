@@ -111,7 +111,7 @@ func loadComposeFileSingleService(
 		util.Error("Compose file not found in template "+templateTypeName+"-"+serviceName, nil, true)
 	}
 	// Evaluate conditional sections
-	evaluated := util.EvaluateConditionalSections(
+	evaluated := util.EvaluateConditionalSectionsToString(
 		opt.WorkingDir+opt.ComposeFileName,
 		selectedTemplates,
 		project.Vars,

@@ -95,10 +95,10 @@ func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 			"NODE_PORT":    "3000",
 		}, vars)
 	}
-	replaceConditionalSectionsInFileCallCount := 0
-	replaceConditionalSectionsInFileMockable = func(filePath string, selectedTemplates *model.SelectedTemplates, vars map[string]string) {
-		replaceConditionalSectionsInFileCallCount++
-		if replaceConditionalSectionsInFileCallCount == 1 {
+	evaluateConditionalSectionsCallCount := 0
+	evaluateConditionalSections = func(filePath string, selected *model.SelectedTemplates, vars map[string]string) {
+		evaluateConditionalSectionsCallCount++
+		if evaluateConditionalSectionsCallCount == 1 {
 			assert.Equal(t, "./work-dir/Dockerfile", filePath)
 		} else {
 			assert.Equal(t, "./work-dir/test/another-config-file.conf", filePath)
@@ -113,6 +113,7 @@ func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 	// Assert
 	assert.Equal(t, 2, startProcessCallCount)
 	assert.Equal(t, 2, replaceVarsInFileCallCount)
+	assert.Equal(t, 2, evaluateConditionalSectionsCallCount)
 }
 
 // --------------------------------------------------------------- ReplaceVarsInFile ---------------------------------------------------------------
