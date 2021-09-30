@@ -1,6 +1,6 @@
 FROM python:${{DJANGO_PYTHON_VERSION}}-alpine
 
-#? if has services.database[0].name == "postgres" {
+#? if has services.database contains name == "postgres" {
 # RUN apt-get install -y --no-install-recommends postgresql-client && rm -rf /var/lib/apt/lists/*  
 #? }
 

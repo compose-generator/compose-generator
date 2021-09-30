@@ -36,6 +36,7 @@ var templateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
 var askTemplateQuestions = util.AskTemplateQuestions
 var askTemplateProxyQuestions = util.AskTemplateProxyQuestions
 var askForCustomVolumePaths = util.AskForCustomVolumePaths
+var evaluateConditionalSections = util.EvaluateConditionalSections
 var unmarshalYaml = yaml.Unmarshal
 var openFile = os.Open
 var readAllFromFile = ioutil.ReadAll

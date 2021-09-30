@@ -69,6 +69,6 @@ var generateSecretsPass = gen_pass.GenerateSecrets
 var generateAddProfilesPass = gen_pass.GenerateAddProfiles
 var generateAddProxyNetworks = gen_pass.GenerateAddProxyNetworks
 var generateCopyVolumesPass = gen_pass.GenerateCopyVolumes
-var generateReplaceVarsInConfigFilesPass = gen_pass.GenerateReplaceVarsInConfigFiles
+var generateReplaceVarsInConfigFilesPass = gen_pass.GenerateReplacePlaceholdersInConfigFiles
 var generateExecServiceInitCommandsPass = gen_pass.GenerateExecServiceInitCommands
 var generateExecDemoAppInitCommandsPass = gen_pass.GenerateExecDemoAppInitCommands
