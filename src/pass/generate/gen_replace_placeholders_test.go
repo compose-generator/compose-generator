@@ -17,7 +17,7 @@ func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
 		Composition: &types.Project{
-			WorkingDir: "./work-dir",
+			WorkingDir: "./work-dir/",
 		},
 		Vars: map[string]string{
 			"NODE_VERSION": "3.14.1",
@@ -73,11 +73,11 @@ func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 		fileExistsCallCount++
 		switch fileExistsCallCount {
 		case 1:
-			assert.Equal(t, "./work-dir/Dockerfile", path)
+			assert.Equal(t, "work-dir/Dockerfile", path)
 		case 2:
-			assert.Equal(t, "./work-dir/test/another-config-file.conf", path)
+			assert.Equal(t, "work-dir/test/another-config-file.conf", path)
 		case 3:
-			assert.Equal(t, "./work-dir/test/non-existent.conf", path)
+			assert.Equal(t, "work-dir/test/non-existent.conf", path)
 			return false
 		}
 		return true
@@ -86,9 +86,9 @@ func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 	replaceVarsInFileMockable = func(filePath string, vars map[string]string) {
 		replaceVarsInFileCallCount++
 		if replaceVarsInFileCallCount == 1 {
-			assert.Equal(t, "./work-dir/Dockerfile", filePath)
+			assert.Equal(t, "work-dir/Dockerfile", filePath)
 		} else {
-			assert.Equal(t, "./work-dir/test/another-config-file.conf", filePath)
+			assert.Equal(t, "work-dir/test/another-config-file.conf", filePath)
 		}
 		assert.EqualValues(t, map[string]string{
 			"NODE_VERSION": "3.14.1",
@@ -99,9 +99,9 @@ func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 	evaluateConditionalSections = func(filePath string, selected *model.SelectedTemplates, vars map[string]string) {
 		evaluateConditionalSectionsCallCount++
 		if evaluateConditionalSectionsCallCount == 1 {
-			assert.Equal(t, "./work-dir/Dockerfile", filePath)
+			assert.Equal(t, "work-dir/Dockerfile", filePath)
 		} else {
-			assert.Equal(t, "./work-dir/test/another-config-file.conf", filePath)
+			assert.Equal(t, "work-dir/test/another-config-file.conf", filePath)
 		}
 		assert.EqualValues(t, map[string]string{
 			"NODE_VERSION": "3.14.1",

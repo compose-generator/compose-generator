@@ -28,17 +28,17 @@ func EvaluateConditionalSections(
 
 // EvaluateConditionalSections evaluates conditional sections in template data
 func EvaluateConditionalSectionsToString(
-	filePath string,
+	input string,
 	selected *model.SelectedTemplates,
 	varMap map[string]string,
 ) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
 	// #nosec G204
-	cmd := exec.Command("ccom", "-d", dataString, "-s", filePath)
+	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", input)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		Error("Could not execute CCom", err, true)
+		Error("Could not execute CCom: "+string(output), err, true)
 	}
 	return strings.TrimRight(string(output), "\r\n")
 }
