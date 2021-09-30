@@ -9,6 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// -------------------------------------------------------- GenerateResolveDependencyGroups --------------------------------------------------------
+
 func TestGenerateResolveDependencyGroups(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
@@ -17,13 +19,50 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 				{
 					Name: "frontend-live-poll",
 					DependsOn: spec.DependsOnConfig{
-						"backend": spec.ServiceDependency{
+						model.TemplateTypeBackend: spec.ServiceDependency{
 							Condition: spec.ServiceConditionStarted,
 						},
 					},
 				},
 				{
 					Name: "backend-live-poll-api",
+					DependsOn: spec.DependsOnConfig{
+						model.TemplateTypeTlsHelper: spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "proxy-nginx",
+					DependsOn: spec.DependsOnConfig{
+						model.TemplateTypeDbAdmin: spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "database-redis",
+					DependsOn: spec.DependsOnConfig{
+						model.TemplateTypeProxy: spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "db-admin-phpmyadmin",
+					DependsOn: spec.DependsOnConfig{
+						model.TemplateTypeFrontend: spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "tls-helper-letsencrypt",
+					DependsOn: spec.DependsOnConfig{
+						model.TemplateTypeDatabase: spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
 				},
 			},
 		},
@@ -41,6 +80,30 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 				Label: "Live-Poll API",
 			},
 		},
+		DatabaseServices: []model.PredefinedTemplateConfig{
+			{
+				Name:  "redis",
+				Label: "Redis",
+			},
+		},
+		DbAdminServices: []model.PredefinedTemplateConfig{
+			{
+				Name:  "phpmyadmin",
+				Label: "PhpMyAdmin",
+			},
+		},
+		ProxyService: []model.PredefinedTemplateConfig{
+			{
+				Name:  "nginx",
+				Label: "JWilder Nginx",
+			},
+		},
+		TlsHelperService: []model.PredefinedTemplateConfig{
+			{
+				Name:  "letsencrypt",
+				Label: "Let's Encrypt",
+			},
+		},
 	}
 	expectedProject := &model.CGProject{
 		Composition: &spec.Project{
@@ -55,6 +118,43 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 				},
 				{
 					Name: "backend-live-poll-api",
+					DependsOn: spec.DependsOnConfig{
+						"tls-helper-letsencrypt": spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "proxy-nginx",
+					DependsOn: spec.DependsOnConfig{
+						"db-admin-phpmyadmin": spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "database-redis",
+					DependsOn: spec.DependsOnConfig{
+						"proxy-nginx": spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "db-admin-phpmyadmin",
+					DependsOn: spec.DependsOnConfig{
+						"frontend-live-poll": spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
+				},
+				{
+					Name: "tls-helper-letsencrypt",
+					DependsOn: spec.DependsOnConfig{
+						"database-redis": spec.ServiceDependency{
+							Condition: spec.ServiceConditionStarted,
+						},
+					},
 				},
 			},
 		},
@@ -78,6 +178,8 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 	assert.Equal(t, 1, stopProcessCallCount)
 	assert.Equal(t, expectedProject, project)
 }
+
+// ------------------------------------------------------------ ReplaceGroupDependency -------------------------------------------------------------
 
 func TestReplaceGroupDependency(t *testing.T) {
 	// Test data

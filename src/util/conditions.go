@@ -14,14 +14,31 @@ func EvaluateConditionalSections(
 	filePath string,
 	selected *model.SelectedTemplates,
 	varMap map[string]string,
+) {
+	dataString := prepareInputData(selected, varMap)
+	// Execute CCom
+	// #nosec G204
+	cmd := exec.Command("ccom", "-s", "-f", "-o", filePath, "-d", dataString, filePath)
+	if output, err := cmd.CombinedOutput(); err != nil {
+		if strings.TrimRight(string(output), "\r\n") != "Unknown lang" {
+			Error("Could not execute CCom: "+string(output), err, true)
+		}
+	}
+}
+
+// EvaluateConditionalSections evaluates conditional sections in template data
+func EvaluateConditionalSectionsToString(
+	input string,
+	selected *model.SelectedTemplates,
+	varMap map[string]string,
 ) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
 	// #nosec G204
-	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", filePath)
+	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", input)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		Error("Could not execute CCom", err, true)
+		Error("Could not execute CCom: "+string(output), err, true)
 	}
 	return strings.TrimRight(string(output), "\r\n")
 }

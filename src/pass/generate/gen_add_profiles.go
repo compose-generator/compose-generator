@@ -4,7 +4,7 @@ import "compose-generator/model"
 
 const (
 	ProfileDev        = "dev"
-	ProfileProduction = "production"
+	ProfileProduction = "prod"
 )
 
 // GenerateAddProfiles adds two profiles to the project in case the production-ready variant was selected

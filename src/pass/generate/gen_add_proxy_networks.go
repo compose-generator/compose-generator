@@ -6,13 +6,15 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
+var getServiceRefMockable = getServiceRef
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// GenerateAddProxyNetworks
+// GenerateAddProxyNetworks connects all proxied services via networks to the proxy and removes their port configs
 func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	if project.ProductionReady {
 		// Get reference of proxy service
-		proxyService := getServiceRef(project.Composition, "proxy-"+selectedTemplates.ProxyService[0].Name)
+		proxyService := getServiceRefMockable(project.Composition, "proxy-"+selectedTemplates.ProxyService[0].Name)
 		if proxyService == nil {
 			printError("Proxy service cannot be found for network inserting", nil, true)
 			return
@@ -25,7 +27,7 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 			if template.Type != model.TemplateTypeProxy && template.Type != model.TemplateTypeTlsHelper && template.Proxied {
 				networkName := "proxy-" + template.Name
 				// Get reference to current service
-				service := getServiceRef(project.Composition, template.Type+"-"+template.Name)
+				service := getServiceRefMockable(project.Composition, template.Type+"-"+template.Name)
 				if service == nil {
 					continue
 				}
@@ -36,7 +38,7 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 				service.Networks[networkName] = nil
 				proxyService.Networks[networkName] = nil
 				// Remove all exposed ports from the proxied service
-				service.Ports = []spec.ServicePortConfig{}
+				service.Ports = nil
 			}
 		}
 	}

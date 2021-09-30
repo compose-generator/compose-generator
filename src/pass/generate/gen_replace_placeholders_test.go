@@ -13,11 +13,11 @@ import (
 
 // -------------------------------------------------------- GenerateReplaceVarsInConfigFiles -------------------------------------------------------
 
-func TestGenerateReplaceVarsInConfigFiles(t *testing.T) {
+func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
 		Composition: &types.Project{
-			WorkingDir: "./work-dir",
+			WorkingDir: "./work-dir/",
 		},
 		Vars: map[string]string{
 			"NODE_VERSION": "3.14.1",
@@ -39,6 +39,10 @@ func TestGenerateReplaceVarsInConfigFiles(t *testing.T) {
 					},
 					{
 						Path: "test/another-config-file.conf",
+						Type: model.FileTypeConfig,
+					},
+					{
+						Path: "test/non-existent.conf",
 						Type: model.FileTypeConfig,
 					},
 				},
@@ -64,13 +68,40 @@ func TestGenerateReplaceVarsInConfigFiles(t *testing.T) {
 	stopProcess = func(s *spinner.Spinner) {
 		assert.Nil(t, s)
 	}
+	fileExistsCallCount := 0
+	fileExists = func(path string) bool {
+		fileExistsCallCount++
+		switch fileExistsCallCount {
+		case 1:
+			assert.Equal(t, "work-dir/Dockerfile", path)
+		case 2:
+			assert.Equal(t, "work-dir/test/another-config-file.conf", path)
+		case 3:
+			assert.Equal(t, "work-dir/test/non-existent.conf", path)
+			return false
+		}
+		return true
+	}
 	replaceVarsInFileCallCount := 0
 	replaceVarsInFileMockable = func(filePath string, vars map[string]string) {
 		replaceVarsInFileCallCount++
 		if replaceVarsInFileCallCount == 1 {
-			assert.Equal(t, "./work-dir/Dockerfile", filePath)
+			assert.Equal(t, "work-dir/Dockerfile", filePath)
 		} else {
-			assert.Equal(t, "./work-dir/test/another-config-file.conf", filePath)
+			assert.Equal(t, "work-dir/test/another-config-file.conf", filePath)
+		}
+		assert.EqualValues(t, map[string]string{
+			"NODE_VERSION": "3.14.1",
+			"NODE_PORT":    "3000",
+		}, vars)
+	}
+	evaluateConditionalSectionsCallCount := 0
+	evaluateConditionalSections = func(filePath string, selected *model.SelectedTemplates, vars map[string]string) {
+		evaluateConditionalSectionsCallCount++
+		if evaluateConditionalSectionsCallCount == 1 {
+			assert.Equal(t, "work-dir/Dockerfile", filePath)
+		} else {
+			assert.Equal(t, "work-dir/test/another-config-file.conf", filePath)
 		}
 		assert.EqualValues(t, map[string]string{
 			"NODE_VERSION": "3.14.1",
@@ -78,10 +109,11 @@ func TestGenerateReplaceVarsInConfigFiles(t *testing.T) {
 		}, vars)
 	}
 	// Execute test
-	GenerateReplaceVarsInConfigFiles(project, selectedTemplates)
+	GenerateReplacePlaceholdersInConfigFiles(project, selectedTemplates)
 	// Assert
 	assert.Equal(t, 2, startProcessCallCount)
 	assert.Equal(t, 2, replaceVarsInFileCallCount)
+	assert.Equal(t, 2, evaluateConditionalSectionsCallCount)
 }
 
 // --------------------------------------------------------------- ReplaceVarsInFile ---------------------------------------------------------------
@@ -94,10 +126,6 @@ func TestReplaceVarsInFile1(t *testing.T) {
 		"NODE_PORT":    "3000",
 	}
 	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, filePath, path)
-		return true
-	}
 	readFile = func(filename string) ([]byte, error) {
 		assert.Equal(t, filePath, filename)
 		return []byte("Test with ${{NODE_PORT}} and ${{NODE_VERSION}}"), nil
@@ -118,32 +146,11 @@ func TestReplaceVarsInFile1(t *testing.T) {
 func TestReplaceVarsInFile2(t *testing.T) {
 	// Test data
 	filePath := "./work-dir/test/Dockerfile"
-	vars := map[string]string{}
-	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, filePath, path)
-		return false
-	}
-	readFile = func(filename string) ([]byte, error) {
-		assert.Fail(t, "Unexpected call of readFile")
-		return nil, nil
-	}
-	// Execute test
-	replaceVarsInFile(filePath, vars)
-}
-
-func TestReplaceVarsInFile3(t *testing.T) {
-	// Test data
-	filePath := "./work-dir/test/Dockerfile"
 	vars := map[string]string{
 		"NODE_VERSION": "3.14.1",
 		"NODE_PORT":    "3000",
 	}
 	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, filePath, path)
-		return true
-	}
 	readFile = func(filename string) ([]byte, error) {
 		assert.Equal(t, filePath, filename)
 		return nil, errors.New("Error message")
@@ -161,7 +168,7 @@ func TestReplaceVarsInFile3(t *testing.T) {
 	replaceVarsInFile(filePath, vars)
 }
 
-func TestReplaceVarsInFile4(t *testing.T) {
+func TestReplaceVarsInFile3(t *testing.T) {
 	// Test data
 	filePath := "./work-dir/test/Dockerfile"
 	vars := map[string]string{
@@ -169,10 +176,6 @@ func TestReplaceVarsInFile4(t *testing.T) {
 		"NODE_PORT":    "3000",
 	}
 	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, filePath, path)
-		return true
-	}
 	readFile = func(filename string) ([]byte, error) {
 		assert.Equal(t, filePath, filename)
 		return []byte("Test with ${{NODE_PORT}} and ${{NODE_VERSION}}"), nil
