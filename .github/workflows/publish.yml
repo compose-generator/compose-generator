@@ -92,6 +92,7 @@ jobs:
     name: Deploy to Nexus
     needs: build-binaries
     runs-on: ubuntu-latest
+    if: contains(github.ref, 'rc') == false
     strategy:
       matrix:
         arch:
