@@ -57,8 +57,12 @@ Compose Generator offers several different methods to use it and it depends on y
 
     After you answered all questions, Compose Generator starts to generate the compose configuration for you and saves the provided outcome into the current directory. After finishing, you can run `$ docker compose up` to run Docker Compose with the generated configuration.
 
-??? question "I already have project(s) to deploy by building images on the host system"
-    To be extended ...
+??? question "I already have project(s) to deploy by building on the host system (not recommended for production)"
+    Clone the project to your system if not done already and execute `$ cg --with-instructions` in the root directory of the project. Please only select the services for the services that you need apart from the services, you want to build.
+
+    After generating the configuration without the relevant services, you can add them via `$ cg add` one by one.
 
 ??? question "I already have project(s) to deploy by pulling remote images"
-    To be extended ...
+    Clone the project to your system if not done already and execute `$ cg --with-instructions` in the root directory of the project. Please only select the services for the services that you need apart from the services, you want to build.
+
+    After generating the configuration without the relevant services, you can add them via `$ cg add` one by one.
