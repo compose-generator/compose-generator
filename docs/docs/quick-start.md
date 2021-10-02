@@ -46,7 +46,7 @@ Compose Generator offers several different methods to use it and it depends on y
 
 ### Generate your first Docker Compose Configuration
 
-??? question "I want to start from scratch"
+???+ question "I want to start from scratch"
     If you haven't started to work on your project you can simply run `$ cg --with-instructions` to generate a compose project from scratch.
     
     Select if you want to only have a compose configuration for development or for development and production. If you choose the latter, Compose Generator creates a compose config with a reverse proxy and a TLS certificate helper service and provides two Docker profiles called `dev` and `prod` that you can run `$ docker compose -p dev up` or respectively `$ docker compose -p prod up`.
