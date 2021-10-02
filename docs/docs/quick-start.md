@@ -5,30 +5,30 @@ Compose Generator offers several different methods to use it and it depends on y
 ### Setup Compose Generator
 
 ??? summary "I want to use it for development"
-    Compose Generator makes developing and especially testing much more seamless. Get started by choosing of the following options:
+    Compose Generator makes developing and especially testing much more seamless. Get started by choosing one of the following options:
 
     ??? summary "I have Docker already installed"
         Perfect! One thing less to care about ... Let's continue by installing Compose Generator:
 
-        ??? summary "Use it as Docker Container without installing"
-            Please refer to the guide on how to [use Compose Generator with Docker](../install/docker).
-
         ??? summary "Install it on your development machine (recommended)"
             If you use Windows on your development machine, please refer to the guide on how to [install Compose Generator on Windows](../install/windows) and if you work with Linux, you can visit the guide on how to [install Compose Generator on Linux](../install/linux).
+
+        ??? summary "Use it as Docker Container without installing"
+            Please refer to the guide on how to [use Compose Generator with Docker](../install/docker).
 
         ??? summary "Install it on your development machine via NPM"
             If you have already installed NPM on your development machine, you can [install Compose Generator via NPM](../install/npm). The only thing NPM does, is to unpack the binary for your platform and architecture to the binaries directory of your system. Compose Generator will post-install predefined service templates and other essential files.
 
-    ??? summary "I haven't got Docker yet"
+    ??? summary "Docker is not installed yet"
         No problem. Some commands of Compose Generator can even by used without having Docker installed, although it is recommended to have Docker installed.
+
+        As Docker is required for most of the tasks for Compose Generator to cover, you should have Docker installed before using it. Compose Generator offers [a simple command](../usage/install) to install Docker with Docker Compose.
 
         ??? summary "Install it on your development machine"
             If you use Windows on your development machine, please refer to the guide on how to [install Compose Generator on Windows](../install/windows) and if you work with Linux, you can visit the guide on how to [install Compose Generator on Linux](../install/linux).
 
         ??? summary "Install it on your development machine via NPM"
             If you have already installed NPM on your development machine, you can [install Compose Generator via NPM](../install/npm). The only thing NPM does, is to unpack the binary for your platform and architecture to the binaries directory of your system. Compose Generator will post-install predefined service templates and other essential files.
-
-        As Docker is required for most of the task, Compose Generator covers, you should have Docker installed before using it. Compose Generator offers [a simple command](../usage/install) to install both - Docker and Docker Compose - at once.
 
 ??? summary "I want to use it in production"
     Compose Generator can also be used to generate production ready Docker Compose configurations. To use it in a production environment we have two options: One-time use or more frequent usage.
@@ -46,11 +46,23 @@ Compose Generator offers several different methods to use it and it depends on y
 
 ### Generate your first Docker Compose Configuration
 
-??? question "I want to start from scratch"
-    To be extended ...
+???+ question "I want to start from scratch"
+    If you haven't started to work on your project you can simply run `$ compose-generator --with-instructions` to generate a compose project from scratch.
+    
+    Select if you want to only have a compose configuration for development or for development and production. If you choose the latter, Compose Generator creates a compose config with a reverse proxy and a TLS certificate helper service and provides two Docker profiles called `dev` and `prod` that you can run `$ docker compose -p dev up` or respectively `$ docker compose -p prod up`.
 
-??? question "I already have project(s) to deploy by building images on the host system"
-    To be extended ...
+    After choosing the production-readyness, Compose Generator asks you for the services that you want to use. Please select the ones, you want to use by navigating up and down and selecting by hitting the space key. Continue with enter. Compose-Generator will ask you some questions on how to configure the services, based on your selection.
+
+    You will get asked for services in 4 or 6 categories depending on you selected for the production-readyness in following order: (`proxy`, `tls helper`,) `frontend`, `backend`, `database`, `db admin`.
+
+    After you answered all questions, Compose Generator starts to generate the compose configuration for you and saves the provided outcome into the current directory. After finishing, you can run `$ docker compose up` to run Docker Compose with the generated configuration.
+
+??? question "I already have project(s) to deploy by building on the host system (not recommended for production)"
+    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services for the services that you need apart from the services, you want to build.
+
+    After generating the configuration without the relevant services, you can add them via `$ compose-generator add` one by one.
 
 ??? question "I already have project(s) to deploy by pulling remote images"
-    To be extended ...
+    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services for the services that you need apart from the services, you want to build.
+
+    After generating the configuration without the relevant services, you can add them via `$ compose-generator add` one by one.

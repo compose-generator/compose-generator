@@ -28,14 +28,14 @@ title: Install on Linux
 	sudo yum install compose-generator
     ```
 
-=== "Alpine"
+<!-- === "Alpine"
     To install Compose Generator on Alpine, execute the following commands in your terminal:
     ```sh
     apk update
     sh -c "echo 'https://repo.chillibits.com/alpine/$(cat \
         /etc/os-release | grep VERSION_ID | cut -d "=" -f2 | cut -d "." \
         -f1,2)/main'" >> /etc/apk/repositories
-    wget -O /etc/apk/keys/alpine.rsa.pub https://server.chillibits.com/files/repo/alpine.rsa.pub
+    wget -O /etc/apk/keys/chillibits.repo https://server.chillibits.com/files/repo/gpg
     apk add -y compose-generator
     ```
 
@@ -43,7 +43,7 @@ title: Install on Linux
         If there occure any errors on the last step, please try the following instead
         ```sh
         apk add compose-generator --allow-untrusted
-        ```
+        ``` -->
 
 === "Raspbian"
     To install Compose Generator on Raspbian, execute the following commands in your terminal:
@@ -95,5 +95,5 @@ You also can install Compose Generator from a package file on your host system.
 
 ### Use
 ```sh
-compose-generator
+compose-generator [<command>]
 ```

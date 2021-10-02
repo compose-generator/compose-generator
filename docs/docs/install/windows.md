@@ -21,5 +21,5 @@ Note: It is possible, that you see an error notification by your anti-virus soft
 
 ### Use
 ```sh
-compose-generator
+compose-generator [<command>]
 ```
