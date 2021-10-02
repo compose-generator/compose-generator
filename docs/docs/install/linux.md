@@ -95,5 +95,5 @@ You also can install Compose Generator from a package file on your host system.
 
 ### Use
 ```sh
-compose-generator
+compose-generator [<command>]
 ```

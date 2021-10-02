@@ -42,5 +42,5 @@ If you don't care about the executable and you just want to use Compose Generato
 
 ### Use
 ```sh
-compose-generator
+compose-generator [<command>]
 ```
