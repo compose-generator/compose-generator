@@ -152,7 +152,7 @@ type ServiceConfig struct {
 	ReadOnly        bool                             `mapstructure:"read_only" yaml:"read_only,omitempty" json:"read_only,omitempty"`
 	Restart         string                           `yaml:",omitempty" json:"restart,omitempty"`
 	Runtime         string                           `yaml:",omitempty" json:"runtime,omitempty"`
-	Scale           int                              `yaml:",omitempty" json:"scale,omitempty"`
+	Scale           int                              `yaml:"-" json:"-"`
 	Secrets         []ServiceSecretConfig            `yaml:",omitempty" json:"secrets,omitempty"`
 	SecurityOpt     []string                         `mapstructure:"security_opt" yaml:"security_opt,omitempty" json:"security_opt,omitempty"`
 	ShmSize         UnitBytes                        `mapstructure:"shm_size" yaml:"shm_size,omitempty" json:"shm_size,omitempty"`
@@ -690,7 +690,7 @@ type ServiceVolumeVolume struct {
 
 // ServiceVolumeTmpfs are options for a service volume of type tmpfs
 type ServiceVolumeTmpfs struct {
-	Size int64 `yaml:",omitempty" json:"size,omitempty"`
+	Size UnitBytes `yaml:",omitempty" json:"size,omitempty"`
 
 	Extensions map[string]interface{} `yaml:",inline" json:"-"`
 }

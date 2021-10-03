@@ -7,7 +7,7 @@ require (
 	github.com/briandowns/spinner v1.13.0
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d
-	github.com/compose-spec/compose-go v0.0.0-20210911175838-81485a4d5ea1
+	github.com/compose-spec/compose-go v1.0.2
 	github.com/docker/docker v20.10.8+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/go-playground/validator/v10 v10.9.0
@@ -22,7 +22,8 @@ require (
 
 require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
-	github.com/containerd/containerd v1.5.5 // indirect
+	github.com/compose-spec/godotenv v1.0.0 // indirect
+	github.com/containerd/containerd v1.5.6 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/distribution/v3 v3.0.0-20210316161203-a01c71e2477e // indirect
@@ -59,7 +60,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
-	github.com/ulyssessouza/godotenv v1.3.1-0.20210806120901-e417b721114e // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
