@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/briandowns/spinner"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,10 +28,6 @@ func TestInstallDockers1(t *testing.T) {
 		assert.Nil(t, err)
 		assert.True(t, exit)
 	}
-	doneCallCount := 0
-	done = func() {
-		doneCallCount++
-	}
 	pl = func(text string) {
 		assert.Equal(t, "Running installation ... ", text)
 	}
@@ -44,7 +41,6 @@ func TestInstallDockers1(t *testing.T) {
 	// Execute test
 	InstallDocker()
 	// Assert
-	assert.Equal(t, 1, doneCallCount)
 	assert.Equal(t, 2, pelCallCount)
 }
 
@@ -57,13 +53,13 @@ func TestInstallDocker2(t *testing.T) {
 		assert.Equal(t, "Downloading Docker installer ...", text)
 		return nil
 	}
-	DownloadFile = func(url string, filepath string) error {
+	downloadFile = func(url string, filepath string) error {
 		assert.Equal(t, downloadUrl, url)
 		assert.Equal(t, filePath, filepath)
 		return errors.New(errorMessage)
 	}
 	errorCalled := false
-	Error = func(description string, err error, exit bool) {
+	printError = func(description string, err error, exit bool) {
 		assert.Equal(t, "Download of Docker installer failed", description)
 		assert.NotNil(t, err)
 		assert.Equal(t, errorMessage, err.Error())
