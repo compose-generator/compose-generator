@@ -50,7 +50,7 @@ func deleteGitignore(project *model.CGProject, opt DeleteOptions) {
 }
 
 func deleteVolumes(project *model.CGProject, opt DeleteOptions) {
-	for _, volumePath := range project.GetAllVolumePathsNormalized() {
+	for _, volumePath := range util.NormalizePaths(project.GetAllVolumePaths()) {
 		err := os.RemoveAll(volumePath)
 		if err != nil {
 			util.Warning("Volume '" + volumePath + "' could not be deleted")

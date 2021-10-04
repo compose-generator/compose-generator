@@ -53,9 +53,9 @@ func TestIsTemplateExisting2(t *testing.T) {
 	assert.True(t, result)
 }
 
-// -------------------------------------------------------------- copyVolumesToTemplate ------------------------------------------------------------
+// ------------------------------------------------------ copyVolumesAndBuildContextsToTemplate ----------------------------------------------------
 
-func TestCopyVolumesToTemplate1(t *testing.T) {
+func TestCopyVolumesAndBuildContextsToTemplate1(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
 		Composition: &spec.Project{
@@ -73,11 +73,10 @@ func TestCopyVolumesToTemplate1(t *testing.T) {
 					},
 				},
 				{
+					Build: &spec.BuildConfig{
+						Context: "./frontend-angular/Dockerfile",
+					},
 					Volumes: []spec.ServiceVolumeConfig{
-						{
-							Source: "../volume3",
-							Type:   spec.VolumeTypeBind,
-						},
 						{
 							Source: "../volume4",
 							Type:   spec.VolumeTypeBind,
@@ -100,10 +99,10 @@ func TestCopyVolumesToTemplate1(t *testing.T) {
 			assert.Equal(t, "./volume1", path)
 			return "/usr/lib/compose-generator/templates/Template 1/volume1", nil
 		case 3:
-			assert.Equal(t, "../volume3", path)
-			return "/usr/lib/compose-generator/templates/Template 2/volume3", nil
-		case 4:
 			assert.Equal(t, "../volume4", path)
+			return "/usr/lib/compose-generator/templates/Template 2/volume4", nil
+		case 4:
+			assert.Equal(t, "frontend-angular", path)
 			return "", errors.New("Error message")
 		}
 		return "", nil
@@ -114,8 +113,8 @@ func TestCopyVolumesToTemplate1(t *testing.T) {
 		case "/usr/lib/compose-generator/templates/Template 1/volume1":
 			assert.Equal(t, "/usr/lib/compose-generator/templates/Template 1/volume1", targpath)
 			return "./Template 1/volume1", nil
-		case "/usr/lib/compose-generator/templates/Template 2/volume3":
-			assert.Equal(t, "/usr/lib/compose-generator/templates/Template 2/volume3", targpath)
+		case "/usr/lib/compose-generator/templates/Template 2/volume4":
+			assert.Equal(t, "/usr/lib/compose-generator/templates/Template 2/volume4", targpath)
 			return "", errors.New("Error message 1")
 		}
 		return "", nil
@@ -129,7 +128,7 @@ func TestCopyVolumesToTemplate1(t *testing.T) {
 			assert.Equal(t, "../templates/./Template 1/volume1", dest)
 			return nil
 		} else {
-			assert.Equal(t, "../volume4", src)
+			assert.Equal(t, "frontend-angular", src)
 			assert.Equal(t, "../templates/", dest)
 		}
 		return errors.New("Error message")
@@ -138,27 +137,27 @@ func TestCopyVolumesToTemplate1(t *testing.T) {
 	printError = func(description string, err error, exit bool) {
 		printErrorCallCount++
 		if printErrorCallCount == 1 {
-			assert.Equal(t, "Could not copy volume '../volume3'", description)
+			assert.Equal(t, "Could not copy volume / build context '../volume4'", description)
 			assert.Equal(t, "Error message 1", err.Error())
 			assert.False(t, exit)
 		} else {
-			assert.Equal(t, "Could not find absolute path of volume dir", description)
+			assert.Equal(t, "Could not find absolute path of volume / build context dir", description)
 			assert.Equal(t, "Error message", err.Error())
 			assert.True(t, exit)
 		}
 	}
 	printWarning = func(description string) {
-		assert.Equal(t, "Could not copy volumes from '../volume4' to '../templates/'", description)
+		assert.Equal(t, "Could not copy volume / build context from 'frontend-angular' to '../templates/'", description)
 	}
 	// Execute test
-	copyVolumesToTemplate(project, targetDir)
+	copyVolumesAndBuildContextsToTemplate(project, targetDir)
 	// Assert
 	assert.Equal(t, 4, absCallCount)
 	assert.Equal(t, 2, copyDirCallCount)
 	assert.Equal(t, 2, printErrorCallCount)
 }
 
-func TestCopyVolumesToTemplate2(t *testing.T) {
+func TestCopyVolumesAndBuildContextsToTemplate2(t *testing.T) {
 	// Test data
 	project := &model.CGProject{}
 	targetDir := "../templates"
@@ -173,5 +172,5 @@ func TestCopyVolumesToTemplate2(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	copyVolumesToTemplate(project, targetDir)
+	copyVolumesAndBuildContextsToTemplate(project, targetDir)
 }

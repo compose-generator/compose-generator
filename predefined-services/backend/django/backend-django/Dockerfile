@@ -1,7 +1,7 @@
 FROM python:${{DJANGO_PYTHON_VERSION}}-alpine
 
 #? if services.database contains name == "postgres" {
-#RUN apt-get install -y --no-install-recommends postgresql-client && rm -rf /var/lib/apt/lists/*  
+#RUN apk update && apk add --no-cache postgresql-client && rm -rf /var/cache/apk/*
 #? }
 WORKDIR /usr/src/app
 COPY requirements.txt ./

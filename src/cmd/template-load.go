@@ -70,9 +70,9 @@ func LoadTemplate(c *cli.Context) error {
 		proj.ForceConfig = flagForce
 		util.StopProcess(spinner)
 
-		// Copy volumes over to the new template dir
-		spinner = util.StartProcess("Copying volumes ...")
-		copyVolumesFromTemplate(proj, sourceDir)
+		// Copy volumes and build contexts over to the new template dir
+		spinner = util.StartProcess("Loading volumes and build contexts ...")
+		copyVolumesAndBuildContextsFromTemplate(proj, sourceDir)
 		util.StopProcess(spinner)
 
 		// Save the project to the current dir
@@ -147,13 +147,14 @@ func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
 	return templateMetadata
 }
 
-func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
+func copyVolumesAndBuildContextsFromTemplate(proj *model.CGProject, sourceDir string) {
 	currentAbs, err := abs(".")
 	if err != nil {
 		printError("Could not find absolute path of current dir", err, true)
 		return
 	}
-	for _, path := range proj.GetAllVolumePathsNormalized() {
+	paths := append(proj.GetAllVolumePaths(), proj.GetAllBuildContextPaths()...)
+	for _, path := range normalizePaths(paths) {
 		pathAbs, err := abs(path)
 		if err != nil {
 			printError("Could not find absolute path of volume dir", err, true)
