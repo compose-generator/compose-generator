@@ -1,0 +1,52 @@
+{
+    "label": "Fiber",
+    "preselected": "false",
+    "proxied": true,
+    "demoAppInitCmd": [
+        "cd ${{FIBER_SOURCE_DIRECTORY}}",
+        "go mod init ${{FIBER_APP_NAME}}",
+        "go mod tidy"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "${{FIBER_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Fiber app?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "FIBER_PORT"
+        },
+        {
+            "text": "Which Go version do you want to use?",
+            "type": 2,
+            "defaultValue": "1.17",
+            "variable": "FIBER_GO_VERSION"
+        },
+        {
+            "text": "How do you want to call your Fiber app?",
+            "type": 2,
+            "defaultValue": "fiber-example",
+            "variable": "FIBER_APP_NAME"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend-fiber",
+            "variable": "FIBER_SOURCE_DIRECTORY"
+        }
+    ]
+}
