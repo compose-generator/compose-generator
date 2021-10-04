@@ -20,17 +20,14 @@ func GenerateCopyVolumes(project *model.CGProject) {
 	for serviceIndex, service := range project.Composition.Services {
 		// Copy volumes if existing
 		for volumeIndex, volume := range service.Volumes {
-			// Cppy only if the volume is located at a relative path
-			if !filepath.IsAbs(volume.Source) {
-				srcPath := filepath.ToSlash(volume.Source)
-				dstPath := srcPath[len(getPredefinedServicesPath()):]
-				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
-				copyVolumeMockable(
-					&project.Composition.Services[serviceIndex].Volumes[volumeIndex],
-					srcPath,
-					dstPath,
-				)
-			}
+			srcPath := filepath.ToSlash(volume.Source)
+			dstPath := srcPath[len(getPredefinedServicesPath()):]
+			dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+			copyVolumeMockable(
+				&project.Composition.Services[serviceIndex].Volumes[volumeIndex],
+				srcPath,
+				dstPath,
+			)
 		}
 		// Copy build dir if existing
 		if service.Build != nil {
