@@ -1,6 +1,7 @@
 package model
 
 import (
+	"path/filepath"
 	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
@@ -54,41 +55,25 @@ func (p CGProject) GetAllVolumePaths() []string {
 	return paths
 }
 
-// GetAllVolumePathsNormalized returns the paths to all volumes, whithout any duplicates and nested paths
-func (p CGProject) GetAllVolumePathsNormalized() []string {
-	paths := p.GetAllVolumePaths()
-	normalizedPaths := []string{}
-	for _, path := range paths {
-		// Check for duplicate
-		duplicate := false
-		for _, normalizedPath := range normalizedPaths {
-			if path == normalizedPath {
-				duplicate = true
-				break
+// GetAllBuildContextPaths returns the paths to all build contexts, known by the project
+func (p CGProject) GetAllBuildContextPaths() []string {
+	paths := []string{}
+	// Return empty list when no composition is attached
+	if p.Composition == nil {
+		return paths
+	}
+	// Search for volume paths in all services
+	for _, service := range p.Composition.Services {
+		if service.Build != nil {
+			path := service.Build.Context
+			if strings.HasSuffix(path, "Dockerfile") {
+				paths = append(paths, filepath.Dir(path))
+			} else {
+				paths = append(paths, path)
 			}
-		}
-		if duplicate {
-			continue
-		}
-		// Check if nested in other paths
-		containedInOtherPath := false
-		for _, otherPath := range paths {
-			// Skip the current path
-			if path == otherPath {
-				continue
-			}
-			// Check if the current path is nested in another path
-			if strings.HasPrefix(path, otherPath) {
-				containedInOtherPath = true
-				break
-			}
-		}
-		// Add to normalized list if not contained anywhere
-		if !containedInOtherPath {
-			normalizedPaths = append(normalizedPaths, path)
 		}
 	}
-	return normalizedPaths
+	return paths
 }
 
 // GetAllEnvFilePaths returns all env file paths for the project

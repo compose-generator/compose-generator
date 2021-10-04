@@ -310,7 +310,7 @@ func TestCopyVolumesFromTemplate1(t *testing.T) {
 		assert.Equal(t, "Could not copy volumes from '././Template 2/volume3' to '../volume3'", description)
 	}
 	// Execute test
-	copyVolumesFromTemplate(project, sourceDir)
+	copyVolumesAndBuildContextsFromTemplate(project, sourceDir)
 	// Assert
 	assert.Equal(t, 4, absCallCount)
 	assert.Equal(t, 1, copyDirCallCount)
@@ -332,5 +332,5 @@ func TestCopyVolumesFromTemplate2(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	copyVolumesFromTemplate(project, sourceDir)
+	copyVolumesAndBuildContextsFromTemplate(project, sourceDir)
 }

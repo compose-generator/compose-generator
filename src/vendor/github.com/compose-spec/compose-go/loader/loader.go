@@ -31,12 +31,12 @@ import (
 	"github.com/compose-spec/compose-go/schema"
 	"github.com/compose-spec/compose-go/template"
 	"github.com/compose-spec/compose-go/types"
+	"github.com/compose-spec/godotenv"
 	"github.com/docker/go-units"
 	"github.com/mattn/go-shellwords"
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"github.com/ulyssessouza/godotenv"
 	"gopkg.in/yaml.v2"
 )
 
@@ -514,7 +514,9 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 // LoadService produces a single ServiceConfig from a compose file Dict
 // the serviceDict is not validated if directly used. Use Load() to enable validation
 func LoadService(name string, serviceDict map[string]interface{}, workingDir string, lookupEnv template.Mapping, resolvePaths bool) (*types.ServiceConfig, error) {
-	serviceConfig := &types.ServiceConfig{}
+	serviceConfig := &types.ServiceConfig{
+		Scale: 1,
+	}
 	if err := Transform(serviceDict, serviceConfig); err != nil {
 		return nil, err
 	}
@@ -1005,10 +1007,13 @@ var transformSize TransformerFunc = func(value interface{}) (interface{}, error)
 	switch value := value.(type) {
 	case int:
 		return int64(value), nil
+	case int64, types.UnitBytes:
+		return value, nil
 	case string:
 		return units.RAMInBytes(value)
+	default:
+		return value, errors.Errorf("invalid type for size %T", value)
 	}
-	panic(errors.Errorf("invalid type for size %T", value))
 }
 
 var transformStringToDuration TransformerFunc = func(value interface{}) (interface{}, error) {

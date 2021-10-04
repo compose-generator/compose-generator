@@ -41,6 +41,7 @@ var abs = filepath.Abs
 var rel = filepath.Rel
 var copyDir = copy.Copy
 var fileExists = util.FileExists
+var normalizePaths = util.NormalizePaths
 
 var addBuildOrImagePass = add_pass.AddBuildOrImage
 var addNamePass = add_pass.AddName
