@@ -1,0 +1,12 @@
+build: ${{FIBER_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-fiber
+restart: always
+networks:
+#? if has services.frontend {
+#  - frontend-backend
+#? }
+#? if has services.database {
+#  - backend-database
+#? }
+ports:
+  - ${{FIBER_PORT}}:3000
