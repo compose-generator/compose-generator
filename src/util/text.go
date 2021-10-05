@@ -37,7 +37,7 @@ func StartProcess(text string) (s *spinner.Spinner) {
 	finalChar := "⠿"
 	if runtime.GOOS == "windows" {
 		charSet = 9
-		finalChar = " "
+		finalChar = "-"
 	}
 	s = spinner.New(spinner.CharSets[charSet], 100*time.Millisecond)
 	s.Suffix = " " + text
