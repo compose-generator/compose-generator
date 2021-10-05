@@ -43,13 +43,11 @@ func (c *Cursor) Back(n int) {
 // NextLine moves cursor to beginning of the line n lines down.
 func (c *Cursor) NextLine(n int) {
 	c.Down(1)
-	c.HorizontalAbsolute(0)
 }
 
 // PreviousLine moves cursor to beginning of the line n lines up.
 func (c *Cursor) PreviousLine(n int) {
 	c.Up(1)
-	c.HorizontalAbsolute(0)
 }
 
 // HorizontalAbsolute moves cursor horizontally to x.

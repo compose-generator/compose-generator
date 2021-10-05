@@ -1,4 +1,4 @@
-# github.com/AlecAivazis/survey/v2 v2.2.16
+# github.com/AlecAivazis/survey/v2 v2.2.11
 ## explicit; go 1.13
 github.com/AlecAivazis/survey/v2
 github.com/AlecAivazis/survey/v2/core
@@ -224,6 +224,7 @@ github.com/xeipuuv/gojsonschema
 # golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 ## explicit; go 1.17
 golang.org/x/crypto/sha3
+golang.org/x/crypto/ssh/terminal
 # golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420
 ## explicit; go 1.17
 golang.org/x/net/internal/socks

@@ -7,7 +7,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/AlecAivazis/survey/v2/terminal"
-	"golang.org/x/term"
+	goterm "golang.org/x/crypto/ssh/terminal"
 )
 
 type Renderer struct {
@@ -119,7 +119,7 @@ func (r *Renderer) resetPrompt(lines int) {
 
 func (r *Renderer) termWidth() (int, error) {
 	fd := int(r.stdio.Out.Fd())
-	termWidth, _, err := term.GetSize(fd)
+	termWidth, _, err := goterm.GetSize(fd)
 	return termWidth, err
 }
 
