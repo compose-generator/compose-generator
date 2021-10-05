@@ -1,6 +1,7 @@
 package util
 
 import (
+	"runtime"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -32,9 +33,15 @@ func Pel() {
 
 // StartProcess displays a loading animation until StopProcess is called
 func StartProcess(text string) (s *spinner.Spinner) {
-	s = spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	charSet := 14
+	finalChar := "⠿"
+	if runtime.GOOS == "windows" {
+		charSet = 9
+		finalChar = " "
+	}
+	s = spinner.New(spinner.CharSets[charSet], 100*time.Millisecond)
 	s.Suffix = " " + text
-	s.FinalMSG = color.GreenString("⠿") + " " + text + color.GreenString(" done\n")
+	s.FinalMSG = color.GreenString(finalChar) + " " + text + color.GreenString(" done\n")
 	s.HideCursor = true
 	s.Start()
 	return
