@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.2
-	github.com/briandowns/spinner v1.13.0
+	github.com/briandowns/spinner v1.16.0
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/diu v0.0.0-20210516173805-20a189eaf38d
 	github.com/compose-spec/compose-go v1.0.2
@@ -23,7 +23,7 @@ require (
 require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/compose-spec/godotenv v1.0.0 // indirect
-	github.com/containerd/containerd v1.5.6 // indirect
+	github.com/containerd/containerd v1.5.7 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/distribution/v3 v3.0.0-20210316161203-a01c71e2477e // indirect
