@@ -22,13 +22,13 @@ var AddCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "run",
 		Aliases: []string{"r"},
-		Usage:   "Run docker-compose after creating the compose file",
+		Usage:   "Run docker compose after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
 		Name:    "detached",
 		Aliases: []string{"d"},
-		Usage:   "Run docker-compose detached after creating the compose file",
+		Usage:   "Run docker compose detached after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{

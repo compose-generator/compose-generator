@@ -27,7 +27,7 @@
     "choco": {
         "description": "Easy to use cli to generate Docker Compose YAML configuration files.",
         "project-url": "https://github.com/compose-generator/compose-generator",
-        "tags": "generator cli docker docker-compose yaml go golang",
+        "tags": "generator cli docker docker compose yaml go golang",
         "license-url": "https://github.com/compose-generator/compose-generator/blob/main/LICENSE"
     }
 }

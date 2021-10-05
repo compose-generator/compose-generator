@@ -26,7 +26,7 @@ var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "detached",
 		Aliases: []string{"d"},
-		Usage:   "Run docker-compose detached after creating the compose file",
+		Usage:   "Run docker compose detached after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
@@ -44,7 +44,7 @@ var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "run",
 		Aliases: []string{"r"},
-		Usage:   "Run docker-compose after creating the compose file",
+		Usage:   "Run docker compose after creating the compose file",
 		Value:   false,
 	},
 }
@@ -107,7 +107,7 @@ func Generate(c *cli.Context) error {
 		util.DockerComposeUp(flagDetached)
 	} else {
 		pel()
-		printSuccess("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+		printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")
 		pel()
 	}
 	return nil
