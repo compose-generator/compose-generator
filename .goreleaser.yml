@@ -181,7 +181,7 @@ release:
   name_template: v{{ .Tag }}
   prerelease: auto
   extra_files:
-    - glob: ./bin/predefined-services.tar.gz
+    - glob: ./predefined-services/predefined-services.tar.gz
   footer: |
     ## What to do next?
     - [Install Compose Generator](https://www.compose-generator.com/install/linux/)
