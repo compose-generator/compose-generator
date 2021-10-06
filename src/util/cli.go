@@ -19,20 +19,29 @@ func CommandExists(cmd string) bool {
 
 // IsPrivileged checks if the user has root priviledges
 func IsPrivileged() bool {
-	cmd := exec.Command("id", "-u")
-	output, err := cmd.Output()
+	if runtime.GOOS == "linux" {
+		cmd := exec.Command("id", "-u")
+		output, err := cmd.Output()
 
-	if err != nil {
-		panic(err)
+		if err != nil {
+			panic(err)
+		}
+
+		// 0 = root, 501 = non-root user
+		i, err := strconv.Atoi(string(output[:len(output)-1]))
+
+		if err != nil {
+			panic(err)
+		}
+		return i == 0
+	} else if runtime.GOOS == "windows" {
+		_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+		if err != nil {
+			return false
+		}
+		return true
 	}
-
-	// 0 = root, 501 = non-root user
-	i, err := strconv.Atoi(string(output[:len(output)-1]))
-
-	if err != nil {
-		panic(err)
-	}
-	return i == 0
+	return false
 }
 
 // DockerComposeUp executes 'docker compose up' in the current directory
