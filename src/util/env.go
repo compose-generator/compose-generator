@@ -1,9 +1,13 @@
 package util
 
 import (
+	"context"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -63,4 +67,26 @@ func GetPredefinedServicesPath() string {
 		return filename + "/predefined-services" // Windows + Docker
 	}
 	return "../predefined-services" // Dev
+}
+
+// IsToolboxPresent checks if the Compose Generator toolbox image is present on the Docker host
+func IsToolboxPresent() bool {
+	// Check if Toolbox is present
+	toolboxTag := "chillibits/compose-generator-toolbox:" + getToolboxImageVersion()
+	client, err := newClientWithOpts(client.FromEnv)
+	if err != nil {
+		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
+		return false
+	}
+	images, err := client.ImageList(context.Background(), types.ImageListOptions{})
+	if err != nil {
+		printError("Could not load Docker images", err, true)
+		return false
+	}
+	for _, image := range images {
+		if SliceContainsString(image.RepoTags, toolboxTag) {
+			return true
+		}
+	}
+	return false
 }

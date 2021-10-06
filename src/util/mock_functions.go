@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/user"
 
+	"github.com/docker/docker/client"
 	"github.com/fatih/color"
 	"github.com/kardianos/osext"
 )
@@ -19,3 +20,4 @@ var getEnv = os.Getenv
 var fileExists = FileExists
 var executable = osext.Executable
 var currentUser = user.Current
+var newClientWithOpts = client.NewClientWithOpts
