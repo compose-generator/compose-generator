@@ -1,10 +1,13 @@
 package util
 
 import (
+	"context"
 	"errors"
 	"os/user"
 	"testing"
 
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -273,4 +276,126 @@ func TestGetPredefinedServicesPath4(t *testing.T) {
 	result := GetPredefinedServicesPath()
 	// Assert
 	assert.Equal(t, pathDev, result)
+}
+
+// --------------------------------------------------------------- IsToolboxPresent ----------------------------------------------------------------
+
+func TestIsToolboxPresent1(t *testing.T) {
+	// Test data
+	version := "1.0.0-rc2"
+	// Mock functions
+	getToolboxImageVersionMockable = func() string {
+		return version
+	}
+	newClientWithOpts = func(ops ...client.Opt) (*client.Client, error) {
+		assert.Equal(t, 1, len(ops))
+		return nil, nil
+	}
+	imageList = func(cli *client.Client, ctx context.Context, opts types.ImageListOptions) ([]types.ImageSummary, error) {
+		assert.Nil(t, cli)
+		assert.Equal(t, context.Background(), ctx)
+		return []types.ImageSummary{
+			{
+				RepoTags: []string{"hello-world"},
+			},
+			{
+				RepoTags: []string{"chillibits/compose-generator-toolbox:" + version},
+			},
+		}, nil
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of printError")
+	}
+	// Execute test
+	result := IsToolboxPresent()
+	// Assert
+	assert.True(t, result)
+}
+
+func TestIsToolboxPresent2(t *testing.T) {
+	// Test data
+	version := "dev"
+	// Mock functions
+	getToolboxImageVersionMockable = func() string {
+		return version
+	}
+	newClientWithOpts = func(ops ...client.Opt) (*client.Client, error) {
+		assert.Equal(t, 1, len(ops))
+		return nil, errors.New("Error message")
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Equal(t, "Could not intanciate Docker client. Please check your Docker installation", description)
+		assert.Equal(t, "Error message", err.Error())
+		assert.True(t, exit)
+	}
+	// Execute test
+	result := IsToolboxPresent()
+	// Assert
+	assert.False(t, result)
+}
+
+func TestIsToolboxPresent3(t *testing.T) {
+	// Test data
+	version := "0.9.0"
+	// Mock functions
+	getToolboxImageVersionMockable = func() string {
+		return version
+	}
+	newClientWithOpts = func(ops ...client.Opt) (*client.Client, error) {
+		assert.Equal(t, 1, len(ops))
+		return nil, nil
+	}
+	imageList = func(cli *client.Client, ctx context.Context, opts types.ImageListOptions) ([]types.ImageSummary, error) {
+		assert.Nil(t, cli)
+		assert.Equal(t, context.Background(), ctx)
+		return []types.ImageSummary{
+			{
+				RepoTags: []string{"hello-world"},
+			},
+			{
+				RepoTags: []string{"chillibits/compose-generator-toolbox:" + version},
+			},
+		}, errors.New("Error message")
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Equal(t, "Could not load Docker images", description)
+		assert.Equal(t, "Error message", err.Error())
+		assert.True(t, exit)
+	}
+	// Execute test
+	result := IsToolboxPresent()
+	// Assert
+	assert.False(t, result)
+}
+
+func TestIsToolboxPresent4(t *testing.T) {
+	// Test data
+	version := "0.9.0"
+	// Mock functions
+	getToolboxImageVersionMockable = func() string {
+		return version
+	}
+	newClientWithOpts = func(ops ...client.Opt) (*client.Client, error) {
+		assert.Equal(t, 1, len(ops))
+		return nil, nil
+	}
+	imageList = func(cli *client.Client, ctx context.Context, opts types.ImageListOptions) ([]types.ImageSummary, error) {
+		assert.Nil(t, cli)
+		assert.Equal(t, context.Background(), ctx)
+		return []types.ImageSummary{
+			{
+				RepoTags: []string{"hello-world"},
+			},
+			{
+				RepoTags: []string{"chillibits/spice:0.4.0"},
+			},
+		}, nil
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of printError")
+	}
+	// Execute test
+	result := IsToolboxPresent()
+	// Assert
+	assert.False(t, result)
 }

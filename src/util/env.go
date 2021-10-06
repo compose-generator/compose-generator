@@ -10,6 +10,8 @@ import (
 	"github.com/docker/docker/client"
 )
 
+var getToolboxImageVersionMockable = getToolboxImageVersion
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // IsDockerizedEnvironment checks if Compose Generator runs within a dockerized environment
@@ -72,13 +74,13 @@ func GetPredefinedServicesPath() string {
 // IsToolboxPresent checks if the Compose Generator toolbox image is present on the Docker host
 func IsToolboxPresent() bool {
 	// Check if Toolbox is present
-	toolboxTag := "chillibits/compose-generator-toolbox:" + getToolboxImageVersion()
+	toolboxTag := "chillibits/compose-generator-toolbox:" + getToolboxImageVersionMockable()
 	client, err := newClientWithOpts(client.FromEnv)
 	if err != nil {
 		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
 		return false
 	}
-	images, err := client.ImageList(context.Background(), types.ImageListOptions{})
+	images, err := imageList(client, context.Background(), types.ImageListOptions{})
 	if err != nil {
 		printError("Could not load Docker images", err, true)
 		return false
