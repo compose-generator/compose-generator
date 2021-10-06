@@ -2,8 +2,6 @@ package project
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
-	"os"
 )
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -23,9 +21,9 @@ func DeleteProject(project *model.CGProject, options ...DeleteOption) {
 
 func deleteReadme(project *model.CGProject, opt DeleteOptions) {
 	if project.WithReadme {
-		err := os.Remove(opt.WorkingDir + "README.md")
+		err := remove(opt.WorkingDir + "README.md")
 		if err != nil {
-			util.Warning("File 'README.md' could not be deleted")
+			printWarning("File 'README.md' could not be deleted")
 		}
 	}
 }
@@ -33,34 +31,34 @@ func deleteReadme(project *model.CGProject, opt DeleteOptions) {
 func deleteEnvFiles(project *model.CGProject, opt DeleteOptions) {
 	for _, envFilePath := range project.GetAllEnvFilePathsNormalized() {
 		// Try to delete the env file
-		err := os.Remove(opt.WorkingDir + envFilePath)
+		err := remove(opt.WorkingDir + envFilePath)
 		if err != nil {
-			util.Warning("File '" + envFilePath + "' could not be deleted")
+			printWarning("File '" + envFilePath + "' could not be deleted")
 		}
 	}
 }
 
 func deleteGitignore(project *model.CGProject, opt DeleteOptions) {
 	if project.WithGitignore {
-		err := os.Remove(opt.WorkingDir + ".gitignore")
+		err := remove(opt.WorkingDir + ".gitignore")
 		if err != nil {
-			util.Warning("File '.gitignore' could not be deleted")
+			printWarning("File '.gitignore' could not be deleted")
 		}
 	}
 }
 
 func deleteVolumes(project *model.CGProject, opt DeleteOptions) {
-	for _, volumePath := range util.NormalizePaths(project.GetAllVolumePaths()) {
-		err := os.RemoveAll(volumePath)
+	for _, volumePath := range normalizePaths(project.GetAllVolumePaths()) {
+		err := removeAll(volumePath)
 		if err != nil {
-			util.Warning("Volume '" + volumePath + "' could not be deleted")
+			printWarning("Volume '" + volumePath + "' could not be deleted")
 		}
 	}
 }
 
 func deleteComposeFile(project *model.CGProject, opt DeleteOptions) {
-	err := os.Remove(opt.WorkingDir + "docker-compose.yml")
+	err := remove(opt.WorkingDir + "docker-compose.yml")
 	if err != nil {
-		util.Warning("File 'docker-compose.yml' could not be deleted")
+		printWarning("File 'docker-compose.yml' could not be deleted")
 	}
 }

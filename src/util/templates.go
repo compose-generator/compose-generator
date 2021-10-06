@@ -57,16 +57,25 @@ func CheckForServiceTemplateUpdate() {
 
 	// Download update if necessary
 	if shouldUpdate {
-		spinner := StartProcess("Downloading predefined services update (this can take a while) ...")
-		if err := DownloadFile(fileUrl, outputPath); err != nil {
-			Error("Failed to download predefined services update. Please check your internet connection", err, true)
+		if IsPrivileged() {
+			// Download predefined services update
+			processMessage := "Downloading predefined services update and the toolbox image (this can take a while) ..."
+			if IsToolboxPresent() {
+				processMessage = "Downloading predefined services update ..."
+			}
+			spinner = StartProcess(processMessage)
+			if err := DownloadFile(fileUrl, outputPath); err != nil {
+				Error("Failed to download predefined services update. Please check your internet connection", err, true)
+			}
+			filepath, err := filepath.Abs(predefinedTemplatesDir)
+			if err != nil {
+				Error("Could not build path", err, true)
+			}
+			ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
+			StopProcess(spinner)
+		} else {
+			Error("Predefined services update found. Root privileges are required to install the update. Please run Compose Generator again with elevated privileges", nil, true)
 		}
-		filepath, err := filepath.Abs(predefinedTemplatesDir)
-		if err != nil {
-			Error("Could not build path", err, true)
-		}
-		ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
-		StopProcess(spinner)
 	}
 }
 

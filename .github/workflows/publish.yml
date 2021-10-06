@@ -62,12 +62,12 @@ jobs:
         working-directory: predefined-services
         run: |
           mkdir ../bin
-          tar cfvz ../bin/predefined-services.tar.gz *
+          tar cfvz ./predefined-services.tar.gz *
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
-          version: v0.180.3
+          version: v0.181.0
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

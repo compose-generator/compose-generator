@@ -1,2 +1,2 @@
 ## Nginx Reverse Proxy
-*To be extended ...*
+The JWilder Nginx proxy can be used to reverse-proxy a software stack, hosted with Docker. It has a auto-lookup feature for other services in the same network and creates a Nginx configuration automatically. It can be combined with the Let's Encrypt TLS Helper (can be found in the tlshelper section) to generate TLS certificates in full automation.

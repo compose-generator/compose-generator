@@ -33,7 +33,7 @@
         {
             "text": "Which Python version do you want to use?",
             "type": 2,
-            "defaultValue": "3.9",
+            "defaultValue": "3.10",
             "variable": "FLASK_PYTHON_VERSION"
         },
         {
