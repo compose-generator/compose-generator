@@ -62,7 +62,7 @@ jobs:
         working-directory: predefined-services
         run: |
           mkdir ../bin
-          tar cfvz ../bin/predefined-services.tar.gz *
+          tar cfvz ./predefined-services.tar.gz *
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
