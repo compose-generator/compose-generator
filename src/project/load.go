@@ -28,8 +28,8 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 	// Create project instance
 	project := &model.CGProject{
 		CGProjectMetadata: model.CGProjectMetadata{
-			WithGitignore: util.FileExists(opts.WorkingDir + ".gitignore"),
-			WithReadme:    util.FileExists(opts.WorkingDir + "README.md"),
+			WithGitignore: fileExists(opts.WorkingDir + ".gitignore"),
+			WithReadme:    fileExists(opts.WorkingDir + "README.md"),
 		},
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
