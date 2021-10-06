@@ -50,7 +50,7 @@ func TestDeleteProject(t *testing.T) {
 		assert.Equal(t, expectedOpt, opt)
 	}
 	// Execute test
-	DeleteProject(project, DeleteComposeFileName("docker.yml"), DeleteWorkingDir("./context/"))
+	DeleteProject(project, DeleteComposeFileName("docker.yml"), DeleteWorkingDir("./context"))
 	// Assert
 	assert.Equal(t, 1, deleteReadmeCallCount)
 	assert.Equal(t, 1, deleteEnvFileCallCount)
@@ -134,6 +134,46 @@ func TestDeleteReadme3(t *testing.T) {
 
 // ----------------------------------------------------------------- DeleteEnvFiles ----------------------------------------------------------------
 
+func TestDeleteEnvFiles(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{
+					EnvFile: []string{"environment.env", "volumes/wordpress/environment.env"},
+				},
+				{
+					EnvFile: []string{"other-environment.env"},
+				},
+			},
+		},
+	}
+	options := DeleteOptions{
+		WorkingDir: "./context/",
+	}
+	// Mock functions
+	removeCallCount := 0
+	remove = func(name string) error {
+		removeCallCount++
+		switch removeCallCount {
+		case 1:
+			assert.Equal(t, "./context/environment.env", name)
+		case 2:
+			assert.Equal(t, "./context/volumes/wordpress/environment.env", name)
+		case 3:
+			assert.Equal(t, "./context/other-environment.env", name)
+		}
+		return nil
+	}
+	printWarning = func(description string) {
+		assert.Fail(t, "Unexpected call of printWarning")
+	}
+	// Execute test
+	deleteEnvFiles(project, options)
+	// Assert
+	assert.Equal(t, 3, removeCallCount)
+}
+
 // ---------------------------------------------------------------- DeleteGitignore ----------------------------------------------------------------
 
 func TestDeleteGitignore1(t *testing.T) {
@@ -212,9 +252,6 @@ func TestDeleteGitignore3(t *testing.T) {
 func TestDeleteVolumes1(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
-		CGProjectMetadata: model.CGProjectMetadata{
-			WithGitignore: true,
-		},
 		Composition: &spec.Project{
 			Services: spec.Services{
 				{
@@ -278,11 +315,7 @@ func TestDeleteVolumes1(t *testing.T) {
 
 func TestDeleteComposeFile1(t *testing.T) {
 	// Test data
-	project := &model.CGProject{
-		CGProjectMetadata: model.CGProjectMetadata{
-			WithGitignore: true,
-		},
-	}
+	project := &model.CGProject{}
 	options := DeleteOptions{
 		ComposeFileName: "compose.yml",
 		WorkingDir:      "./context/",
@@ -305,11 +338,7 @@ func TestDeleteComposeFile1(t *testing.T) {
 
 func TestDeleteComposeFile2(t *testing.T) {
 	// Test data
-	project := &model.CGProject{
-		CGProjectMetadata: model.CGProjectMetadata{
-			WithGitignore: true,
-		},
-	}
+	project := &model.CGProject{}
 	options := DeleteOptions{
 		ComposeFileName: "compose.yml",
 		WorkingDir:      "./context/",
