@@ -41,7 +41,7 @@ func deleteEnvFiles(project *model.CGProject, opt DeleteOptions) {
 		// Try to delete the env file
 		err := remove(opt.WorkingDir + envFilePath)
 		if err != nil {
-			printWarning("File '" + envFilePath + "' could not be deleted")
+			printWarning("File '" + opt.WorkingDir + envFilePath + "' could not be deleted")
 		}
 	}
 }

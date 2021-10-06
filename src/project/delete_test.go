@@ -162,11 +162,16 @@ func TestDeleteEnvFiles(t *testing.T) {
 			assert.Equal(t, "./context/volumes/wordpress/environment.env", name)
 		case 3:
 			assert.Equal(t, "./context/other-environment.env", name)
+			return errors.New("Error message")
 		}
 		return nil
 	}
 	printWarning = func(description string) {
-		assert.Fail(t, "Unexpected call of printWarning")
+		if removeCallCount == 3 {
+			assert.Equal(t, "File './context/other-environment.env' could not be deleted", description)
+		} else {
+			assert.Fail(t, "Unexpected call of printWarning")
+		}
 	}
 	// Execute test
 	deleteEnvFiles(project, options)
