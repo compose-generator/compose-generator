@@ -4,17 +4,25 @@ import (
 	"compose-generator/model"
 )
 
+var deleteReadmeMockable = deleteReadme
+var deleteEnvFilesMockable = deleteEnvFiles
+var deleteGitignoreMockable = deleteGitignore
+var deleteVolumesMockable = deleteVolumes
+var deleteComposeFileMockable = deleteComposeFile
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // DeleteProject deletes a project from the disk
 func DeleteProject(project *model.CGProject, options ...DeleteOption) {
+	// Apply options
 	opts := applyDeleteOptions(options...)
 
-	deleteReadme(project, opts)
-	deleteEnvFiles(project, opts)
-	deleteGitignore(project, opts)
-	deleteVolumes(project, opts)
-	deleteComposeFile(project, opts)
+	// Delete all components
+	deleteReadmeMockable(project, opts)
+	deleteEnvFilesMockable(project, opts)
+	deleteGitignoreMockable(project, opts)
+	deleteVolumesMockable(project, opts)
+	deleteComposeFileMockable(project, opts)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -33,7 +41,7 @@ func deleteEnvFiles(project *model.CGProject, opt DeleteOptions) {
 		// Try to delete the env file
 		err := remove(opt.WorkingDir + envFilePath)
 		if err != nil {
-			printWarning("File '" + envFilePath + "' could not be deleted")
+			printWarning("File '" + opt.WorkingDir + envFilePath + "' could not be deleted")
 		}
 	}
 }
@@ -57,8 +65,8 @@ func deleteVolumes(project *model.CGProject, opt DeleteOptions) {
 }
 
 func deleteComposeFile(project *model.CGProject, opt DeleteOptions) {
-	err := remove(opt.WorkingDir + "docker-compose.yml")
+	err := remove(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
-		printWarning("File 'docker-compose.yml' could not be deleted")
+		printWarning("File '" + opt.ComposeFileName + "' could not be deleted")
 	}
 }

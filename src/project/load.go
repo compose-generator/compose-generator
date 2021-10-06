@@ -14,17 +14,22 @@ import (
 	"github.com/spf13/viper"
 )
 
+var loadComposeFileMockable = loadComposeFile
+var loadGitignoreFileMockable = loadGitignoreFile
+var loadCGFileMockable = loadCGFile
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // LoadProject loads a project from the disk
 func LoadProject(options ...LoadOption) *model.CGProject {
+	// Apply options
 	opts := applyLoadOptions(options...)
 
 	// Create project instance
 	project := &model.CGProject{
 		CGProjectMetadata: model.CGProjectMetadata{
-			WithGitignore: util.FileExists(opts.WorkingDir + ".gitignore"),
-			WithReadme:    util.FileExists(opts.WorkingDir + "README.md"),
+			WithGitignore: fileExists(opts.WorkingDir + ".gitignore"),
+			WithReadme:    fileExists(opts.WorkingDir + "README.md"),
 		},
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
@@ -32,9 +37,9 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 	}
 
 	// Load components
-	loadComposeFile(project, opts)
-	loadGitignoreFile(project, opts)
-	loadCGFile(&project.CGProjectMetadata, opts)
+	loadComposeFileMockable(project, opts)
+	loadGitignoreFileMockable(project, opts)
+	loadCGFileMockable(&project.CGProjectMetadata, opts)
 
 	return project
 }
@@ -50,7 +55,7 @@ func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
 	}
 
 	// Load metadata
-	loadCGFile(metadata, opts)
+	loadCGFileMockable(metadata, opts)
 
 	return metadata
 }

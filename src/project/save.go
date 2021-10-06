@@ -15,8 +15,10 @@ import (
 
 // SaveProject saves the Docker compose project to the current directory
 func SaveProject(project *model.CGProject, options ...SaveOption) {
+	// Apply options
 	opt := applySaveOptions(options...)
 
+	// Save all components
 	saveCGFile(project, opt)
 	saveGitignore(project, opt)
 	saveReadme(project, opt)
