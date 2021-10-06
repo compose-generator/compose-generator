@@ -18,6 +18,7 @@ import (
 
 // LoadProject loads a project from the disk
 func LoadProject(options ...LoadOption) *model.CGProject {
+	// Apply options
 	opts := applyLoadOptions(options...)
 
 	// Create project instance
