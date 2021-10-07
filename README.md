@@ -10,7 +10,7 @@
     <a target="_blank" href="https://goreportcard.com/report/github.com/compose-generator/compose-generator"><img src="https://goreportcard.com/badge/github.com/compose-generator/compose-generator"></a>
     <a href="https://codecov.io/gh/compose-generator/compose-generator"><img src="https://codecov.io/gh/compose-generator/compose-generator/branch/main/graph/badge.svg?token=r9pWf0GCXg"/></a>
     <a target="_blank" href="https://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
-    <a target="_blank" href="./LICENSE.md"><img src="https://img.shields.io/github/license/compose-generator/compose-generator"></a>
+    <a target="_blank" href="./LICENSE"><img src="https://img.shields.io/github/license/compose-generator/compose-generator"></a>
   </p>
 </p>
 
