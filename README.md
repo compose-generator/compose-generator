@@ -5,8 +5,8 @@
   <p align="center">
     <a target="_blank" href="https://github.com/compose-generator/compose-generator/releases/latest"><img src="https://img.shields.io/github/v/release/compose-generator/compose-generator?include_prereleases"></a>
     <a target="_blank" href="https://hub.docker.com/r/chillibits/compose-generator"><img src="https://img.shields.io/docker/pulls/chillibits/compose-generator"></a>
-    <a target="_blank" href="./.github/workflows/ci.yml"><img src="https://github.com/compose-generator/compose-generator/workflows/Go%20CI/badge.svg"></a>
-    <a target="_blank" href="./.github/workflows/codeql-analysis.yml"><img src="https://github.com/compose-generator/compose-generator/actions/workflows/codeql-analysis.yml/badge.svg"></a>
+    <a target="_blank" href="https://github.com/compose-generator/compose-generator/actions/workflows/test.yml"><img src="https://github.com/compose-generator/compose-generator/workflows/Go%20CI/badge.svg"></a>
+    <a target="_blank" href="https://github.com/compose-generator/compose-generator/actions/workflows/codeql-analysis.yml"><img src="https://github.com/compose-generator/compose-generator/actions/workflows/codeql-analysis.yml/badge.svg"></a>
     <a target="_blank" href="https://goreportcard.com/report/github.com/compose-generator/compose-generator"><img src="https://goreportcard.com/badge/github.com/compose-generator/compose-generator"></a>
     <a href="https://codecov.io/gh/compose-generator/compose-generator"><img src="https://codecov.io/gh/compose-generator/compose-generator/branch/main/graph/badge.svg?token=r9pWf0GCXg"/></a>
     <a target="_blank" href="https://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
@@ -17,7 +17,7 @@
 ---
 
 ## Documentation
-Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).
+**Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).**
 
 ### Install Compose Generator
 To install Compose Generator on your system, please visit the [installation section](https://www.compose-generator.com/install/linux/) in the documentation. Compose Generator is available for the latest versions of Alpine, CentOS, Debian, Fedora, Raspbian, Ubuntu and Windows. If you want to install Compose Generator manually by downloading a package file, please take a look at the table below.
