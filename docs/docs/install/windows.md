@@ -3,11 +3,11 @@ title: Install on Windows
 ---
 
 ### Install via winget cli
-Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli). <br>
-In the future, winget will be available for download in the Microsoft Store. Currently, the easiest way to install winget is, to download it manually from GitHub. Visit the [installation instruction](https://github.com/microsoft/winget-cli#installing-the-client) from Microsoft.
+Compose Generator gets distributed for Windows via the new Windows package manager called [winget](https://github.com/microsoft/winget-cli).
 
 As soon as the Windows package manager is installed on your Windows machine, you can open up powershell and execute the following installation command: <br>
 ```sh
+winget install ChilliBits.CCom
 winget install ChilliBits.ComposeGenerator
 ```
 After installing Compose Generator, you should be able to run Compose Generator. If not, please restart your powershell instance to make it reload the available commands.

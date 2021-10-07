@@ -1,6 +1,6 @@
 # Quick Start
 
-Compose Generator offers several different methods to use it and it depends on your context and intention, what we can recommend you to do.
+Compose Generator offers several different methods to start with. Choose the one you need for your project below.
 
 ### Setup Compose Generator
 
@@ -51,18 +51,18 @@ Compose Generator offers several different methods to use it and it depends on y
     
     Select if you want to only have a compose configuration for development or for development and production. If you choose the latter, Compose Generator creates a compose config with a reverse proxy and a TLS certificate helper service and provides two Docker profiles called `dev` and `prod` that you can run `$ docker compose -p dev up` or respectively `$ docker compose -p prod up`.
 
-    After choosing the production-readyness, Compose Generator asks you for the services that you want to use. Please select the ones, you want to use by navigating up and down and selecting by hitting the space key. Continue with enter. Compose-Generator will ask you some questions on how to configure the services, based on your selection.
+    After choosing the production-readiness, Compose Generator asks you for the services that you want to use. Please select one or more by navigating up and down and selecting by hitting the space key. Continue with the enter key. Compose-Generator will ask you some questions on how to configure the services, based on your selection.
 
-    You will get asked for services in 4 or 6 categories depending on you selected for the production-readyness in following order: (`proxy`, `tls helper`,) `frontend`, `backend`, `database`, `db admin`.
+    You will get asked for your selection of services in 4 or 6 categories, depending on your selection for the production-readiness. The categories will come up in following order: (`proxy`, `tls helper`,) `frontend`, `backend`, `database`, `db admin`.
 
     After you answered all questions, Compose Generator starts to generate the compose configuration for you and saves the provided outcome into the current directory. After finishing, you can run `$ docker compose up` to run Docker Compose with the generated configuration.
 
 ??? question "I already have project(s) to deploy by building on the host system (not recommended for production)"
-    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services for the services that you need apart from the services, you want to build.
+    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services that you need apart from the services, you want to build.
 
     After generating the configuration without the relevant services, you can add them via `$ compose-generator add` one by one.
 
 ??? question "I already have project(s) to deploy by pulling remote images"
-    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services for the services that you need apart from the services, you want to build.
+    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services that you need apart from the services, you want to build.
 
     After generating the configuration without the relevant services, you can add them via `$ compose-generator add` one by one.
