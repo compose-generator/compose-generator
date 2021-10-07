@@ -23,12 +23,6 @@ var TemplateSaveCliFlags = []cli.Flag{
 		Usage:   "No safety checks",
 		Value:   false,
 	},
-	&cli.BoolFlag{
-		Name:    "with-dockerfile",
-		Aliases: []string{"w"},
-		Usage:   "Also save the Dockerfile in the template",
-		Value:   false,
-	},
 }
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -39,7 +33,6 @@ func SaveTemplate(c *cli.Context) error {
 	name := c.Args().Get(0)
 	flagStash := c.Bool("stash")
 	flagForce := c.Bool("force")
-	//flagWithDockerfile := c.Bool("with-dockerfile")
 
 	// Load project
 	spinner := util.StartProcess("Loading project ...")

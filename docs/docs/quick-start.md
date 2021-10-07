@@ -46,6 +46,8 @@ Compose Generator offers several different methods to start with. Choose the one
 
 ### Generate your first Docker Compose Configuration
 
+The first step is, to start your Docker instance on your host system. That given, follow one guide below to proceed.
+
 ???+ question "I want to start from scratch"
     If you haven't started to work on your project you can simply run `$ compose-generator --with-instructions` to generate a compose project from scratch.
     
@@ -57,7 +59,7 @@ Compose Generator offers several different methods to start with. Choose the one
 
     After you answered all questions, Compose Generator starts to generate the compose configuration for you and saves the provided outcome into the current directory. After finishing, you can run `$ docker compose up` to run Docker Compose with the generated configuration.
 
-??? question "I already have project(s) to deploy by building on the host system (not recommended for production)"
+??? question "I already have project(s) to deploy by building the image(s) in-place (not recommended for production)"
     Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services that you need apart from the services, you want to build.
 
     After generating the configuration without the relevant services, you can add them via `$ compose-generator add` one by one.

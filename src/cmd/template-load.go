@@ -27,12 +27,6 @@ var TemplateLoadCliFlags = []cli.Flag{
 		Usage:   "Do not load a template. Instead only list all templates and terminate",
 		Value:   false,
 	},
-	&cli.BoolFlag{
-		Name:    "with-dockerfile",
-		Aliases: []string{"w"},
-		Usage:   "Also load the Dockerfile from the template (if existing)",
-		Value:   false,
-	},
 }
 
 var getTemplateMetadataListMockable = getTemplateMetadataList
@@ -45,7 +39,6 @@ func LoadTemplate(c *cli.Context) error {
 	dirName := c.Args().Get(0)
 	flagForce := c.Bool("force")
 	flagShow := c.Bool("show")
-	//withDockerfile := c.Bool("with-dockerfile")
 
 	if flagShow {
 		showTemplateList()

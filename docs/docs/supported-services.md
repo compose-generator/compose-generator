@@ -1,6 +1,6 @@
 # Supported services
 
-The following table shows all services, which Compose Generator currently supports out of the box as predefined service template. To use these templates, please refer to the [generate command](../usage/generate).
+The following table shows all services which Compose Generator currently supports out of the box as predefined service templates. To use these templates, please refer to the [generate command](../usage/generate).
 
 | Frontend                                                                                                                                           | Backend                                                                                                                                         | Database                                                                                                                                   | Database Admin                                                                                                                                        |
 | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -25,6 +25,6 @@ The following table shows all services, which Compose Generator currently suppor
 | *more to come ...*                                                                                                                                 |                                                                                                                                                 |                                                                                                                                            |                                                                                                                                                       |
 
 :new: - New templates, which were released with the latest version of Compose Generator <br>
-:fontawesome-brands-dev: - New templates, which are currently in preview and will be released with the next version of Compose Generator
+:fontawesome-brands-dev: - New templates, which are currently in preview and will be released with the next version
 
 If you miss a predefined template and you want to create one for the public, please first read our [contribution guidelines](../contributing) and then continue reading the instructions on how to [contribute a service template](https://github.com/compose-generator/compose-generator/blob/docs/supported-services-page/predefined-services/README.md). Fork the repository, create the template and open a pr to the `dev` branch. The community is thankful for every predefined template!
