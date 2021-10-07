@@ -19,9 +19,9 @@ Sometimes you need to add one or more services to your Docker Compose configurat
 ## Options
 You can apply following options to the `add` command:
 
-| Option       | Short | Description                                                     |
-| ------------ | ----- | --------------------------------------------------------------- |
-| `--advanced` | `-a`  | Show questions for advanced customization                       |
-| `--detached` | `-d`  | To run the compose configuration after adding in detached mode. |
-| `--force`    | `-f`  | Skip safety checks and delete all files that may exist.         |
-| `--run`      | `-r`  | To run the compose configuration after adding.                  |
+| Option       | Short | Description                                                               |
+| ------------ | ----- | ------------------------------------------------------------------------- |
+| `--advanced` | `-a`  | Enable advanced mode with advanced questions to allow more customization. |
+| `--detached` | `-d`  | Run the compose configuration subsequently in detached mode.              |
+| `--force`    | `-f`  | Skip safety checks and delete all files that may exist.                   |
+| `--run`      | `-r`  | Run the compose configuration subsequently.                               |

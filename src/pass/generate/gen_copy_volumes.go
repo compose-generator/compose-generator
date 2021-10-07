@@ -21,13 +21,15 @@ func GenerateCopyVolumes(project *model.CGProject) {
 		// Copy volumes if existing
 		for volumeIndex, volume := range service.Volumes {
 			srcPath := filepath.ToSlash(volume.Source)
-			dstPath := srcPath[len(getPredefinedServicesPath()):]
-			dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
-			copyVolumeMockable(
-				&project.Composition.Services[serviceIndex].Volumes[volumeIndex],
-				srcPath,
-				dstPath,
-			)
+			if strings.Contains(srcPath, getPredefinedServicesPath()) {
+				dstPath := srcPath[len(getPredefinedServicesPath()):]
+				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+				copyVolumeMockable(
+					&project.Composition.Services[serviceIndex].Volumes[volumeIndex],
+					srcPath,
+					dstPath,
+				)
+			}
 		}
 		// Copy build dir if existing
 		if service.Build != nil {

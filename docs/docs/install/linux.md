@@ -6,6 +6,7 @@ title: Install on Linux
 === "Debian/Ubuntu"
     To install Compose Generator on Debian or Ubuntu, execute the following commands in your terminal:
     ```sh
+    sudo apt-get install ca-certificates
     curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
 	sudo add-apt-repository "deb https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main"
 	sudo apt-get update
@@ -31,6 +32,7 @@ title: Install on Linux
 === "Raspbian"
     To install Compose Generator on Raspbian, execute the following commands in your terminal:
     ```sh
+    sudo apt-get install ca-certificates
     curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
 	sudo echo "deb [arch=armhf] https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main" > /etc/apt/sources.list.d/chillibits.list
 	sudo apt-get update

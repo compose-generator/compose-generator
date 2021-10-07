@@ -36,10 +36,7 @@ func IsPrivileged() bool {
 		return i == 0
 	} else if runtime.GOOS == "windows" {
 		_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
-		if err != nil {
-			return false
-		}
-		return true
+		return err == nil
 	}
 	return false
 }
