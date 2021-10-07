@@ -36,10 +36,10 @@ func IsPrivileged() bool {
 		return i == 0
 	} else if runtime.GOOS == "windows" {
 		_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
-		if err != nil {
-			return false
+		if err == nil {
+			return true
 		}
-		return true
+		return false
 	}
 	return false
 }
@@ -97,6 +97,8 @@ func ExecuteOnToolbox(c string) {
 	// Start docker container
 	// #nosec G204
 	cmd := exec.Command("docker", "run", "-i", "-v", workingDir+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
 		Error("Toolbox terminated with an error", err, true)
