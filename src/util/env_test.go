@@ -3,6 +3,7 @@ package util
 import (
 	"context"
 	"errors"
+	"os/exec"
 	"os/user"
 	"testing"
 
@@ -396,6 +397,74 @@ func TestIsToolboxPresent4(t *testing.T) {
 	}
 	// Execute test
 	result := IsToolboxPresent()
+	// Assert
+	assert.False(t, result)
+}
+
+// ---------------------------------------------------------------- IsDockerRunning ----------------------------------------------------------------
+
+func TestIsDockerRunning1(t *testing.T) {
+	// Test data
+	commandOutput := "Client:\nContext:    default\nDebug Mode: false\nPlugins:\nbuildx: Build with BuildKit (Docker Inc., 0.6.3+azure)\ncompose: Docker Compose (Docker Inc., 2.0.0)\n\n\nServer:\nContainers: 2\nRunning: 0\nPaused: 0\nStopped: 2\nImages: 1\nServer Version: 20.10.8+azure\nStorage Driver: overlay2\nBacking Filesystem: extfs\nSupports d_type: true\nNative Overlay Diff: false\nuserxattr: false\nLogging Driver: json-file\nCgroup Driver: cgroupfs\nCgroup Version: 1\nPlugins:\nVolume: local\nNetwork: bridge host ipvlan macvlan null overlay\nLog: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog\nSwarm: inactive\nRuntimes: io.containerd.runtime.v1.linux runc io.containerd.runc.v2\nDefault Runtime: runc\nInit Binary: docker-init\ncontainerd version: e25210fe30a0a703442421b0f60afac609f950a3\nrunc version: 4144b63817ebcc5b358fc2c8ef95f7cddd709aa7\ninit version:\nSecurity Options:\napparmor\nseccomp\nProfile: default\nKernel Version: 5.4.0-1059-azure\nOperating System: Ubuntu 20.04.3 LTS (containerized)\nOSType: linux\nArchitecture: x86_64\nCPUs: 4\nTotal Memory: 7.775GiB\nName: codespaces_09bc9d\nID: G4C5:7KMT:LQVT:QEDB:PW4I:DER3:OONZ:YKG5:TOMZ:BYX5:3Z2W:XGSV\nDocker Root Dir: /var/lib/docker\nDebug Mode: false\nUsername: codespacesdev\nRegistry: https://index.docker.io/v1/\nLabels:\nExperimental: false\nInsecure Registries:\n127.0.0.0/8\nLive Restore Enabled: false\n\n\nWARNING: No swap limit support"
+	// Mock functions
+	executeCommand = func(name string, arg ...string) *exec.Cmd {
+		assert.Equal(t, "docker", name)
+		assert.Equal(t, 1, len(arg))
+		return nil
+	}
+	getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
+		assert.Nil(t, cmd)
+		return []byte(commandOutput), nil
+	}
+	printWarning = func(description string) {
+		assert.Fail(t, "Unexpected call of printWarning")
+	}
+	// Execute test
+	result := IsDockerRunning()
+	// Assert
+	assert.True(t, result)
+}
+
+func TestIsDockerRunning2(t *testing.T) {
+	// Test data
+	commandOutput := "Client:\nContext:    default\nDebug Mode: false\nPlugins:\nbuildx: Build with BuildKit (Docker Inc., 0.6.3+azure)\ncompose: Docker Compose (Docker Inc., 2.0.0)\n\n\nServer:\nContainers: 2\nRunning: 0\nPaused: 0\nStopped: 2\nImages: 1\nServer Version: 20.10.8+azure\nStorage Driver: overlay2\nBacking Filesystem: extfs\nSupports d_type: true\nNative Overlay Diff: false\nuserxattr: false\nLogging Driver: json-file\nCgroup Driver: cgroupfs\nCgroup Version: 1\nPlugins:\nVolume: local\nNetwork: bridge host ipvlan macvlan null overlay\nLog: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog\nSwarm: inactive\nRuntimes: io.containerd.runtime.v1.linux runc io.containerd.runc.v2\nDefault Runtime: runc\nInit Binary: docker-init\ncontainerd version: e25210fe30a0a703442421b0f60afac609f950a3\nrunc version: 4144b63817ebcc5b358fc2c8ef95f7cddd709aa7\ninit version:\nSecurity Options:\napparmor\nseccomp\nProfile: default\nKernel Version: 5.4.0-1059-azure\nOperating System: Ubuntu 20.04.3 LTS (containerized)\nOSType: linux\nArchitecture: x86_64\nCPUs: 4\nTotal Memory: 7.775GiB\nName: codespaces_09bc9d\nID: G4C5:7KMT:LQVT:QEDB:PW4I:DER3:OONZ:YKG5:TOMZ:BYX5:3Z2W:XGSV\nDocker Root Dir: /var/lib/docker\nDebug Mode: false\nUsername: codespacesdev\nRegistry: https://index.docker.io/v1/\nLabels:\nExperimental: false\nInsecure Registries:\n127.0.0.0/8\nLive Restore Enabled: false\n\n\nWARNING: No swap limit support"
+	// Mock functions
+	executeCommand = func(name string, arg ...string) *exec.Cmd {
+		assert.Equal(t, "docker", name)
+		assert.Equal(t, 1, len(arg))
+		return nil
+	}
+	getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
+		assert.Nil(t, cmd)
+		return []byte(commandOutput), errors.New("Error message")
+	}
+	printWarning = func(description string) {
+		assert.Equal(t, "Cannot determine status of Docker engine", description)
+	}
+	// Execute test
+	result := IsDockerRunning()
+	// Assert
+	assert.False(t, result)
+}
+
+func TestIsDockerRunning3(t *testing.T) {
+	// Test data
+	commandOutput := "Client:\nContext:    default\nDebug Mode: false\nPlugins:\nbuildx: Build with BuildKit (Docker Inc., v0.6.3)\ncompose: Docker Compose (Docker Inc., v2.0.0)\nscan: Docker Scan (Docker Inc., v0.8.0)\n\n\nServer:\nERROR: error during connect: This error may indicate that the docker daemon is not running.: Get \"http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.24/info\": open //./pipe/docker_engine: The system cannot find the file specified.\nerrors pretty printing info"
+	// Mock functions
+	executeCommand = func(name string, arg ...string) *exec.Cmd {
+		assert.Equal(t, "docker", name)
+		assert.Equal(t, 1, len(arg))
+		return nil
+	}
+	getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
+		assert.Nil(t, cmd)
+		return []byte(commandOutput), nil
+	}
+	printWarning = func(description string) {
+		assert.Fail(t, "Unexpected call of printWarning")
+	}
+	// Execute test
+	result := IsDockerRunning()
 	// Assert
 	assert.False(t, result)
 }

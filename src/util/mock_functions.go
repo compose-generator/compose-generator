@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/user"
 
 	"github.com/docker/docker/api/types"
@@ -17,6 +18,9 @@ var white = color.White
 var red = color.Red
 var hiYellow = color.HiYellow
 var printError = Error
+var printWarning = Warning
+var commandExists = CommandExists
+var isDockerRunning = IsDockerRunning
 var exitProgram = os.Exit
 var getEnv = os.Getenv
 var fileExists = FileExists
@@ -25,4 +29,8 @@ var currentUser = user.Current
 var newClientWithOpts = client.NewClientWithOpts
 var imageList = func(cli *client.Client, ctx context.Context, opts types.ImageListOptions) ([]types.ImageSummary, error) {
 	return cli.ImageList(ctx, opts)
+}
+var executeCommand = exec.Command
+var getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
+	return cmd.Output()
 }
