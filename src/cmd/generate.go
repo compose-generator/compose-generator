@@ -61,8 +61,9 @@ func Generate(c *cli.Context) error {
 	flagForce := c.Bool("force")
 	flagWithInstructions := c.Bool("with-instructions")
 
-	// Check if CCom is installed
+	// Check if CCom is installed and Docker is running
 	util.EnsureCComIsInstalled()
+	util.EnsureDockerIsRunning()
 
 	// Clear screen if in interactive mode
 	if configPath == "" {

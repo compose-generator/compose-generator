@@ -92,3 +92,17 @@ func IsToolboxPresent() bool {
 	}
 	return false
 }
+
+// IsDocker running checks if Docker is running
+func IsDockerRunning() bool {
+	cmd := exec.Command("docker", "info")
+	output, err := cmd.Output()
+	if err != nil {
+		Warning("Cannot determine status of Docker engine")
+		return false
+	}
+	if strings.Contains(string(output), "Server:\nERROR: error during connect") {
+		return false
+	}
+	return true
+}

@@ -58,6 +58,9 @@ func Remove(c *cli.Context) error {
 	flagForce := c.Bool("force")
 	flagAdvanced := c.Bool("advanced")
 
+	// Check if Docker is running
+	util.EnsureDockerIsRunning()
+
 	// Clear the screen for CG output
 	util.ClearScreen()
 

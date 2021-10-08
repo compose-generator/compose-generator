@@ -67,6 +67,13 @@ func EnsureCComIsInstalled() {
 	}
 }
 
+// EnsureDockerIsRunning checks if Docker is running
+func EnsureDockerIsRunning() {
+	if !IsDockerRunning() {
+		Error("Docker engine is not running. Please start it and execute Compose Generator again", nil, true)
+	}
+}
+
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func prepareInputData(
