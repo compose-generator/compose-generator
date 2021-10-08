@@ -97,12 +97,5 @@ func IsToolboxPresent() bool {
 func IsDockerRunning() bool {
 	cmd := executeCommand("docker", "info")
 	output, err := getCommandOutput(cmd)
-	if err != nil {
-		printWarning("Cannot determine status of Docker engine")
-		return false
-	}
-	if strings.Contains(string(output), "Server:\nERROR: error during connect") {
-		return false
-	}
-	return true
+	return err == nil && !strings.Contains(string(output), "Server:\nERROR: error during connect")
 }

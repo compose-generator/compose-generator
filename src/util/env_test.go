@@ -416,9 +416,6 @@ func TestIsDockerRunning1(t *testing.T) {
 		assert.Nil(t, cmd)
 		return []byte(commandOutput), nil
 	}
-	printWarning = func(description string) {
-		assert.Fail(t, "Unexpected call of printWarning")
-	}
 	// Execute test
 	result := IsDockerRunning()
 	// Assert
@@ -438,9 +435,6 @@ func TestIsDockerRunning2(t *testing.T) {
 		assert.Nil(t, cmd)
 		return []byte(commandOutput), errors.New("Error message")
 	}
-	printWarning = func(description string) {
-		assert.Equal(t, "Cannot determine status of Docker engine", description)
-	}
 	// Execute test
 	result := IsDockerRunning()
 	// Assert
@@ -459,9 +453,6 @@ func TestIsDockerRunning3(t *testing.T) {
 	getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
 		assert.Nil(t, cmd)
 		return []byte(commandOutput), nil
-	}
-	printWarning = func(description string) {
-		assert.Fail(t, "Unexpected call of printWarning")
 	}
 	// Execute test
 	result := IsDockerRunning()
