@@ -51,8 +51,9 @@ func Add(c *cli.Context) error {
 	flagDetached := c.Bool("detached")
 	flagForce := c.Bool("force")
 
-	// Check if CCom is installed
+	// Check if CCom is installed and Docker is running
 	util.EnsureCComIsInstalled()
+	util.EnsureDockerIsRunning()
 
 	// Clear the screen for CG output
 	clearScreen()

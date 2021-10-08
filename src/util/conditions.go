@@ -62,8 +62,15 @@ func EvaluateCondition(
 
 // EnsureCComIsInstalled checks if CCom is present on the current machine
 func EnsureCComIsInstalled() {
-	if !CommandExists("ccom") {
-		Error("CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", nil, true)
+	if !commandExists("ccom") {
+		printError("CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", nil, true)
+	}
+}
+
+// EnsureDockerIsRunning checks if Docker is running
+func EnsureDockerIsRunning() {
+	if !isDockerRunning() {
+		printError("Docker engine is not running. Please start it and execute Compose Generator again.", nil, true)
 	}
 }
 
