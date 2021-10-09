@@ -4,6 +4,7 @@ import (
 	"compose-generator/model"
 	"testing"
 
+	"github.com/compose-spec/compose-go/loader"
 	spec "github.com/compose-spec/compose-go/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -126,3 +127,42 @@ func TestLoadTemplateService(t *testing.T) {
 }
 
 // ---------------------------------------------------------------- loadComposeFile ----------------------------------------------------------------
+
+func TestLoadComposeFile1(t *testing.T) {
+	// Test data
+	project := &model.CGProject{}
+	options := LoadOptions{
+		WorkingDir:      "./context/",
+		ComposeFileName: "docker-compose.yml",
+	}
+	composeFileContent := "services:\nbackend-django:\nbuild:\ncontext: ./backend-django\ncontainer_name: example-project-backend-django\nports:\n- mode: ingress\ntarget: 8000\npublished: 8000\nprotocol: tcp\nrestart: always"
+	expectedProject := &model.CGProject{
+		Composition: &spec.Project{
+			Name: "Project name",
+		},
+	}
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, "./context/docker-compose.yml", path)
+		return true
+	}
+	readFile = func(filename string) ([]byte, error) {
+		assert.Equal(t, "./context/docker-compose.yml", filename)
+		return []byte(composeFileContent), nil
+	}
+	parseCompositionYAML = func(source []byte) (map[string]interface{}, error) {
+		return make(map[string]interface{}), nil
+	}
+	loadComposition = func(configDetails spec.ConfigDetails, options ...func(*loader.Options)) (*spec.Project, error) {
+		return &spec.Project{
+			Name: "Project name",
+		}, nil
+	}
+	printError = func(description string, err error, exit bool) {
+		assert.Fail(t, "Unexpected call of printError")
+	}
+	// Execute test
+	loadComposeFile(project, options)
+	// Assert
+	assert.Equal(t, expectedProject, project)
+}
