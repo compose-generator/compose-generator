@@ -19,6 +19,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 	templatesPath := "../predefined-templates/path"
 	project := &model.CGProject{
 		Composition: &spec.Project{
+			WorkingDir: "./",
 			Services: spec.Services{
 				{
 					Name: "Service 1",
@@ -59,11 +60,11 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 		if copyVolumeCallCount == 1 {
 			assert.Equal(t, project.Composition.Services[0].Volumes[0], *volume)
 			assert.Equal(t, "../predefined-templates/path/type/template/volumes/volume1", srcPath)
-			assert.Equal(t, "volumes/volume1", dstPath)
+			assert.Equal(t, "./volumes/volume1", dstPath)
 		} else {
 			assert.Equal(t, project.Composition.Services[1].Volumes[0], *volume)
 			assert.Equal(t, "../predefined-templates/path/type/template/volumes/volume2", srcPath)
-			assert.Equal(t, "volumes/volume2", dstPath)
+			assert.Equal(t, "./volumes/volume2", dstPath)
 		}
 	}
 	copyBuildDirMockable = func(build *spec.BuildConfig, srcPath, dstPath string) {
@@ -84,6 +85,7 @@ func TestGenerateCopyVolumes2(t *testing.T) {
 	templatesPath := "../predefined-templates"
 	project := &model.CGProject{
 		Composition: &spec.Project{
+			WorkingDir: "./",
 			Services: spec.Services{
 				{
 					Name: "Service 1",
