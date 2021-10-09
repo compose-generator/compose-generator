@@ -10,13 +10,14 @@ import (
 	"time"
 
 	"github.com/compose-spec/compose-go/loader"
-	"github.com/compose-spec/compose-go/types"
+	spec "github.com/compose-spec/compose-go/types"
 	"github.com/spf13/viper"
 )
 
 var loadComposeFileMockable = loadComposeFile
 var loadGitignoreFileMockable = loadGitignoreFile
 var loadCGFileMockable = loadCGFile
+var loadComposeFileSingleServiceMockable = loadComposeFileSingleService
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -67,41 +68,47 @@ func LoadTemplateService(
 	templateTypeName string,
 	serviceName string,
 	options ...LoadOption,
-) *types.ServiceConfig {
+) *spec.ServiceConfig {
 	opts := applyLoadOptions(options...)
-	return loadComposeFileSingleService(project, selectedTemplates, templateTypeName, serviceName, opts)
+	return loadComposeFileSingleServiceMockable(
+		project,
+		selectedTemplates,
+		templateTypeName,
+		serviceName,
+		opts,
+	)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	// Check if file exists
-	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
-		util.Error("Compose file not found", nil, true)
+	if !fileExists(opt.WorkingDir + opt.ComposeFileName) {
+		printError("Compose file not found", nil, true)
 	}
 	// Parse compose file
-	content, err := ioutil.ReadFile(opt.WorkingDir + opt.ComposeFileName)
+	content, err := readFile(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
-		util.Error("Unable to parse '"+opt.ComposeFileName+"'", err, true)
+		printError("Unable to parse '"+opt.ComposeFileName+"'", err, true)
 	}
-	dict, err := loader.ParseYAML(content)
+	dict, err := parseCompositionYAML(content)
 	if err != nil {
-		util.Error("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
+		printError("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
 	}
 
-	configs := []types.ConfigFile{
+	configs := []spec.ConfigFile{
 		{
 			Filename: opt.ComposeFileName,
 			Config:   dict,
 		},
 	}
-	config := types.ConfigDetails{
+	config := spec.ConfigDetails{
 		WorkingDir:  opt.WorkingDir,
 		ConfigFiles: configs,
 	}
-	project.Composition, err = loader.Load(config)
+	project.Composition, err = loadComposition(config)
 	if err != nil {
-		util.Error("Could not load project from the current directory", err, true)
+		printError("Could not load project from the current directory", err, true)
 	}
 }
 
@@ -111,7 +118,7 @@ func loadComposeFileSingleService(
 	templateTypeName string,
 	serviceName string,
 	opt LoadOptions,
-) *types.ServiceConfig {
+) *spec.ServiceConfig {
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
 		util.Error("Compose file not found in template "+templateTypeName+"-"+serviceName, nil, true)
 	}
