@@ -40,7 +40,7 @@ title: Install on Linux
     ```
 
     !!! warning
-        The support for Raspbian is at the experimental stage. Please File a bug ticket on <a href="https://github.com/compose-generator/compose-generator/issues/new/choose" target="_blank">GitHub</a> if there occurs a bug while installing for you.
+        The support for Raspbian is at the experimental stage. Please File a bug ticket on <a href="https://github.com/compose-generator/compose-generator/issues/new/choose" target="_blank">GitHub</a> if there occurs a bug for you while installing.
 
 <!-- === "Alpine"
     To install Compose Generator on Alpine, execute the following commands in your terminal:
