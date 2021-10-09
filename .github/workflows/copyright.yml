@@ -4,9 +4,9 @@ name: Check Copyright
 on:
   push:
     branches:
-      - 'dev'
+      - dev
     paths:
-      - 'src/**'
+      - src/**
   workflow_dispatch:
 
 jobs:

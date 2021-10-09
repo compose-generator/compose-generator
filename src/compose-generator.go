@@ -20,12 +20,16 @@ func main() {
 
 	// Main cli configuration
 	app := &cli.App{
-		Name:    "compose-generator",
-		Version: util.BuildVersion(util.Version, util.Commit, util.Date, util.BuiltBy),
+		Name:        "compose-generator",
+		Version:     util.BuildVersion(util.Version, util.Commit, util.Date, util.BuiltBy),
+		HideVersion: true,
 		Authors: []*cli.Author{
-			{Name: "Marc Auberer", Email: "marc.auberer@chillibits.com"},
+			{
+				Name:  "Marc Auberer",
+				Email: "marc.auberer@chillibits.com",
+			},
 		},
-		Copyright: "© 2021 Marc Auberer",
+		Copyright: "© 2021 Compose Generator Contributors",
 		Usage:     "Generate and manage docker compose configuration files for your projects.",
 		Flags:     cmd.GenerateCliFlags,
 		Action:    cmd.Generate,
