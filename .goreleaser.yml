@@ -187,10 +187,6 @@ release:
     - [Install Compose Generator](https://www.compose-generator.com/install/linux/)
     - Visit [www.compose-generator.com](https://www.compose-generator.com) to test the new features
     - Follow [@composegen](https://twitter.com/composegen) on Twitter
-announce:
-  twitter:
-    enabled: true
-    message_template: 'Compose Generator {{ .Tag }} is now available! Check out the new features: compose-generator.com!'
 milestones:
   - close: true
     fail_on_error: false

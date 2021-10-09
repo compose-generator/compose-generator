@@ -13,11 +13,11 @@ RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
 WORKDIR /cg/out
 
 # Install Docker CLI
-COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/
+RUN apk add docker
 
 # Install CCom
 RUN apk add curl
-RUN curl -SsL https://github.com/compose-generator/ccom/releases/latest/download/ccom_${ARCH}.apk -o ccom.apk
+RUN curl -fsSL https://github.com/compose-generator/ccom/releases/latest/download/ccom_${ARCH}.apk -o ccom.apk
 RUN apk add --allow-untrusted ccom.apk; rm ccom.apk
 
 # Copy sources
