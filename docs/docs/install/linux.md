@@ -39,6 +39,9 @@ title: Install on Linux
 	sudo apt-get install compose-generator
     ```
 
+    !!! warning
+        The support for Raspbian is at the experimental stage. Please File a bug ticket on <a href="https://github.com/compose-generator/compose-generator/issues/new/choose" target="_blank">GitHub</a>
+
 <!-- === "Alpine"
     To install Compose Generator on Alpine, execute the following commands in your terminal:
     ```sh
