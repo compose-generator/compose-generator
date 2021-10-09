@@ -6,7 +6,7 @@ RUN gradle build -q || return 0
 
 COPY ./src ./src
 RUN gradle build -w
-RUN java -Djarmode=layertools -jar build/libs/*.jar list
+RUN java -Djarmode=layertools -jar build/libs/demo-0.0.1-SNAPSHOT.jar extract
 
 # JRE run instructions
 FROM openjdk:18-alpine AS prod
