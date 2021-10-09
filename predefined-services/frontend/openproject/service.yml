@@ -1,0 +1,10 @@
+image: openproject/community:${{OPENPROJECT_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-openproject
+restart: always
+volumes:
+  - ${{VOLUME_OPENPROJECT_DATA}}:/var/openproject/pgdata
+  - ${{VOLUME_OPENPROJECT_ASSETS}}:/var/openproject/assets
+networks:
+  - frontend-database
+ports:
+  - ${{OPENPROJECT_PORT}}:80
