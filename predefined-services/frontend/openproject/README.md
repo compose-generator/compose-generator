@@ -9,4 +9,4 @@ After you have started the web interface of OpenProject, you can click on `sign 
 Username: `admin`
 Password `admin`
 
-Please change the password immediatly after the first login as prompted.
+Please change the password immediately after the first login as prompted.
