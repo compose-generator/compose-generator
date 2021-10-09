@@ -1,0 +1,54 @@
+{
+    "label": "OpenProject",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your OpenProject instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "OPENPROJECT_PORT"
+        },
+        {
+            "text": "Which version of OpenProject do you want to use?",
+            "type": 2,
+            "defaultValue": "11",
+            "variable": "OPENPROJECT_VERSION"
+        },
+        {
+            "text": "On which host is your instance accessible from outside?",
+            "type": 2,
+            "defaultValue": "localhost",
+            "variable": "OPENPROJECT_OUTSIDE_HOST"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for OpenProject data volume?",
+            "defaultValue": "./volumes/openproject-data",
+            "variable": "VOLUME_OPENPROJECT_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for OpenProject assets volume?",
+            "defaultValue": "./volumes/openproject-assets",
+            "variable": "VOLUME_OPENPROJECT_ASSETS",
+            "advanced": true
+        }
+    ]
+}
