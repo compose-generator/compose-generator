@@ -10,13 +10,14 @@ import (
 	"time"
 
 	"github.com/compose-spec/compose-go/loader"
-	"github.com/compose-spec/compose-go/types"
+	spec "github.com/compose-spec/compose-go/types"
 	"github.com/spf13/viper"
 )
 
 var loadComposeFileMockable = loadComposeFile
 var loadGitignoreFileMockable = loadGitignoreFile
 var loadCGFileMockable = loadCGFile
+var loadComposeFileSingleServiceMockable = loadComposeFileSingleService
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -67,9 +68,15 @@ func LoadTemplateService(
 	templateTypeName string,
 	serviceName string,
 	options ...LoadOption,
-) *types.ServiceConfig {
+) *spec.ServiceConfig {
 	opts := applyLoadOptions(options...)
-	return loadComposeFileSingleService(project, selectedTemplates, templateTypeName, serviceName, opts)
+	return loadComposeFileSingleServiceMockable(
+		project,
+		selectedTemplates,
+		templateTypeName,
+		serviceName,
+		opts,
+	)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -89,13 +96,13 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 		util.Error("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
 	}
 
-	configs := []types.ConfigFile{
+	configs := []spec.ConfigFile{
 		{
 			Filename: opt.ComposeFileName,
 			Config:   dict,
 		},
 	}
-	config := types.ConfigDetails{
+	config := spec.ConfigDetails{
 		WorkingDir:  opt.WorkingDir,
 		ConfigFiles: configs,
 	}
@@ -111,7 +118,7 @@ func loadComposeFileSingleService(
 	templateTypeName string,
 	serviceName string,
 	opt LoadOptions,
-) *types.ServiceConfig {
+) *spec.ServiceConfig {
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
 		util.Error("Compose file not found in template "+templateTypeName+"-"+serviceName, nil, true)
 	}
