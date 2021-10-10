@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package model
 
 // CComDataInput represents the structure, in which data gets passed to CCom
