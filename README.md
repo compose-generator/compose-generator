@@ -28,11 +28,16 @@ $ compose-generator [<command>]
 ```
 
 ## QuickStart with Docker
-*Note for Windows users: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
-
+**For Linux:**
 ```sh
-$ docker run --rm -it -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
+$ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/cg/out chillibits/compose-generator [<command>]
 ```
+
+**For Windows:**
+```sh
+$ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
+```
+*Note: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
 
 ## Supported host systems & file downloads
 There are downloadable packages available for all supported platforms:

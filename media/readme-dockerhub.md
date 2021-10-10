@@ -25,11 +25,16 @@ You can use the Compose Generator CLI by directly installing it on your Docker h
 For installation instructions for NPM, Linux, Windows, etc., please visit the [installation guide](https://www.compose-generator.com/install/linux).
 
 ## QuickStart with Docker
-*Note for Windows users: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
-
+**For Linux:**
 ```sh
-$ docker run --rm -it -v ${pwd}:/cg/out chillibits/compose-generator
+$ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/cg/out chillibits/compose-generator [<command>]
 ```
+
+**For Windows:**
+```sh
+$ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
+```
+*Note: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
 
 ## Contribute by providing predefined service templates
 If you miss a predefined service and you want to create one for the public, please read the [instructions to create one](https://github.com/compose-generator/compose-generator/blob/main/predefined-services/README.md). Fork the repository, create the template and open a pr.
