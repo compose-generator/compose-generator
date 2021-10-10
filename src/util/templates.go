@@ -12,8 +12,8 @@ import (
 
 // CheckForServiceTemplateUpdate checks if any updates are available for the predefined service templates
 func CheckForServiceTemplateUpdate() {
-	// Skip on dev version
-	if IsDevVersion() {
+	// Skip on dev version or dockerized
+	if IsDevVersion() || IsDockerizedEnvironment() {
 		return
 	}
 	// Create predefined templates dir if not exitsts

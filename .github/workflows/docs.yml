@@ -1,17 +1,16 @@
 # Publish documentation
-
 name: Publish documentation
 
 on:
   push:
     branches:
-      - 'main'
-      - 'docs/**'
-      #- 'feature/**'
-      - 'service/**'
-      - 'fix/**'
+      - main
+      - docs/**
+      #- feature/**
+      - service/**
+      - fix/**
     paths:
-      - 'docs/**'
+      - docs/**
   workflow_dispatch:
 
 jobs:

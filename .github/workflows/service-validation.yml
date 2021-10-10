@@ -5,9 +5,12 @@ name: Service validation
 on:
   push:
     paths:
-      - 'predefined-services/**'
+      - predefined-services/**
   pull_request:
-    branches: [ main, dev, feature/* ]
+    branches:
+      - main
+      - dev
+      - feature/**
 
 jobs:
   validation:

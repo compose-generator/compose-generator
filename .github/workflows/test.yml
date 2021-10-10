@@ -5,9 +5,13 @@ name: Go Tests
 on:
   push:
     paths:
-      - 'src/**'
+      - src/**
   pull_request:
-    branches: [ main, dev, test/*, tests/* ]
+    branches:
+      - main
+      - dev
+      - test/**
+      - tests/**
 
 jobs:
   test:

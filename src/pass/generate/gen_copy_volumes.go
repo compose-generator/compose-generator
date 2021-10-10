@@ -33,9 +33,9 @@ func GenerateCopyVolumes(project *model.CGProject) {
 		}
 		// Copy build dir if existing
 		if service.Build != nil {
-			srcPath := filepath.ToSlash(service.Build.Context)
+			srcPath := filepath.Clean(filepath.ToSlash(service.Build.Context))
 			dstPath := srcPath[len(getPredefinedServicesPath()):]
-			dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+			dstPath = filepath.Clean(project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/"))
 			copyBuildDirMockable(service.Build, srcPath, dstPath)
 		}
 	}

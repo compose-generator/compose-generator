@@ -1,0 +1,32 @@
+# Check copyright
+name: Check Copyright
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - src/**
+  workflow_dispatch:
+
+jobs:
+  docs-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check Copyright
+        uses: VinnyBabuManjaly/copyright-action@v1.0.0
+        with:
+          CopyrightString: '/*\nCopyright 2021 Compose Generator Contributors\nAll rights reserved ©\n*/\n'
+          FileType: '.go'
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: dev
+          title: Update copyright notice
+          labels: documentation
+          reviewrs: marcauberer
