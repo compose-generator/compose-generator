@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package model
 
 // GenerateConfig represents a configuration file, which can be passed to the generate command
