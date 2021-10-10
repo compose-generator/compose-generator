@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package godotenv is a go port of the ruby dotenv library (https://github.com/bkeepers/dotenv)
 //
 // Examples/readme can be found on the github page at https://github.com/joho/godotenv

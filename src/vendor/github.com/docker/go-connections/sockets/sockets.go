@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package sockets provides helper functions to create and configure Unix or TCP sockets.
 package sockets
 

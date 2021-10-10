@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package validator
 
 var iso3166_1_alpha2 = map[string]bool{

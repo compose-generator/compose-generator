@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package require implements the same assertions as the `assert` package but
 // stops test execution when a test fails.
 //

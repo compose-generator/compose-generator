@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package toml
 
 // ValueStringRepresentation transforms an interface{} value into its toml string representation.

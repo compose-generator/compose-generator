@@ -1,4 +1,8 @@
 /*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+/*
  * Copyright (c) 2013-2016 Dave Collins <dave@davec.name>
  *
  * Permission to use, copy, modify, and distribute this software for any

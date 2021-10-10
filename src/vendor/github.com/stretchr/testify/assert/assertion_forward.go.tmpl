@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 {{.CommentWithoutT "a"}}
 func (a *Assertions) {{.DocInfo.Name}}({{.Params}}) bool {
 	if h, ok := a.t.(tHelper); ok { h.Helper() }

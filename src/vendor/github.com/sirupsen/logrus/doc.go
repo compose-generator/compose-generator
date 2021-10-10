@@ -1,4 +1,8 @@
 /*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+/*
 Package logrus is a structured logger for Go, completely API compatible with the standard library logger.
 
 

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Copyright © 2014 Steve Francia <spf@spf13.com>.
 // Copyright 2013 tsuru authors. All rights reserved.
 //

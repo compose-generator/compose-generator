@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package gotenv provides functionality to dynamically load the environment variables
 package gotenv
 

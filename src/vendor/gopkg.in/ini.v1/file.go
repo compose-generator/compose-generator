@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Copyright 2017 Unknwon
 //
 // Licensed under the Apache License, Version 2.0 (the "License"): you may

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Go support for Protocol Buffers - Google's data interchange format
 //
 // Copyright 2012 The Go Authors.  All rights reserved.

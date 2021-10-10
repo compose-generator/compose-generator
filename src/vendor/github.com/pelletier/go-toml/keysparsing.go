@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Parsing keys handling both bare and quoted keys.
 
 package toml

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package types // import "github.com/docker/docker/api/types"
 
 // AuthConfig contains authorization information for connecting to a Registry

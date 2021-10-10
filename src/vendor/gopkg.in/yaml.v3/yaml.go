@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 //
 // Copyright (c) 2011-2019 Canonical Ltd
 //

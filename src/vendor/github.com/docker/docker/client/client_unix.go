@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // +build linux freebsd openbsd netbsd darwin solaris illumos dragonfly
 
 package client // import "github.com/docker/docker/client"

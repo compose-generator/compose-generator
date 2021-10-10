@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package printer implements printing of AST nodes to HCL format.
 package printer
 

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package ast declares the types used to represent syntax trees for HCL
 // (HashiCorp Configuration Language)
 package ast

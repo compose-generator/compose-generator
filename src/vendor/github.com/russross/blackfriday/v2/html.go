@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 //
 // Blackfriday Markdown Processor
 // Available at http://github.com/russross/blackfriday

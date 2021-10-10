@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 //go:build appengine || js || nacl || wasm
 // +build appengine js nacl wasm
 

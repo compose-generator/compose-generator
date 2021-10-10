@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package logrus
 
 // A hook to be fired when logging on the logging levels returned from

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package api // import "github.com/docker/docker/api"
 
 // MinVersion represents Minimum REST API version supported

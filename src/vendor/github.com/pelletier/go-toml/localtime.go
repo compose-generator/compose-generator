@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Implementation of TOML's local date/time.
 //
 // Copied over from Google's civil to avoid pulling all the Google dependencies.

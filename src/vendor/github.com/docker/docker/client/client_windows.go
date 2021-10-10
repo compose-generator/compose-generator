@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package client // import "github.com/docker/docker/client"
 
 // DefaultDockerHost defines os specific default if DOCKER_HOST is unset

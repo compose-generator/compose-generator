@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package cli
 
 // AppHelpTemplate is the text template for the Default help topic.

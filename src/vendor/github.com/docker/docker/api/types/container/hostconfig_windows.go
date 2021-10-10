@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package container // import "github.com/docker/docker/api/types/container"
 
 // IsBridge indicates whether container uses the bridge network stack

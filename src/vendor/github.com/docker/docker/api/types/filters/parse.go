@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 /*Package filters provides tools for encoding a mapping of keys to a set of
 multiple values.
 */

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Protocol Buffers for Go with Gadgets
 //
 // Copyright (c) 2016, The GoGo Authors. All rights reserved.

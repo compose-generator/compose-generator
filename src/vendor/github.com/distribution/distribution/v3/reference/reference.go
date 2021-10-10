@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package reference provides a general type to represent any way of referencing images within the registry.
 // Its main purpose is to abstract tags and digests (content-addressable hash).
 //

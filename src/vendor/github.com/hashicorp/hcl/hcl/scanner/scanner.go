@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package scanner implements a scanner for HCL (HashiCorp Configuration
 // Language) source text.
 package scanner

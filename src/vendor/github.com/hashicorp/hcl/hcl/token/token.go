@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package token defines constants representing the lexical tokens for HCL
 // (HashiCorp Configuration Language)
 package token

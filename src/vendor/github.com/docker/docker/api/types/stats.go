@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package types is used for API stability in the types and response to the
 // consumers of the API stats endpoint.
 package types // import "github.com/docker/docker/api/types"

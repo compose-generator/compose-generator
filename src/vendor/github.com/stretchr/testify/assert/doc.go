@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package assert provides a set of comprehensive testing tools for use with the normal Go testing system.
 //
 // Example Usage

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package hcl decodes HCL into usable Go structures.
 //
 // hcl input can come in either pure HCL format or JSON format.

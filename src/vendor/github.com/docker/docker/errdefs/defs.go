@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package errdefs // import "github.com/docker/docker/errdefs"
 
 // ErrNotFound signals that the requested object doesn't exist

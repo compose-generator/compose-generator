@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package toml
 
 // PubTOMLValue wrapping tomlValue in order to access all properties from outside.

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package nat is a convenience package for manipulation of strings describing network ports.
 package nat
 

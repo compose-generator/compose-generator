@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // +build windows
 
 // Package guid provides a GUID type. The backing structure for a GUID is

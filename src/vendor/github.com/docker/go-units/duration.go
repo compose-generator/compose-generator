@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package units provides helper function to parse and print size and time units
 // in human-readable format.
 package units

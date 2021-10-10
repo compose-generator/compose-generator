@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package sanitized_anchor_name provides a func to create sanitized anchor names.
 //
 // Its logic can be reused by multiple packages to create interoperable anchor names

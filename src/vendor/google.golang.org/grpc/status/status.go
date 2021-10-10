@@ -1,4 +1,8 @@
 /*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+/*
  *
  * Copyright 2017 gRPC authors.
  *

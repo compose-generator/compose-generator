@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package cli
 
 // BashCompleteFunc is an action to execute when the shell completion flag is set

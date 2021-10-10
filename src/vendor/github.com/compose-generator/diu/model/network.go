@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package model
 
 // DockerNetwork represents the JSON structure of a docker network

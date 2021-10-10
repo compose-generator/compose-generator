@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package strslice // import "github.com/docker/docker/api/types/strslice"
 
 import "encoding/json"

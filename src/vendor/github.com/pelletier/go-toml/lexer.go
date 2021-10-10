@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // TOML lexer.
 //
 // Written using the principles developed by Rob Pike in

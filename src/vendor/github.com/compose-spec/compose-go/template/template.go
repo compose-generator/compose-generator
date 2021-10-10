@@ -1,4 +1,8 @@
 /*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+/*
    Copyright 2020 The Compose Specification Authors.
 
    Licensed under the Apache License, Version 2.0 (the "License");

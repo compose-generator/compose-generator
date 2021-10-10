@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package swarm // import "github.com/docker/docker/api/types/swarm"
 
 // RuntimeType is the type of runtime used for the TaskSpec

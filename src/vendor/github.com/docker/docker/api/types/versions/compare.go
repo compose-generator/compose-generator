@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package versions // import "github.com/docker/docker/api/types/versions"
 
 import (

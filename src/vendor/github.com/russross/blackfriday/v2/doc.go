@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package blackfriday is a markdown processor.
 //
 // It translates plain text with simple formatting rules into an AST, which can

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Copyright 2019, 2020 OCI Contributors
 // Copyright 2017 Docker, Inc.
 //

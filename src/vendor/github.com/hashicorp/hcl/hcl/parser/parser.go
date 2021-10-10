@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package parser implements a parser for HCL (HashiCorp Configuration
 // Language)
 package parser

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package swarm // import "github.com/docker/docker/api/types/swarm"
 
 // Node represents a node.

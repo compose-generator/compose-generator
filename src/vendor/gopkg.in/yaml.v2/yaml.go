@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package yaml implements YAML support for the Go language.
 //
 // Source code and other details for the project are available at GitHub:

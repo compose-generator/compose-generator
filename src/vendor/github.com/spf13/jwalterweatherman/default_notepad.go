@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Copyright © 2016 Steve Francia <spf@spf13.com>.
 //
 // Use of this source code is governed by an MIT-style

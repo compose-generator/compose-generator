@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // +build !appengine,!js,!windows,!nacl,!plan9
 
 package logrus

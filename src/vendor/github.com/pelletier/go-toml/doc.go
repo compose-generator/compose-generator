@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package toml is a TOML parser and manipulation library.
 //
 // This version supports the specification as described in

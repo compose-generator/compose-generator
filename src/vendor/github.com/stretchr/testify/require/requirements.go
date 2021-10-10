@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 package require
 
 // TestingT is an interface wrapper around *testing.T

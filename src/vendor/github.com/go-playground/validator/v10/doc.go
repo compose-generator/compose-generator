@@ -1,4 +1,8 @@
 /*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+/*
 Package validator implements value validations for structs and individual fields
 based on tags.
 

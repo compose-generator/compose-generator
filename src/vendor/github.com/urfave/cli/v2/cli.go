@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package cli provides a minimal framework for creating and organizing command line
 // Go applications. cli is designed to be easy to understand and write, the most simple
 // cli application can be written as follows:

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package password provides a library for generating high-entropy random
 // password strings via the crypto/rand package.
 //

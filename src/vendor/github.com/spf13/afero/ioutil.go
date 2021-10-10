@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Copyright ©2015 The Go Authors
 // Copyright ©2015 Steve Francia <spf@spf13.com>
 //

@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // Package errdefs defines a set of error interfaces that packages should use for communicating classes of errors.
 // Errors that cross the package boundary should implement one (and only one) of these interfaces.
 //

@@ -1,4 +1,8 @@
 /*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+/*
 Package ansi is a small, fast library to create ANSI colored strings and codes.
 
 Installation

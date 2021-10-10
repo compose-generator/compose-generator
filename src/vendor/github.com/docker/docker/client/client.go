@@ -1,4 +1,8 @@
 /*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+/*
 Package client is a Go client for the Docker Engine API.
 
 For more information about the Engine API, see the documentation:

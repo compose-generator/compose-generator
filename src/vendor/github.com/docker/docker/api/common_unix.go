@@ -1,3 +1,7 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
 // +build !windows
 
 package api // import "github.com/docker/docker/api"
