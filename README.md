@@ -1,7 +1,7 @@
 <p align="center">
-  <img alt="Compose Generator Logo" src="./docs/docs/static/avatar.png" height="220" />
+  <img alt="Compose Generator Logo" src="./media/logo-wide.png" height="280" />
   <h3 align="center">Compose Generator</h3>
-  <p align="center">Easy to use cli to generate Docker Compose YAML configuration files.</p>
+  <p align="center">Easy to use cli tool to generate Docker Compose configurations blazingly fast.</p>
   <p align="center">
     <a target="_blank" href="https://github.com/compose-generator/compose-generator/releases/latest"><img src="https://img.shields.io/github/v/release/compose-generator/compose-generator?include_prereleases"></a>
     <a target="_blank" href="https://hub.docker.com/r/chillibits/compose-generator"><img src="https://img.shields.io/docker/pulls/chillibits/compose-generator"></a>
