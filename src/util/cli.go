@@ -87,15 +87,11 @@ func ExecuteAndWait(c ...string) {
 // ExecuteOnToolbox runs a command in an isolated Linux environment
 func ExecuteOnToolbox(c string) {
 	imageVersion := getToolboxImageVersion()
-	workingDir, err := os.Getwd()
-	if err != nil {
-		Error("Could not find current working directory", err, true)
-	}
+	toolboxMountPath := getToolboxMountPath()
 	// Start docker container
 	// #nosec G204
-	cmd := exec.Command("docker", "run", "-i", "-v", workingDir+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
-	err = cmd.Run()
-	if err != nil {
+	cmd := exec.Command("docker", "run", "-i", "-v", toolboxMountPath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	if err := cmd.Run(); err != nil {
 		Error("Toolbox terminated with an error", err, true)
 	}
 }
@@ -133,4 +129,16 @@ func getToolboxImageVersion() string {
 		return "dev"
 	}
 	return Version
+}
+
+func getToolboxMountPath() string {
+	if IsDockerizedEnvironment() { // Get the path which is mounted to /cg/out from outside the container
+		return getOuterVolumePathOnDockerizedEnvironment()
+	} else { // Get the current working directory
+		workingDir, err := os.Getwd()
+		if err != nil {
+			Error("Could not find current working directory", err, true)
+		}
+		return workingDir
+	}
 }

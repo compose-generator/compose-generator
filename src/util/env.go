@@ -2,10 +2,12 @@ package util
 
 import (
 	"context"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
+	spec "github.com/compose-spec/compose-go/types"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
@@ -98,4 +100,36 @@ func IsDockerRunning() bool {
 	cmd := executeCommand("docker", "info")
 	output, err := getCommandOutput(cmd)
 	return err == nil && !strings.Contains(string(output), "Server:\nERROR: error during connect")
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func getOuterVolumePathOnDockerizedEnvironment() string {
+	// Obtain Docker client
+	client, err := newClientWithOpts(client.FromEnv)
+	if err != nil {
+		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
+		return ""
+	}
+	// Get hostname as it is the container id
+	hostname, err := os.Hostname()
+	if err != nil {
+		printError("Could not obtain the hostname of the container", err, true)
+		return ""
+	}
+	// Get container details
+	container, err := client.ContainerInspect(context.Background(), hostname)
+	if err != nil {
+		printError("Could not inspect the container", err, true)
+		return ""
+	}
+	// Search for volume which is mounted to /cg/out
+	for _, mount := range container.Mounts {
+		if mount.Type == spec.VolumeTypeBind && mount.Destination == "/cg/out" {
+			return mount.Source
+		}
+	}
+	// Volume not found => error
+	printError("Could not find a volume that is mounted to /cg/out", err, true)
+	return ""
 }
