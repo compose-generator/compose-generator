@@ -1,3 +1,8 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+
 // go:build windows
 package pass
 

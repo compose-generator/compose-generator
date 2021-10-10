@@ -1,3 +1,8 @@
+/*
+Copyright 2021 Compose Generator Contributors
+All rights reserved ©
+*/
+
 package model
 
 // TemplateTypeFrontend, TemplateTypeBackend, TemplateTypeDatabase, TemplateTypeProxy and TemplateTypeTlsHelper represent the different template types
