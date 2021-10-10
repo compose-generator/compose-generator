@@ -1,5 +1,6 @@
 # Ignore executables
 bin/*
+compose-generator
 
 # Ignore predefined services archive
 predefined-services/*.tar.gz

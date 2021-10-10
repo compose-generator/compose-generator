@@ -14,13 +14,21 @@ You don't have to pull the image first. You also can skip this step.
     ```
 
 ### Use
-=== "Docker Hub"
+=== "Linux - Docker Hub"
     ```sh
-    docker run --rm -it -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
+    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/cg/out chillibits/compose-generator [<command>]
     ```
-=== "GitHub Container Registry"
+=== "Linux - GHCR"
     ```sh
-    docker run --rm -it -v ${pwd}:/cg/out ghcr.io/chillibits/compose-generator [<command>]
+    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/cg/out ghcr.io/chillibits/compose-generator [<command>]
+    ```
+=== "Windows - Docker Hub"
+    ```sh
+    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
+    ```
+=== "Windows - GHCR"
+    ```sh
+    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ${pwd}:/cg/out ghcr.io/chillibits/compose-generator [<command>]
     ```
 
 ### Customize

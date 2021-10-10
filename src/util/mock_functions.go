@@ -18,7 +18,6 @@ var white = color.White
 var red = color.Red
 var hiYellow = color.HiYellow
 var printError = Error
-var printWarning = Warning
 var commandExists = CommandExists
 var isDockerRunning = IsDockerRunning
 var exitProgram = os.Exit
@@ -34,3 +33,6 @@ var executeCommand = exec.Command
 var getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
 	return cmd.Output()
 }
+var isDockerizedEnvironment = IsDockerizedEnvironment
+var getOuterVolumePathOnDockerizedEnvironmentMockable = getOuterVolumePathOnDockerizedEnvironment
+var getwd = os.Getwd
