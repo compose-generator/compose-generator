@@ -18,7 +18,7 @@ You don't have to pull the image first. You also can skip this step.
     ```sh
     docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/cg/out chillibits/compose-generator [<command>]
     ```
-=== "Linux - GitHub Container Registry"
+=== "Linux - GHCR"
     ```sh
     docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/cg/out ghcr.io/chillibits/compose-generator [<command>]
     ```
@@ -26,7 +26,7 @@ You don't have to pull the image first. You also can skip this step.
     ```sh
     docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
     ```
-=== "Windows - GitHub Container Registry"
+=== "Windows - GHCR"
     ```sh
     docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ${pwd}:/cg/out ghcr.io/chillibits/compose-generator [<command>]
     ```
