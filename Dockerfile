@@ -5,6 +5,9 @@ ENV PATH="/cg:${PATH}"
 ENV TERM="xterm-256color"
 ENV COMPOSE_GENERATOR_DOCKERIZED=1
 
+# Specify volumes
+VOLUME /cg/out /var/run/docker.sock
+
 # Set default arg value
 ARG ARCH=amd64
 
@@ -22,9 +25,9 @@ RUN apk add --allow-untrusted ccom.apk; rm ccom.apk
 RUN apk update && apk add --no-cache libc6-compat libstdc++ && rm -rf /var/cache/apk/*
 
 # Copy sources
-COPY compose-generator /cg/compose-generator
+COPY compose-generator /cg/cg
 COPY predefined-services/ /cg/predefined-services/
-RUN chmod +x /cg/compose-generator
+RUN chmod +x /cg/cg
 
 # Set entrypoint
-ENTRYPOINT [ "compose-generator" ]
+ENTRYPOINT [ "cg" ]
