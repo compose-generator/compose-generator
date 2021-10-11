@@ -107,6 +107,8 @@ func ExecuteOnToolboxCustomVolume(c string, volumePath string) {
 	// Start docker container
 	// #nosec G204
 	cmd := exec.Command("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	if err := cmd.Start(); err != nil {
 		Error("Could not start docker", err, true)
 	}
