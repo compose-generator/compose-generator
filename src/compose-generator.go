@@ -27,7 +27,6 @@ func main() {
 	app := &cli.App{
 		Name:        "compose-generator",
 		Version:     util.BuildVersion(util.Version, util.Commit, util.Date, util.BuiltBy),
-		HideVersion: true,
 		Authors: []*cli.Author{
 			{
 				Name:  "Marc Auberer",

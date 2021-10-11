@@ -10,14 +10,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  docs-deploy:
+  copyright-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Check Copyright
-        uses: VinnyBabuManjaly/copyright-action@v1
+        uses: VinnyBabuManjaly/copyright-action@v1.0.0
         with:
           CopyrightString: '/*\nCopyright © 2021 Compose Generator Contributors\nAll rights reserved.\n*/\n\n'
           Path: 'src'
