@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check Copyright
-        uses: VinnyBabuManjaly/copyright-action@v1.0.0
+        uses: VinnyBabuManjaly/copyright-action@v1
         with:
           CopyrightString: '/*\nCopyright © 2021 Compose Generator Contributors\nAll rights reserved.\n*/\n\n'
           Path: 'src'
@@ -25,7 +25,7 @@ jobs:
           FileType: '.go'
           
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
+        uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: dev
