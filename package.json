@@ -1,6 +1,6 @@
 {
   "name": "@compose-generator/cli",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Easy to use cli to generate Docker Compose YAML configuration files.",
   "main": "index.js",
   "directories": {
@@ -35,6 +35,6 @@
     "url": "https://github.com/compose-generator/compose-generator/releases/download/{{version}}/compose-generator_{{platform}}_{{arch}}.tar.gz"
   },
   "dependencies": {
-    "@compose-generator/go-npm": "~0.9.0"
+    "@compose-generator/go-npm": "~1.0.0"
   }
 }

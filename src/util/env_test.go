@@ -342,7 +342,7 @@ func TestIsToolboxPresent2(t *testing.T) {
 
 func TestIsToolboxPresent3(t *testing.T) {
 	// Test data
-	version := "0.9.0"
+	version := "1.0.0"
 	// Mock functions
 	getToolboxImageVersionMockable = func() string {
 		return version
@@ -376,7 +376,7 @@ func TestIsToolboxPresent3(t *testing.T) {
 
 func TestIsToolboxPresent4(t *testing.T) {
 	// Test data
-	version := "0.9.0"
+	version := "1.0.0"
 	// Mock functions
 	getToolboxImageVersionMockable = func() string {
 		return version
