@@ -1,6 +1,7 @@
 {
     "label": "Gitea",
     "preselected": "false",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -22,7 +23,7 @@
         {
             "text": "Which version of Gitea do you want to use?",
             "type": 2,
-            "defaultValue": "1.14.6",
+            "defaultValue": "1.15",
             "variable": "GITEA_VERSION"
         }
     ],

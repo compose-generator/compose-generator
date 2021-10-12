@@ -1,36 +1,52 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package util
 
 import (
-	"fmt"
-	"os"
+	"runtime"
 	"time"
 
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 )
 
+var getErrorMessageMockable = getErrorMessage
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // P prints a normal text to the console
 func P(text string) {
-	color.New(color.FgWhite).Print(text)
+	if _, err := color.New(color.FgWhite).Print(text); err != nil {
+		printError("Could not print white text", err, false)
+	}
 }
 
 // Pl prints a normal text line to the console
 func Pl(text string) {
-	color.White(text)
+	white(text)
 }
 
 // Pel prints an empty line to the console
 func Pel() {
-	fmt.Println()
+	if _, err := println(); err != nil {
+		printError("Could not print empty line", err, true)
+	}
 }
 
 // StartProcess displays a loading animation until StopProcess is called
 func StartProcess(text string) (s *spinner.Spinner) {
-	s = spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	charSet := 14
+	finalChar := "⠿"
+	if runtime.GOOS == "windows" {
+		charSet = 9
+		finalChar = "-"
+	}
+	s = spinner.New(spinner.CharSets[charSet], 100*time.Millisecond)
 	s.Suffix = " " + text
-	s.FinalMSG = color.GreenString("⠿") + " " + text + color.GreenString(" done\n")
+	s.FinalMSG = color.GreenString(finalChar) + " " + text + color.GreenString(" done\n")
 	s.HideCursor = true
 	s.Start()
 	return
@@ -44,26 +60,30 @@ func StopProcess(s *spinner.Spinner) {
 // Heading prints heading to console
 func Heading(text string) {
 	green := color.New(color.FgGreen).Add(color.Bold)
-	green.Println(text)
+	if _, err := green.Println(text); err != nil {
+		printError("Could not print heading", err, false)
+	}
 }
 
 // Success prints a success message to console
 func Success(text string) {
 	green := color.New(color.FgGreen).Add(color.Italic)
-	green.Println(text)
+	if _, err := green.Println(text); err != nil {
+		printError("Could not print success message", err, false)
+	}
 }
 
 // Error prints an error message
 func Error(description string, err error, exit bool) {
-	color.Red(getErrorMessage(description, err))
+	red(getErrorMessageMockable(description, err))
 	if exit {
-		os.Exit(1)
+		exitProgram(1)
 	}
 }
 
 // Warning prints an warning message
 func Warning(description string) {
-	color.Red("Warning: " + description)
+	hiYellow("Warning: " + description)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------

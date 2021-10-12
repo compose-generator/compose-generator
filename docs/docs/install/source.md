@@ -23,7 +23,7 @@ If you want to build the executable, you can use the `build.sh` for Linux or the
     ```
 === "Windows"
     ```sh
-    build.bat
+    .\build.bat
     ```
 
 The executables will end up in the `bin` subfolder for the architectures `amd64` and `armv7`.
@@ -37,10 +37,10 @@ If you don't care about the executable and you just want to use Compose Generato
     ```
 === "Windows"
     ```sh
-    install.bat
+    .\install.bat
     ```
 
 ### Use
 ```sh
-compose-generator
+compose-generator [<command>]
 ```

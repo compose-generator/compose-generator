@@ -1,8 +1,13 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/pass"
+	commonPass "compose-generator/pass/common"
 	"compose-generator/project"
 	"compose-generator/util"
 
@@ -11,7 +16,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the add command
+// AddCliFlags are the cli flags for the add command
 var AddCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "advanced",
@@ -22,13 +27,13 @@ var AddCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "run",
 		Aliases: []string{"r"},
-		Usage:   "Run docker-compose after creating the compose file",
+		Usage:   "Run docker compose after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
 		Name:    "detached",
 		Aliases: []string{"d"},
-		Usage:   "Run docker-compose detached after creating the compose file",
+		Usage:   "Run docker compose detached after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
@@ -38,6 +43,8 @@ var AddCliFlags = []cli.Flag{
 		Value:   false,
 	},
 }
+
+var AddCustomServiceMockable = AddCustomService
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -49,11 +56,12 @@ func Add(c *cli.Context) error {
 	flagDetached := c.Bool("detached")
 	flagForce := c.Bool("force")
 
-	// Check if CCom is installed
+	// Check if CCom is installed and Docker is running
 	util.EnsureCComIsInstalled()
+	util.EnsureDockerIsRunning()
 
 	// Clear the screen for CG output
-	util.ClearScreen()
+	clearScreen()
 
 	// Check for predefined service templates updates
 	util.CheckForServiceTemplateUpdate()
@@ -61,27 +69,30 @@ func Add(c *cli.Context) error {
 	// Ask for custom compose file
 	composeFilePath := "docker-compose.yml"
 	if flagAdvanced {
-		composeFilePath = util.TextQuestionWithDefault("From which compose file do you want to load?", "./docker-compose.yml")
+		composeFilePath = textQuestionWithDefault("From which compose file do you want to load?", "./docker-compose.yml")
 	}
 
 	// Load project
-	spinner := util.StartProcess("Loading project ...")
+	spinner := startProcess("Loading project ...")
 	proj := project.LoadProject(
 		project.LoadFromComposeFile(composeFilePath),
 	)
 	proj.AdvancedConfig = flagAdvanced
 	proj.ForceConfig = flagForce
-	util.StopProcess(spinner)
-	util.Pel()
+	stopProcess(spinner)
+	pel()
+
+	// Execute additional validation steps
+	commonPass.CommonCheckForDependencyCycles(proj)
 
 	// Add custom service
-	AddCustomService(proj)
+	AddCustomServiceMockable(proj)
 
 	// Save project
-	spinner = util.StartProcess("Saving project ...")
+	spinner = startProcess("Saving project ...")
 	project.SaveProject(proj)
-	util.StopProcess(spinner)
-	util.Pel()
+	stopProcess(spinner)
+	pel()
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
@@ -96,23 +107,24 @@ func AddCustomService(project *model.CGProject) {
 	newService := spec.ServiceConfig{}
 
 	// Initialize Docker client
-	client, err := client.NewClientWithOpts(client.FromEnv)
+	client, err := newClientWithOpts(client.FromEnv)
 	if err != nil {
-		util.Error("Could not intanciate Docker client. Please check your Docker installation", err, true)
+		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
+		return
 	}
 
 	// Execute passes on the service
-	pass.AddBuildOrImage(&newService, project)
-	pass.AddName(&newService, project)
-	pass.AddContainerName(&newService, project)
-	pass.AddVolumes(&newService, project, client)
-	pass.AddNetworks(&newService, project, client)
-	pass.AddPorts(&newService, project)
-	pass.AddEnvVars(&newService, project)
-	pass.AddEnvFiles(&newService, project)
-	pass.AddRestart(&newService, project)
-	pass.AddDepends(&newService, project)
-	pass.AddDependants(&newService, project)
+	addBuildOrImagePass(&newService, project)
+	addNamePass(&newService, project)
+	addContainerNamePass(&newService, project)
+	addVolumesPass(&newService, project, client)
+	addNetworksPass(&newService, project, client)
+	addPortsPass(&newService, project)
+	addEnvVarsPass(&newService, project)
+	addEnvFilesPass(&newService, project)
+	addRestartPass(&newService, project)
+	addDependsPass(&newService, project)
+	addDependantsPass(&newService, project)
 
 	// Add the new service to the project
 	project.Composition.Services = append(project.Composition.Services, newService)

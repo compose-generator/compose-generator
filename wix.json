@@ -1,33 +1,35 @@
 {
-    "product": "Compose Generator",
-    "company": "ChilliBits",
-    "license": "LICENSE",
-    "files": {
-        "guid": "1ece7ee1-246e-4f91-81f1-ce68f09c44c3",
-        "items": [
-            "compose-generator.exe"
-        ]
-    },
-    "directories": [
-        "predefined-services"
-    ],
-    "env": {
-        "guid": "cb192ea2-49e4-4f66-be32-b919aa652e5a",
-        "vars": [
-            {
-                "name": "PATH",
-                "value": "[INSTALLDIR]",
-                "permanent": "yes",
-                "system": "no",
-                "action": "set",
-                "part": "last"
-            }
-        ]
-    },
-    "choco": {
-        "description": "Easy to use cli to generate Docker Compose YAML configuration files.",
-        "project-url": "https://github.com/compose-generator/compose-generator",
-        "tags": "generator cli docker docker-compose yaml go golang",
-        "license-url": "https://github.com/compose-generator/compose-generator/blob/main/LICENSE"
-    }
+  "product": "Compose Generator",
+  "company": "ChilliBits",
+  "license": "LICENSE",
+  "upgrade-code": "dec5b940-99e3-418e-b831-3ebb65567f31",
+  "files": {
+    "guid": "1ece7ee1-246e-4f91-81f1-ce68f09c44c3",
+    "items": [
+      "compose-generator.exe"
+    ]
+  },
+  "directories": [
+    "predefined-services"
+  ],
+  "env": {
+    "guid": "cb192ea2-49e4-4f66-be32-b919aa652e5a",
+    "vars": [
+      {
+        "name": "PATH",
+        "value": "[INSTALLDIR]",
+        "permanent": "yes",
+        "system": "no",
+        "action": "set",
+        "part": "last"
+      }
+    ]
+  },
+  "shortcuts": {},
+  "choco": {
+    "description": "Easy to use cli to generate Docker Compose YAML configuration files.",
+    "project-url": "https://github.com/compose-generator/compose-generator",
+    "tags": "generator cli docker docker compose yaml go golang",
+    "license-url": "https://github.com/compose-generator/compose-generator/blob/main/LICENSE"
+  }
 }

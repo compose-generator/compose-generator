@@ -1,6 +1,7 @@
 {
     "label": "Telegram Bot",
     "preselected": "false",
+    "proxied": false,
     "files": [
         {
             "path": "service.yml",
@@ -15,7 +16,11 @@
             "type": "env"
         },
         {
-            "path": "backend/bot.py",
+            "path": "${{TELEGRAM_BOT_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{TELEGRAM_BOT_SOURCE_DIRECTORY}}/bot.py",
             "type": "config"
         }
     ],
@@ -34,7 +39,7 @@
         {
             "text": "Which Python version do you want to use?",
             "type": 2,
-            "defaultValue": "3.9",
+            "defaultValue": "3.10",
             "variable": "TELEGRAM_BOT_PYTHON_VERSION",
             "advanced": true
         }

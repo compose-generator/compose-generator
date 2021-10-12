@@ -29,7 +29,7 @@ var TemplateFuncsNoColor = map[string]interface{}{
 //for colored output. The second string does not contain escape codes
 //and can be used by the renderer for layout purposes.
 func RunTemplate(tmpl string, data interface{}) (string, string, error) {
-	tPair, err := GetTemplatePair(tmpl)
+	tPair, err := getTemplatePair(tmpl)
 	if err != nil {
 		return "", "", err
 	}
@@ -52,12 +52,12 @@ var (
 	memoMutex = &sync.RWMutex{}
 )
 
-//GetTemplatePair returns a pair of compiled templates where the
+//getTemplatePair returns a pair of compiled templates where the
 //first template is generated for user-facing output and the
 //second is generated for use by the renderer. The second
 //template does not contain any color escape codes, whereas
 //the first template may or may not depending on DisableColor.
-func GetTemplatePair(tmpl string) ([2]*template.Template, error) {
+func getTemplatePair(tmpl string) ([2]*template.Template, error) {
 	memoMutex.RLock()
 	if t, ok := memoizedGetTemplate[tmpl]; ok {
 		memoMutex.RUnlock()

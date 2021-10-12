@@ -1,6 +1,7 @@
 {
     "label": "PHP",
     "preselected": "false",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -9,6 +10,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{PHP_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [
@@ -22,7 +27,7 @@
         {
             "text": "Which version of PHP do you want to use?",
             "type": 2,
-            "defaultValue": "8.1",
+            "defaultValue": "8.0",
             "variable": "PHP_VERSION"
         }
     ],

@@ -1,2 +1,2 @@
 ## Lets Encrypt TLS Helper
-*To be extended ...*
+Generates TLS certificates for the JWilder Nginx reverse proxy.

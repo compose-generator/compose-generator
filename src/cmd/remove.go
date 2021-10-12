@@ -1,17 +1,21 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/pass"
+	commonPass "compose-generator/pass/common"
 	"compose-generator/project"
 	"compose-generator/util"
-	"errors"
 
 	spec "github.com/compose-spec/compose-go/types"
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the remove command
+// RemoveCliFlags are the cli flags for the remove command
 var RemoveCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "advanced",
@@ -28,13 +32,13 @@ var RemoveCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "run",
 		Aliases: []string{"r"},
-		Usage:   "Run docker-compose after creating the compose file",
+		Usage:   "Run docker compose after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
 		Name:    "detached",
 		Aliases: []string{"d"},
-		Usage:   "Run docker-compose detached after creating the compose file",
+		Usage:   "Run docker compose detached after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
@@ -44,6 +48,8 @@ var RemoveCliFlags = []cli.Flag{
 		Value:   false,
 	},
 }
+
+var removeServiceFromProjectMockable = removeServiceFromProject
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -56,6 +62,9 @@ func Remove(c *cli.Context) error {
 	flagWithVolumes := c.Bool("with-volumes")
 	flagForce := c.Bool("force")
 	flagAdvanced := c.Bool("advanced")
+
+	// Check if Docker is running
+	util.EnsureDockerIsRunning()
 
 	// Clear the screen for CG output
 	util.ClearScreen()
@@ -76,6 +85,9 @@ func Remove(c *cli.Context) error {
 	proj.WithVolumesConfig = flagWithVolumes
 	util.StopProcess(spinner)
 	util.Pel()
+
+	// Execute additional validation steps
+	commonPass.CommonCheckForDependencyCycles(proj)
 
 	// Ask for services to remove
 	if len(serviceNames) == 0 {
@@ -108,40 +120,40 @@ func Remove(c *cli.Context) error {
 
 func removeService(project *model.CGProject, serviceName string, withVolumes bool) {
 	// Get service and its index by its name
-	service, index, err := findServiceWithIndex(project, serviceName)
+	service, err := project.Composition.GetService(serviceName)
 	if err != nil {
-		util.Error("Service not found", err, false)
+		printError("Service not found", err, false)
 		return
 	}
 
 	// Display warning to the user
 	if !project.ForceConfig {
-		if !util.YesNoQuestion("Do you really want to remove service '"+serviceName+"'?", false) {
+		if !yesNoQuestion("Do you really want to remove service '"+serviceName+"'?", false) {
 			return
 		}
 	}
 
 	// Execute passes on the service
-	pass.RemoveVolumes(&service, project)
-	pass.RemoveNetworks(&service, project)
-	pass.RemoveDependencies(&service, project)
+	removeVolumesPass(&service, project)
+	removeNetworksPass(&service, project)
+	removeDependenciesPass(&service, project)
 
 	// Remove service from the project
-	project.Composition.Services = removeServiceFromProject(project.Composition.Services, index)
+	removeServiceFromProjectMockable(&project.Composition.Services, serviceName)
 }
 
 // ---------------------------------------------------------------- Helper functions ---------------------------------------------------------------
 
-func findServiceWithIndex(project *model.CGProject, serviceName string) (spec.ServiceConfig, int, error) {
-	for index, service := range project.Composition.Services {
+func removeServiceFromProject(services *spec.Services, serviceName string) {
+	// Search service
+	index := 0
+	for i, service := range *services {
 		if service.Name == serviceName {
-			return service, index, nil
+			index = i
+			break
 		}
 	}
-	return spec.ServiceConfig{}, -1, errors.New("Service '" + serviceName + "' not found")
-}
-
-func removeServiceFromProject(services []spec.ServiceConfig, index int) []spec.ServiceConfig {
-	services[index] = services[len(services)-1]
-	return services[:len(services)-1]
+	// Remove service
+	(*services)[index] = (*services)[len(*services)-1]
+	*services = (*services)[:len(*services)-1]
 }

@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package model
 
 // GenerateConfig represents a configuration file, which can be passed to the generate command
@@ -15,7 +20,8 @@ type ServiceConfig struct {
 	Params map[string]string `yaml:"params,omitempty"`
 }
 
-func (c GenerateConfig) GetServiceConfigurationsByName(templateType string) []ServiceConfig {
+// GetServiceConfigurationsByName returns all specified service configurations by the name of their type
+func (c GenerateConfig) GetServiceConfigurationsByType(templateType string) []ServiceConfig {
 	services := []ServiceConfig{}
 	for _, service := range c.ServiceConfig {
 		if service.Type == templateType {

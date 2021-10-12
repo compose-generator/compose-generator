@@ -1,0 +1,2 @@
+## Node.js
+Node.js can be used for realizing server-side and well scalable applications. It comes with support for JavaScript / TypeScript and is known for its maximized throughput and efficiency by design.

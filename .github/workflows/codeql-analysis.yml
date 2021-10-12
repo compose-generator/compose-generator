@@ -1,8 +1,10 @@
+# CodeQL workflow
 name: CodeQL
 
 on:
   schedule:
     - cron: '0 6 * * 6' # Every saturday at 06:00
+  workflow_dispatch:
 
 jobs:
   analyze:

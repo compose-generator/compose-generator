@@ -1,6 +1,7 @@
 {
     "label": "Django",
     "preselected": "false",
+    "proxied": true,
     "demoAppInitCmd": [
         "django-admin startproject ${{DJANGO_APP_NAME}} ./${{DJANGO_SOURCE_DIRECTORY}}",
         "chmod -R 777 ./${{DJANGO_SOURCE_DIRECTORY}}"
@@ -15,7 +16,11 @@
             "type": "docs"
         },
         {
-            "path": "backend/requirements.txt",
+            "path": "${{DJANGO_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{DJANGO_SOURCE_DIRECTORY}}/requirements.txt",
             "type": "config"
         }
     ],
@@ -30,13 +35,13 @@
         {
             "text": "Which Django version do you want to use?",
             "type": 2,
-            "defaultValue": "3.2.6",
+            "defaultValue": "3.2.7",
             "variable": "DJANGO_VERSION"
         },
         {
             "text": "Which Python version do you want to use?",
             "type": 2,
-            "defaultValue": "3.9",
+            "defaultValue": "3.10",
             "variable": "DJANGO_PYTHON_VERSION"
         },
         {

@@ -1,6 +1,7 @@
 {
     "label": "FaunaDB",
     "preselected": "false",
+    "proxied": false,
     "files": [
         {
             "path": "service.yml",
@@ -29,7 +30,7 @@
         {
             "text": "Which FaunaDB version do you want to use?",
             "type": 2,
-            "defaultValue": "4.1.0",
+            "defaultValue": "4.2.0",
             "variable": "FAUNADB_VERSION",
             "advanced": true
         }

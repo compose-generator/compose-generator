@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package cmd
 
 import (
@@ -5,13 +10,11 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"os"
-	"path/filepath"
 
-	"github.com/otiai10/copy"
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the template save command
+// TemplateSaveCliFlags are the cli flags for the template save command
 var TemplateSaveCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "stash",
@@ -25,12 +28,6 @@ var TemplateSaveCliFlags = []cli.Flag{
 		Usage:   "No safety checks",
 		Value:   false,
 	},
-	&cli.BoolFlag{
-		Name:    "with-dockerfile",
-		Aliases: []string{"w"},
-		Usage:   "Also save the Dockerfile in the template",
-		Value:   false,
-	},
 }
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -41,7 +38,6 @@ func SaveTemplate(c *cli.Context) error {
 	name := c.Args().Get(0)
 	flagStash := c.Bool("stash")
 	flagForce := c.Bool("force")
-	//flagWithDockerfile := c.Bool("with-dockerfile")
 
 	// Load project
 	spinner := util.StartProcess("Loading project ...")
@@ -59,11 +55,13 @@ func SaveTemplate(c *cli.Context) error {
 
 	// Create the new template
 	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	os.MkdirAll(targetDir, 0755)
+	if err := os.MkdirAll(targetDir, 0750); err != nil {
+		util.Error("Could not create template dir", err, true)
+	}
 
-	// Copy volumes over to the new template dir
-	spinner = util.StartProcess("Copying volumes ...")
-	copyVolumesToTemplate(proj, targetDir)
+	// Copy volumnes and build contexts over to the new template dir
+	spinner = util.StartProcess("Saving volumes and build contexts ...")
+	copyVolumesAndBuildContextsToTemplate(proj, targetDir)
 	util.StopProcess(spinner)
 
 	// Save the project to the templates dir
@@ -87,29 +85,33 @@ func SaveTemplate(c *cli.Context) error {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func isTemplateExisting(name string) bool {
-	targetDir := util.GetCustomTemplatesPath() + "/" + name
-	if util.FileExists(targetDir) {
-		util.Error("Template with the name '"+name+"' already exists", nil, false)
+	targetDir := getCustomTemplatesPath() + "/" + name
+	if fileExists(targetDir) {
+		printError("Template with the name '"+name+"' already exists", nil, false)
 		return true
 	}
 	return false
 }
 
-func copyVolumesToTemplate(proj *model.CGProject, targetDir string) {
-	currentAbs, err := filepath.Abs(".")
+func copyVolumesAndBuildContextsToTemplate(proj *model.CGProject, targetDir string) {
+	currentAbs, err := abs(".")
 	if err != nil {
-		util.Error("Could not find absolute path of current dir", err, true)
+		printError("Could not find absolute path of current dir", err, true)
 	}
-	for _, path := range proj.GetAllVolumePathsNormalized() {
-		pathAbs, err := filepath.Abs(path)
+	// Copy volumes to template dir
+	paths := append(proj.GetAllVolumePaths(), proj.GetAllBuildContextPaths()...)
+	for _, path := range normalizePaths(paths) {
+		pathAbs, err := abs(path)
 		if err != nil {
-			util.Error("Could not find absolute path of volume dir", err, true)
+			printError("Could not find absolute path of volume / build context dir", err, true)
 		}
-		pathRel, err := filepath.Rel(currentAbs, pathAbs)
+		pathRel, err := rel(currentAbs, pathAbs)
 		if err != nil {
-			util.Error("Could not copy volume '"+path+"'", err, false)
+			printError("Could not copy volume / build context '"+path+"'", err, false)
 			continue
 		}
-		copy.Copy(path, targetDir+"/"+pathRel)
+		if copyDir(path, targetDir+"/"+pathRel) != nil {
+			printWarning("Could not copy volume / build context from '" + path + "' to '" + targetDir + "/" + pathRel + "'")
+		}
 	}
 }

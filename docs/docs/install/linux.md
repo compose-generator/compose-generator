@@ -4,8 +4,9 @@ title: Install on Linux
 
 ### Install from repository
 === "Debian/Ubuntu"
-    To install Compose Generator on Debian, execute the following commands in your terminal:
+    To install Compose Generator on Debian or Ubuntu, execute the following commands in your terminal:
     ```sh
+    sudo apt-get install ca-certificates
     curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
 	sudo add-apt-repository "deb https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main"
 	sudo apt-get update
@@ -28,14 +29,27 @@ title: Install on Linux
 	sudo yum install compose-generator
     ```
 
-=== "Alpine"
+=== "Raspbian"
+    To install Compose Generator on Raspbian, execute the following commands in your terminal:
+    ```sh
+    sudo apt-get install ca-certificates
+    curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
+	sudo echo "deb [arch=armhf] https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main" > /etc/apt/sources.list.d/chillibits.list
+	sudo apt-get update
+	sudo apt-get install compose-generator
+    ```
+
+    !!! warning
+        The support for Raspbian is at the experimental stage. Please File a bug ticket on <a href="https://github.com/compose-generator/compose-generator/issues/new/choose" target="_blank">GitHub</a> if there occurs a bug for you while installing.
+
+<!-- === "Alpine"
     To install Compose Generator on Alpine, execute the following commands in your terminal:
     ```sh
     apk update
     sh -c "echo 'https://repo.chillibits.com/alpine/$(cat \
         /etc/os-release | grep VERSION_ID | cut -d "=" -f2 | cut -d "." \
         -f1,2)/main'" >> /etc/apk/repositories
-    wget -O /etc/apk/keys/alpine.rsa.pub https://server.chillibits.com/files/repo/alpine.rsa.pub
+    wget -O /etc/apk/keys/chillibits.repo https://server.chillibits.com/files/repo/gpg
     apk add -y compose-generator
     ```
 
@@ -43,26 +57,17 @@ title: Install on Linux
         If there occure any errors on the last step, please try the following instead
         ```sh
         apk add compose-generator --allow-untrusted
-        ```
-
-=== "Raspbian"
-    To install Compose Generator on Raspbian, execute the following commands in your terminal:
-    ```sh
-    curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
-	sudo add-apt-repository "deb https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main"
-	sudo apt-get update
-	sudo apt-get install compose-generator
-    ```
+        ``` -->
 
 ### Install from package file
 You also can install Compose Generator from a package file on your host system.
 
 === "Debian/Ubuntu/Raspbian"
-    [Download amd64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_amd64.deb){ .md-button .md-button--primary }
-    [Download arm64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_arm64.deb){ .md-button .md-button--primary }
-    [Download armv5](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv5.deb){ .md-button .md-button--primary }
-    [Download armv6](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv6.deb){ .md-button .md-button--primary }
-    [Download armv7](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv7.deb){ .md-button .md-button--primary }
+    [Download amd64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_amd64.deb){ .md-button .md-button--primary .md-button--small }
+    [Download arm64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_arm64.deb){ .md-button .md-button--primary .md-button--small }
+    [Download armv5](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv5.deb){ .md-button .md-button--primary .md-button--small }
+    [Download armv6](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv6.deb){ .md-button .md-button--primary .md-button--small }
+    [Download armv7](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv7.deb){ .md-button .md-button--primary .md-button--small }
 
     To install it, execute the following command:
     ```sh
@@ -70,11 +75,11 @@ You also can install Compose Generator from a package file on your host system.
     ```
 
 === "Fedora/CentOS"
-    [Download amd64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_amd64.rpm){ .md-button .md-button--primary }
-    [Download arm64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_arm64.rpm){ .md-button .md-button--primary }
-    [Download armv5](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv5.rpm){ .md-button .md-button--primary }
-    [Download armv6](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv6.rpm){ .md-button .md-button--primary }
-    [Download armv7](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv7.rpm){ .md-button .md-button--primary }
+    [Download amd64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_amd64.rpm){ .md-button .md-button--primary .md-button--small }
+    [Download arm64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_arm64.rpm){ .md-button .md-button--primary .md-button--small }
+    [Download armv5](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv5.rpm){ .md-button .md-button--primary .md-button--small }
+    [Download armv6](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv6.rpm){ .md-button .md-button--primary .md-button--small }
+    [Download armv7](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv7.rpm){ .md-button .md-button--primary .md-button--small }
 
     To install it, execute the following command:
     ```sh
@@ -82,11 +87,11 @@ You also can install Compose Generator from a package file on your host system.
     ```
 
 === "Alpine"
-    [Download amd64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_amd64.apk){ .md-button .md-button--primary }
-    [Download arm64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_arm64.apk){ .md-button .md-button--primary }
-    [Download armv5](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv5.apk){ .md-button .md-button--primary }
-    [Download armv6](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv6.apk){ .md-button .md-button--primary }
-    [Download armv7](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv7.apk){ .md-button .md-button--primary }
+    [Download amd64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_amd64.apk){ .md-button .md-button--primary .md-button--small }
+    [Download arm64](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_arm64.apk){ .md-button .md-button--primary .md-button--small }
+    [Download armv5](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv5.apk){ .md-button .md-button--primary .md-button--small }
+    [Download armv6](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv6.apk){ .md-button .md-button--primary .md-button--small }
+    [Download armv7](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_armv7.apk){ .md-button .md-button--primary .md-button--small }
 
     To install it, execute the following command:
     ```sh
@@ -95,5 +100,5 @@ You also can install Compose Generator from a package file on your host system.
 
 ### Use
 ```sh
-compose-generator
+compose-generator [<command>]
 ```

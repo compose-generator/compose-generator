@@ -1,6 +1,7 @@
 {
     "label": "ElasticsearchHQ",
     "preselected": "services.database contains name == \"elasticsearch\"",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",

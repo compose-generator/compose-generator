@@ -1,0 +1,46 @@
+{
+    "label": "Node.js",
+    "preselected": "false",
+    "proxied": true,
+    "demoAppInitCmd": [
+        "express example-app",
+        "mv -f ./example-app/* ./${{NODE_SOURCE_DIRECTORY}}/",
+        "rm -rf ./example-app"
+    ],
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "${{NODE_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Node.js instance?",
+            "type": 2,
+            "defaultValue": "3000",
+            "validator": "port",
+            "variable": "NODE_PORT"
+        },
+        {
+            "text": "Which version of Node do you want to use?",
+            "type": 2,
+            "defaultValue": "16.9-alpine",
+            "variable": "NODE_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend-node",
+            "variable": "NODE_SOURCE_DIRECTORY"
+        }
+    ]
+}

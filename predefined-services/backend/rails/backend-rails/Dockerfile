@@ -5,14 +5,14 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y --no-install-recommends nodejs yarn && rm -rf /var/lib/apt/lists/*
 RUN yarn -v
-
-#? if has services.database[0].name == "postgres" {
-# RUN apt-get install -y --no-install-recommends postgresql-client && rm -rf /var/lib/apt/lists/*  
+#? if services.database contains name == "postgres" {
+#RUN apt-get install -y --no-install-recommends postgresql-client && rm -rf /var/lib/apt/lists/*  
 #? }
 
 COPY Gemfile* ./
 RUN bundle install
 COPY . .
+RUN bundle install
 RUN bundle exec rails webpacker:install
 
 EXPOSE 3000

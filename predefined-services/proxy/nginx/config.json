@@ -1,6 +1,7 @@
 {
-    "label": "Nginx Reverse Proxy",
+    "label": "JWilder Nginx Proxy",
     "preselected": "true",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -9,6 +10,52 @@
         {
             "path": "README.md",
             "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Default virtual domain (e.g. example.com):",
+            "type": 2,
+            "validator": "hostname",
+            "variable": "DEFAULT_HOST"
+        },
+        {
+            "text": "Which version of of JWilder Nginx Proxy do you want to use?",
+            "defaultValue": "0.8.0",
+            "type": 2,
+            "variable": "PROXY_VERSION",
+            "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for HTTP?",
+            "defaultValue": "80",
+            "type": 2,
+            "validator": "port",
+            "variable": "PROXY_HTTP_PORT",
+            "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for HTTPS?",
+            "defaultValue": "443",
+            "type": 2,
+            "validator": "port",
+            "variable": "PROXY_HTTPS_PORT",
+            "advanced": true
+        }
+    ],
+    "proxy-questions": [
+        {
+            "text": "Virtual domain:",
+            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{DEFAULT_HOST}}",
+            "type": 2,
+            "validator": "hostname",
+            "variable": "VIRTUAL_HOST"
+        },
+        {
+            "text": "Virtual port:",
+            "type": 2,
+            "validator": "port",
+            "variable": "VIRTUAL_PORT"
         }
     ],
     "volumes": [

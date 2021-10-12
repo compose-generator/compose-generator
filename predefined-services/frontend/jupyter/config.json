@@ -1,0 +1,55 @@
+{
+    "label": "Jupyter",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which notebook type you want to choose?",
+            "type": 3,
+            "defaultValue": "datascience-notebook",
+            "options": [
+                "tensorflow-notebook",
+                "datascience-notebook",
+                "all-spark-notebook",
+                "pyspark-notebook",
+                "scipy-notebook",
+                "r-notebook",
+                "minimal-notebook",
+                "base-notebook"
+            ],
+            "variable": "JUPYTER_NOTEBOOK_TYPE"
+        },
+        {
+            "text": "On which port you want to expose your Jira instance?",
+            "type": 2,
+            "defaultValue": "8888",
+            "validator": "port",
+            "variable": "JUPYTER_PORT"
+        },
+        {
+            "text": "Which version of Jupyter do you want to use?",
+            "type": 2,
+            "defaultValue": "6.4.4",
+            "variable": "JUPYTER_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Jupyter data volume?",
+            "defaultValue": "./volumes/jupyter-data",
+            "variable": "VOLUME_JUPYTER_DATA",
+            "advanced": true
+        }
+    ]
+}

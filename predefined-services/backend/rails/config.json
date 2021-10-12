@@ -1,16 +1,15 @@
 {
     "label": "Ruby on Rails",
     "preselected": "false",
+    "proxied": true,
     "demoAppInitCmd": [
-        "rails new ${{RAILS_APP_NAME}} --webpack=react",
+        "rails new ${{RAILS_APP_NAME}} --webpack=react --skip-bundle",
         "shopt -s dotglob",
+        "mv ./${{RAILS_SOURCE_DIRECTORY}}/* ./${{RAILS_APP_NAME}}",
         "mv ./${{RAILS_APP_NAME}}/* ./${{RAILS_SOURCE_DIRECTORY}}",
         "rmdir ${{RAILS_APP_NAME}}",
         "chmod -R 777 ./${{RAILS_SOURCE_DIRECTORY}}",
-        "cd ./${{RAILS_SOURCE_DIRECTORY}}",
-        "echo \"ruby-${{RAILS_RUBY_VERSION}}\" > .ruby-version",
-        "sed -i \"s/ruby '2.7.3'/ruby '${{RAILS_RUBY_VERSION}}'/g\" Gemfile",
-        "bundle exec rails webpacker:install"
+        "cd ./${{RAILS_SOURCE_DIRECTORY}}"
     ],
     "files": [
         {
@@ -20,6 +19,18 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{RAILS_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{RAILS_SOURCE_DIRECTORY}}/Gemfile",
+            "type": "config"
+        },
+        {
+            "path": "${{RAILS_SOURCE_DIRECTORY}}/.ruby-version",
+            "type": "config"
         }
     ],
     "questions": [

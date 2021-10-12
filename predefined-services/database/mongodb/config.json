@@ -1,6 +1,7 @@
 {
     "label": "MongoDB",
     "preselected": "false",
+    "proxied": false,
     "serviceInitCmd": [
         "cd ${{VOLUME_MONGODB_INIT}}",
         "dos2unix init-mongo.sh"

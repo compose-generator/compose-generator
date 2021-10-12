@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package project
 
 import (
@@ -10,21 +15,27 @@ import (
 	"time"
 
 	"github.com/compose-spec/compose-go/loader"
-	"github.com/compose-spec/compose-go/types"
+	spec "github.com/compose-spec/compose-go/types"
 	"github.com/spf13/viper"
 )
 
+var loadComposeFileMockable = loadComposeFile
+var loadGitignoreFileMockable = loadGitignoreFile
+var loadCGFileMockable = loadCGFile
+var loadComposeFileSingleServiceMockable = loadComposeFileSingleService
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// LoadProject loads the Docker compose project from the current directory
+// LoadProject loads a project from the disk
 func LoadProject(options ...LoadOption) *model.CGProject {
+	// Apply options
 	opts := applyLoadOptions(options...)
 
 	// Create project instance
 	project := &model.CGProject{
 		CGProjectMetadata: model.CGProjectMetadata{
-			WithGitignore: util.FileExists(opts.WorkingDir + ".gitignore"),
-			WithReadme:    util.FileExists(opts.WorkingDir + "README.md"),
+			WithGitignore: fileExists(opts.WorkingDir + ".gitignore"),
+			WithReadme:    fileExists(opts.WorkingDir + "README.md"),
 		},
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
@@ -32,13 +43,14 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 	}
 
 	// Load components
-	loadComposeFile(project, opts)
-	loadGitignoreFile(project, opts)
-	loadCGFile(&project.CGProjectMetadata, opts)
+	loadComposeFileMockable(project, opts)
+	loadGitignoreFileMockable(project, opts)
+	loadCGFileMockable(&project.CGProjectMetadata, opts)
 
 	return project
 }
 
+// LoadProjectMetadata loads only the metadata of a project from the disk
 func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
 	opts := applyLoadOptions(options...)
 
@@ -49,50 +61,59 @@ func LoadProjectMetadata(options ...LoadOption) *model.CGProjectMetadata {
 	}
 
 	// Load metadata
-	loadCGFile(metadata, opts)
+	loadCGFileMockable(metadata, opts)
 
 	return metadata
 }
 
+// LoadTemplateService loads a project as a single service
 func LoadTemplateService(
 	project *model.CGProject,
 	selectedTemplates *model.SelectedTemplates,
 	templateTypeName string,
 	serviceName string,
 	options ...LoadOption,
-) *types.ServiceConfig {
+) *spec.ServiceConfig {
 	opts := applyLoadOptions(options...)
-	return loadComposeFileSingleService(project, selectedTemplates, templateTypeName, serviceName, opts)
+	return loadComposeFileSingleServiceMockable(
+		project,
+		selectedTemplates,
+		templateTypeName,
+		serviceName,
+		opts,
+	)
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
-	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
-		util.Error("Compose file not found", nil, true)
+	// Check if file exists
+	if !fileExists(opt.WorkingDir + opt.ComposeFileName) {
+		printError("Compose file not found", nil, true)
 	}
-	content, err := ioutil.ReadFile(opt.WorkingDir + opt.ComposeFileName)
+	// Parse compose file
+	content, err := readFile(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
-		util.Error("Unable to parse '"+opt.ComposeFileName+"'", err, true)
+		printError("Unable to parse '"+opt.ComposeFileName+"'", err, true)
 	}
-	dict, err := loader.ParseYAML(content)
+	dict, err := parseCompositionYAML(content)
 	if err != nil {
-		util.Error("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
+		printError("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
 	}
 
-	configs := []types.ConfigFile{
+	configs := []spec.ConfigFile{
 		{
 			Filename: opt.ComposeFileName,
 			Config:   dict,
 		},
 	}
-	config := types.ConfigDetails{
+	config := spec.ConfigDetails{
 		WorkingDir:  opt.WorkingDir,
 		ConfigFiles: configs,
 	}
-	project.Composition, err = loader.Load(config)
+	project.Composition, err = loadComposition(config)
 	if err != nil {
-		util.Error("Could not load project from the current directory", err, true)
+		printError("Could not load project from the current directory", err, true)
 	}
 }
 
@@ -102,12 +123,12 @@ func loadComposeFileSingleService(
 	templateTypeName string,
 	serviceName string,
 	opt LoadOptions,
-) *types.ServiceConfig {
+) *spec.ServiceConfig {
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
 		util.Error("Compose file not found in template "+templateTypeName+"-"+serviceName, nil, true)
 	}
 	// Evaluate conditional sections
-	evaluated := util.EvaluateConditionalSections(
+	evaluated := util.EvaluateConditionalSectionsToString(
 		opt.WorkingDir+opt.ComposeFileName,
 		selectedTemplates,
 		project.Vars,

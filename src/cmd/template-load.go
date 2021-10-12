@@ -1,14 +1,16 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package cmd
 
 import (
 	"compose-generator/model"
 	"compose-generator/project"
 	"compose-generator/util"
-	"io/ioutil"
-	"path/filepath"
 	"time"
 
-	"github.com/otiai10/copy"
 	"github.com/urfave/cli/v2"
 )
 
@@ -16,7 +18,7 @@ const (
 	timeFormat = "Jan-02-06 3:04:05 PM"
 )
 
-// Cli flags for the template load command
+// TemplateLoadCliFlags are the cli flags for the template load command
 var TemplateLoadCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "force",
@@ -30,13 +32,9 @@ var TemplateLoadCliFlags = []cli.Flag{
 		Usage:   "Do not load a template. Instead only list all templates and terminate",
 		Value:   false,
 	},
-	&cli.BoolFlag{
-		Name:    "with-dockerfile",
-		Aliases: []string{"w"},
-		Usage:   "Also load the Dockerfile from the template (if existing)",
-		Value:   false,
-	},
 }
+
+var getTemplateMetadataListMockable = getTemplateMetadataList
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -46,7 +44,6 @@ func LoadTemplate(c *cli.Context) error {
 	dirName := c.Args().Get(0)
 	flagForce := c.Bool("force")
 	flagShow := c.Bool("show")
-	//withDockerfile := c.Bool("with-dockerfile")
 
 	if flagShow {
 		showTemplateList()
@@ -71,9 +68,9 @@ func LoadTemplate(c *cli.Context) error {
 		proj.ForceConfig = flagForce
 		util.StopProcess(spinner)
 
-		// Copy volumes over to the new template dir
-		spinner = util.StartProcess("Copying volumes ...")
-		copyVolumesFromTemplate(proj, sourceDir)
+		// Copy volumes and build contexts over to the new template dir
+		spinner = util.StartProcess("Loading volumes and build contexts ...")
+		copyVolumesAndBuildContextsFromTemplate(proj, sourceDir)
 		util.StopProcess(spinner)
 
 		// Save the project to the current dir
@@ -90,10 +87,10 @@ func LoadTemplate(c *cli.Context) error {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func askForTemplate() string {
-	spinner := util.StartProcess("Loading template list ...")
-	templateMetadataList := getTemplateMetadataList()
-	util.StopProcess(spinner)
-	util.Pel()
+	spinner := startProcess("Loading template list ...")
+	templateMetadataList := getTemplateMetadataListMockable()
+	stopProcess(spinner)
+	pel()
 
 	if len(templateMetadataList) > 0 {
 		var items []string
@@ -103,43 +100,43 @@ func askForTemplate() string {
 			keys = append(keys, key)
 			items = append(items, metadata.Name+" (Saved at: "+creationDate+")")
 		}
-		index := util.MenuQuestionIndex("Which template do you want to load?", items)
+		index := menuQuestionIndex("Which template do you want to load?", items)
 		return keys[index]
-	} else {
-		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	}
+	printError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	return ""
 }
 
 func showTemplateList() {
-	spinner := util.StartProcess("Loading template list ...")
-	templateMetadataList := getTemplateMetadataList()
-	util.StopProcess(spinner)
-	util.Pel()
+	spinner := startProcess("Loading template list ...")
+	templateMetadataList := getTemplateMetadataListMockable()
+	stopProcess(spinner)
+	pel()
 
 	if len(templateMetadataList) > 0 {
 		// Show list of saved templates
-		util.Heading("List of all templates:")
+		printHeading("List of all templates:")
 		for _, metadata := range templateMetadataList {
 			creationDate := time.Unix(0, int64(metadata.LastModifiedAt)).Format(timeFormat)
-			util.Pl(metadata.Name + " (Saved at: " + creationDate + ")")
+			pl(metadata.Name + " (Saved at: " + creationDate + ")")
 		}
-		util.Pel()
+		pel()
 	} else {
-		util.Error("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
+		printError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
 	}
 }
 
 func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
-	files, err := ioutil.ReadDir(util.GetCustomTemplatesPath())
+	files, err := readDir(getCustomTemplatesPath())
 	if err != nil {
-		util.Error("Cannot access directory for custom templates", err, true)
+		printError("Cannot access directory for custom templates", err, true)
+		return nil
 	}
 	templateMetadata := make(map[string]*model.CGProjectMetadata)
 	for _, f := range files {
 		if f.IsDir() {
-			templatePath := util.GetCustomTemplatesPath() + "/" + f.Name()
-			metadata := project.LoadProjectMetadata(
+			templatePath := getCustomTemplatesPath() + "/" + f.Name()
+			metadata := loadProjectMetadata(
 				project.LoadFromDir(templatePath),
 			)
 			templateMetadata[templatePath] = metadata
@@ -148,21 +145,26 @@ func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
 	return templateMetadata
 }
 
-func copyVolumesFromTemplate(proj *model.CGProject, sourceDir string) {
-	currentAbs, err := filepath.Abs(".")
+func copyVolumesAndBuildContextsFromTemplate(proj *model.CGProject, sourceDir string) {
+	currentAbs, err := abs(".")
 	if err != nil {
-		util.Error("Could not find absolute path of current dir", err, true)
+		printError("Could not find absolute path of current dir", err, true)
+		return
 	}
-	for _, path := range proj.GetAllVolumePathsNormalized() {
-		pathAbs, err := filepath.Abs(path)
+	paths := append(proj.GetAllVolumePaths(), proj.GetAllBuildContextPaths()...)
+	for _, path := range normalizePaths(paths) {
+		pathAbs, err := abs(path)
 		if err != nil {
-			util.Error("Could not find absolute path of volume dir", err, true)
+			printError("Could not find absolute path of volume dir", err, true)
+			return
 		}
-		pathRel, err := filepath.Rel(currentAbs, pathAbs)
+		pathRel, err := rel(currentAbs, pathAbs)
 		if err != nil {
-			util.Error("Could not copy volume '"+path+"'", err, false)
+			printError("Could not copy volume '"+path+"'", err, false)
 			continue
 		}
-		copy.Copy(sourceDir+"/"+pathRel, path)
+		if copyDir(sourceDir+"/"+pathRel, path) != nil {
+			printWarning("Could not copy volumes from '" + sourceDir + "/" + pathRel + "' to '" + path + "'")
+		}
 	}
 }

@@ -1,0 +1,65 @@
+{
+    "label": "GitLab",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your GitLab instance over HTTPS?",
+            "type": 2,
+            "defaultValue": "443",
+            "validator": "port",
+            "variable": "GITLAB_PORT_HTTPS"
+        },
+        {
+            "text": "On which port you want to expose your GitLab instance over HTTP?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "GITLAB_PORT_HTTP"
+        },
+        {
+            "text": "On which port you want to expose your GitLab instance for Git?",
+            "type": 2,
+            "defaultValue": "22",
+            "validator": "port",
+            "variable": "GITLAB_PORT_GIT"
+        },
+        {
+            "text": "Which version of GitLab do you want to use?",
+            "type": 2,
+            "defaultValue": "14.3.0",
+            "variable": "GITLAB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for GitLab data volume?",
+            "defaultValue": "./volumes/gitlab-data",
+            "variable": "VOLUME_GITLAB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for GitLab config volume?",
+            "defaultValue": "./volumes/gitlab-config",
+            "variable": "VOLUME_GITLAB_CONFIG",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for GitLab logs volume?",
+            "defaultValue": "./volumes/gitlab-logs",
+            "variable": "VOLUME_GITLAB_LOGS",
+            "advanced": true
+        }
+    ]
+}

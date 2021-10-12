@@ -24,6 +24,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-amd64
       - chillibits/compose-generator:latest-amd64
     dockerfile: Dockerfile
+    skip_push: auto
     use: buildx
     goarch: amd64
     extra_files:
@@ -44,6 +45,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-i386
       - chillibits/compose-generator:latest-i386
     dockerfile: Dockerfile
+    skip_push: auto
     use: buildx
     goarch: 386
     extra_files:
@@ -64,6 +66,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-arm32v6
       - chillibits/compose-generator:latest-arm32v6
     dockerfile: Dockerfile
+    skip_push: auto
     use: buildx
     goarch: arm
     goarm: 6
@@ -85,6 +88,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-arm32v7
       - chillibits/compose-generator:latest-arm32v7
     dockerfile: Dockerfile
+    skip_push: auto
     use: buildx
     goarch: arm
     goarm: 7
@@ -107,24 +111,28 @@ docker_manifests:
       - chillibits/compose-generator:{{ .Version }}-i386
       - chillibits/compose-generator:{{ .Version }}-arm32v6
       - chillibits/compose-generator:{{ .Version }}-arm32v7
+    skip_push: auto
   - name_template: chillibits/compose-generator:latest
     image_templates:
       - chillibits/compose-generator:{{ .Version }}-amd64
       - chillibits/compose-generator:{{ .Version }}-i386
       - chillibits/compose-generator:{{ .Version }}-arm32v6
       - chillibits/compose-generator:{{ .Version }}-arm32v7
+    skip_push: auto
   - name_template: ghcr.io/compose-generator/compose-generator:{{ .Version }}
     image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+    skip_push: auto
   - name_template: ghcr.io/compose-generator/compose-generator:latest
     image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+    skip_push: auto
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     files:
@@ -170,18 +178,15 @@ nfpms:
     empty_folders:
       - /usr/lib/compose-generator/templates
 release:
-  name_template: v{{.Tag}}
+  name_template: v{{ .Tag }}
   prerelease: auto
   extra_files:
-    - glob: ./bin/predefined-services.tar.gz
+    - glob: ./predefined-services/predefined-services.tar.gz
   footer: |
-    ---
-    
-    __Visit [www.compose-generator.com](https://www.compose-generator.com) to test the new features!__
-announce:
-  twitter:
-    enabled: true
-    message_template: 'Compose Generator {{ .Tag }} is now available! Check out the new features: compose-generator.com!'
+    ## What to do next?
+    - [Install Compose Generator](https://www.compose-generator.com/install/linux/)
+    - Visit [www.compose-generator.com](https://www.compose-generator.com) to test the new features
+    - Follow [@composegen](https://twitter.com/composegen) on Twitter
 milestones:
   - close: true
     fail_on_error: false

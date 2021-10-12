@@ -1,14 +1,14 @@
 project_name: Test
 compose_version: 3.8
-also_production: true
+production_ready: true
 services:
-  - type: frontend
-    service: angular
+  - service: angular
+    type: frontend
     params:
       ANGULAR_SOURCE_DIRECTORY: ./frontend-angular
       ANGULAR_PORT: 81
-  - type: backend
-    service: spring-maven
+  - service: spring-maven
+    type: backend
     params:
       SPRING_MAVEN_SOURCE_DIRECTORY: ./backend-spring
       SPRING_MAVEN_PORT: 8081

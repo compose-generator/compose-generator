@@ -1,6 +1,7 @@
 {
     "label": "Jira",
     "preselected": "false",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -26,7 +27,7 @@
         {
             "text": "Which version of Jira do you want to use?",
             "type": 2,
-            "defaultValue": "8.18",
+            "defaultValue": "8.19",
             "variable": "JIRA_VERSION",
             "advanced": true
         },

@@ -1,6 +1,7 @@
 {
     "label": "Minecraft Server",
     "preselected": "false",
+    "proxied": false,
     "files": [
         {
             "path": "service.yml",
@@ -23,7 +24,7 @@
         {
             "text": "Which version of Minecraft do you want to use?",
             "type": 2,
-            "defaultValue": "1.16.5",
+            "defaultValue": "1.17.1",
             "variable": "MINECRAFT_VERSION"
         },
         {

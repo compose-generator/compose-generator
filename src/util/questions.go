@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package util
 
 import (
@@ -6,6 +11,9 @@ import (
 	survey "github.com/AlecAivazis/survey/v2"
 	"github.com/AlecAivazis/survey/v2/terminal"
 )
+
+// Suggest is a function for settings suggestions to a question for autocompletion
+type Suggest func(toComplete string) []string
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -94,6 +102,7 @@ func MenuQuestion(label string, items []string) (result string) {
 	return
 }
 
+// MenuQuestionWithDefault prints a selection of predefined items with default selections
 func MenuQuestionWithDefault(label string, items []string, defaultItem string) (result string) {
 	prompt := &survey.Select{
 		Message: label,
@@ -119,7 +128,7 @@ func MultiSelectMenuQuestion(label string, items []string) (result []string) {
 	prompt := &survey.MultiSelect{
 		Message:  label,
 		Options:  items,
-		PageSize: 15,
+		PageSize: 20,
 	}
 	handleInterrupt(survey.AskOne(prompt, &result, survey.WithIcons(func(icons *survey.IconSet) {
 		icons.Question.Format = "yellow+hb"
@@ -133,7 +142,7 @@ func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []s
 		Message:  label,
 		Options:  items,
 		Default:  defaultItems,
-		PageSize: 15,
+		PageSize: 20,
 	}
 	handleInterrupt(survey.AskOne(prompt, &result, survey.WithIcons(func(icons *survey.IconSet) {
 		icons.Question.Format = "yellow+hb"
@@ -142,9 +151,6 @@ func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []s
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
-
-// Function for settings suggestions to a question for autocompletion
-type Suggest func(toComplete string) []string
 
 func handleInterrupt(err error) {
 	if err == terminal.InterruptErr {

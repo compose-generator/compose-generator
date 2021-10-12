@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package util
 
 import (
@@ -6,19 +11,21 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 )
 
 // CheckForServiceTemplateUpdate checks if any updates are available for the predefined service templates
 func CheckForServiceTemplateUpdate() {
-	// Skip on dev version
-	if IsDevVersion() {
+	// Skip on dev version or dockerized
+	if IsDevVersion() || IsDockerizedEnvironment() {
 		return
 	}
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
+	spinner := StartProcess("Checking for predefined service template updates ...")
 	if !FileExists(predefinedTemplatesDir) {
-		if err := os.MkdirAll(predefinedTemplatesDir, 0755); err != nil {
+		if err := os.MkdirAll(predefinedTemplatesDir, 0750); err != nil {
 			Error("Could not create directory for predefined templates", err, true)
 		}
 	}
@@ -51,28 +58,40 @@ func CheckForServiceTemplateUpdate() {
 	} else { // File does not exist => download directly
 		shouldUpdate = true
 	}
+	StopProcess(spinner)
 
 	// Download update if necessary
 	if shouldUpdate {
-		spinner := StartProcess("Downloading predefined services update ...")
-		if err := DownloadFile(fileUrl, outputPath); err != nil {
-			Error("Failed to download predefined services update. Please check your internet connection", err, true)
+		if IsPrivileged() {
+			// Download predefined services update
+			processMessage := "Downloading predefined services update and the toolbox image (this can take a while) ..."
+			if IsToolboxPresent() {
+				processMessage = "Downloading predefined services update ..."
+			}
+			spinner = StartProcess(processMessage)
+			if err := DownloadFile(fileUrl, outputPath); err != nil {
+				Error("Failed to download predefined services update. Please check your internet connection", err, true)
+			}
+			filepath, err := filepath.Abs(predefinedTemplatesDir)
+			if err != nil {
+				Error("Could not build path", err, true)
+			}
+			ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
+			StopProcess(spinner)
+		} else {
+			Error("Predefined services update found. Root privileges are required to install the update. Please run Compose Generator again with elevated privileges", nil, true)
 		}
-		filepath, err := filepath.Abs(predefinedTemplatesDir)
-		if err != nil {
-			Error("Could not build path", err, true)
-		}
-		ExecuteOnLinuxWithCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
-		StopProcess(spinner)
 	}
 }
 
-// Asks the user all questions the predefined service contains and saves the answers to the project
+// AskTemplateQuestions asks the user all questions the predefined service contains and saves the answers to the project
 func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, question := range template.Questions {
+		text := ReplaceVarsInString(question.Text, project.Vars)
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
-		// If the port is already in use, find unused one
+
 		if question.Validator == "port" {
+			// If the port is already in use, find unused one
 			port, err := strconv.Atoi(defaultValue)
 			if err != nil {
 				Error("Could not convert port to integer. Please check template", err, true)
@@ -92,7 +111,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 				if err != nil {
 					Error("Mistake in predefined template '"+template.Name+"'. Default value of yes/no question was no bool", err, true)
 				}
-				answer := YesNoQuestion(question.Text, defaultValue)
+				answer := YesNoQuestion(text, defaultValue)
 				project.Vars[question.Variable] = strconv.FormatBool(answer)
 			case model.QuestionTypeText:
 				// Ask a text question
@@ -100,7 +119,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 				if question.Validator != "" {
 					// Ask a text question with validator
 					validator := GetValidatorByName(question.Validator)
-					answer = TextQuestionWithDefaultAndValidator(question.Text, defaultValue, validator)
+					answer = TextQuestionWithDefaultAndValidator(text, defaultValue, validator)
 					if question.Validator == "port" {
 						port, err := strconv.Atoi(answer)
 						if err != nil {
@@ -110,12 +129,12 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 					}
 				} else {
 					// Ask a text question without validator
-					answer = TextQuestionWithDefault(question.Text, defaultValue)
+					answer = TextQuestionWithDefault(text, defaultValue)
 				}
 				project.Vars[question.Variable] = answer
 			case model.QuestionTypeMenu:
 				// Ask a menu question
-				answer := MenuQuestionWithDefault(question.Text, question.Options, question.DefaultValue)
+				answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
 				project.Vars[question.Variable] = answer
 			}
 		} else {
@@ -125,6 +144,67 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	}
 }
 
+func AskTemplateProxyQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
+	// Ask proxy questions only if the service wants to get proxied
+	if template.Proxied {
+		proxyVars := make(model.Vars)
+		for _, question := range selectedTemplates.GetAllProxyQuestions() {
+			// Replace vars
+			text := ReplaceVarsInString(question.Text, project.Vars)
+			defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
+			// Replace current service variables
+			text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+			text = strings.ReplaceAll(text, "${{CURRENT_SERVICE_NAME}}", template.Name)
+			defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+			defaultValue = strings.ReplaceAll(defaultValue, "${{CURRENT_SERVICE_NAME}}", template.Name)
+
+			// Only ask advanced questions when the project was created in advanced mode
+			if project.AdvancedConfig || !question.Advanced {
+				// Question can be answered
+				switch question.Type {
+				case model.QuestionTypeYesNo:
+					// Ask a yes/no question
+					defaultValue, err := strconv.ParseBool(defaultValue)
+					if err != nil {
+						Error("Mistake in proxy question configuration. Default value of yes/no question was no bool", err, true)
+					}
+					answer := YesNoQuestion(text, defaultValue)
+					proxyVars[question.Variable] = strconv.FormatBool(answer)
+				case model.QuestionTypeText:
+					// Ask a text question
+					answer := ""
+					if question.Validator != "" {
+						// Ask a text question with validator
+						validator := GetValidatorByName(question.Validator)
+						answer = TextQuestionWithDefaultAndValidator(text, defaultValue, validator)
+						if question.Validator == "port" {
+							port, err := strconv.Atoi(answer)
+							if err != nil {
+								Error("Internal error", err, true)
+							}
+							project.Ports = append(project.Ports, port)
+						}
+					} else {
+						// Ask a text question without validator
+						answer = TextQuestionWithDefault(text, defaultValue)
+					}
+					proxyVars[question.Variable] = answer
+				case model.QuestionTypeMenu:
+					// Ask a menu question
+					answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
+					proxyVars[question.Variable] = answer
+				}
+			} else {
+				// Advanced question falls back to default value
+				proxyVars[question.Variable] = question.DefaultValue
+			}
+		}
+		// Add collected proxy vars to project
+		project.ProxyVars[template.Name] = proxyVars
+	}
+}
+
+// AskForCustomVolumePaths asks the user for custom volume paths for a template
 func AskForCustomVolumePaths(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, volume := range template.Volumes {
 		defaultValue := ReplaceVarsInString(volume.DefaultValue, project.Vars)

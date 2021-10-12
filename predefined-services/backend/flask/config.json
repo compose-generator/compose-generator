@@ -1,11 +1,13 @@
 {
     "label": "Flask",
     "preselected": "false",
+    "proxied": true,
     "demoAppInitCmd": [
         "flask-now ${{FLASK_APP_NAME}} simple -e sqlalchemy",
         "mv ./${{FLASK_APP_NAME}}/* ./${{FLASK_SOURCE_DIRECTORY}}",
         "rmdir ${{FLASK_APP_NAME}}",
-        "mv ./${{FLASK_SOURCE_DIRECTORY}}/main.py ./${{FLASK_SOURCE_DIRECTORY}}/run.py"
+        "mv ./${{FLASK_SOURCE_DIRECTORY}}/main.py ./${{FLASK_SOURCE_DIRECTORY}}/run.py",
+        "echo \"Flask==${{FLASK_VERSION}}\" >> ./${{FLASK_SOURCE_DIRECTORY}}/requirements.txt"
     ],
     "files": [
         {
@@ -15,6 +17,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{FLASK_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [
@@ -28,7 +34,7 @@
         {
             "text": "Which Python version do you want to use?",
             "type": 2,
-            "defaultValue": "3.9",
+            "defaultValue": "3.10",
             "variable": "FLASK_PYTHON_VERSION"
         },
         {
@@ -36,6 +42,12 @@
             "type": 2,
             "defaultValue": "flask-example",
             "variable": "FLASK_APP_NAME"
+        },
+        {
+            "text": "Which Flask version do you want to use?",
+            "type": 2,
+            "defaultValue": "2.0.2",
+            "variable": "FLASK_VERSION"
         }
     ],
     "volumes": [

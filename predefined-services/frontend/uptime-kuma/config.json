@@ -1,6 +1,7 @@
 {
     "label": "Uptime Kuma",
     "preselected": "false",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -22,7 +23,7 @@
         {
             "text": "Which version of Uptime Kuma do you want to use?",
             "type": 2,
-            "defaultValue": "1",
+            "defaultValue": "1.6.3",
             "variable": "UPTIME_KUMA_VERSION"
         }
     ],

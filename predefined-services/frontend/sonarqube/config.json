@@ -1,6 +1,7 @@
 {
     "label": "SonarQube",
     "preselected": "false",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -26,7 +27,7 @@
         {
             "text": "Which version of SonarQube do you want to use?",
             "type": 2,
-            "defaultValue": "9.0",
+            "defaultValue": "9.1",
             "variable": "SONARQUBE_VERSION"
         }
     ],

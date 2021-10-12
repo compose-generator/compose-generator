@@ -6,10 +6,12 @@ volumes:
   - ${{VOLUME_PROXY_CERTS}}:/etc/nginx/certs
   - ${{VOLUME_PROXY_VHOSTS}}:/etc/nginx/vhost.d
   - ${{VOLUME_PROXY_HTML}}:/usr/share/nginx/html
-networks:
-  - ${{PROJECT_NAME_CONTAINER}}
 environment:
-  - DEFAULT_EMAIL=${{TLS_DOMAIN_EMAIL}}
+  - DEFAULT_EMAIL=${{TLS_DEFAULT_EMAIL}}
   - NGINX_PROXY_CONTAINER=proxy
 depends_on:
   - proxy
+profiles:
+  - production
+networks:
+  - proxy-tls

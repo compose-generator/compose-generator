@@ -1,16 +1,21 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package cmd
 
 import (
 	"compose-generator/model"
-	"compose-generator/parser"
-	"compose-generator/pass"
+	genPass "compose-generator/pass/generate"
 	"compose-generator/project"
 	"compose-generator/util"
+	"time"
 
 	"github.com/urfave/cli/v2"
 )
 
-// Cli flags for the generate command
+// GenerateCliFlags are the cli flags for the generate command
 var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "advanced",
@@ -26,7 +31,7 @@ var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "detached",
 		Aliases: []string{"d"},
-		Usage:   "Run docker-compose detached after creating the compose file",
+		Usage:   "Run docker compose detached after creating the compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
@@ -44,7 +49,7 @@ var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "run",
 		Aliases: []string{"r"},
-		Usage:   "Run docker-compose after creating the compose file",
+		Usage:   "Run docker compose after creating the compose file",
 		Value:   false,
 	},
 }
@@ -61,12 +66,13 @@ func Generate(c *cli.Context) error {
 	flagForce := c.Bool("force")
 	flagWithInstructions := c.Bool("with-instructions")
 
-	// Check if CCom is installed
+	// Check if CCom is installed and Docker is running
 	util.EnsureCComIsInstalled()
+	util.EnsureDockerIsRunning()
 
 	// Clear screen if in interactive mode
 	if configPath == "" {
-		util.ClearScreen()
+		clearScreen()
 	}
 
 	// Check for predefined service templates updates
@@ -78,33 +84,37 @@ func Generate(c *cli.Context) error {
 			AdvancedConfig: flagAdvanced,
 			WithGitignore:  true,
 			WithReadme:     flagWithInstructions,
+			CreatedBy:      util.GetUsername(),
+			CreatedAt:      time.Now().UnixNano(),
 		},
 		ForceConfig: flagForce,
-		Vars:        make(map[string]string),
+		Vars:        make(model.Vars),
+		ProxyVars:   make(map[string]model.Vars),
 		Secrets:     []model.ProjectSecret{},
 	}
 	config := &model.GenerateConfig{}
 
 	// Run passes
-	pass.LoadGenerateConfig(proj, config, configPath)
+	genPass.LoadGenerateConfig(proj, config, configPath)
 
 	// Enrich project with information
 	generateProject(proj, config)
 
 	// Save project
-	spinner := util.StartProcess("Saving project ...")
+	spinner := startProcess("Saving project ...")
 	project.SaveProject(proj)
-	util.StopProcess(spinner)
+	stopProcess(spinner)
 
 	// Print generated secrets
-	pass.GeneratePrintSecrets(proj)
+	genPass.GeneratePrintSecrets(proj)
 
 	// Run if the corresponding flag is set. Otherwise, print success message
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 	} else {
-		util.Pel()
-		util.Success("🎉 Done! You now can execute \"$ docker-compose up\" to launch your app! 🎉")
+		pel()
+		printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")
+		pel()
 	}
 	return nil
 }
@@ -114,13 +124,13 @@ func Generate(c *cli.Context) error {
 func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 	// Clear screen
 	if !config.FromFile {
-		util.ClearScreen()
+		clearScreen()
 	}
 
 	// Parse available service templates
-	spinner := util.StartProcess("Loading predefined service templates ...")
-	availableTemplates := parser.GetAvailablePredefinedTemplates()
-	util.StopProcess(spinner)
+	spinner := startProcess("Loading predefined service templates ...")
+	availableTemplates := getAvailablePredefinedTemplates()
+	stopProcess(spinner)
 
 	// Generate composition
 	selectedTemplates := &model.SelectedTemplates{
@@ -131,20 +141,23 @@ func generateProject(project *model.CGProject, config *model.GenerateConfig) {
 		ProxyService:     []model.PredefinedTemplateConfig{},
 		TlsHelperService: []model.PredefinedTemplateConfig{},
 	}
-	pass.GenerateChooseFrontends(project, availableTemplates, selectedTemplates, config)
-	pass.GenerateChooseBackends(project, availableTemplates, selectedTemplates, config)
-	pass.GenerateChooseDatabases(project, availableTemplates, selectedTemplates, config)
-	pass.GenerateChooseDbAdmins(project, availableTemplates, selectedTemplates, config)
 	if project.ProductionReady {
-		pass.GenerateChooseProxies(project, availableTemplates, selectedTemplates, config)
-		pass.GenerateChooseTlsHelpers(project, availableTemplates, selectedTemplates, config)
+		generateChooseProxiesPass(project, availableTemplates, selectedTemplates, config)
+		generateChooseTlsHelpersPass(project, availableTemplates, selectedTemplates, config)
 	}
+	generateChooseFrontendsPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseBackendsPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseDatabasesPass(project, availableTemplates, selectedTemplates, config)
+	generateChooseDbAdminsPass(project, availableTemplates, selectedTemplates, config)
 
 	// Execute passes
-	pass.Generate(project, selectedTemplates)
-	pass.GenerateResolveDependencyGroups(project, selectedTemplates)
-	pass.GenerateSecrets(project, selectedTemplates)
-	pass.GenerateCopyVolumes(project)
-	pass.GenerateExecServiceInitCommands(project, selectedTemplates)
-	pass.GenerateExecDemoAppInitCommands(project, selectedTemplates)
+	generatePass(project, selectedTemplates)
+	generateResolveDependencyGroupsPass(project, selectedTemplates)
+	generateSecretsPass(project, selectedTemplates)
+	generateAddProfilesPass(project)
+	generateAddProxyNetworks(project, selectedTemplates)
+	generateCopyVolumesPass(project)
+	generateReplaceVarsInConfigFilesPass(project, selectedTemplates)
+	generateExecServiceInitCommandsPass(project, selectedTemplates)
+	generateExecDemoAppInitCommandsPass(project, selectedTemplates)
 }

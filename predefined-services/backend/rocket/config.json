@@ -1,6 +1,7 @@
 {
     "label": "Rocket",
     "preselected": "false",
+    "proxied": true,
     "files": [
         {
             "path": "service.yml",
@@ -11,7 +12,11 @@
             "type": "docs"
         },
         {
-            "path": "backend/Cargo.toml",
+            "path": "${{ROCKET_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{ROCKET_SOURCE_DIRECTORY}}/Cargo.toml",
             "type": "config"
         }
     ],

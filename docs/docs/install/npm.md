@@ -18,7 +18,7 @@ npm update -g @compose-generator/cli
 
 ### Use
 ```sh
-compose-generator
+compose-generator [<command>]
 ```
 
 *[NPM]: Node Package Manager
