@@ -5,11 +5,6 @@ All rights reserved.
 
 // go:build darwin
 
-/*
-Copyright © 2021 Compose Generator Contributors
-All rights reserved.
-*/
-
 package pass
 
 import (
