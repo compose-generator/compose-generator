@@ -292,10 +292,9 @@ func TestCopyVolumesFromTemplate1(t *testing.T) {
 			assert.Equal(t, "././Template 1/volume1", src)
 			assert.Equal(t, "./volume1", dest)
 			return nil
-		} else {
-			assert.Equal(t, "././Template 2/volume3", src)
-			assert.Equal(t, "../volume3", dest)
 		}
+		assert.Equal(t, "././Template 2/volume3", src)
+		assert.Equal(t, "../volume3", dest)
 		return errors.New("Error message")
 	}
 	printErrorCallCount := 0

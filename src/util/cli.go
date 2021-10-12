@@ -139,11 +139,11 @@ func getToolboxImageVersion() string {
 func getToolboxMountPath() string {
 	if isDockerizedEnvironment() { // Get the path which is mounted to /cg/out from outside the container
 		return getOuterVolumePathOnDockerizedEnvironmentMockable()
-	} else { // Get the current working directory
-		workingDir, err := getwd()
-		if err != nil {
-			printError("Could not find current working directory", err, true)
-		}
-		return workingDir
 	}
+	// Get the current working directory
+	workingDir, err := getwd()
+	if err != nil {
+		printError("Could not find current working directory", err, true)
+	}
+	return workingDir
 }

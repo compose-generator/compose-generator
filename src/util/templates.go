@@ -144,6 +144,7 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 	}
 }
 
+// AskTemplateProxyQuestions aks the user all collected proxy questions for every selected service
 func AskTemplateProxyQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
 	// Ask proxy questions only if the service wants to get proxied
 	if template.Proxied {

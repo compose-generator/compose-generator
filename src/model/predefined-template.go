@@ -63,6 +63,7 @@ func (t SelectedTemplates) GetTotal() int {
 	return count
 }
 
+// GetAllProxyQuestions returns all questions, which are marked as proxy questions
 func (t SelectedTemplates) GetAllProxyQuestions() []Question {
 	questions := []Question{}
 	for _, template := range t.ProxyService {

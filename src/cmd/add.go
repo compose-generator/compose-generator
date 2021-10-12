@@ -44,6 +44,7 @@ var AddCliFlags = []cli.Flag{
 	},
 }
 
+// AddCustomServiceMockable is the mockable version of AddCustomService
 var AddCustomServiceMockable = AddCustomService
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
