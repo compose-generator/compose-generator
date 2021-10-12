@@ -25,8 +25,8 @@ func main() {
 
 	// Main cli configuration
 	app := &cli.App{
-		Name:        "compose-generator",
-		Version:     util.BuildVersion(util.Version, util.Commit, util.Date, util.BuiltBy),
+		Name:    "compose-generator",
+		Version: util.BuildVersion(util.Version, util.Commit, util.Date, util.BuiltBy),
 		Authors: []*cli.Author{
 			{
 				Name:  "Marc Auberer",

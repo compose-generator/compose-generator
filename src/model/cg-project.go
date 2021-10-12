@@ -26,6 +26,7 @@ type CGProject struct {
 	Ports             []int
 }
 
+// Vars represents a list of environment variables
 type Vars map[string]string
 
 // CGProjectMetadata represents the metadata that is attached to a CGProject

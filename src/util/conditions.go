@@ -31,7 +31,7 @@ func EvaluateConditionalSections(
 	}
 }
 
-// EvaluateConditionalSections evaluates conditional sections in template data
+// EvaluateConditionalSectionsToString evaluates conditional sections in template data
 func EvaluateConditionalSectionsToString(
 	input string,
 	selected *model.SelectedTemplates,

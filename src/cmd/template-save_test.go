@@ -132,10 +132,9 @@ func TestCopyVolumesAndBuildContextsToTemplate1(t *testing.T) {
 			assert.Equal(t, "./volume1", src)
 			assert.Equal(t, "../templates/./Template 1/volume1", dest)
 			return nil
-		} else {
-			assert.Equal(t, "frontend-angular", src)
-			assert.Equal(t, "../templates/", dest)
 		}
+		assert.Equal(t, "frontend-angular", src)
+		assert.Equal(t, "../templates/", dest)
 		return errors.New("Error message")
 	}
 	printErrorCallCount := 0
