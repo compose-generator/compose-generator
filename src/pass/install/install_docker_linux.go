@@ -1,9 +1,9 @@
-// go:build linux
-
 /*
 Copyright © 2021 Compose Generator Contributors
 All rights reserved.
 */
+
+// go:build linux
 
 package pass
 
