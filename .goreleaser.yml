@@ -24,7 +24,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-amd64
       - chillibits/compose-generator:latest-amd64
     dockerfile: Dockerfile
-    #skip_push: auto
+    skip_push: auto
     use: buildx
     goarch: amd64
     extra_files:
@@ -45,7 +45,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-i386
       - chillibits/compose-generator:latest-i386
     dockerfile: Dockerfile
-    #skip_push: auto
+    skip_push: auto
     use: buildx
     goarch: 386
     extra_files:
@@ -66,7 +66,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-arm32v6
       - chillibits/compose-generator:latest-arm32v6
     dockerfile: Dockerfile
-    #skip_push: auto
+    skip_push: auto
     use: buildx
     goarch: arm
     goarm: 6
@@ -88,7 +88,7 @@ dockers:
       - chillibits/compose-generator:{{ .Version }}-arm32v7
       - chillibits/compose-generator:latest-arm32v7
     dockerfile: Dockerfile
-    #skip_push: auto
+    skip_push: auto
     use: buildx
     goarch: arm
     goarm: 7
@@ -111,28 +111,28 @@ docker_manifests:
       - chillibits/compose-generator:{{ .Version }}-i386
       - chillibits/compose-generator:{{ .Version }}-arm32v6
       - chillibits/compose-generator:{{ .Version }}-arm32v7
-    #skip_push: auto
+    skip_push: auto
   - name_template: chillibits/compose-generator:latest
     image_templates:
       - chillibits/compose-generator:{{ .Version }}-amd64
       - chillibits/compose-generator:{{ .Version }}-i386
       - chillibits/compose-generator:{{ .Version }}-arm32v6
       - chillibits/compose-generator:{{ .Version }}-arm32v7
-    #skip_push: auto
+    skip_push: auto
   - name_template: ghcr.io/compose-generator/compose-generator:{{ .Version }}
     image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
-    #skip_push: auto
+    skip_push: auto
   - name_template: ghcr.io/compose-generator/compose-generator:latest
     image_templates:
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
       - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
-    #skip_push: auto
+    skip_push: auto
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     files:
