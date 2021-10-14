@@ -44,8 +44,8 @@ var AddCliFlags = []cli.Flag{
 	},
 }
 
-// AddCustomServiceMockable is the mockable version of AddCustomService
-var AddCustomServiceMockable = AddCustomService
+var addCustomServiceMockable = AddCustomService
+var addPredefinedServiceMockable = addPredefinedService
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -86,8 +86,13 @@ func Add(c *cli.Context) error {
 	// Execute additional validation steps
 	commonPass.CommonCheckForDependencyCycles(proj)
 
-	// Add custom service
-	AddCustomServiceMockable(proj)
+	if yesNoQuestion("Do you want to add a predefined service (Y) or a custom one (n)?", true) {
+		// Add predefined service
+		addPredefinedServiceMockable(proj)
+	} else {
+		// Add custom service
+		addCustomServiceMockable(proj)
+	}
 
 	// Save project
 	spinner = startProcess("Saving project ...")
@@ -129,4 +134,8 @@ func AddCustomService(project *model.CGProject) {
 
 	// Add the new service to the project
 	project.Composition.Services = append(project.Composition.Services, newService)
+}
+
+func addPredefinedService(project *model.CGProject) {
+
 }
