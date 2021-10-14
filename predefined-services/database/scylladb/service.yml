@@ -1,0 +1,15 @@
+image: scylladb/scylla:${{SCYLLADB_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-scylla
+restart: always
+networks:
+#? if has services.backend {
+#  - backend-database
+#? }
+ports:
+  - ${{SCYLLADB_API_PORT}}:10000
+  - ${{SCYLLADB_JMX_PORT}}:7199
+volumes: 
+  - ${{VOLUME_SCYLLADB_DATA}}:/var/lib/scylla/data
+  - ${{VOLUME_SCYLLADB_COMMITLOG}}:/var/lib/scylla/commitlog
+env_file:
+  - environment.env

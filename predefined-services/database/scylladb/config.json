@@ -1,0 +1,63 @@
+{
+    "label": "ScyllaDB",
+    "preselected": "false",
+    "proxied": false,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose JMX of your ScyllaDB instance?",
+            "type": 2,
+            "defaultValue": "7199",
+            "validator": "port",
+            "variable": "SCYLLADB_JMX_PORT"
+        },
+        {
+            "text": "On which port you want to expose the API of your ScyllaDB instance?",
+            "type": 2,
+            "defaultValue": "10000",
+            "validator": "port",
+            "variable": "SCYLLADB_API_PORT"
+        },
+        {
+            "text": "Which ScyllaDB version do you want to use?",
+            "type": 2,
+            "defaultValue": "4.5.0",
+            "variable": "SCYLLADB_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for ScyllaDB data volume?",
+            "defaultValue": "./volumes/scylladb-data",
+            "variable": "VOLUME_SCYLLADB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for ScyllaDB commit log volume?",
+            "defaultValue": "./volumes/scylladb-commitlog",
+            "variable": "VOLUME_SCYLLADB_COMMITLOG",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "ScyllaDB password",
+            "variable": "_PW_SCYLLADB",
+            "length": 50
+        }
+    ]
+}
