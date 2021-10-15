@@ -28,25 +28,25 @@ def test_combination(comb):
     services = []
     for service in comb:
         services.append({"service": service[0], "type": service[1]})
-    config = [{"project_name": "Example project", "services": services}]
+    config = {"project_name": "Example project", "services": services}
     with open(BIN_PATH + "/config.yml", "w", encoding='utf-8') as file:
         yaml.dump(config, file, default_flow_style=False)
 
     # Execute Compose Generator with the config file
     if system("compose-generator -c config.yml -i") != 0:
-        sys.exit('Compose Generator failed when generating stack for combination ' + comb)
+        sys.exit('Compose Generator failed when generating stack for combination ' + str(comb))
 
     # Delete config file
     remove(BIN_PATH + "/config.yml")
 
     # Execute Compose Generator with the config file
     if system("docker compose up -d") != 0:
-        sys.exit('Docker failed when generating stack for combination ' + comb)
+        sys.exit('Docker failed when generating stack for combination ' + str(comb))
 
 def reset_environment():
     """Deletes all Docker related stuff. Should be executed after each test"""
     system("docker system prune -af > /dev/null")
-    system("sudo rm -rf ./*")
+    system("rm -rf {BIN_PATH}/*")
 
 # Initially reset the testing environment
 print("Do initial cleanup ...", end='')
