@@ -1,32 +1,43 @@
 """Script to test all combinations of predefined service templates"""
 
 from os.path import isdir, join
-from os import listdir, system
+from os import listdir, system, remove
 import sys
 import itertools
+import yaml
+
+MAX_COMBINATION_SIZE = 1 # Careful! Runtime increases exponentially
+TEMPLATES_PATH = "../../../predefined-services"
+BIN_PATH = "../../../bin"
 
 def get_all_template_names():
     """Returns a string array with all existing template names"""
 
-    template_names = []
-    template_path = '../../../predefined-services'
-    #template_types = ["backend", "database", "db-admin", "frontend"]
-    template_types = ["backend"]
+    template_tuples = []
+    template_types = ["backend", "database", "db-admin", "frontend"]
     for template_type in template_types:
-        template_type_path = template_path + '/' + template_type
-        service_names = [f for f in listdir(template_type_path) if isdir(join(template_type_path, f))]
-        template_names.extend(service_names)
+        template_type_path = TEMPLATES_PATH + '/' + template_type
+        for service_name in [f for f in listdir(template_type_path) if isdir(join(template_type_path, f))]:
+            template_tuples.append((service_name, template_type))
 
-    return template_names
+    return template_tuples
 
 def test_combination(comb):
     """Tests one particular combination of services"""
     # Create config file
-    
+    services = []
+    for service in comb:
+        services.append({"service": service[0], "type": service[1]})
+    config = [{"project_name": "Example project", "services": services}]
+    with open(BIN_PATH + "/config.yml", "w", encoding='utf-8') as file:
+        yaml.dump(config, file, default_flow_style=False)
 
     # Execute Compose Generator with the config file
     if system("compose-generator -c config.yml -i") != 0:
         sys.exit('Compose Generator failed when generating stack for combination ' + comb)
+
+    # Delete config file
+    remove(BIN_PATH + "/config.yml")
 
     # Execute Compose Generator with the config file
     if system("docker compose up -d") != 0:
@@ -46,7 +57,7 @@ print(" done")
 print("Collecting template names ...", end='')
 templates = get_all_template_names()
 combinations = []
-for i in range(1, len(templates) +1):
+for i in range(1, MAX_COMBINATION_SIZE +1):
     combinations.extend(list(itertools.combinations(templates, i)))
 print(" done")
 print(combinations)
