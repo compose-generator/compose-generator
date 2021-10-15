@@ -1,15 +1,13 @@
-# Predefined service validation
-name: Service validation
+# Predefined service testing
+name: Service testing
 
 on:
-  push:
+  pull_request:
     paths:
       - predefined-services/**
-  pull_request:
     branches:
       - main
       - release/**
-      - feature/**
 
 jobs:
   validation:
@@ -18,15 +16,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17.x
+
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
 
     - name: Prepare environment.env
-      working-directory: .github/scripts/service-validator
+      working-directory: .github/scripts/service-tester
       run: pip install -r requirements.txt
+
+    - name: Install CG
+      run: ./install.sh
       
-    - name: Run validation script
-      working-directory: .github/scripts/service-validator
-      run: python predefined-service-validator.py
+    - name: Run testing script
+      working-directory: .github/scripts/service-tester
+      run: python predefined-service-tester.py
