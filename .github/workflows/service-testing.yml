@@ -31,6 +31,13 @@ jobs:
       working-directory: .github/scripts/service-tester
       run: pip install -r requirements.txt
 
+    - name: Install CCom
+      run: |
+        curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb https://admin.repo.chillibits.com/repository/ubuntu-$(lsb_release -cs) $(lsb_release -cs) main"
+        sudo apt-get update
+        sudo apt-get install ccom
+
     - name: Install CG
       run: ./install.sh
       
