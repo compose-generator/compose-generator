@@ -4,13 +4,15 @@ import os
 import sys
 import itertools
 
+TEMPLATES_DIR = "../../../predefined-services"
+
 def get_all_template_names():
     """Returns a string array with all existing template names"""
-    template_types = list(filter(os.path.isdir, os.listdir("./predefined-templates")))
+    template_types = list(filter(os.path.isdir, os.listdir(TEMPLATES_DIR)))
 
     template_names = []
     for name in template_types:
-        template_names += list(filter(os.path.isdir, os.listdir("./predefined-templates/" + name)))
+        template_names += list(filter(os.path.isdir, os.listdir(TEMPLATES_DIR + "/" + name)))
 
     print(template_names)
     return template_names
@@ -34,21 +36,27 @@ def reset_environment():
     os.system("sudo rm -rf ./*")
 
 # Initially reset the testing environment
+print("Do initial cleanup ...", end='')
 reset_environment()
+print(" done")
 
 # Find all possible template combinations
+print("Collecting template names ...", end='')
 templates = get_all_template_names()
 combinations = []
 for t in range(len(templates) +1):
     combinations_list = list(itertools.combinations(templates, t))
     combinations += combinations_list
 total = len(combinations)
+print(" done")
 
 # Execute test for each combination
+print("Execute tests ...", end='')
 for i, combination in enumerate(combinations):
     print(f"Testing combination {i} of {total} ...")
     #test_combination(combination)
     reset_environment()
+print(" done")
 
 # Test was successful
 print("Tested all combinations successfully!")
