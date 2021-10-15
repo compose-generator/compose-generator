@@ -27,26 +27,29 @@ def test_combination(comb):
     # Create config file
     services = []
     for service in comb:
-        services.append({"service": service[0], "type": service[1]})
+        services.append({"name": service[0], "type": service[1]})
     config = {"project_name": "Example project", "services": services}
     with open(BIN_PATH + "/config.yml", "w", encoding='utf-8') as file:
         yaml.dump(config, file, default_flow_style=False)
 
     # Execute Compose Generator with the config file
-    if system("compose-generator -c config.yml -i") != 0:
-        sys.exit('Compose Generator failed when generating stack for combination ' + str(comb))
+    if system(f"cd {BIN_PATH} && compose-generator -c config.yml -i") != 0:
+        sys.exit("Compose Generator failed when generating stack for combination " + str(comb))
 
     # Delete config file
     remove(BIN_PATH + "/config.yml")
 
     # Execute Compose Generator with the config file
-    if system("docker compose up -d") != 0:
-        sys.exit('Docker failed when generating stack for combination ' + str(comb))
+    if system(f"cd {BIN_PATH} && docker compose up -d") != 0:
+        sys.exit("Docker failed when generating stack for combination " + str(comb))
+
+    if system(f"cd {BIN_PATH} && docker compose down") != 0:
+        sys.exit("Error on 'docker compose down' for " + str(comb))
 
 def reset_environment():
     """Deletes all Docker related stuff. Should be executed after each test"""
-    system("docker system prune -af > /dev/null")
-    system("rm -rf {BIN_PATH}/*")
+    #system("docker system prune -af > /dev/null")
+    system(f"sudo rm -rf {BIN_PATH}/*")
 
 # Initially reset the testing environment
 print("Do initial cleanup ...", end='')
@@ -65,7 +68,7 @@ print(combinations)
 # Execute test for each combination
 print("Execute tests ...")
 for i, combination in enumerate(combinations):
-    print(f"Testing combination {i} of {len(combinations)} ...")
+    print(f"Testing combination {i+1} of {len(combinations)} ...")
     test_combination(combination)
     reset_environment()
 print("Done")
