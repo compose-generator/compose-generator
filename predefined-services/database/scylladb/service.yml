@@ -7,9 +7,10 @@ networks:
 #? }
 ports:
   - ${{SCYLLADB_API_PORT}}:10000
-  - ${{SCYLLADB_JMX_PORT}}:7199
+  - ${{SCYLLADB_RPC_PORT}}:9160
 volumes: 
   - ${{VOLUME_SCYLLADB_DATA}}:/var/lib/scylla/data
   - ${{VOLUME_SCYLLADB_COMMITLOG}}:/var/lib/scylla/commitlog
+  - ${{VOLUME_SCYLLADB_CONFIG}}/scylla.yaml:/etc/scylla/scylla.yaml
 env_file:
   - environment.env

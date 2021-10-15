@@ -18,11 +18,11 @@
     ],
     "questions": [
         {
-            "text": "On which port you want to expose JMX of your ScyllaDB instance?",
+            "text": "On which port you want to expose RPC of your ScyllaDB instance?",
             "type": 2,
-            "defaultValue": "7199",
+            "defaultValue": "9160",
             "validator": "port",
-            "variable": "SCYLLADB_JMX_PORT"
+            "variable": "SCYLLADB_RPC_PORT"
         },
         {
             "text": "On which port you want to expose the API of your ScyllaDB instance?",
@@ -37,6 +37,13 @@
             "defaultValue": "4.5.0",
             "variable": "SCYLLADB_VERSION",
             "advanced": true
+        },
+        {
+            "text": "Which username you want to specify for your ScyllaDB instance?",
+            "type": 2,
+            "defaultValue": "admin",
+            "variable": "SCYLLADB_USER",
+            "advanced": true
         }
     ],
     "volumes": [
@@ -44,6 +51,12 @@
             "text": "Custom path for ScyllaDB data volume?",
             "defaultValue": "./volumes/scylladb-data",
             "variable": "VOLUME_SCYLLADB_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for ScyllaDB config volume?",
+            "defaultValue": "./volumes/scylladb-config",
+            "variable": "VOLUME_SCYLLADB_CONFIG",
             "advanced": true
         },
         {
