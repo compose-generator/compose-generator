@@ -10,11 +10,11 @@ def get_all_template_names():
 
     template_names = []
     template_path = '../../../predefined-services'
-    template_types = ["backend", "database", "db-admin", "frontend"]
+    #template_types = ["backend", "database", "db-admin", "frontend"]
+    template_types = ["backend"]
     for template_type in template_types:
         template_type_path = template_path + '/' + template_type
         service_names = [f for f in listdir(template_type_path) if isdir(join(template_type_path, f))]
-        print(service_names)
         template_names.extend(service_names)
 
     return template_names
@@ -45,20 +45,20 @@ print(" done")
 # Find all possible template combinations
 print("Collecting template names ...", end='')
 templates = get_all_template_names()
-#combinations = []
-#for i in range(1, len(templates) +1):
-#    combinations.append(list(itertools.combinations(templates, i)))
-#print(" done")
-#print(combinations)
-#
+combinations = []
+for i in range(1, len(templates) +1):
+    combinations.extend(list(itertools.combinations(templates, i)))
+print(" done")
+print(combinations)
+
 # Execute test for each combination
-#print("Execute tests ...")
-#for i, combination in enumerate(combinations):
-#    print(f"Testing combination {i} of {len(combinations)} ...")
+print("Execute tests ...")
+for i, combination in enumerate(combinations):
+    print(f"Testing combination {i} of {len(combinations)} ...")
     #if len(combination) > 0:
     #    test_combination(combination)
     #    reset_environment()
-#print("Done")
+print("Done")
 
 # Test was successful
 print("Tested all combinations successfully!")
