@@ -11,7 +11,7 @@ on:
   push:
 
 jobs:
-  validation:
+  test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
