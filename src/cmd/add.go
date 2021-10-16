@@ -7,7 +7,6 @@ package cmd
 
 import (
 	commonPass "compose-generator/pass/common"
-	genPass "compose-generator/pass/generate"
 	"compose-generator/project"
 	"compose-generator/util"
 
@@ -82,7 +81,7 @@ func Add(c *cli.Context) error {
 	commonPass.CommonCheckForDependencyCycles(proj)
 
 	// Enrich project
-	genPass.GenerateAddCustomService(proj)
+	EnrichProjectWithServices(proj, nil)
 
 	// Save project
 	spinner = startProcess("Saving project ...")

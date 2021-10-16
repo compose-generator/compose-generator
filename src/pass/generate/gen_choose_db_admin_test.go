@@ -144,7 +144,7 @@ func TestGenerateChooseDbAdmins2(t *testing.T) {
 	}
 	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
 		assert.Equal(t, "Which db admin services do you need?", label)
-		assert.Equal(t, []string{"Test DbAdmin"}, items)
+		assert.Equal(t, []string{"Test DbAdmin", "Custom db admin service"}, items)
 		return []int{0}
 	}
 	pelCallCount := 0

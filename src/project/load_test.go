@@ -26,6 +26,9 @@ func TestLoadProject(t *testing.T) {
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
 		ForceConfig:       false,
+		Vars:              make(model.Vars),
+		ProxyVars:         make(map[string]model.Vars),
+		Secrets:           []model.ProjectSecret{},
 	}
 	expectedOptions := LoadOptions{
 		ComposeFileName: "docker.yml",

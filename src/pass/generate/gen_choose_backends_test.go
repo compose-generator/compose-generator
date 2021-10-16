@@ -144,7 +144,7 @@ func TestGenerateChooseBackends2(t *testing.T) {
 	}
 	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
 		assert.Equal(t, "Which backends services do you need?", label)
-		assert.Equal(t, []string{"Test Backend"}, items)
+		assert.Equal(t, []string{"Test Backend", "Custom backend service"}, items)
 		return []int{0}
 	}
 	pelCallCount := 0

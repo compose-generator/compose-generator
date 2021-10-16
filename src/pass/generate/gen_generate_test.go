@@ -44,10 +44,6 @@ func TestGenerate1(t *testing.T) {
 		ReadmeChildPaths: []string{
 			predefinedTemplatesPath + "/INSTRUCTIONS_HEADER.md",
 		},
-		Composition: &spec.Project{
-			WorkingDir: "./",
-			Services:   spec.Services{},
-		},
 	}
 	// Mock functions
 	pelCallCount := 0

@@ -40,6 +40,9 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
 		ForceConfig:       false,
+		Vars:              make(model.Vars),
+		ProxyVars:         make(map[string]model.Vars),
+		Secrets:           []model.ProjectSecret{},
 	}
 
 	// Load components

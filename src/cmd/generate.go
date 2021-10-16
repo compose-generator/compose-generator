@@ -127,7 +127,7 @@ func Generate(c *cli.Context) error {
 // EnrichProjectWithServices enriches a project with a custom selection of predefined services
 func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateConfig) {
 	// Clear screen
-	if !config.FromFile {
+	if config == nil || !config.FromFile {
 		clearScreen()
 	}
 
