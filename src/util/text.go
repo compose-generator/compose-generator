@@ -39,7 +39,9 @@ func Pel() {
 // StartProcess displays a loading animation until StopProcess is called
 func StartProcess(text string) (s *spinner.Spinner) {
 	if IsCIEnvironment() {
-		color.New(color.FgWhite).Print(text)
+		if _, err := color.New(color.FgWhite).Print(text); err != nil {
+			Error("Could not print to console", err, false)
+		}
 		return nil
 	}
 	charSet := 14
