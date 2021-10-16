@@ -15,9 +15,9 @@ import (
 
 // ------------------------------------------------------------------- Generate --------------------------------------------------------------------
 
-// ---------------------------------------------------------------- generateProject ----------------------------------------------------------------
+// ----------------------------------------------------------- EnrichProjectWithServices -----------------------------------------------------------
 
-func TestGenerateProject1(t *testing.T) {
+func TestEnrichProjectWithServices1(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
 		CGProjectMetadata: model.CGProjectMetadata{
@@ -121,7 +121,7 @@ func TestGenerateProject1(t *testing.T) {
 		generateExecDemoAppInitCommandsPassCallCount++
 	}
 	// Execute test
-	generateProject(project, config)
+	EnrichProjectWithServices(project, config)
 	// Assert
 	assert.Equal(t, 1, clearScreenCallCount)
 	assert.Equal(t, 1, generateChooseFrontendsPassCallCount)
@@ -141,7 +141,7 @@ func TestGenerateProject1(t *testing.T) {
 	assert.Equal(t, 1, generateExecDemoAppInitCommandsPassCallCount)
 }
 
-func TestGenerateProject2(t *testing.T) {
+func TestEnrichProjectWithServices2(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
 		CGProjectMetadata: model.CGProjectMetadata{
@@ -245,7 +245,7 @@ func TestGenerateProject2(t *testing.T) {
 		generateExecDemoAppInitCommandsPassCallCount++
 	}
 	// Execute test
-	generateProject(project, config)
+	EnrichProjectWithServices(project, config)
 	// Assert
 	assert.Zero(t, clearScreenCallCount)
 	assert.Equal(t, 1, generateChooseFrontendsPassCallCount)

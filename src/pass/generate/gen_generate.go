@@ -10,8 +10,6 @@ import (
 	"compose-generator/project"
 	"path/filepath"
 	"strconv"
-
-	"github.com/compose-spec/compose-go/types"
 )
 
 var generateServiceMockable = generateService
@@ -23,18 +21,15 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 	pel()
 	templateCount := selectedTemplates.GetTotal()
 	if templateCount > 0 {
+		// Generate services from selected templates
 		spinner := startProcess("Generating configuration from " + strconv.Itoa(templateCount) + " template(s) ...")
+
 		// Prepare
-		project.Composition = &types.Project{
-			WorkingDir: "./",
-			Services:   types.Services{},
-		}
 		if project.WithReadme {
 			instructionsHeaderPath := getPredefinedServicesPath() + "/INSTRUCTIONS_HEADER.md"
 			project.ReadmeChildPaths = append(project.ReadmeChildPaths, instructionsHeaderPath)
 		}
 
-		// Generate services from selected templates
 		// Generate frontends
 		for _, template := range selectedTemplates.FrontendServices {
 			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeFrontend, template.Name)

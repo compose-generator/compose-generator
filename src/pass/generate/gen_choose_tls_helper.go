@@ -18,7 +18,7 @@ func GenerateChooseTlsHelpers(
 	selected *model.SelectedTemplates,
 	config *model.GenerateConfig,
 ) {
-	if config.FromFile {
+	if config != nil &&  config.FromFile {
 		// Generate from config file
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeTlsHelper)
 		if project.Vars == nil {
@@ -43,9 +43,8 @@ func GenerateChooseTlsHelpers(
 		}
 	} else {
 		// Generate from user input
-		availableTlsHelpers := available.TlsHelperService
-		items := templateListToLabelList(availableTlsHelpers)
-		itemsPreselected := templateListToPreselectedLabelList(availableTlsHelpers, selected)
+		items := templateListToLabelList(available.TlsHelperService)
+		itemsPreselected := templateListToPreselectedLabelList(available.TlsHelperService, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which tls helper services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()

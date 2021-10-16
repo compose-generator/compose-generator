@@ -7,11 +7,13 @@ package pass
 
 import (
 	"compose-generator/model"
+	addPass "compose-generator/pass/add"
 	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
 	"os"
 
+	"github.com/docker/docker/client"
 	"github.com/fatih/color"
 	"github.com/otiai10/copy"
 	"github.com/sethvargo/go-password/password"
@@ -53,3 +55,15 @@ var writeFile = ioutil.WriteFile
 var getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 	return config.GetServiceConfigurationsByType(templateType)
 }
+var addBuildOrImagePass = addPass.AddBuildOrImage
+var addNamePass = addPass.AddName
+var addContainerNamePass = addPass.AddContainerName
+var addVolumesPass = addPass.AddVolumes
+var addNetworksPass = addPass.AddNetworks
+var addPortsPass = addPass.AddPorts
+var addEnvVarsPass = addPass.AddEnvVars
+var addEnvFilesPass = addPass.AddEnvFiles
+var addRestartPass = addPass.AddRestart
+var addDependsPass = addPass.AddDepends
+var addDependantsPass = addPass.AddDependants
+var newClientWithOpts = client.NewClientWithOpts

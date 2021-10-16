@@ -12,6 +12,7 @@ import (
 	"compose-generator/util"
 	"time"
 
+	spec "github.com/compose-spec/compose-go/types"
 	"github.com/urfave/cli/v2"
 )
 
@@ -87,6 +88,10 @@ func Generate(c *cli.Context) error {
 			CreatedBy:      util.GetUsername(),
 			CreatedAt:      time.Now().UnixNano(),
 		},
+		Composition: &spec.Project{
+			WorkingDir: "./",
+			Services:   spec.Services{},
+		},
 		ForceConfig: flagForce,
 		Vars:        make(model.Vars),
 		ProxyVars:   make(map[string]model.Vars),
@@ -98,7 +103,7 @@ func Generate(c *cli.Context) error {
 	genPass.LoadGenerateConfig(proj, config, configPath)
 
 	// Enrich project with information
-	generateProject(proj, config)
+	EnrichProjectWithServices(proj, config)
 
 	// Save project
 	spinner := startProcess("Saving project ...")
@@ -119,9 +124,8 @@ func Generate(c *cli.Context) error {
 	return nil
 }
 
-// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
-
-func generateProject(project *model.CGProject, config *model.GenerateConfig) {
+// EnrichProjectWithServices enriches a project with a custom selection of predefined services
+func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateConfig) {
 	// Clear screen
 	if !config.FromFile {
 		clearScreen()
