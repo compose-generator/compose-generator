@@ -15,10 +15,13 @@ def get_all_template_names():
 
     template_tuples = []
     template_types = ["backend", "database", "db-admin", "frontend"]
+    skipped_names = ["rocket"]
     for template_type in template_types:
         template_type_path = TEMPLATES_PATH + '/' + template_type
-        for service_name in [f for f in listdir(template_type_path) if isdir(join(template_type_path, f))]:
-            template_tuples.append((service_name, template_type))
+        services = [f for f in listdir(template_type_path) if isdir(join(template_type_path, f))]
+        for service in services:
+            if service not in skipped_names:
+                template_tuples.append((service, template_type))
 
     return template_tuples
 
