@@ -73,9 +73,7 @@ print("Execute tests ...")
 for i, combination in enumerate(combinations):
     print(f"Testing combination {i+1} of {len(combinations)}: {str(combination)} ...")
     test_combination(combination)
-    # Reset every five stacks
-    if i % 5 == 0:
-        reset_environment()
+    reset_environment()
 print("Done")
 
 # Test was successful

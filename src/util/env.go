@@ -26,6 +26,11 @@ func IsDockerizedEnvironment() bool {
 	return getEnv("COMPOSE_GENERATOR_DOCKERIZED") == "1"
 }
 
+// IsCIEnvironment checks if Compose Generator runs within a CI environment
+func IsCIEnvironment() bool {
+	return getEnv("COMPOSE_GENERATOR_CI") == "1"
+}
+
 // GetUsername returns the username of the current username. If it is not determinable it returns "unknown"
 func GetUsername() string {
 	if user, err := currentUser(); err == nil {

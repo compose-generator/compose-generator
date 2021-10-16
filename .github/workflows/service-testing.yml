@@ -44,3 +44,5 @@ jobs:
     - name: Run testing script
       working-directory: .github/scripts/service-tester
       run: python predefined-service-tester.py
+      env:
+        COMPOSE_GENERATOR_CI: 1
