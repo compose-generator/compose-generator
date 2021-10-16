@@ -43,6 +43,32 @@ func TestIsDockerizedEnvironment2(t *testing.T) {
 	assert.False(t, result)
 }
 
+// ----------------------------------------------------------------- IsCIEnvironment ---------------------------------------------------------------
+
+func TestIsCIEnvironment1(t *testing.T) {
+	// Mock functions
+	getEnv = func(key string) string {
+		assert.Equal(t, "COMPOSE_GENERATOR_CI", key)
+		return "1"
+	}
+	// Execute test
+	result := IsCIEnvironment()
+	// Assert
+	assert.True(t, result)
+}
+
+func TestIsCIEnvironment2(t *testing.T) {
+	// Mock functions
+	getEnv = func(key string) string {
+		assert.Equal(t, "COMPOSE_GENERATOR_CI", key)
+		return ""
+	}
+	// Execute test
+	result := IsCIEnvironment()
+	// Assert
+	assert.False(t, result)
+}
+
 // ------------------------------------------------------------- GetCustomTemplatesPath ------------------------------------------------------------
 
 func TestGetCustomTemplatesPath1(t *testing.T) {

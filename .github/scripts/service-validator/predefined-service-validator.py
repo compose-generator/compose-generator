@@ -1,11 +1,14 @@
+"""Script to validate the files of all predefined service templates"""
+
 from os.path import isfile, isdir, join
 from os import listdir
-from cerberus import Validator
 import sys
-import yaml
 import json
+from cerberus import Validator
+import yaml
 
-def checkFileExistence():
+def check_file_existence():
+    """Checks if all required files exist"""
     print('Checking file existence ...', end='')
     status = True
     template_path = '../../../predefined-services'
@@ -30,7 +33,8 @@ def checkFileExistence():
     print(' done')
     return status
 
-def checkYamlValidity():
+def check_yaml_validity():
+    """Checks the validity of a YAML file"""
     print('Checking YAML validity ...', end='')
     status = True
     schema = eval(open('./service-schema.py').read())
@@ -49,7 +53,8 @@ def checkYamlValidity():
     print(' done')
     return status
 
-def checkJsonValidity():
+def check_json_validity():
+    """Checks the validity of a JSON file"""
     print('Checking JSON validity ...', end='')
     status = True
     schema = eval(open('./config-schema.py').read())
@@ -83,9 +88,9 @@ def loadJsonDoc(path):
             raise exception
 
 # Execute checks
-if not checkFileExistence():
+if not check_file_existence():
     sys.exit('File existence check failed.')
-if not checkYamlValidity():
+if not check_yaml_validity():
     sys.exit('Yaml validation check failed.')
-if not checkJsonValidity():
+if not check_json_validity():
     sys.exit('Json validation check failed.')
