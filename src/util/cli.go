@@ -96,6 +96,8 @@ func ExecuteOnToolbox(c string) {
 	// Start docker container
 	// #nosec G204
 	cmd := exec.Command("docker", "run", "-i", "-v", toolboxMountPath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
 		Error("Toolbox terminated with an error", err, true)
 	}

@@ -118,6 +118,7 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	if err != nil {
 		printError("Could not load project from the current directory", err, true)
 	}
+	project.Composition.WorkingDir = opt.WorkingDir
 }
 
 func loadComposeFileSingleService(
