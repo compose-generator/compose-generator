@@ -22,13 +22,18 @@ func TestLoadProject(t *testing.T) {
 		CGProjectMetadata: model.CGProjectMetadata{
 			WithGitignore: true,
 			WithReadme:    false,
+			Name:          "Example project",
+			ContainerName: "example-project",
 		},
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
 		ForceConfig:       false,
-		Vars:              make(model.Vars),
-		ProxyVars:         make(map[string]model.Vars),
-		Secrets:           []model.ProjectSecret{},
+		Vars: model.Vars{
+			"PROJECT_NAME":           "Example project",
+			"PROJECT_NAME_CONTAINER": "example-project",
+		},
+		ProxyVars: make(map[string]model.Vars),
+		Secrets:   []model.ProjectSecret{},
 	}
 	expectedOptions := LoadOptions{
 		ComposeFileName: "docker.yml",
@@ -59,6 +64,8 @@ func TestLoadProject(t *testing.T) {
 	loadCGFileMockable = func(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		loadCGFileCallCount++
 		assert.Equal(t, expectedOptions, opt)
+		metadata.Name = "Example project"
+		metadata.ContainerName = "example-project"
 	}
 	// Execute test
 	result := LoadProject(LoadFromComposeFile("docker.yml"), LoadFromDir("./context"))
@@ -146,7 +153,8 @@ func TestLoadComposeFile1(t *testing.T) {
 	composeFileContent := "services:\nbackend-django:\nbuild:\ncontext: ./backend-django\ncontainer_name: example-project-backend-django\nports:\n- mode: ingress\ntarget: 8000\npublished: 8000\nprotocol: tcp\nrestart: always"
 	expectedProject := &model.CGProject{
 		Composition: &spec.Project{
-			Name: "Project name",
+			Name:       "Project name",
+			WorkingDir: "./context/",
 		},
 	}
 	// Mock functions

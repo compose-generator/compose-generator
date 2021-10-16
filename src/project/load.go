@@ -50,6 +50,9 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 	loadGitignoreFileMockable(project, opts)
 	loadCGFileMockable(&project.CGProjectMetadata, opts)
 
+	project.Vars["PROJECT_NAME"] = project.CGProjectMetadata.Name
+	project.Vars["PROJECT_NAME_CONTAINER"] = project.CGProjectMetadata.ContainerName
+
 	return project
 }
 
@@ -104,6 +107,7 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 		printError("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
 	}
 
+	// Load
 	configs := []spec.ConfigFile{
 		{
 			Filename: opt.ComposeFileName,
@@ -118,7 +122,14 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	if err != nil {
 		printError("Could not load project from the current directory", err, true)
 	}
+
+	// Enrich project with data from composition
 	project.Composition.WorkingDir = opt.WorkingDir
+	for _, service := range project.Composition.Services {
+		for _, port := range service.Ports {
+			project.Ports = append(project.Ports, int(port.Published))
+		}
+	}
 }
 
 func loadComposeFileSingleService(
