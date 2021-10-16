@@ -70,7 +70,35 @@ func TestAddDepends1(t *testing.T) {
 func TestAddDepends2(t *testing.T) {
 	// Test data
 	service := &spec.ServiceConfig{}
-	project := &model.CGProject{}
+	project := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{},
+			},
+		},
+	}
+	expectedService := &spec.ServiceConfig{}
+	// Mock functions
+	pel = func() {
+		assert.Fail(t, "Unexpected call of pel")
+	}
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
+		assert.Equal(t, "Do you want your service to depend on other services?", question)
+		assert.False(t, defaultValue)
+		return false
+	}
+	// Execute test
+	AddDepends(service, project)
+	// Assert
+	assert.Equal(t, expectedService, service)
+}
+
+func TestAddDepends3(t *testing.T) {
+	// Test data
+	service := &spec.ServiceConfig{}
+	project := &model.CGProject{
+		Composition: &spec.Project{},
+	}
 	expectedService := &spec.ServiceConfig{}
 	// Mock functions
 	pel = func() {
