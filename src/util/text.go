@@ -38,6 +38,12 @@ func Pel() {
 
 // StartProcess displays a loading animation until StopProcess is called
 func StartProcess(text string) (s *spinner.Spinner) {
+	if IsCIEnvironment() {
+		if _, err := color.New(color.FgWhite).Print(text); err != nil {
+			Error("Could not print to console", err, false)
+		}
+		return nil
+	}
 	charSet := 14
 	finalChar := "⠿"
 	if runtime.GOOS == "windows" {
@@ -54,7 +60,11 @@ func StartProcess(text string) (s *spinner.Spinner) {
 
 // StopProcess stops the spinner, which was started by calling StartProcess
 func StopProcess(s *spinner.Spinner) {
-	s.Stop()
+	if IsCIEnvironment() {
+		color.Green(" done")
+	} else {
+		s.Stop()
+	}
 }
 
 // Heading prints heading to console

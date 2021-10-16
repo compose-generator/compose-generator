@@ -35,6 +35,13 @@ func GenerateChooseProxies(
 							project.Vars[question.Variable] = question.DefaultValue
 						}
 					}
+					for _, question := range template.Volumes {
+						if value, ok := selectedConfig.Params[question.Variable]; ok {
+							project.Vars[question.Variable] = value
+						} else {
+							project.Vars[question.Variable] = question.DefaultValue
+						}
+					}
 					// Add template to selected templates
 					selected.ProxyService = append(selected.ProxyService, template)
 					break
