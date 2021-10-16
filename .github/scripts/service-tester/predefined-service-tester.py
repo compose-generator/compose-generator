@@ -48,7 +48,7 @@ def test_combination(comb):
 
 def reset_environment():
     """Deletes all Docker related stuff. Should be executed after each test"""
-    #system("docker system prune -af > /dev/null")
+    system("docker system prune -af > /dev/null")
     system(f"sudo rm -rf {BIN_PATH}/*")
 
 # Initially reset the testing environment
@@ -68,9 +68,11 @@ print(combinations)
 # Execute test for each combination
 print("Execute tests ...")
 for i, combination in enumerate(combinations):
-    print(f"Testing combination {i+1} of {len(combinations)} ...")
+    print(f"Testing combination {i+1} of {len(combinations)}: {str(combination)} ...")
     test_combination(combination)
-    reset_environment()
+    # Reset every five stacks
+    if i % 5 == 0:
+        reset_environment()
 print("Done")
 
 # Test was successful
