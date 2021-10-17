@@ -1,5 +1,5 @@
-# NodeJS build instructions
-FROM node:lts AS development
+# Development image
+FROM node:lts AS dev
 
 RUN yarn global add @vue/cli
 
@@ -11,10 +11,10 @@ COPY . /code
 
 CMD ["vue", "serve"]
 
-# Build
-FROM development AS build
+# Builder
+FROM dev AS build
 RUN yarn run build
 
-# Serve instructions
+# Minimalistic image
 FROM nginx:1.21-alpine
 COPY --from=build /code/dist /usr/share/nginx/html

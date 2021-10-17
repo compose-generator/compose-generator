@@ -1,5 +1,5 @@
-# NodeJS build instructions
-FROM node:lts AS development
+# Development image
+FROM node:lts AS dev
 
 WORKDIR /code
 COPY yarn.lock /code/yarn.lock
@@ -13,10 +13,10 @@ ENV PORT=3000
 
 CMD ["yarn", "start"]
 
-# Build
-FROM development AS build
+# Builder
+FROM dev AS build
 RUN yarn run build
 
-# Serve instructions
+# Minimalistic image
 FROM nginx:1.21-alpine
 COPY --from=build /code/build /usr/share/nginx/html
