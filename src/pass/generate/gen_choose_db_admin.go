@@ -64,7 +64,7 @@ func GenerateChooseDbAdmins(
 		for _, index := range templateSelections {
 			pel()
 			if index == len(available.DbAdminServices) { // Custom service was selected
-				GenerateAddCustomService(project)
+				GenerateAddCustomService(project, model.TemplateTypeDbAdmin)
 			} else { // Predefined service was selected
 				// Get selected template config
 				selectedConfig := available.DbAdminServices[index]

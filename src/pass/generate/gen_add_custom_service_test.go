@@ -23,7 +23,7 @@ func TestGenerateAddCustomService1(t *testing.T) {
 		assert.Fail(t, "Unexpected call of printError")
 	}
 	addBuildOrImagePassCallCount := 0
-	addBuildOrImagePass = func(service *types.ServiceConfig, project *model.CGProject) {
+	addBuildOrImagePass = func(service *types.ServiceConfig, project *model.CGProject, serviceType string) {
 		addBuildOrImagePassCallCount++
 	}
 	addNamePassCallCount := 0
@@ -66,8 +66,12 @@ func TestGenerateAddCustomService1(t *testing.T) {
 	addDependantsPass = func(service *types.ServiceConfig, project *model.CGProject) {
 		addDependantsPassCallCount++
 	}
+	pelCallCount := 0
+	pel = func() {
+		pelCallCount++
+	}
 	// Execute test
-	GenerateAddCustomService(project)
+	GenerateAddCustomService(project, model.TemplateTypeFrontend)
 	// Assert
 	assert.Equal(t, 1, addBuildOrImagePassCallCount)
 	assert.Equal(t, 1, addNamePassCallCount)
@@ -80,6 +84,7 @@ func TestGenerateAddCustomService1(t *testing.T) {
 	assert.Equal(t, 1, addRestartPassCallCount)
 	assert.Equal(t, 1, addDependsPassCallCount)
 	assert.Equal(t, 1, addDependantsPassCallCount)
+	assert.Equal(t, 1, pelCallCount)
 }
 
 func TestGenerateAddCustomService2(t *testing.T) {
@@ -96,9 +101,9 @@ func TestGenerateAddCustomService2(t *testing.T) {
 		assert.Equal(t, "Error message", err.Error())
 		assert.True(t, exit)
 	}
-	addBuildOrImagePass = func(service *types.ServiceConfig, project *model.CGProject) {
+	addBuildOrImagePass = func(service *types.ServiceConfig, project *model.CGProject, serviceType string) {
 		assert.Fail(t, "Unexpected call of addBuildOrImagePass")
 	}
 	// Execute test
-	GenerateAddCustomService(project)
+	GenerateAddCustomService(project, model.TemplateTypeBackend)
 }

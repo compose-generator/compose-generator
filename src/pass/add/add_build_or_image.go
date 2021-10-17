@@ -18,7 +18,7 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // AddBuildOrImage asks the user if he/she wants to build from source or add a predefined image to a service
-func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
+func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serviceType string) {
 	fromSource := yesNoQuestion("Build from source?", false)
 	if fromSource { // Build from source
 		// Ask for build path
@@ -50,9 +50,6 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject) {
 
 			chooseAgain = searchRemoteImage(registry, image)
 		}
-
-		options := []string{"frontend", "backend", "database", "db-admin"}
-		serviceType := menuQuestion("Which type is the closest match for this service?", options)
 
 		imageBaseName := path.Base(image)
 		imageBaseName = strings.Split(imageBaseName, ":")[0]

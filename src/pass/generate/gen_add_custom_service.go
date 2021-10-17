@@ -8,7 +8,7 @@ import (
 )
 
 // GenerateAddCustomService adds a custom service configuration to the composition
-func GenerateAddCustomService(project *model.CGProject) {
+func GenerateAddCustomService(project *model.CGProject, serviceType string) {
 	newService := spec.ServiceConfig{}
 
 	// Initialize Docker client
@@ -19,7 +19,7 @@ func GenerateAddCustomService(project *model.CGProject) {
 	}
 
 	// Execute passes on the service
-	addBuildOrImagePass(&newService, project)
+	addBuildOrImagePass(&newService, project, serviceType)
 	addNamePass(&newService, project)
 	addContainerNamePass(&newService, project)
 	addVolumesPass(&newService, project, client)
@@ -33,4 +33,6 @@ func GenerateAddCustomService(project *model.CGProject) {
 
 	// Add the new service to the project
 	project.Composition.Services = append(project.Composition.Services, newService)
+
+	pel()
 }

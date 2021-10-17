@@ -62,7 +62,7 @@ func GenerateChooseBackends(
 		for _, index := range templateSelections {
 			pel()
 			if index == len(available.BackendServices) { // Custom service was selected
-				GenerateAddCustomService(project)
+				GenerateAddCustomService(project, model.TemplateTypeBackend)
 			} else { // Predefined service was selected
 				// Get selected template config
 				selectedConfig := available.BackendServices[index]

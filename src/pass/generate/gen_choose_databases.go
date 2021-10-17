@@ -64,7 +64,7 @@ func GenerateChooseDatabases(
 		for _, index := range templateSelections {
 			pel()
 			if index == len(available.DatabaseServices) { // Custom service was selected
-				GenerateAddCustomService(project)
+				GenerateAddCustomService(project, model.TemplateTypeDatabase)
 			} else { // Predefined service was selected
 				// Get selected template config
 				selectedConfig := available.DatabaseServices[index]

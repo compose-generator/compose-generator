@@ -64,7 +64,7 @@ func GenerateChooseFrontends(
 		for _, index := range templateSelections {
 			pel()
 			if index == len(available.FrontendServices) { // Custom service was selected
-				GenerateAddCustomService(project)
+				GenerateAddCustomService(project, model.TemplateTypeFrontend)
 			} else { // Predefined service was selected
 				// Get selected template config
 				selectedConfig := available.FrontendServices[index]
