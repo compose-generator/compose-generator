@@ -58,7 +58,7 @@ func GenerateChooseBackends(
 		items := templateListToLabelList(available.BackendServices)
 		items = append(items, "Custom backend service")
 		itemsPreselected := templateListToPreselectedLabelList(available.BackendServices, selected)
-		templateSelections := multiSelectMenuQuestionIndex("Which backends services do you need?", items, itemsPreselected)
+		templateSelections := multiSelectMenuQuestionIndex("Which backend services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
 			if index == len(available.BackendServices) { // Custom service was selected
