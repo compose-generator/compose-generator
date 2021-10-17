@@ -16,7 +16,7 @@ func GenerateChooseBackends(
 	selected *model.SelectedTemplates,
 	config *model.GenerateConfig,
 ) {
-	if config.FromFile {
+	if config != nil && config.FromFile {
 		// Generate from config file
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeBackend)
 		if project.Vars == nil {
@@ -55,22 +55,26 @@ func GenerateChooseBackends(
 		}
 	} else {
 		// Generate from user input
-		availableBackends := available.BackendServices
-		items := templateListToLabelList(availableBackends)
-		itemsPreselected := templateListToPreselectedLabelList(availableBackends, selected)
-		templateSelections := multiSelectMenuQuestionIndex("Which backends services do you need?", items, itemsPreselected)
+		items := templateListToLabelList(available.BackendServices)
+		items = append(items, "Custom backend service")
+		itemsPreselected := templateListToPreselectedLabelList(available.BackendServices, selected)
+		templateSelections := multiSelectMenuQuestionIndex("Which backend services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
-			// Get selected template config
-			selectedConfig := available.BackendServices[index]
-			// Ask questions to the user
-			askTemplateQuestions(project, &selectedConfig)
-			// Ask proxy questions to the user
-			askTemplateProxyQuestions(project, &selectedConfig, selected)
-			// Ask volume questions to the user
-			askForCustomVolumePaths(project, &selectedConfig)
-			// Save template to the selected templates
-			selected.BackendServices = append(selected.BackendServices, selectedConfig)
+			if index == len(available.BackendServices) { // Custom service was selected
+				GenerateAddCustomService(project, model.TemplateTypeBackend)
+			} else { // Predefined service was selected
+				// Get selected template config
+				selectedConfig := available.BackendServices[index]
+				// Ask questions to the user
+				askTemplateQuestions(project, &selectedConfig)
+				// Ask proxy questions to the user
+				askTemplateProxyQuestions(project, &selectedConfig, selected)
+				// Ask volume questions to the user
+				askForCustomVolumePaths(project, &selectedConfig)
+				// Save template to the selected templates
+				selected.BackendServices = append(selected.BackendServices, selectedConfig)
+			}
 		}
 	}
 }

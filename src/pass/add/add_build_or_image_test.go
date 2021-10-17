@@ -47,7 +47,7 @@ func TestAddBuildOrImage1(t *testing.T) {
 		return ""
 	}
 	// Execute test
-	AddBuildOrImage(service, project)
+	AddBuildOrImage(service, project, model.TemplateTypeDbAdmin)
 	// Assert
 	assert.Equal(t, expectedService, service)
 }
@@ -79,7 +79,7 @@ func TestAddBuildOrImage2(t *testing.T) {
 		return ""
 	}
 	// Execute test
-	AddBuildOrImage(service, project)
+	AddBuildOrImage(service, project, model.TemplateTypeBackend)
 }
 
 func TestAddBuildOrImage3(t *testing.T) {
@@ -87,7 +87,7 @@ func TestAddBuildOrImage3(t *testing.T) {
 	project := &model.CGProject{}
 	service := &spec.ServiceConfig{}
 	expectedService := &spec.ServiceConfig{
-		Name:  "backend-spice",
+		Name:  "database-spice",
 		Image: "ghcr.io/chillibits/spice:0.3.0",
 	}
 	testManifest := diu.DockerManifest{
@@ -125,11 +125,6 @@ func TestAddBuildOrImage3(t *testing.T) {
 	fileExists = func(path string) bool {
 		return false
 	}
-	menuQuestion = func(label string, items []string) (result string) {
-		assert.Equal(t, "Which type is the closest match for this service?", label)
-		assert.EqualValues(t, []string{"frontend", "backend", "database", "db-admin"}, items)
-		return "backend"
-	}
 	getImageManifest = func(image string) (diu.DockerManifest, error) {
 		assert.Equal(t, "ghcr.io/chillibits/spice:0.3.0", image)
 		return testManifest, nil
@@ -142,7 +137,7 @@ func TestAddBuildOrImage3(t *testing.T) {
 		assert.Equal(t, " found - 7 layer(s)", text)
 	}
 	// Execute test
-	AddBuildOrImage(service, project)
+	AddBuildOrImage(service, project, model.TemplateTypeDatabase)
 	// Assert
 	assert.Equal(t, expectedService, service)
 }

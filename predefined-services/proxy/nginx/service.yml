@@ -11,7 +11,7 @@ ports:
   - 80:80
   - 443:443
 profiles:
-  - production
+  - prod
 networks:
   - proxy-tls
 labels:

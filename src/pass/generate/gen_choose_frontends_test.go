@@ -144,7 +144,7 @@ func TestGenerateChooseFrontends2(t *testing.T) {
 	}
 	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
 		assert.Equal(t, "Which frontend services do you need?", label)
-		assert.Equal(t, []string{"Test Frontend"}, items)
+		assert.Equal(t, []string{"Test Frontend", "Custom frontend service"}, items)
 		return []int{0}
 	}
 	pelCallCount := 0

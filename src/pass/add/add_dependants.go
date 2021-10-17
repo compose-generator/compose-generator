@@ -17,7 +17,7 @@ var checkForDependencyCycleMockable = checkForDependencyCycle
 
 // AddDependants asks the user if he/she wants to let other services depend on a service
 func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
-	if yesNoQuestion("Do you want other services depend on the new one?", false) {
+	if len(project.Composition.Services) > 0 && yesNoQuestion("Do you want other services depend on the new one?", false) {
 		pel()
 		selectedServices := multiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
 		// Add service dependencies

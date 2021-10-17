@@ -18,7 +18,7 @@ func GenerateChooseDbAdmins(
 	selected *model.SelectedTemplates,
 	config *model.GenerateConfig,
 ) {
-	if config.FromFile {
+	if config != nil && config.FromFile {
 		// Generate from config file
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeDbAdmin)
 		if project.Vars == nil {
@@ -57,22 +57,26 @@ func GenerateChooseDbAdmins(
 		}
 	} else {
 		// Generate from user input
-		availableDbAdmins := available.DbAdminServices
-		items := templateListToLabelList(availableDbAdmins)
-		itemsPreselected := templateListToPreselectedLabelList(availableDbAdmins, selected)
+		items := templateListToLabelList(available.DbAdminServices)
+		items = append(items, "Custom db admin service")
+		itemsPreselected := templateListToPreselectedLabelList(available.DbAdminServices, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which db admin services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
-			// Get selected template config
-			selectedConfig := available.DbAdminServices[index]
-			// Ask questions to the user
-			askTemplateQuestions(project, &selectedConfig)
-			// Ask proxy questions to the user
-			askTemplateProxyQuestions(project, &selectedConfig, selected)
-			// Ask volume questions to the user
-			askForCustomVolumePaths(project, &selectedConfig)
-			// Save template to the selected templates
-			selected.DbAdminServices = append(selected.DbAdminServices, selectedConfig)
+			if index == len(available.DbAdminServices) { // Custom service was selected
+				GenerateAddCustomService(project, model.TemplateTypeDbAdmin)
+			} else { // Predefined service was selected
+				// Get selected template config
+				selectedConfig := available.DbAdminServices[index]
+				// Ask questions to the user
+				askTemplateQuestions(project, &selectedConfig)
+				// Ask proxy questions to the user
+				askTemplateProxyQuestions(project, &selectedConfig, selected)
+				// Ask volume questions to the user
+				askForCustomVolumePaths(project, &selectedConfig)
+				// Save template to the selected templates
+				selected.DbAdminServices = append(selected.DbAdminServices, selectedConfig)
+			}
 		}
 	}
 }

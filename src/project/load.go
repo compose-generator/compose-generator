@@ -40,12 +40,18 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
 		ForceConfig:       false,
+		Vars:              make(model.Vars),
+		ProxyVars:         make(map[string]model.Vars),
+		Secrets:           []model.ProjectSecret{},
 	}
 
 	// Load components
 	loadComposeFileMockable(project, opts)
 	loadGitignoreFileMockable(project, opts)
 	loadCGFileMockable(&project.CGProjectMetadata, opts)
+
+	project.Vars["PROJECT_NAME"] = project.CGProjectMetadata.Name
+	project.Vars["PROJECT_NAME_CONTAINER"] = project.CGProjectMetadata.ContainerName
 
 	return project
 }
@@ -101,6 +107,7 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 		printError("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
 	}
 
+	// Load
 	configs := []spec.ConfigFile{
 		{
 			Filename: opt.ComposeFileName,
@@ -114,6 +121,14 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	project.Composition, err = loadComposition(config)
 	if err != nil {
 		printError("Could not load project from the current directory", err, true)
+	}
+
+	// Enrich project with data from composition
+	project.Composition.WorkingDir = opt.WorkingDir
+	for _, service := range project.Composition.Services {
+		for _, port := range service.Ports {
+			project.Ports = append(project.Ports, int(port.Published))
+		}
 	}
 }
 

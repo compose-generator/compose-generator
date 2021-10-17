@@ -6,13 +6,10 @@ All rights reserved.
 package cmd
 
 import (
-	"compose-generator/model"
 	commonPass "compose-generator/pass/common"
 	"compose-generator/project"
 	"compose-generator/util"
 
-	spec "github.com/compose-spec/compose-go/types"
-	"github.com/docker/docker/client"
 	"github.com/urfave/cli/v2"
 )
 
@@ -43,9 +40,6 @@ var AddCliFlags = []cli.Flag{
 		Value:   false,
 	},
 }
-
-// AddCustomServiceMockable is the mockable version of AddCustomService
-var AddCustomServiceMockable = AddCustomService
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -86,8 +80,8 @@ func Add(c *cli.Context) error {
 	// Execute additional validation steps
 	commonPass.CommonCheckForDependencyCycles(proj)
 
-	// Add custom service
-	AddCustomServiceMockable(proj)
+	// Enrich project
+	EnrichProjectWithServices(proj, nil)
 
 	// Save project
 	spinner = startProcess("Saving project ...")
@@ -101,32 +95,4 @@ func Add(c *cli.Context) error {
 	}
 
 	return nil
-}
-
-// AddCustomService adds a fully customizable service to the project
-func AddCustomService(project *model.CGProject) {
-	newService := spec.ServiceConfig{}
-
-	// Initialize Docker client
-	client, err := newClientWithOpts(client.FromEnv)
-	if err != nil {
-		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
-		return
-	}
-
-	// Execute passes on the service
-	addBuildOrImagePass(&newService, project)
-	addNamePass(&newService, project)
-	addContainerNamePass(&newService, project)
-	addVolumesPass(&newService, project, client)
-	addNetworksPass(&newService, project, client)
-	addPortsPass(&newService, project)
-	addEnvVarsPass(&newService, project)
-	addEnvFilesPass(&newService, project)
-	addRestartPass(&newService, project)
-	addDependsPass(&newService, project)
-	addDependantsPass(&newService, project)
-
-	// Add the new service to the project
-	project.Composition.Services = append(project.Composition.Services, newService)
 }

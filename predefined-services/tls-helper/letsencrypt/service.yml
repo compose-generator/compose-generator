@@ -12,6 +12,6 @@ environment:
 depends_on:
   - proxy
 profiles:
-  - production
+  - prod
 networks:
   - proxy-tls

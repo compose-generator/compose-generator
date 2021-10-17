@@ -18,7 +18,7 @@ func GenerateChooseFrontends(
 	selected *model.SelectedTemplates,
 	config *model.GenerateConfig,
 ) {
-	if config.FromFile {
+	if config != nil && config.FromFile {
 		// Generate from config file
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeFrontend)
 		if project.Vars == nil {
@@ -57,22 +57,26 @@ func GenerateChooseFrontends(
 		}
 	} else {
 		// Generate from user input
-		availableFrontends := available.FrontendServices
-		items := templateListToLabelList(availableFrontends)
-		itemsPreselected := templateListToPreselectedLabelList(availableFrontends, selected)
+		items := templateListToLabelList(available.FrontendServices)
+		items = append(items, "Custom frontend service")
+		itemsPreselected := templateListToPreselectedLabelList(available.FrontendServices, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which frontend services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
-			// Get selected template config
-			selectedConfig := available.FrontendServices[index]
-			// Ask questions to the user
-			askTemplateQuestions(project, &selectedConfig)
-			// Ask proxy questions to the user
-			askTemplateProxyQuestions(project, &selectedConfig, selected)
-			// Ask volume questions to the user
-			askForCustomVolumePaths(project, &selectedConfig)
-			// Save template to the selected templates
-			selected.FrontendServices = append(selected.FrontendServices, selectedConfig)
+			if index == len(available.FrontendServices) { // Custom service was selected
+				GenerateAddCustomService(project, model.TemplateTypeFrontend)
+			} else { // Predefined service was selected
+				// Get selected template config
+				selectedConfig := available.FrontendServices[index]
+				// Ask questions to the user
+				askTemplateQuestions(project, &selectedConfig)
+				// Ask proxy questions to the user
+				askTemplateProxyQuestions(project, &selectedConfig, selected)
+				// Ask volume questions to the user
+				askForCustomVolumePaths(project, &selectedConfig)
+				// Save template to the selected templates
+				selected.FrontendServices = append(selected.FrontendServices, selectedConfig)
+			}
 		}
 	}
 }

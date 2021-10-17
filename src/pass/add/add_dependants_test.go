@@ -114,9 +114,48 @@ func TestAddDependants1(t *testing.T) {
 
 func TestAddDependants2(t *testing.T) {
 	// Test data
-	project := &model.CGProject{}
+	project := &model.CGProject{
+		Composition: &spec.Project{},
+	}
 	service := &spec.ServiceConfig{}
-	expectedProject := &model.CGProject{}
+	expectedProject := &model.CGProject{
+		Composition: &spec.Project{},
+	}
+	// Mock functions
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
+		assert.Equal(t, "Do you want other services depend on the new one?", question)
+		assert.False(t, defaultValue)
+		return false
+	}
+	multiSelectMenuQuestion = func(label string, items []string) (result []string) {
+		return []string{}
+	}
+	pel = func() {
+		assert.Fail(t, "Unexpected call of pel")
+	}
+	// Execute test
+	AddDependants(service, project)
+	// Assert
+	assert.Equal(t, expectedProject, project)
+}
+
+func TestAddDependants3(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{},
+			},
+		},
+	}
+	service := &spec.ServiceConfig{}
+	expectedProject := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{},
+			},
+		},
+	}
 	// Mock functions
 	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want other services depend on the new one?", question)
