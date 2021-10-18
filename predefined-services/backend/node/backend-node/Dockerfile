@@ -9,11 +9,11 @@ RUN curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash 
 
 COPY package*.json ./
 RUN npm i
-
 COPY . .
 
 RUN npm prune --production
 RUN /usr/local/bin/node-prune
+
 
 # Minimalistic image
 FROM node:${{NODE_VERSION}}-alpine
