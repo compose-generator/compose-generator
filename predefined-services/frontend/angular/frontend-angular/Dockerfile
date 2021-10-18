@@ -1,5 +1,5 @@
-# NodeJS build instructions
-FROM node:lts AS development
+# Dev image
+FROM node:lts AS dev
 
 RUN npm i -g --loglevel=error @angular/cli
 
@@ -11,10 +11,11 @@ COPY . /code
 
 CMD ["ng", "serve", "--host", "0.0.0.0"]
 
-# Build
-FROM development AS build
+# Builder
+FROM dev AS build
 RUN npm run build
 
-# Serve instructions
+
+# Minimalistic image
 FROM nginx:1.21-alpine
 COPY --from=build /code/dist/demo-app /usr/share/nginx/html
