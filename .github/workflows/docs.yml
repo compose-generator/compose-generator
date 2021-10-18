@@ -10,8 +10,8 @@ on:
       #- service/**
       #- fix/**
       - chore/**
-    paths:
-      - docs/**
+    #paths:
+    #  - docs/**
   workflow_dispatch:
 
 jobs:
