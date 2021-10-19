@@ -28,7 +28,8 @@ func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 			}
 			// Check if the dependency would produce a cycle
 			if checkForDependencyCycleMockable(service, otherService.Name, project.Composition) {
-				printWarning("Could not add dependency from '" + otherService.Name + "' to '" + service.Name + "' because it would cause a cycle")
+				warningLogger.Println("Could not add dependency from '" + otherService.Name + "' to '" + service.Name + "' because it would cause a cycle")
+				logWarning("Could not add dependency from '" + otherService.Name + "' to '" + service.Name + "' because it would cause a cycle")
 				continue
 			}
 			// Create map if not exists

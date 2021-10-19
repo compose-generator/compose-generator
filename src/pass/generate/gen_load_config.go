@@ -23,7 +23,8 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 		// Ask the user for the config information
 		config.ProjectName = textQuestion("What is the name of your project:")
 		if config.ProjectName == "" {
-			printError("You must specify a project name!", nil, true)
+			errorLogger.Println("No project name specified")
+			logError("You must specify a project name!", true)
 			return
 		}
 		config.ProductionReady = yesNoQuestion("Do you want the output to be production-ready?", false)
@@ -33,22 +34,26 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 		if fileExists(configPath) {
 			yamlFile, err := openFile(configPath)
 			if err != nil {
-				printError("Could not load config file. Permissions granted?", err, true)
+				errorLogger.Println("Could not load config file: " + err.Error())
+				logError("Could not load config file. Permissions granted?", true)
 				return
 			}
 			content, err := readAllFromFile(yamlFile)
 			if err != nil {
-				printError("Could not load config file. Permissions granted?", err, true)
+				errorLogger.Println("Could not load config file: " + err.Error())
+				logError("Could not load config file. Permissions granted?", true)
 				return
 			}
 			// Parse yaml
 			if err := unmarshalYaml(content, &config); err != nil {
-				printError("Could not unmarshal config file", err, true)
+				errorLogger.Println("Could not unmarshal config file: " + err.Error())
+				logError("Could not unmarshal config file", true)
 				return
 			}
 			config.FromFile = true
 		} else {
-			printError("Config file could not be found", nil, true)
+			errorLogger.Println("Config file could not be found")
+			logError("Config file could not be found", true)
 			return
 		}
 	}

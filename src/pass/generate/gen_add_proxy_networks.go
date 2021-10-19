@@ -21,7 +21,8 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 		// Get reference of proxy service
 		proxyService := getServiceRefMockable(project.Composition, "proxy-"+selectedTemplates.ProxyService[0].Name)
 		if proxyService == nil {
-			printError("Proxy service cannot be found for network inserting", nil, true)
+			errorLogger.Println("Proxy service cannot be found for network inserting")
+			logError("Proxy service cannot be found for network inserting", true)
 			return
 		}
 		if proxyService.Networks == nil {

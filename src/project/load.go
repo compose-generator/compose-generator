@@ -144,7 +144,8 @@ func loadComposeFileSingleService(
 	opt LoadOptions,
 ) *spec.ServiceConfig {
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
-		util.Error("Compose file not found in template "+templateTypeName+"-"+serviceName, nil, true)
+		errorLogger.Println("Compose file not found in template " + templateTypeName + "-" + serviceName)
+		logError("Compose file not found in template "+templateTypeName+"-"+serviceName, true)
 	}
 	// Evaluate conditional sections
 	evaluated := util.EvaluateConditionalSectionsToString(
@@ -157,11 +158,13 @@ func loadComposeFileSingleService(
 	// Parse file contents to service
 	serviceDict, err := loader.ParseYAML([]byte(evaluated))
 	if err != nil {
-		util.Error("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", err, true)
+		errorLogger.Println("Unable to unmarshal the evaluated version of '" + templateTypeName + "-" + serviceName + "': " + err.Error())
+		logError("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", true)
 	}
 	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil, true)
 	if err != nil {
-		util.Error("Unable to load '"+templateTypeName+"-"+serviceName+"'", err, true)
+		errorLogger.Println("Unable to load '" + templateTypeName + "-" + serviceName + "': " + err.Error())
+		logError("Unable to load '"+templateTypeName+"-"+serviceName+"'", true)
 	}
 	return service
 }
@@ -171,7 +174,8 @@ func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 		// Load patterns from .gitignore file
 		content, err := ioutil.ReadFile(opt.WorkingDir + ".gitignore")
 		if err != nil {
-			util.Error("Unable to parse .gitignore file", err, true)
+			errorLogger.Println("Unable to parse .gitignore file: " + err.Error())
+			logError("Unable to parse .gitignore file", true)
 		}
 		contentStr := strings.ReplaceAll(string(content), "\r\n", "\n")
 		// Save them into the project
@@ -217,7 +221,8 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		config.AddConfigPath(opt.WorkingDir)
 		err := config.ReadInConfig()
 		if err != nil {
-			util.Error("Could not read '"+configFileName+"' file", err, true)
+			errorLogger.Println("Could not read '"+configFileName+"' file: " + err.Error())
+			logError("Could not read '"+configFileName+"' file", true)
 		}
 		// Assign values
 		metadata.Name = config.GetString("project-name")

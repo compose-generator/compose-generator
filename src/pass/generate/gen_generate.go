@@ -56,7 +56,8 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 		}
 		stopProcess(spinner)
 	} else {
-		printError("No templates selected. Aborting ...", nil, true)
+		errorLogger.Println("No templates selected. Aborting")
+		logError("No templates selected. Aborting ...", true)
 	}
 }
 

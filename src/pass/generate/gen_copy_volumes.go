@@ -55,8 +55,9 @@ func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath strin
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
-		if mkdirAll(dstPath, 0777) != nil {
-			printWarning("Could not create volume dir")
+		if err := mkdirAll(dstPath, 0777); err != nil {
+			warningLogger.Println("Could not create volume dir: " + err.Error())
+			logWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
@@ -64,7 +65,8 @@ func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath strin
 			AddPermission: 0777,
 		}
 		if err := copyFile(srcPath, dstPath, opt); err != nil {
-			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
+			warningLogger.Println("Could not copy volume from '" + srcPath + "' to '" + dstPath + "': " + err.Error())
+			logWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
 		}
 	}
 	// Set the volume bind path to the destination
@@ -75,8 +77,9 @@ func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
-		if mkdirAll(dstPath, 0777) != nil {
-			printWarning("Could not create volume dir")
+		if err := mkdirAll(dstPath, 0777); err != nil {
+			warningLogger.Println("Could not create volume dir: " + err.Error())
+			logWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
@@ -84,7 +87,8 @@ func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
 			AddPermission: 0777,
 		}
 		if err := copyFile(srcPath, dstPath, opt); err != nil {
-			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
+			warningLogger.Println("Could not copy volume from '" + srcPath + "' to '" + dstPath + "': " + err.Error())
+			logWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
 		}
 	}
 	// Set the volume bind path to the destination

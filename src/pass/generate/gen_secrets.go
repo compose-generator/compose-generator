@@ -19,7 +19,8 @@ func GenerateSecrets(project *model.CGProject, selected *model.SelectedTemplates
 			// Generate secret
 			res, err := generatePassword(secret.Length, 10, 0, false, false)
 			if err != nil {
-				printError("Password generation failed.", err, true)
+				errorLogger.Println("Password generation failed: " + err.Error())
+				logError("Password generation failed", true)
 			}
 			project.Secrets = append(project.Secrets, model.ProjectSecret{
 				Name:     secret.Name,

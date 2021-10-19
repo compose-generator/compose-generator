@@ -19,7 +19,8 @@ func GenerateAddCustomService(project *model.CGProject, serviceType string) {
 	// Initialize Docker client
 	client, err := newClientWithOpts(client.FromEnv)
 	if err != nil {
-		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
+		errorLogger.Println("Could not intanciate Docker client: " + err.Error())
+		logError("Could not intanciate Docker client. Please check your Docker installation", true)
 		return
 	}
 

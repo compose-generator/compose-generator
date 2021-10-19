@@ -53,11 +53,13 @@ func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject
 	// Search for external networks
 	externalNetworks, err := ListDockerNetworks(client)
 	if err != nil {
-		printError("Error parsing external networks", err, false)
+		errorLogger.Println("Error parsing external networks: " + err.Error())
+		logError("Error parsing external networks", false)
 		return
 	}
 	if len(externalNetworks) == 0 {
-		printError("There is no external network existing", nil, false)
+		errorLogger.Println("There is no external network existing: " + err.Error())
+		logError("There is no external network existing", false)
 		return
 	}
 	// Let the user choose one
@@ -105,7 +107,8 @@ func askForNewNetwork(service *spec.ServiceConfig, project *model.CGProject, cli
 		// Create external network
 		err := CreateDockerNetwork(client, networkName)
 		if err != nil {
-			printError("External network could not be created", err, false)
+			errorLogger.Println("External network could not be created: " + err.Error())
+			logError("External network could not be created", false)
 			return
 		}
 		externalConfig = spec.External{

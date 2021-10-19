@@ -22,7 +22,8 @@ func AddName(service *spec.ServiceConfig, project *model.CGProject) {
 	for chooseAgain {
 		service.Name = textQuestionWithDefault("How do you want to call your service (best practice: lower, kebab cased):", service.Name)
 		if util.SliceContainsString(project.Composition.ServiceNames(), service.Name) {
-			printError("This service name already exists. Please choose a different one", nil, false)
+			errorLogger.Println("Service '" + service.Name + "' already exists")
+			logError("Service '"+service.Name+"' already exists. Please choose a different one", false)
 		} else {
 			chooseAgain = false
 		}

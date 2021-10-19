@@ -8,7 +8,6 @@ package pass
 import (
 	"compose-generator/model"
 	"compose-generator/util"
-	"errors"
 	"path"
 	"strconv"
 	"strings"
@@ -26,9 +25,8 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serv
 		dockerfilePath := textQuestionWithDefault("Where is your Dockerfile located?", "./Dockerfile")
 		// Check if Dockerfile exists
 		if !fileExists(dockerfilePath) {
-			err := errors.New("The Dockerfile could not be found")
-			util.ErrorLogger.Println(err)
-			printError("The Dockerfile could not be found", nil, true)
+			errorLogger.Println("Dockerfile could not be found")
+			logError("Dockerfile could not be found", true)
 			return
 		}
 		// Add build config to service
@@ -62,7 +60,6 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serv
 		service.Image = registry + image
 		service.Name = serviceType + "-" + imageBaseName
 	}
-	return nil
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------
@@ -72,7 +69,8 @@ func searchRemoteImage(registry string, image string) bool {
 	p("Searching image ... ")
 	manifest, err := getImageManifest(registry + image)
 	if err != nil {
-		printError(" not found or no access", nil, false)
+		errorLogger.Println("Image '" + registry + image + "' not found or no access")
+		logError(" not found or no access", false)
 		chooseAgain := yesNoQuestion("Choose another image (Y) or proceed anyway (n)?", true)
 		util.Pel()
 		return chooseAgain

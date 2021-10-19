@@ -19,7 +19,8 @@ var visitServiceDependenciesMockable = VisitServiceDependencies
 // CommonCheckForDependencyCycles ensures that the project contains no dependency cycles
 func CommonCheckForDependencyCycles(project *model.CGProject) {
 	if hasDependencyCyclesMockable(project.Composition) {
-		printError("Configuration contains dependency cycles", nil, true)
+		errorLogger.Println("Configuration contains dependency cycles")
+		logError("Configuration contains dependency cycles", true)
 	}
 }
 
