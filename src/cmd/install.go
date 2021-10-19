@@ -30,7 +30,7 @@ func Install(_ *cli.Context) error {
 	if commandExists("docker") {
 		pel()
 		dockerVersion := getDockerVersion()
-		printSuccessMessage("Congrats! You have installed " + dockerVersion + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
+		printSuccess("Congrats! You have installed " + dockerVersion + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
 		util.InfoLogger.Println("Installation successful")
 	} else {
 		util.ErrorLogger.Println("Installation failed")

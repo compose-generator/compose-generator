@@ -20,43 +20,41 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// Function list for mocking
-var textQuestion = util.TextQuestion
-var yesNoQuestion = util.YesNoQuestion
-var multiSelectMenuQuestionIndex = util.MultiSelectMenuQuestionIndex
+// Logging
 var logError = util.LogError
 var logWarning = util.LogWarning
 var warningLogger = util.WarningLogger
 var errorLogger = util.ErrorLogger
-var heading = util.Heading
+
+// Text output
 var p = util.P
 var pl = util.Pl
 var pel = util.Pel
+var heading = util.Heading
+var textQuestion = util.TextQuestion
+var yesNoQuestion = util.YesNoQuestion
+var multiSelectMenuQuestionIndex = util.MultiSelectMenuQuestionIndex
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
 var printSecretValue = color.Yellow
-var fileExists = util.FileExists
-var getPredefinedServicesPath = util.GetPredefinedServicesPath
-var mkdirAll = os.MkdirAll
-var executeOnToolbox = util.ExecuteOnToolbox
-var copyFile = copy.Copy
-var templateListToLabelList = util.TemplateListToLabelList
-var templateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
 var askTemplateQuestions = util.AskTemplateQuestions
 var askTemplateProxyQuestions = util.AskTemplateProxyQuestions
 var askForCustomVolumePaths = util.AskForCustomVolumePaths
 var evaluateConditionalSections = util.EvaluateConditionalSections
-var unmarshalYaml = yaml.Unmarshal
+
+// File operations
+var fileExists = util.FileExists
+var getPredefinedServicesPath = util.GetPredefinedServicesPath
+var mkdirAll = os.MkdirAll
+var copyFile = copy.Copy
 var openFile = os.Open
 var readAllFromFile = ioutil.ReadAll
-var generatePassword = password.Generate
-var loadTemplateService = project.LoadTemplateService
-var sliceContainsString = util.SliceContainsString
 var readFile = ioutil.ReadFile
 var writeFile = ioutil.WriteFile
-var getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
-	return config.GetServiceConfigurationsByType(templateType)
-}
+var unmarshalYaml = yaml.Unmarshal
+var loadTemplateService = project.LoadTemplateService
+
+// Passes
 var addBuildOrImagePass = addPass.AddBuildOrImage
 var addNamePass = addPass.AddName
 var addContainerNamePass = addPass.AddContainerName
@@ -68,4 +66,14 @@ var addEnvFilesPass = addPass.AddEnvFiles
 var addRestartPass = addPass.AddRestart
 var addDependsPass = addPass.AddDepends
 var addDependantsPass = addPass.AddDependants
+
+// Other
 var newClientWithOpts = client.NewClientWithOpts
+var executeOnToolbox = util.ExecuteOnToolbox
+var templateListToLabelList = util.TemplateListToLabelList
+var templateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
+var generatePassword = password.Generate
+var sliceContainsString = util.SliceContainsString
+var getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
+	return config.GetServiceConfigurationsByType(templateType)
+}

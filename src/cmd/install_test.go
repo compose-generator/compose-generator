@@ -32,7 +32,7 @@ func TestInstall1(t *testing.T) {
 		return expectedDockerVersion
 	}
 	printSuccessMessageCallCount := 0
-	printSuccessMessage = func(text string) {
+	printSuccess = func(text string) {
 		printSuccessMessageCallCount++
 		assert.Equal(t, "Congrats! You have installed "+expectedDockerVersion+". You now can start by executing 'compose-generator generate' to generate your compose file.", text)
 	}
