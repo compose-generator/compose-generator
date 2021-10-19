@@ -3,6 +3,8 @@ package util
 import (
 	"log"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/fatih/color"
 )
@@ -18,7 +20,8 @@ var (
 
 func init() {
 	// Open logfile
-	logfile, err := os.OpenFile("log.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+
+	logfile, err := os.OpenFile(getLogfilePath(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,11 +31,13 @@ func init() {
 	consoleErrorLogger = log.New(os.Stderr, color.RedString("ERROR: "), log.Ldate|log.Ltime)
 
 	// Create file loggers
-	DebugLogger = log.New(logfile, "DEBUG: ", log.Ldate|log.Ltime|log.Lshortfile)
-	InfoLogger = log.New(logfile, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	WarningLogger = log.New(logfile, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(logfile, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	DebugLogger = log.New(logfile, "DEBUG: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
+	InfoLogger = log.New(logfile, "INFO: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
+	WarningLogger = log.New(logfile, "WARNING: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
+	ErrorLogger = log.New(logfile, "ERROR: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
 }
+
+// ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // LogError prints an error message to the console
 func LogError(message string, exit bool) {
@@ -46,4 +51,16 @@ func LogError(message string, exit bool) {
 // LogWarning prints a warning message to the console
 func LogWarning(message string) {
 	consoleWarningLogger.Println(message)
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func getLogfilePath() string {
+	timestampString := time.Now().Format("2017-09-07 17:06:04.000000")
+	timestampString = strings.ReplaceAll(timestampString, " ", "_")
+	timestampString = strings.ReplaceAll(timestampString, "-", "_")
+	timestampString = strings.ReplaceAll(timestampString, ":", "_")
+	timestampString = strings.ReplaceAll(timestampString, ".", "_")
+	logfileName := "log_" + timestampString + ".log"
+	return getLogfilesPath() + "/" + logfileName
 }

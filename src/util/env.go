@@ -88,24 +88,6 @@ func GetPredefinedServicesPath() string {
 	return "../predefined-services" // Dev
 }
 
-// GetLogfilesPath returns the path to the logfiles directory
-func GetLogfilesPath() string {
-	logPathLinux := "/usr/lib/compose-generator/log"
-	if fileExists(logPathLinux) {
-		return logPathLinux // Linux
-	}
-	filename, err := executable()
-	if err != nil {
-		logError("Cannot retrieve path of executable", true)
-	}
-	filename = filepath.ToSlash(filename)
-	filename = filename[:strings.LastIndex(filename, "/")]
-	if fileExists(filename + "/log") {
-		return filename + "/log" // Windows + Docker
-	}
-	return "../log" // Dev
-}
-
 // IsToolboxPresent checks if the Compose Generator toolbox image is present on the Docker host
 func IsToolboxPresent() bool {
 	// Check if Toolbox is present
@@ -138,6 +120,23 @@ func IsDockerRunning() bool {
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func getLogfilesPath() string {
+	logPathLinux := "/usr/lib/compose-generator/log"
+	if fileExists(logPathLinux) {
+		return logPathLinux // Linux
+	}
+	filename, err := executable()
+	if err != nil {
+		logError("Cannot retrieve path of executable", true)
+	}
+	filename = filepath.ToSlash(filename)
+	filename = filename[:strings.LastIndex(filename, "/")]
+	if fileExists(filename + "/log") {
+		return filename + "/log" // Windows + Docker
+	}
+	return "../log" // Dev
+}
 
 func getOuterVolumePathOnDockerizedEnvironment() string {
 	// Obtain Docker client

@@ -30,12 +30,14 @@ func AddPorts(service *spec.ServiceConfig, _ *model.CGProject) {
 			portOuter := textQuestionWithValidator("To which destination port on the host machine?", util.PortValidator)
 			portInnerInt, err := strconv.ParseUint(portInner, 10, 32)
 			if err != nil {
-				printError("Port could not be converted to uint32", err, false)
+				errorLogger.Println("Inner port could not be converted to uint32: " + err.Error())
+				logError("Inner port could not be converted to uint32", false)
 				return
 			}
 			portOuterInt, err := strconv.ParseUint(portOuter, 10, 32)
 			if err != nil {
-				printError("Port could not be converted to uint32", err, false)
+				errorLogger.Println("Outer port could not be converted to uint32: " + err.Error())
+				logError("Outer port could not be converted to uint32", false)
 				return
 			}
 
