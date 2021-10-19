@@ -7,6 +7,7 @@ package pass
 
 import (
 	"compose-generator/model"
+	"compose-generator/util"
 	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
@@ -19,6 +20,7 @@ var isVolumeUsedByOtherServicesMockable = isVolumeUsedByOtherServices
 // RemoveVolumes removes all volumes of a service
 func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
 	deleteFromDisk := yesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false)
+	util.InfoLogger.Println("Removing volumes ...")
 	for i := range service.Volumes {
 		volume := &service.Volumes[i]
 		// Check if volume exists
@@ -30,13 +32,15 @@ func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
 			// Delete volume recursively
 			if deleteFromDisk {
 				if err := removeAll(volume.Source); err != nil {
-					printWarning("Could not remove volume at path '" + volume.Source + "'")
+					util.WarningLogger.Println("Could not remove volume at path '" + volume.Source + "': " + err.Error())
+					logWarning("Could not remove volume at path '" + volume.Source + "'")
 				}
 			}
 			// Remove in project-wide volumes section
 			delete(project.Composition.Volumes, volume.Source)
 		}
 	}
+	util.InfoLogger.Println("Removing volumes done")
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

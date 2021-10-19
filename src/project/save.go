@@ -45,11 +45,13 @@ func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	// Save docker compose file
 	content, err := yaml.Marshal(project.Composition)
 	if err != nil {
-		util.Error("Could not save "+opt.ComposeFileName, err, true)
+		errorLogger.Println("Could not save "+opt.ComposeFileName + ": " + err.Error())
+		logError("Could not save "+opt.ComposeFileName, true)
 	}
 	err = ioutil.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0600)
 	if err != nil {
-		util.Error("Could not save "+opt.ComposeFileName, err, true)
+		errorLogger.Println("Could not save "+opt.ComposeFileName + ": " + err.Error())
+		logError("Could not save "+opt.ComposeFileName, true)
 	}
 }
 
@@ -94,7 +96,8 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 		content = util.ReplaceVarsInString(content, secretMap)
 		// Write to disk
 		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0600); err != nil {
-			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
+			errorLogger.Println("Unable to write environment file '"+fileName+"' to the disk: " + err.Error())
+			logError("Unable to write environment file '"+fileName+"' to the disk", true)
 		}
 	}
 }
@@ -107,7 +110,8 @@ func saveGitignore(project *model.CGProject, opt SaveOptions) {
 			content += pattern + "\n"
 		}
 		if err := ioutil.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0600); err != nil {
-			util.Error("Could not write .gitignore file", err, true)
+			errorLogger.Println("Could not write .gitignore file: " + err.Error())
+			logError("Could not write .gitignore file", true)
 		}
 	}
 }
@@ -121,7 +125,8 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 				// #nosec G304
 				childContent, err := ioutil.ReadFile(path)
 				if err != nil {
-					util.Error("Could not load README.md from service template", err, false)
+					errorLogger.Panicln("Could not load README.md from service template: " + err.Error())
+					logError("Could not load README.md from service template", false)
 					continue
 				}
 				content += string(childContent) + "\n\n"
@@ -131,7 +136,8 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 		content = util.ReplaceVarsInString(content, project.Vars)
 		// Write to output file
 		if err := ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0600); err != nil {
-			util.Error("Could not write README file", err, true)
+			errorLogger.Println("Could not write README file: " + err.Error())
+			logError("Could not write README file", true)
 		}
 	}
 }
@@ -152,6 +158,7 @@ func saveCGFile(project *model.CGProject, opt SaveOptions) {
 	config.Set("modified-by", project.LastModifiedBy)
 	config.Set("modified-at", project.LastModifiedAt)
 	if err := config.WriteConfigAs(opt.WorkingDir + ".cg.yml"); err != nil {
-		util.Error("Could not write CG config file", err, true)
+		errorLogger.Println("Could not write CG config file: " + err.Error())
+		logError("Could not write CG config file", true)
 	}
 }

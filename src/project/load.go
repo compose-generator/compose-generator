@@ -95,16 +95,19 @@ func LoadTemplateService(
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	// Check if file exists
 	if !fileExists(opt.WorkingDir + opt.ComposeFileName) {
-		printError("Compose file not found", nil, true)
+		errorLogger.Println("Compose file not found")
+		logError("Compose file not found", true)
 	}
 	// Parse compose file
 	content, err := readFile(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
-		printError("Unable to parse '"+opt.ComposeFileName+"'", err, true)
+		errorLogger.Println("Unable to parse '" + opt.ComposeFileName + "': " + err.Error())
+		logError("Unable to parse '"+opt.ComposeFileName+"'", true)
 	}
 	dict, err := parseCompositionYAML(content)
 	if err != nil {
-		printError("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
+		errorLogger.Println("Unable to parse '" + opt.ComposeFileName + "': " + err.Error())
+		logError("Unable to parse '"+opt.ComposeFileName+"' file", true)
 	}
 
 	// Load
@@ -120,7 +123,8 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	}
 	project.Composition, err = loadComposition(config)
 	if err != nil {
-		printError("Could not load project from the current directory", err, true)
+		errorLogger.Println("Could not load project from the current directory: " + err.Error())
+		logError("Could not load project from the current directory", true)
 	}
 
 	// Enrich project with data from composition

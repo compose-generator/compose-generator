@@ -45,6 +45,8 @@ var AddCliFlags = []cli.Flag{
 
 // Add a service to an existing compose file
 func Add(c *cli.Context) error {
+	infoLogger.Println("Add command executed")
+
 	// Extract flags
 	flagAdvanced := c.Bool("advanced")
 	flagRun := c.Bool("run")

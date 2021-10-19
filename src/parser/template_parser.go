@@ -33,7 +33,8 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 	templatesPath := util.GetPredefinedServicesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
-		util.Error("Could not load predefined service templates", err, true)
+		errorLogger.Println("Could not load predefined service templates: " + err.Error())
+		logError("Could not load predefined service templates", true)
 	}
 	filterFunc := func(s string) bool {
 		return s != "README.md" && s != "INSTRUCTIONS_HEADER.md" && s != "predefined-services.tar.gz"
@@ -43,7 +44,8 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 	for _, templateType := range filterFilenames(files, filterFunc) {
 		files, err := ioutil.ReadDir(filepath.Join(templatesPath, templateType))
 		if err != nil {
-			util.Error("Could not load predefined service templates", err, true)
+			errorLogger.Println("Could not load predefined service templates: " + err.Error())
+			logError("Could not load predefined service templates", true)
 		}
 		// Search through service templates
 		for _, f := range filterFilenames(files, filterFunc) {
@@ -80,20 +82,24 @@ func getConfigFromFile(dirPath string) (config model.PredefinedTemplateConfig) {
 	jsonFile, err := os.Open(dirPath + "/config.json")
 	defer func() {
 		if err := jsonFile.Close(); err != nil {
-			util.Error("Error closing config file", err, true)
+			errorLogger.Println("Error closing template config file: " + err.Error())
+			logError("Error closing config file", true)
 		}
 	}()
 	if err != nil {
-		util.Error("Unable to load config file of template "+dirPath, err, true)
+		errorLogger.Println("Unable to load config file of template '" + dirPath + "': " + err.Error())
+		logError("Unable to load config file of template "+dirPath, true)
 	}
 
 	// Parse json to TemplateConfig struct
 	bytes, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
-		util.Error("Unable to load config file of template "+dirPath, err, true)
+		errorLogger.Println("Unable to load config file of template '" + dirPath + "': " + err.Error())
+		logError("Unable to load config file of template "+dirPath, true)
 	}
 	if err := json.Unmarshal(bytes, &config); err != nil {
-		util.Error("Unable to unmarshal config file of template "+dirPath, err, true)
+		errorLogger.Println("Unable to unmarshal config file of template '" + dirPath + "': " + err.Error())
+		logError("Unable to unmarshal config file of template "+dirPath, true)
 	}
 	return
 }

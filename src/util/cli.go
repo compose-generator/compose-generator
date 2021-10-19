@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"runtime"
 	"strconv"
+	"strings"
 
 	"github.com/cli/safeexec"
 )
@@ -59,10 +60,12 @@ func DockerComposeUp(detached bool) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Start(); err != nil {
-		Error("Could not execute docker compose", err, true)
+		errorLogger.Println("Could not execute Docker Compose: " + err.Error())
+		logError("Could not execute Docker Compose", true)
 	}
 	if err := cmd.Wait(); err != nil {
-		Error("Could not wait for docker compose", err, true)
+		errorLogger.Println("Could not wait for Docker Compose: " + err.Error())
+		logError("Could not wait for Docker Compose", true)
 	}
 }
 
@@ -73,7 +76,8 @@ func ExecuteWithOutput(c string) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		Error("Could not execute command", err, true)
+		errorLogger.Println("Could not execute command '" + c + "': " + err.Error())
+		logError("Could not execute command", true)
 	}
 }
 
@@ -82,10 +86,12 @@ func ExecuteAndWait(c ...string) {
 	// #nosec G204
 	cmd := exec.Command(c[0], c[1:]...)
 	if err := cmd.Start(); err != nil {
-		Error("Could not execute command", err, true)
+		errorLogger.Println("Could not execute command '" + strings.Join(c, " ") + "': " + err.Error())
+		logError("Could not execute command", true)
 	}
 	if err := cmd.Wait(); err != nil {
-		Error("Could not wait for command", err, true)
+		errorLogger.Println("Could not wait for command '" + strings.Join(c, " ") + "': " + err.Error())
+		logError("Could not wait for command", true)
 	}
 }
 
@@ -96,8 +102,10 @@ func ExecuteOnToolbox(c string) {
 	// Start docker container
 	// #nosec G204
 	cmd := exec.Command("docker", "run", "-i", "-v", toolboxMountPath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
+	debugLogger.Println(cmd.Output())
 	if err := cmd.Run(); err != nil {
-		Error("Toolbox terminated with an error", err, true)
+		errorLogger.Println("Toolbox terminated with an error for command '" + c + "': " + err.Error())
+		logError("Toolbox terminated with an error", true)
 	}
 }
 
@@ -108,10 +116,12 @@ func ExecuteOnToolboxCustomVolume(c string, volumePath string) {
 	// #nosec G204
 	cmd := exec.Command("docker", "run", "-i", "-v", volumePath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
 	if err := cmd.Start(); err != nil {
-		Error("Could not start docker", err, true)
+		errorLogger.Println("Could not execute Toolbox command '" + c + "': " + err.Error())
+		logError("Could not start Docker", true)
 	}
 	if err := cmd.Wait(); err != nil {
-		Error("Could not wait for docker", err, true)
+		errorLogger.Println("Could not wait for Toolbox command '" + c + "': " + err.Error())
+		logError("Could not wait for Docker", true)
 	}
 }
 
@@ -123,7 +133,8 @@ func ClearScreen() {
 	}
 	cmd.Stdout = os.Stdout
 	if err := cmd.Run(); err != nil {
-		Warning("Could not clear screen")
+		warningLogger.Println("Could not clear screen: " + err.Error())
+		logWarning("Could not clear screen")
 	}
 }
 
@@ -143,7 +154,8 @@ func getToolboxMountPath() string {
 	// Get the current working directory
 	workingDir, err := getwd()
 	if err != nil {
-		printError("Could not find current working directory", err, true)
+		errorLogger.Println("Could not find current working directory: " + err.Error())
+		logError("Could not find current working directory", true)
 	}
 	return workingDir
 }

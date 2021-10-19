@@ -19,8 +19,11 @@ import (
 )
 
 var isDockerizedEnvironment = util.IsDockerizedEnvironment
-var printError = util.Error
-var printWarning = util.Warning
+var logError = util.LogError
+var logWarning = util.LogWarning
+var infoLogger = util.InfoLogger
+var warningLogger = util.WarningLogger
+var errorLogger = util.ErrorLogger
 var printSuccess = util.Success
 var printHeading = util.Heading
 var printSuccessMessage = util.Success

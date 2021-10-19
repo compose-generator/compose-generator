@@ -34,6 +34,8 @@ var TemplateSaveCliFlags = []cli.Flag{
 
 // SaveTemplate copies the compose configuration from the current directory to a central templates directory
 func SaveTemplate(c *cli.Context) error {
+	infoLogger.Println("SaveTemplate command executed")
+
 	// Extract flags
 	name := c.Args().Get(0)
 	flagStash := c.Bool("stash")
@@ -56,7 +58,8 @@ func SaveTemplate(c *cli.Context) error {
 	// Create the new template
 	targetDir := util.GetCustomTemplatesPath() + "/" + name
 	if err := os.MkdirAll(targetDir, 0750); err != nil {
-		util.Error("Could not create template dir", err, true)
+		errorLogger.Println("Could not create custom template dir: " + err.Error())
+		logError("Could not create template dir", true)
 	}
 
 	// Copy volumnes and build contexts over to the new template dir
@@ -87,7 +90,8 @@ func SaveTemplate(c *cli.Context) error {
 func isTemplateExisting(name string) bool {
 	targetDir := getCustomTemplatesPath() + "/" + name
 	if fileExists(targetDir) {
-		printError("Template with the name '"+name+"' already exists", nil, false)
+		warningLogger.Println("Template '" + targetDir + "' already exists")
+		logWarning("Template with the name '" + name + "' already exists")
 		return true
 	}
 	return false
@@ -96,22 +100,26 @@ func isTemplateExisting(name string) bool {
 func copyVolumesAndBuildContextsToTemplate(proj *model.CGProject, targetDir string) {
 	currentAbs, err := abs(".")
 	if err != nil {
-		printError("Could not find absolute path of current dir", err, true)
+		errorLogger.Println("Could not find absolute path of current dir: " + err.Error())
+		logError("Could not find absolute path of current dir", true)
 	}
 	// Copy volumes to template dir
 	paths := append(proj.GetAllVolumePaths(), proj.GetAllBuildContextPaths()...)
 	for _, path := range normalizePaths(paths) {
 		pathAbs, err := abs(path)
 		if err != nil {
-			printError("Could not find absolute path of volume / build context dir", err, true)
+			errorLogger.Println("Could not find absolute path of volume / build context dir: " + err.Error())
+			logError("Could not find absolute path of volume / build context dir", true)
 		}
 		pathRel, err := rel(currentAbs, pathAbs)
 		if err != nil {
-			printError("Could not copy volume / build context '"+path+"'", err, false)
+			errorLogger.Println("Could not copy volume / build context: " + err.Error())
+			logError("Could not copy volume / build context '"+path+"'", false)
 			continue
 		}
 		if copyDir(path, targetDir+"/"+pathRel) != nil {
-			printWarning("Could not copy volume / build context from '" + path + "' to '" + targetDir + "/" + pathRel + "'")
+			warningLogger.Println("Could not copy volume / build context from '" + path + "' to '" + targetDir + "/" + pathRel + "': " + err.Error())
+			logWarning("Could not copy volume / build context from '" + path + "' to '" + targetDir + "/" + pathRel + "'")
 		}
 	}
 }

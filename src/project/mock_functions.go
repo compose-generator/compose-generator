@@ -13,8 +13,10 @@ import (
 	"github.com/compose-spec/compose-go/loader"
 )
 
-var printWarning = util.Warning
-var printError = util.Error
+var logWarning = util.LogWarning
+var logError = util.LogError
+var warningLogger = util.WarningLogger
+var errorLogger = util.ErrorLogger
 var remove = os.Remove
 var removeAll = os.RemoveAll
 var normalizePaths = util.NormalizePaths

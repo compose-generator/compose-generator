@@ -23,7 +23,8 @@ func DownloadFile(url string, filepath string) error {
 	resp, err := client.Get(url)
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
-			Error("Error closing downloaded file", err, true)
+			errorLogger.Println("Error closing downloaded file: " + err.Error())
+			logError("Error closing downloaded file", true)
 		}
 	}()
 	if err != nil {
@@ -34,7 +35,8 @@ func DownloadFile(url string, filepath string) error {
 	out, err := os.Create(filepath)
 	defer func() {
 		if err := out.Close(); err != nil {
-			Error("Error closing downloaded file", err, true)
+			errorLogger.Println("Error closing downloaded file: " + err.Error())
+			logError("Error closing downloaded file", true)
 		}
 	}()
 	if err != nil {

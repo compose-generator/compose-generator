@@ -8,6 +8,7 @@ package pass
 import (
 	"compose-generator/model"
 	"compose-generator/util"
+	"errors"
 	"path"
 	"strconv"
 	"strings"
@@ -25,7 +26,10 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serv
 		dockerfilePath := textQuestionWithDefault("Where is your Dockerfile located?", "./Dockerfile")
 		// Check if Dockerfile exists
 		if !fileExists(dockerfilePath) {
+			err := errors.New("The Dockerfile could not be found")
+			util.ErrorLogger.Println(err)
 			printError("The Dockerfile could not be found", nil, true)
+			return
 		}
 		// Add build config to service
 		service.Build = &spec.BuildConfig{
@@ -58,6 +62,7 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serv
 		service.Image = registry + image
 		service.Name = serviceType + "-" + imageBaseName
 	}
+	return nil
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

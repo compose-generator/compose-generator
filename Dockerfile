@@ -1,3 +1,4 @@
+# WARNING: This Dockerfile is not meant to be used to build the Docker image manually
 FROM alpine:3.14
 
 # Set env variables

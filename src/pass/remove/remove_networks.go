@@ -7,6 +7,7 @@ package pass
 
 import (
 	"compose-generator/model"
+	"compose-generator/util"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
@@ -17,6 +18,7 @@ var getServicesWhichUseNetworkMockable = getServicesWhichUseNetwork
 
 // RemoveNetworks removes all networks from a service
 func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
+	util.InfoLogger.Println("Removing networks ...")
 	for networkName := range service.Networks {
 		// Get project-wide network config by the name of the network
 		networkConfig := project.Composition.Networks[networkName]
@@ -33,6 +35,7 @@ func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 		// Remove network from project-wide network section
 		delete(project.Composition.Networks, networkName)
 	}
+	util.InfoLogger.Println("Removing networks done")
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

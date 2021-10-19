@@ -55,6 +55,8 @@ var removeServiceFromProjectMockable = removeServiceFromProject
 
 // Remove services from an existing compose file
 func Remove(c *cli.Context) error {
+	infoLogger.Println("Remove command executed")
+
 	// Extract flags
 	serviceNames := c.Args().Slice()
 	flagRun := c.Bool("run")
@@ -84,6 +86,7 @@ func Remove(c *cli.Context) error {
 	proj.ForceConfig = flagForce
 	proj.WithVolumesConfig = flagWithVolumes
 	util.StopProcess(spinner)
+	util.InfoLogger.Println("Loading project done")
 	util.Pel()
 
 	// Execute additional validation steps
@@ -93,7 +96,8 @@ func Remove(c *cli.Context) error {
 	if len(serviceNames) == 0 {
 		serviceNames = proj.Composition.ServiceNames()
 		if len(serviceNames) == 0 {
-			util.Error("No services found", nil, true)
+			util.ErrorLogger.Println("Removal of 0 services. Therefore aborting")
+			logError("No services found", true)
 		}
 		serviceNames = util.MultiSelectMenuQuestion("Which services do you want to remove?", serviceNames)
 	}
@@ -108,11 +112,13 @@ func Remove(c *cli.Context) error {
 	project.SaveProject(proj)
 	util.StopProcess(spinner)
 	util.Pel()
+	util.InfoLogger.Println("Saving project done")
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
 		util.DockerComposeUp(flagDetached)
 	}
+	util.InfoLogger.Println("Docker Compose command terminated")
 	return nil
 }
 
@@ -122,7 +128,8 @@ func removeService(project *model.CGProject, serviceName string, withVolumes boo
 	// Get service and its index by its name
 	service, err := project.Composition.GetService(serviceName)
 	if err != nil {
-		printError("Service not found", err, false)
+		util.WarningLogger.Println("Selected service was not found in composition: " + err.Error())
+		logError("Service not found", false)
 		return
 	}
 

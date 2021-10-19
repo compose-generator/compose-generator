@@ -13,7 +13,7 @@ import (
 
 // Function list for mocking
 var yesNoQuestion = util.YesNoQuestion
-var printWarning = util.Warning
+var logWarning = util.LogWarning
 var fileExists = util.FileExists
 var removeAll = os.RemoveAll
 var abs = filepath.Abs

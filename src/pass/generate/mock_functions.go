@@ -24,8 +24,8 @@ import (
 var textQuestion = util.TextQuestion
 var yesNoQuestion = util.YesNoQuestion
 var multiSelectMenuQuestionIndex = util.MultiSelectMenuQuestionIndex
-var printError = util.Error
-var printWarning = util.Warning
+var logError = util.LogError
+var logWarning = util.LogWarning
 var heading = util.Heading
 var p = util.P
 var pl = util.Pl

@@ -20,9 +20,14 @@ import (
 
 var println = fmt.Println
 var white = color.White
-var red = color.Red
-var hiYellow = color.HiYellow
-var printError = Error
+var redString = color.RedString
+var hiYellowString = color.HiYellowString
+var logError = LogError
+var logWarning = LogWarning
+var debugLogger = DebugLogger
+var infoLogger = InfoLogger
+var warningLogger = WarningLogger
+var errorLogger = ErrorLogger
 var commandExists = CommandExists
 var isDockerRunning = IsDockerRunning
 var exitProgram = os.Exit

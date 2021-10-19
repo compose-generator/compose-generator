@@ -59,6 +59,8 @@ var GenerateCliFlags = []cli.Flag{
 
 // Generate a docker compose configuration
 func Generate(c *cli.Context) error {
+	infoLogger.Println("Generate command executed")
+
 	// Extract flags
 	configPath := c.Path("config")
 	flagAdvanced := c.Bool("advanced")
@@ -106,16 +108,20 @@ func Generate(c *cli.Context) error {
 	EnrichProjectWithServices(proj, config)
 
 	// Save project
+	infoLogger.Println("Saving project ...")
 	spinner := startProcess("Saving project ...")
 	project.SaveProject(proj)
 	stopProcess(spinner)
+	infoLogger.Println("Saving project done")
 
 	// Print generated secrets
 	genPass.GeneratePrintSecrets(proj)
 
 	// Run if the corresponding flag is set. Otherwise, print success message
 	if flagRun || flagDetached {
+		infoLogger.Println("Running Docker Compose ...")
 		util.DockerComposeUp(flagDetached)
+		infoLogger.Println("Running Docker Compose done")
 	} else {
 		pel()
 		printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")
