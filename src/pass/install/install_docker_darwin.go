@@ -17,6 +17,7 @@ const downloadUrl = "https://get.docker.com"
 func InstallDocker() {
 	infoLogger.Println("Executing Install command")
 	if isPrivileged() {
+		infoLogger.Println("Installing Docker ...")
 		spinner := startProcess("Installing Docker ...")
 		filePath := os.TempDir() + "/install-docker.sh"
 		err := downloadFile(downloadUrl, filePath)
@@ -27,5 +28,6 @@ func InstallDocker() {
 		executeAndWait("chmod", "+x", filePath)
 		executeAndWait("sh", filePath)
 		stopProcess(spinner)
+		infoLogger.Println("Installing Docker (done)")
 	}
 }

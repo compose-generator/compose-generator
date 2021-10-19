@@ -20,7 +20,7 @@ var isVolumeUsedByOtherServicesMockable = isVolumeUsedByOtherServices
 // RemoveVolumes removes all volumes of a service
 func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
 	deleteFromDisk := yesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false)
-	util.InfoLogger.Println("Removing volumes ...")
+	infoLogger.Println("Removing volumes ...")
 	for i := range service.Volumes {
 		volume := &service.Volumes[i]
 		// Check if volume exists
@@ -40,7 +40,7 @@ func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
 			delete(project.Composition.Volumes, volume.Source)
 		}
 	}
-	util.InfoLogger.Println("Removing volumes done")
+	infoLogger.Println("Removing volumes (done)")
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

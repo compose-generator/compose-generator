@@ -30,6 +30,7 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 	}
 
 	// Find available templates
+	infoLogger.Println("Loading predefined service templates ...")
 	templatesPath := util.GetPredefinedServicesPath()
 	files, err := ioutil.ReadDir(templatesPath)
 	if err != nil {
@@ -71,6 +72,7 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 			}
 		}
 	}
+	infoLogger.Println("Loading predefined service templates (done)")
 	return availableTemplates
 }
 

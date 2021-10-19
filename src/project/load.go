@@ -94,6 +94,7 @@ func LoadTemplateService(
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	// Check if file exists
+	infoLogger.Println("Loading Compose file ...")
 	if !fileExists(opt.WorkingDir + opt.ComposeFileName) {
 		errorLogger.Println("Compose file not found")
 		logError("Compose file not found", true)
@@ -134,6 +135,7 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 			project.Ports = append(project.Ports, int(port.Published))
 		}
 	}
+	infoLogger.Println("Loading Compose file (done)")
 }
 
 func loadComposeFileSingleService(
@@ -143,6 +145,7 @@ func loadComposeFileSingleService(
 	serviceName string,
 	opt LoadOptions,
 ) *spec.ServiceConfig {
+	infoLogger.Println("Loading service '" + serviceName + "' from Compose file ...")
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
 		errorLogger.Println("Compose file not found in template " + templateTypeName + "-" + serviceName)
 		logError("Compose file not found in template "+templateTypeName+"-"+serviceName, true)
@@ -166,11 +169,13 @@ func loadComposeFileSingleService(
 		errorLogger.Println("Unable to load '" + templateTypeName + "-" + serviceName + "': " + err.Error())
 		logError("Unable to load '"+templateTypeName+"-"+serviceName+"'", true)
 	}
+	infoLogger.Println("Loading service '" + serviceName + "' from Compose file (done)")
 	return service
 }
 
 func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 	if project.WithGitignore {
+		infoLogger.Println("Loading Gitignore ...")
 		// Load patterns from .gitignore file
 		content, err := ioutil.ReadFile(opt.WorkingDir + ".gitignore")
 		if err != nil {
@@ -185,10 +190,12 @@ func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 				project.GitignorePatterns = append(project.GitignorePatterns, trimmedLine)
 			}
 		}
+		infoLogger.Println("Loading Gitignore (done)")
 	}
 }
 
 func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
+	infoLogger.Println("Loading .cg.yml file ...")
 	// Get default config values
 	defaultProjectName := path.Base(opt.WorkingDir)
 	defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
@@ -221,7 +228,7 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		config.AddConfigPath(opt.WorkingDir)
 		err := config.ReadInConfig()
 		if err != nil {
-			errorLogger.Println("Could not read '"+configFileName+"' file: " + err.Error())
+			errorLogger.Println("Could not read '" + configFileName + "' file: " + err.Error())
 			logError("Could not read '"+configFileName+"' file", true)
 		}
 		// Assign values
@@ -242,4 +249,5 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		metadata.LastModifiedBy = defaultModifiedBy
 		metadata.LastModifiedAt = defaultModifiedAt
 	}
+	infoLogger.Println("Loading .cg.yml file (done)")
 }

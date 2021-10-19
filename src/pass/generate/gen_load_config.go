@@ -7,6 +7,7 @@ package pass
 
 import (
 	"compose-generator/model"
+	"strconv"
 	"strings"
 )
 
@@ -27,11 +28,14 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 			logError("You must specify a project name!", true)
 			return
 		}
+		infoLogger.Println("Project name: '" + config.ProjectName + "'")
 		config.ProductionReady = yesNoQuestion("Do you want the output to be production-ready?", false)
 		config.FromFile = false
+		infoLogger.Println("Production-ready: '" + strconv.FormatBool(config.ProductionReady) + "'")
 	} else {
 		// Take the given config file and load config from there
 		if fileExists(configPath) {
+			infoLogger.Println("Config file was attached")
 			yamlFile, err := openFile(configPath)
 			if err != nil {
 				errorLogger.Println("Could not load config file: " + err.Error())

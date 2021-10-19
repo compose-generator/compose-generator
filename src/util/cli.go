@@ -6,6 +6,7 @@ All rights reserved.
 package util
 
 import (
+	"bytes"
 	"os"
 	"os/exec"
 	"runtime"
@@ -102,8 +103,13 @@ func ExecuteOnToolbox(c string) {
 	// Start docker container
 	// #nosec G204
 	cmd := exec.Command("docker", "run", "-i", "-v", toolboxMountPath+":/toolbox", "chillibits/compose-generator-toolbox:"+imageVersion, c)
-	//debugLogger.Println(cmd.Output())
-	if err := cmd.Run(); err != nil {
+	var outb, errb bytes.Buffer
+	cmd.Stdout = &outb
+	cmd.Stderr = &errb
+	err := cmd.Run()
+	DebugLogger.Print("Toolbox stdout:\n" + outb.String())
+	DebugLogger.Print("Toolbox stderr:\n" + errb.String())
+	if err != nil {
 		ErrorLogger.Println("Toolbox terminated with an error for command '" + c + "': " + err.Error())
 		logError("Toolbox terminated with an error", true)
 	}

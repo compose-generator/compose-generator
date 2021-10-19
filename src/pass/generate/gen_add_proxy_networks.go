@@ -18,6 +18,7 @@ var getServiceRefMockable = getServiceRef
 // GenerateAddProxyNetworks connects all proxied services via networks to the proxy and removes their port configs
 func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	if project.ProductionReady {
+		infoLogger.Println("Adding proxy networks to proxied services ...")
 		// Get reference of proxy service
 		proxyService := getServiceRefMockable(project.Composition, "proxy-"+selectedTemplates.ProxyService[0].Name)
 		if proxyService == nil {
@@ -47,6 +48,7 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 				service.Ports = nil
 			}
 		}
+		infoLogger.Println("Adding proxy networks to proxied services (done)")
 	}
 }
 

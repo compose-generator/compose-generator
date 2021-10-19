@@ -112,7 +112,7 @@ func Generate(c *cli.Context) error {
 	spinner := startProcess("Saving project ...")
 	project.SaveProject(proj)
 	stopProcess(spinner)
-	infoLogger.Println("Saving project done")
+	infoLogger.Println("Saving project (done)")
 
 	// Print generated secrets
 	genPass.GeneratePrintSecrets(proj)
@@ -121,7 +121,7 @@ func Generate(c *cli.Context) error {
 	if flagRun || flagDetached {
 		infoLogger.Println("Running Docker Compose ...")
 		util.DockerComposeUp(flagDetached)
-		infoLogger.Println("Running Docker Compose done")
+		infoLogger.Println("Running Docker Compose (done)")
 	} else {
 		pel()
 		printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")

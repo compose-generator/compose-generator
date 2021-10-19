@@ -120,8 +120,9 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 					ErrorLogger.Println("Default value of yes/no was no bool in '" + template.Name + "': " + err.Error())
 					logError("Mistake in predefined template '"+template.Name+"'. Default value of yes/no question was no bool", true)
 				}
-				answer := YesNoQuestion(text, defaultValue)
-				project.Vars[question.Variable] = strconv.FormatBool(answer)
+				answer := strconv.FormatBool(YesNoQuestion(text, defaultValue))
+				InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
+				project.Vars[question.Variable] = answer
 			case model.QuestionTypeText:
 				// Ask a text question
 				answer := ""
@@ -141,14 +142,17 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 					// Ask a text question without validator
 					answer = TextQuestionWithDefault(text, defaultValue)
 				}
+				InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				project.Vars[question.Variable] = answer
 			case model.QuestionTypeMenu:
 				// Ask a menu question
 				answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
+				InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				project.Vars[question.Variable] = answer
 			}
 		} else {
 			// Advanced question falls back to default value
+			InfoLogger.Println("Falling back to default: " + question.Variable + "=" + question.DefaultValue)
 			project.Vars[question.Variable] = question.DefaultValue
 		}
 	}
@@ -180,8 +184,9 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 						ErrorLogger.Println("Default value of yes/no was no bool in '" + template.Name + "': " + err.Error())
 						logError("Mistake in proxy question configuration. Default value of yes/no question was no bool", true)
 					}
-					answer := YesNoQuestion(text, defaultValue)
-					proxyVars[question.Variable] = strconv.FormatBool(answer)
+					answer := strconv.FormatBool(YesNoQuestion(text, defaultValue))
+					proxyVars[question.Variable] = answer
+					InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				case model.QuestionTypeText:
 					// Ask a text question
 					answer := ""
@@ -202,14 +207,17 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 						answer = TextQuestionWithDefault(text, defaultValue)
 					}
 					proxyVars[question.Variable] = answer
+					InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				case model.QuestionTypeMenu:
 					// Ask a menu question
 					answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
 					proxyVars[question.Variable] = answer
+					InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				}
 			} else {
 				// Advanced question falls back to default value
 				proxyVars[question.Variable] = question.DefaultValue
+				InfoLogger.Println("Falling back to default: " + question.Variable + "=" + question.DefaultValue)
 			}
 		}
 		// Add collected proxy vars to project
@@ -227,9 +235,11 @@ func AskForCustomVolumePaths(project *model.CGProject, template *model.Predefine
 			// Ask a text question with validator
 			answer = TextQuestionWithDefault(volume.Text, defaultValue)
 			project.Vars[volume.Variable] = answer
+			InfoLogger.Println("User chose: " + volume.Variable + "=" + answer)
 		} else {
 			// Advanced question falls back to default value
 			project.Vars[volume.Variable] = volume.DefaultValue
+			InfoLogger.Println("Falling back to default: " + volume.Variable + "=" + volume.DefaultValue)
 		}
 	}
 }

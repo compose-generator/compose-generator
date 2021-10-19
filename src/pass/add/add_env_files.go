@@ -32,6 +32,7 @@ func AddEnvFiles(service *spec.ServiceConfig, _ *model.CGProject) {
 			}
 			// Add env file to service
 			service.EnvFile = append(service.EnvFile, envFile)
+			infoLogger.Println("Selected env file: " + envFile)
 		}
 		pel()
 	}

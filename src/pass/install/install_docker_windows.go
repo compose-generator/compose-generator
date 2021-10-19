@@ -17,6 +17,7 @@ const downloadUrl = "https://desktop.docker.com/win/stable/Docker%20Desktop%20In
 func InstallDocker() {
 	infoLogger.Println("Executing Install command")
 	// Download Docker installer
+	infoLogger.Println("Downloading Docker installer ...")
 	spinner := startProcess("Downloading Docker installer ...")
 	filePath := os.TempDir() + "/DockerInstaller.exe"
 	err := downloadFile(downloadUrl, filePath)
@@ -25,6 +26,7 @@ func InstallDocker() {
 		logError("Download of Docker installer failed", true)
 	}
 	stopProcess(spinner)
+	infoLogger.Println("Downloading Docker installer (done)")
 
 	// Run Docker installer
 	pl("Running installation ... ")

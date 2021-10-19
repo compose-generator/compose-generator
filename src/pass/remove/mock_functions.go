@@ -13,6 +13,7 @@ import (
 
 // Logging
 var logWarning = util.LogWarning
+var infoLogger = util.InfoLogger
 
 // Text output
 var yesNoQuestion = util.YesNoQuestion

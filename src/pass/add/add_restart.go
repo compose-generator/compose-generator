@@ -19,6 +19,7 @@ func AddRestart(service *spec.ServiceConfig, project *model.CGProject) {
 		pel()
 		items := []string{"always", "on-failure", "unless-stopped", "no"}
 		service.Restart = menuQuestion("When should the service get restarted?", items)
+		infoLogger.Println("Restart service: " + service.Restart)
 		pel()
 	}
 }

@@ -86,7 +86,7 @@ func Remove(c *cli.Context) error {
 	proj.ForceConfig = flagForce
 	proj.WithVolumesConfig = flagWithVolumes
 	util.StopProcess(spinner)
-	util.InfoLogger.Println("Loading project done")
+	util.InfoLogger.Println("Loading project (done)")
 	util.Pel()
 
 	// Execute additional validation steps
@@ -112,7 +112,7 @@ func Remove(c *cli.Context) error {
 	project.SaveProject(proj)
 	util.StopProcess(spinner)
 	util.Pel()
-	util.InfoLogger.Println("Saving project done")
+	util.InfoLogger.Println("Saving project (done)")
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {

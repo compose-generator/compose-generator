@@ -20,6 +20,7 @@ func GenerateChooseProxies(
 ) {
 	if config != nil && config.FromFile {
 		// Generate from config file
+		infoLogger.Println("Generating proxies from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeProxy)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -48,8 +49,10 @@ func GenerateChooseProxies(
 				}
 			}
 		}
+		infoLogger.Println("Generating proxies from config file (done)")
 	} else {
 		// Generate from user input
+		infoLogger.Println("Generating proxies from user input ...")
 		items := templateListToLabelList(available.ProxyService)
 		itemsPreselected := templateListToPreselectedLabelList(available.ProxyService, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which proxy services do you need?", items, itemsPreselected)
@@ -64,5 +67,6 @@ func GenerateChooseProxies(
 			// Save template to the selected templates
 			selected.ProxyService = append(selected.ProxyService, selectedConfig)
 		}
+		infoLogger.Println("Generating proxies from user input (done)")
 	}
 }

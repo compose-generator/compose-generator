@@ -40,6 +40,8 @@ var getTemplateMetadataListMockable = getTemplateMetadataList
 
 // LoadTemplate copies a template from the central templates directory to the working directory
 func LoadTemplate(c *cli.Context) error {
+	infoLogger.Println("LoadTemplate command executed")
+
 	// Extract flags
 	dirName := c.Args().Get(0)
 	flagForce := c.Bool("force")

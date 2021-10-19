@@ -114,6 +114,7 @@ func askForExistingExternalVolume(service *spec.ServiceConfig, project *model.CG
 			External: true,
 		},
 	}
+	infoLogger.Println("Added external volume '" + selectedVolume.Name + "' to new service")
 }
 
 func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
@@ -157,6 +158,7 @@ func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProje
 			External: true,
 		},
 	}
+	infoLogger.Println("Added new external volume '" + name + "' to new service")
 }
 
 func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
@@ -186,4 +188,5 @@ func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
 		Target:   volumeInner,
 		ReadOnly: readOnly,
 	})
+	infoLogger.Println("Added bind volume '" + volumeOuter + ":" + volumeInner + "' to new service")
 }

@@ -16,6 +16,7 @@ import (
 // Logging
 var logWarning = util.LogWarning
 var logError = util.LogError
+var infoLogger = util.InfoLogger
 var warningLogger = util.WarningLogger
 var errorLogger = util.ErrorLogger
 

@@ -70,6 +70,7 @@ func generateService(
 	templateType string,
 	serviceName string,
 ) {
+	infoLogger.Println("Generating service '" + serviceName + "' ...")
 	// Load service configuration
 	service := loadTemplateService(
 		proj,
@@ -100,4 +101,5 @@ func generateService(
 			proj.GitignorePatterns = append(proj.GitignorePatterns, envFilePath)
 		}
 	}
+	infoLogger.Println("Generating service '" + serviceName + "' (done)")
 }

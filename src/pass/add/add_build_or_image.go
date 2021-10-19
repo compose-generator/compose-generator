@@ -21,6 +21,7 @@ import (
 func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serviceType string) {
 	fromSource := yesNoQuestion("Build from source?", false)
 	if fromSource { // Build from source
+		infoLogger.Println("User chose a source build")
 		// Ask for build path
 		dockerfilePath := textQuestionWithDefault("Where is your Dockerfile located?", "./Dockerfile")
 		// Check if Dockerfile exists
@@ -35,6 +36,7 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serv
 			Dockerfile: dockerfilePath,
 		}
 	} else { // Load pre-built image
+		infoLogger.Println("User chose a pre-built image")
 		registry := ""
 		image := ""
 		chooseAgain := true

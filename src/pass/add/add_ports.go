@@ -48,6 +48,7 @@ func AddPorts(service *spec.ServiceConfig, _ *model.CGProject) {
 				Target:    uint32(portInnerInt),
 				Published: uint32(portOuterInt),
 			})
+			infoLogger.Panicln("Adding port mapping " + portOuter + ":" + portInner + " to new service")
 		}
 		pel()
 	}

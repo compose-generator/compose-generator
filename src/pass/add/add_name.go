@@ -27,6 +27,7 @@ func AddName(service *spec.ServiceConfig, project *model.CGProject) {
 		} else {
 			chooseAgain = false
 		}
+		infoLogger.Println("New service name: " + service.Name)
 	}
 	// Set container name
 	service.ContainerName = strings.ReplaceAll(strings.ToLower(service.Name), " ", "-")

@@ -21,6 +21,7 @@ var copyBuildDirMockable = copyBuildDir
 
 // GenerateCopyVolumes reads the volume paths from the composition and copies them over to the current work dir
 func GenerateCopyVolumes(project *model.CGProject) {
+	infoLogger.Println("Copying volumes ...")
 	spinner := startProcess("Copying volumes ...")
 	for serviceIndex, service := range project.Composition.Services {
 		// Copy volumes if existing
@@ -29,6 +30,7 @@ func GenerateCopyVolumes(project *model.CGProject) {
 			if strings.Contains(srcPath, getPredefinedServicesPath()) {
 				dstPath := srcPath[len(getPredefinedServicesPath()):]
 				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+				infoLogger.Println("Copying volume from '" + srcPath + "' to '" + dstPath + "'")
 				copyVolumeMockable(
 					&project.Composition.Services[serviceIndex].Volumes[volumeIndex],
 					srcPath,
@@ -42,6 +44,7 @@ func GenerateCopyVolumes(project *model.CGProject) {
 			if strings.Contains(srcPath, getPredefinedServicesPath()) {
 				dstPath := srcPath[len(getPredefinedServicesPath()):]
 				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+				infoLogger.Println("Copying build dir from '" + srcPath + "' to '" + dstPath + "'")
 				copyBuildDirMockable(service.Build, filepath.Clean(srcPath), filepath.Clean(dstPath))
 			}
 		}
