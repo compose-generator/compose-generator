@@ -58,7 +58,7 @@ func askForExternalNetwork(service *spec.ServiceConfig, project *model.CGProject
 		return
 	}
 	if len(externalNetworks) == 0 {
-		errorLogger.Println("There is no external network existing: " + err.Error())
+		errorLogger.Println("There is no external network existing")
 		logError("There is no external network existing", false)
 		return
 	}

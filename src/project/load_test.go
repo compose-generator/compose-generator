@@ -174,8 +174,8 @@ func TestLoadComposeFile1(t *testing.T) {
 			Name: "Project name",
 		}, nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	loadComposeFile(project, options)

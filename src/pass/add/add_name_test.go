@@ -25,7 +25,7 @@ func TestAddName1(t *testing.T) {
 	textQuestionWithDefault = func(question, defaultValue string) string {
 		return testName
 	}
-	printError = func(description string, err error, exit bool) {
+	logError = func(message string, exit bool) {
 		assert.Fail(t, "Error function was called")
 	}
 	// Execute test
@@ -59,11 +59,11 @@ func TestAddName2(t *testing.T) {
 		}
 		return testName1
 	}
-	printError = func(description string, err error, exit bool) {
+	logError = func(message string, exit bool) {
 		if callCounter == 2 {
 			assert.Fail(t, "Error function was called")
 		} else {
-			assert.Equal(t, "This service name already exists. Please choose a different one", description)
+			assert.Equal(t, "Service 'Test name' already exists. Please choose a different one", message)
 		}
 	}
 	// Execute test

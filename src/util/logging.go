@@ -56,11 +56,17 @@ func LogWarning(message string) {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func getLogfilePath() string {
+	// Create filename
 	timestampString := time.Now().Format("2017-09-07 17:06:04.000000")
 	timestampString = strings.ReplaceAll(timestampString, " ", "_")
 	timestampString = strings.ReplaceAll(timestampString, "-", "_")
 	timestampString = strings.ReplaceAll(timestampString, ":", "_")
 	timestampString = strings.ReplaceAll(timestampString, ".", "_")
 	logfileName := "log_" + timestampString + ".log"
-	return getLogfilesPath() + "/" + logfileName
+	// Create logfile dir
+	logfileDir := getLogfilesPath()
+	if err := os.MkdirAll(logfileDir, 0700); err != nil {
+		log.Fatal(err)
+	}
+	return logfileDir + "/" + logfileName
 }

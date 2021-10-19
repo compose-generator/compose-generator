@@ -128,8 +128,8 @@ func TestCheckIfCComIsInstalled1(t *testing.T) {
 		assert.Equal(t, "ccom", cmd)
 		return true
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	EnsureCComIsInstalled()
@@ -141,17 +141,16 @@ func TestCheckIfCComIsInstalled2(t *testing.T) {
 		assert.Equal(t, "ccom", cmd)
 		return false
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", description)
-		assert.Nil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	EnsureCComIsInstalled()
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 // -------------------------------------------------------------- CheckIfDockerIsRunning ------------------------------------------------------------
@@ -161,8 +160,8 @@ func TestCheckIfDockerIsRunning1(t *testing.T) {
 	isDockerRunning = func() bool {
 		return true
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	EnsureDockerIsRunning()
@@ -173,15 +172,14 @@ func TestCheckIfDockerIsRunning2(t *testing.T) {
 	isDockerRunning = func() bool {
 		return false
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Docker engine is not running. Please start it and execute Compose Generator again.", description)
-		assert.Nil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Docker engine is not running. Please start it and execute Compose Generator again.", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	EnsureDockerIsRunning()
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }

@@ -117,7 +117,7 @@ func copyVolumesAndBuildContextsToTemplate(proj *model.CGProject, targetDir stri
 			logError("Could not copy volume / build context '"+path+"'", false)
 			continue
 		}
-		if copyDir(path, targetDir+"/"+pathRel) != nil {
+		if err := copyDir(path, targetDir+"/"+pathRel); err != nil {
 			warningLogger.Println("Could not copy volume / build context from '" + path + "' to '" + targetDir + "/" + pathRel + "': " + err.Error())
 			logWarning("Could not copy volume / build context from '" + path + "' to '" + targetDir + "/" + pathRel + "'")
 		}

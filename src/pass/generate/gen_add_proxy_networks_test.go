@@ -159,18 +159,17 @@ func TestGenerateAddProxyNetworks3(t *testing.T) {
 		getServiceRefCallCount++
 		return nil
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Proxy service cannot be found for network inserting", description)
-		assert.Nil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Proxy service cannot be found for network inserting", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	GenerateAddProxyNetworks(project, selectedTemplates)
 	// Assert
 	assert.Equal(t, 1, getServiceRefCallCount)
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 // ------------------------------------------------------------------ getServiceRef ----------------------------------------------------------------

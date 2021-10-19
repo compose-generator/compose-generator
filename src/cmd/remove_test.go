@@ -63,9 +63,9 @@ func TestRemoveService1(t *testing.T) {
 	}
 	serviceName := "service2"
 	// Mock functions
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you really want to remove service '"+serviceName+"'?", question)
@@ -87,7 +87,7 @@ func TestRemoveService1(t *testing.T) {
 	// Execute test
 	removeService(project, serviceName, false)
 	// Assert
-	assert.Zero(t, printErrorCallCount)
+	assert.Zero(t, logErrorCallCount)
 	assert.Equal(t, 1, removeVolumesPassCallCount)
 	assert.Equal(t, 1, removeNetworksPassCallCount)
 	assert.Equal(t, 1, removeDependenciesPassCallCount)
@@ -114,17 +114,16 @@ func TestRemoveService2(t *testing.T) {
 	}
 	serviceName := "service4"
 	// Mock functions
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Service not found", description)
-		assert.NotNil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Service not found", message)
 		assert.False(t, exit)
 	}
 	// Execute test
 	removeService(project, serviceName, false)
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 func TestRemoveService3(t *testing.T) {
@@ -147,9 +146,9 @@ func TestRemoveService3(t *testing.T) {
 	}
 	serviceName := "service2"
 	// Mock functions
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you really want to remove service '"+serviceName+"'?", question)
@@ -163,7 +162,7 @@ func TestRemoveService3(t *testing.T) {
 	// Execute test
 	removeService(project, serviceName, false)
 	// Assert
-	assert.Zero(t, printErrorCallCount)
+	assert.Zero(t, logErrorCallCount)
 	assert.Zero(t, removeVolumesPassCallCount)
 }
 

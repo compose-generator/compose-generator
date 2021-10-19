@@ -88,10 +88,10 @@ func TestAddDependants1(t *testing.T) {
 	pel = func() {
 		pelCallCount++
 	}
-	printWarningCallCount := 0
-	printWarning = func(description string) {
-		printWarningCallCount++
-		assert.Equal(t, "Could not add dependency from 'Service 1' to 'Service 0' because it would cause a cycle", description)
+	logWarningCallCount := 0
+	logWarning = func(message string) {
+		logWarningCallCount++
+		assert.Equal(t, "Could not add dependency from 'Service 1' to 'Service 0' because it would cause a cycle", message)
 	}
 	checkForDependencyCycleCallCount := 0
 	checkForDependencyCycleMockable = func(currentService *spec.ServiceConfig, otherServiceName string, project *spec.Project) bool {
@@ -108,7 +108,7 @@ func TestAddDependants1(t *testing.T) {
 	// Assert
 	assert.Equal(t, expectedProject, project)
 	assert.Equal(t, 2, pelCallCount)
-	assert.Equal(t, 1, printWarningCallCount)
+	assert.Equal(t, 1, logWarningCallCount)
 	assert.Equal(t, 2, checkForDependencyCycleCallCount)
 }
 

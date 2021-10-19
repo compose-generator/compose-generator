@@ -71,8 +71,8 @@ func TestGetToolboxMountPath2(t *testing.T) {
 	getwd = func() (dir string, err error) {
 		return wd, nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	result := getToolboxMountPath()
@@ -92,16 +92,15 @@ func TestGetToolboxMountPath3(t *testing.T) {
 	getwd = func() (dir string, err error) {
 		return "", errors.New("Error message")
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Could not find current working directory", description)
-		assert.Equal(t, "Error message", err.Error())
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Could not find current working directory", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	result := getToolboxMountPath()
 	// Assert
 	assert.Zero(t, len(result))
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }

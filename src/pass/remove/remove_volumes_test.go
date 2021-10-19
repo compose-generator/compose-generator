@@ -74,17 +74,17 @@ func TestRemoveVolumes1(t *testing.T) {
 		}
 		return nil
 	}
-	printWarningCallCount := 0
-	printWarning = func(description string) {
-		printWarningCallCount++
-		assert.Equal(t, "Could not remove volume at path 'test'", description)
+	logWarninggCallCount := 0
+	logWarning = func(message string) {
+		logWarninggCallCount++
+		assert.Equal(t, "Could not remove volume at path 'test'", message)
 	}
 	// Execute test
 	RemoveVolumes(service, project)
 	// Assert
 	assert.Equal(t, 2, fileExistsCallCount)
 	assert.Equal(t, 2, removeAllCallCount)
-	assert.Equal(t, 1, printWarningCallCount)
+	assert.Equal(t, 1, logWarninggCallCount)
 	assert.Equal(t, expectedProject, project)
 }
 

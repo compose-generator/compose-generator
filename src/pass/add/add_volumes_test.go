@@ -202,8 +202,8 @@ func TestAskForExistingExternalVolume1(t *testing.T) {
 			},
 		}, nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	menuQuestionIndex = func(label string, items []string) int {
 		assert.Equal(t, "Which one?", label)
@@ -278,8 +278,8 @@ func TestAskForExistingExternalVolume2(t *testing.T) {
 			},
 		}, nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	menuQuestionIndex = func(label string, items []string) int {
 		assert.Equal(t, "Which one?", label)
@@ -357,8 +357,8 @@ func TestAskForNewExternalVolume1(t *testing.T) {
 		assert.Equal(t, "Test volume", volumeName)
 		return nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Fail(t, "Unexpected call of yesNoQuestion")
@@ -424,8 +424,8 @@ func TestAskForNewExternalVolume2(t *testing.T) {
 		assert.Equal(t, "Test volume", volumeName)
 		return nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to make the volume read-only?", question)
