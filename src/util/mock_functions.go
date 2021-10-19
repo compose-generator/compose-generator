@@ -21,9 +21,6 @@ import (
 // Logging
 var logError = LogError
 var logWarning = LogWarning
-var infoLogger = InfoLogger
-var warningLogger = WarningLogger
-var errorLogger = ErrorLogger
 
 // Text output
 var println = fmt.Println

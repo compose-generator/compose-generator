@@ -18,7 +18,7 @@ import (
 // P prints a normal text to the console
 func P(text string) {
 	if _, err := color.New(color.FgWhite).Print(text); err != nil {
-		errorLogger.Println("Could not print white text: " + err.Error())
+		ErrorLogger.Println("Could not print white text: " + err.Error())
 		logError("Could not print white text", false)
 	}
 }
@@ -31,7 +31,7 @@ func Pl(text string) {
 // Pel prints an empty line to the console
 func Pel() {
 	if _, err := println(); err != nil {
-		errorLogger.Println("Could not print empty line: " + err.Error())
+		ErrorLogger.Println("Could not print empty line: " + err.Error())
 		logError("Could not print empty line", true)
 	}
 }
@@ -40,7 +40,7 @@ func Pel() {
 func StartProcess(text string) (s *spinner.Spinner) {
 	if IsCIEnvironment() {
 		if _, err := color.New(color.FgWhite).Print(text); err != nil {
-			errorLogger.Println("Could not print process start: " + err.Error())
+			ErrorLogger.Println("Could not print process start: " + err.Error())
 			logError("Could not print to console", false)
 		}
 		return nil
@@ -72,7 +72,7 @@ func StopProcess(s *spinner.Spinner) {
 func Heading(text string) {
 	green := color.New(color.FgGreen).Add(color.Bold)
 	if _, err := green.Println(text); err != nil {
-		errorLogger.Println("Could not print heading: " + err.Error())
+		ErrorLogger.Println("Could not print heading: " + err.Error())
 		logError("Could not print heading", false)
 	}
 }
@@ -81,7 +81,7 @@ func Heading(text string) {
 func Success(text string) {
 	green := color.New(color.FgGreen).Add(color.Italic)
 	if _, err := green.Println(text); err != nil {
-		errorLogger.Println("Could not print success message: " + err.Error())
+		ErrorLogger.Println("Could not print success message: " + err.Error())
 		logError("Could not print success message", false)
 	}
 }
