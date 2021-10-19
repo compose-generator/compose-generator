@@ -83,7 +83,7 @@ func TestDeleteReadme1(t *testing.T) {
 		assert.Equal(t, "./context/README.md", name)
 		return nil
 	}
-	printWarning = func(description string) {
+	logWarning = func(message string) {
 		assert.Fail(t, "Unexpected call of printWarning")
 	}
 	// Execute test
@@ -128,8 +128,8 @@ func TestDeleteReadme3(t *testing.T) {
 		assert.Equal(t, "./context/README.md", name)
 		return errors.New("Error message")
 	}
-	printWarning = func(description string) {
-		assert.Equal(t, "File 'README.md' could not be deleted", description)
+	logWarning = func(message string) {
+		assert.Equal(t, "File 'README.md' could not be deleted", message)
 	}
 	// Execute test
 	deleteReadme(project, options)
@@ -171,11 +171,11 @@ func TestDeleteEnvFiles(t *testing.T) {
 		}
 		return nil
 	}
-	printWarning = func(description string) {
+	logWarning = func(message string) {
 		if removeCallCount == 3 {
-			assert.Equal(t, "File './context/other-environment.env' could not be deleted", description)
+			assert.Equal(t, "File './context/other-environment.env' could not be deleted", message)
 		} else {
-			assert.Fail(t, "Unexpected call of printWarning")
+			assert.Fail(t, "Unexpected call of logWarning")
 		}
 	}
 	// Execute test
@@ -203,8 +203,8 @@ func TestDeleteGitignore1(t *testing.T) {
 		assert.Equal(t, "./context/.gitignore", name)
 		return nil
 	}
-	printWarning = func(description string) {
-		assert.Fail(t, "Unexpected call of printWarning")
+	logWarning = func(message string) {
+		assert.Fail(t, "Unexpected call of logWarning")
 	}
 	// Execute test
 	deleteGitignore(project, options)
@@ -248,8 +248,8 @@ func TestDeleteGitignore3(t *testing.T) {
 		assert.Equal(t, "./context/.gitignore", name)
 		return errors.New("Error message")
 	}
-	printWarning = func(description string) {
-		assert.Equal(t, "File '.gitignore' could not be deleted", description)
+	logWarning = func(message string) {
+		assert.Equal(t, "File '.gitignore' could not be deleted", message)
 	}
 	// Execute test
 	deleteGitignore(project, options)
@@ -309,11 +309,11 @@ func TestDeleteVolumes1(t *testing.T) {
 		assert.Equal(t, "./volumes/backend-gin", path)
 		return errors.New("Error message")
 	}
-	printWarning = func(description string) {
+	logWarning = func(message string) {
 		if removeAllCallCount == 1 {
-			assert.Fail(t, "Unexpected call of printWarning")
+			assert.Fail(t, "Unexpected call of logWarning")
 		}
-		assert.Equal(t, "Volume './volumes/backend-gin' could not be deleted", description)
+		assert.Equal(t, "Volume './volumes/backend-gin' could not be deleted", message)
 	}
 	// Execute test
 	deleteVolumes(project, options)
@@ -337,8 +337,8 @@ func TestDeleteComposeFile1(t *testing.T) {
 		assert.Equal(t, "./context/compose.yml", name)
 		return nil
 	}
-	printWarning = func(description string) {
-		assert.Fail(t, "Unexpected call of printWarning")
+	logWarning = func(message string) {
+		assert.Fail(t, "Unexpected call of logWarning")
 	}
 	// Execute test
 	deleteComposeFile(project, options)
@@ -361,9 +361,9 @@ func TestDeleteComposeFile2(t *testing.T) {
 		return errors.New("Error message")
 	}
 	printWarningCallCount := 0
-	printWarning = func(description string) {
+	logWarning = func(message string) {
 		printWarningCallCount++
-		assert.Equal(t, "File 'compose.yml' could not be deleted", description)
+		assert.Equal(t, "File 'compose.yml' could not be deleted", message)
 	}
 	// Execute test
 	deleteComposeFile(project, options)

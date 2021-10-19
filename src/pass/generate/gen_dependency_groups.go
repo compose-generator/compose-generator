@@ -15,6 +15,7 @@ import (
 
 // GenerateResolveDependencyGroups resolves group dependencies like 'database' or 'frontend' to concrete service dependencies
 func GenerateResolveDependencyGroups(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+	infoLogger.Println("Resolving group dependencies ...")
 	spinner := startProcess("Resolving group dependencies ...")
 	for i := range project.Composition.Services {
 		service := &project.Composition.Services[i]
@@ -44,6 +45,7 @@ func GenerateResolveDependencyGroups(project *model.CGProject, selectedTemplates
 		}
 	}
 	stopProcess(spinner)
+	infoLogger.Println("Resolving group dependencies (done)")
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

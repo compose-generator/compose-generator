@@ -20,6 +20,7 @@ func GenerateChooseDatabases(
 ) {
 	if config != nil && config.FromFile {
 		// Generate from config file
+		infoLogger.Println("Generating databases from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeDatabase)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -55,8 +56,10 @@ func GenerateChooseDatabases(
 				}
 			}
 		}
+		infoLogger.Println("Generating databases from config file (done)")
 	} else {
 		// Generate from user input
+		infoLogger.Println("Generating databases from user input ...")
 		items := templateListToLabelList(available.DatabaseServices)
 		items = append(items, "Custom database service")
 		itemsPreselected := templateListToPreselectedLabelList(available.DatabaseServices, selected)
@@ -78,5 +81,6 @@ func GenerateChooseDatabases(
 				selected.DatabaseServices = append(selected.DatabaseServices, selectedConfig)
 			}
 		}
+		infoLogger.Println("Generating databases from user input (done)")
 	}
 }

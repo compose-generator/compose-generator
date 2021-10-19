@@ -18,18 +18,28 @@ import (
 	"github.com/kardianos/osext"
 )
 
+// Logging
+var logError = LogError
+var logWarning = LogWarning
+
+// Text output
 var println = fmt.Println
 var white = color.White
-var red = color.Red
-var hiYellow = color.HiYellow
-var printError = Error
+
+// Environment
 var commandExists = CommandExists
 var isDockerRunning = IsDockerRunning
-var exitProgram = os.Exit
 var getEnv = os.Getenv
-var fileExists = FileExists
 var executable = osext.Executable
 var currentUser = user.Current
+var isDockerizedEnvironment = IsDockerizedEnvironment
+var getwd = os.Getwd
+var getOuterVolumePathOnDockerizedEnvironmentMockable = getOuterVolumePathOnDockerizedEnvironment
+
+// File operations
+var fileExists = FileExists
+
+// Other
 var newClientWithOpts = client.NewClientWithOpts
 var imageList = func(cli *client.Client, ctx context.Context, opts types.ImageListOptions) ([]types.ImageSummary, error) {
 	return cli.ImageList(ctx, opts)
@@ -38,6 +48,3 @@ var executeCommand = exec.Command
 var getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
 	return cmd.Output()
 }
-var isDockerizedEnvironment = IsDockerizedEnvironment
-var getOuterVolumePathOnDockerizedEnvironmentMockable = getOuterVolumePathOnDockerizedEnvironment
-var getwd = os.Getwd

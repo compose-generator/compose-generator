@@ -24,8 +24,8 @@ func TestGenerateAddCustomService1(t *testing.T) {
 	newClientWithOpts = func(ops ...client.Opt) (*client.Client, error) {
 		return nil, nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	addBuildOrImagePassCallCount := 0
 	addBuildOrImagePass = func(service *types.ServiceConfig, project *model.CGProject, serviceType string) {
@@ -101,9 +101,8 @@ func TestGenerateAddCustomService2(t *testing.T) {
 	newClientWithOpts = func(ops ...client.Opt) (*client.Client, error) {
 		return nil, errors.New("Error message")
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Could not intanciate Docker client. Please check your Docker installation", description)
-		assert.Equal(t, "Error message", err.Error())
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not intanciate Docker client. Please check your Docker installation", message)
 		assert.True(t, exit)
 	}
 	addBuildOrImagePass = func(service *types.ServiceConfig, project *model.CGProject, serviceType string) {

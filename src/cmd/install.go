@@ -6,6 +6,8 @@ All rights reserved.
 package cmd
 
 import (
+	"compose-generator/util"
+
 	"github.com/urfave/cli/v2"
 )
 
@@ -13,9 +15,12 @@ import (
 
 // Install Docker and Docker Compose with a single command
 func Install(_ *cli.Context) error {
+	util.InfoLogger.Println("Install command executed")
+
 	// Check if Compose Generator runs in dockerized environment
 	if isDockerizedEnvironment() {
-		printError("You are currently using the dockerized version of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", nil, true)
+		util.ErrorLogger.Println("Dockerized environment detected")
+		logError("You are currently using the dockerized version of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", true)
 	}
 
 	// Execute passes
@@ -25,9 +30,11 @@ func Install(_ *cli.Context) error {
 	if commandExists("docker") {
 		pel()
 		dockerVersion := getDockerVersion()
-		printSuccessMessage("Congrats! You have installed " + dockerVersion + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
+		printSuccess("Congrats! You have installed " + dockerVersion + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
+		util.InfoLogger.Println("Installation successful")
 	} else {
-		printError("An error occurred while installing Docker", nil, true)
+		util.ErrorLogger.Println("Installation failed")
+		logError("An error occurred while installing Docker", true)
 	}
 	return nil
 }

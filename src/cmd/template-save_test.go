@@ -47,10 +47,8 @@ func TestIsTemplateExisting2(t *testing.T) {
 		assert.Equal(t, customTemplatePath+"/"+name, path)
 		return true
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Template with the name 'Template 1' already exists", description)
-		assert.Nil(t, err)
-		assert.False(t, exit)
+	logWarning = func(message string) {
+		assert.Equal(t, "Template with the name 'Template 1' already exists", message)
 	}
 	// Execute test
 	result := isTemplateExisting(name)
@@ -137,28 +135,26 @@ func TestCopyVolumesAndBuildContextsToTemplate1(t *testing.T) {
 		assert.Equal(t, "../templates/", dest)
 		return errors.New("Error message")
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		if printErrorCallCount == 1 {
-			assert.Equal(t, "Could not copy volume / build context '../volume4'", description)
-			assert.Equal(t, "Error message 1", err.Error())
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		if logErrorCallCount == 1 {
+			assert.Equal(t, "Could not copy volume / build context '../volume4'", message)
 			assert.False(t, exit)
 		} else {
-			assert.Equal(t, "Could not find absolute path of volume / build context dir", description)
-			assert.Equal(t, "Error message", err.Error())
+			assert.Equal(t, "Could not find absolute path of volume / build context dir", message)
 			assert.True(t, exit)
 		}
 	}
-	printWarning = func(description string) {
-		assert.Equal(t, "Could not copy volume / build context from 'frontend-angular' to '../templates/'", description)
+	logWarning = func(message string) {
+		assert.Equal(t, "Could not copy volume / build context from 'frontend-angular' to '../templates/'", message)
 	}
 	// Execute test
 	copyVolumesAndBuildContextsToTemplate(project, targetDir)
 	// Assert
 	assert.Equal(t, 4, absCallCount)
 	assert.Equal(t, 2, copyDirCallCount)
-	assert.Equal(t, 2, printErrorCallCount)
+	assert.Equal(t, 2, logErrorCallCount)
 }
 
 func TestCopyVolumesAndBuildContextsToTemplate2(t *testing.T) {
@@ -170,9 +166,8 @@ func TestCopyVolumesAndBuildContextsToTemplate2(t *testing.T) {
 		assert.Equal(t, ".", path)
 		return "", errors.New("Error message")
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Could not find absolute path of current dir", description)
-		assert.Equal(t, "Error message", err.Error())
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not find absolute path of current dir", message)
 		assert.True(t, exit)
 	}
 	// Execute test

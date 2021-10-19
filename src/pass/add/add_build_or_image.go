@@ -21,11 +21,14 @@ import (
 func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serviceType string) {
 	fromSource := yesNoQuestion("Build from source?", false)
 	if fromSource { // Build from source
+		infoLogger.Println("User chose a source build")
 		// Ask for build path
 		dockerfilePath := textQuestionWithDefault("Where is your Dockerfile located?", "./Dockerfile")
 		// Check if Dockerfile exists
 		if !fileExists(dockerfilePath) {
-			printError("The Dockerfile could not be found", nil, true)
+			errorLogger.Println("Dockerfile could not be found")
+			logError("Dockerfile could not be found", true)
+			return
 		}
 		// Add build config to service
 		service.Build = &spec.BuildConfig{
@@ -33,6 +36,7 @@ func AddBuildOrImage(service *spec.ServiceConfig, project *model.CGProject, serv
 			Dockerfile: dockerfilePath,
 		}
 	} else { // Load pre-built image
+		infoLogger.Println("User chose a pre-built image")
 		registry := ""
 		image := ""
 		chooseAgain := true
@@ -67,7 +71,8 @@ func searchRemoteImage(registry string, image string) bool {
 	p("Searching image ... ")
 	manifest, err := getImageManifest(registry + image)
 	if err != nil {
-		printError(" not found or no access", nil, false)
+		errorLogger.Println("Image '" + registry + image + "' not found or no access")
+		logError(" not found or no access", false)
 		chooseAgain := yesNoQuestion("Choose another image (Y) or proceed anyway (n)?", true)
 		util.Pel()
 		return chooseAgain

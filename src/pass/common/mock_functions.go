@@ -7,5 +7,10 @@ package pass
 
 import "compose-generator/util"
 
-var printError = util.Error
+// Logging
+var logError = util.LogError
+var infoLogger = util.InfoLogger
+var errorLogger = util.ErrorLogger
+
+// Other
 var sliceContainsString = util.SliceContainsString

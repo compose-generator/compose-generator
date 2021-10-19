@@ -17,6 +17,7 @@ import (
 func GenerateExecServiceInitCommands(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	for _, template := range selectedTemplates.GetAll() {
 		if len(template.ServiceInitCmd) > 0 {
+			infoLogger.Println("Generating configuration for '" + template.Label + "' ...")
 			// Retrieve service init commands
 			cmds := []string{}
 			for _, cmd := range template.ServiceInitCmd {
@@ -26,6 +27,7 @@ func GenerateExecServiceInitCommands(project *model.CGProject, selectedTemplates
 			spinner := startProcess("Generating configuration for " + template.Label + " ...")
 			executeOnToolbox(strings.Join(cmds, " && "))
 			stopProcess(spinner)
+			infoLogger.Println("Generating configuration for '" + template.Label + "' (done)")
 		}
 	}
 }

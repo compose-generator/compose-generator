@@ -17,7 +17,8 @@ const (
 // GenerateAddProfiles adds two profiles to the project in case the production-ready variant was selected
 func GenerateAddProfiles(project *model.CGProject) {
 	if project.CGProjectMetadata.ProductionReady {
-		spinner := startProcess("Adding dev and production profiles")
+		infoLogger.Println("Supplying dev and prod profiles ...")
+		spinner := startProcess("Adding dev and prod profiles")
 		for i := range project.Composition.Services {
 			service := &project.Composition.Services[i]
 			if len(service.Profiles) == 0 {
@@ -25,5 +26,6 @@ func GenerateAddProfiles(project *model.CGProject) {
 			}
 		}
 		stopProcess(spinner)
+		infoLogger.Println("Supplying dev and prod profiles done")
 	}
 }

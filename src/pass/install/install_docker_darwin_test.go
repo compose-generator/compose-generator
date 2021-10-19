@@ -26,6 +26,10 @@ func TestInstallDocker1(t *testing.T) {
 		assert.Equal(t, "Installing Docker ...", text)
 		return nil
 	}
+	stopProcessCallCount := 0
+	stopProcess = func(s *spinner.Spinner) {
+		stopProcessCallCount++
+	}
 	executeWaitCallCount := 0
 	executeAndWait = func(c ...string) {
 		executeWaitCallCount++
@@ -44,12 +48,12 @@ func TestInstallDocker1(t *testing.T) {
 	InstallDocker()
 	// Assert
 	assert.Equal(t, 2, executeWaitCallCount)
+	assert.Equal(t, 1, stopProcessCallCount)
 }
 
 func TestInstallDocker2(t *testing.T) {
 	// Test data
 	filePath := os.TempDir() + "/install-docker.sh"
-	errorMessage := "Test download error"
 	// Mock functions
 	isPrivileged = func() bool {
 		return true
@@ -59,22 +63,25 @@ func TestInstallDocker2(t *testing.T) {
 		startProcessCallCount++
 		return nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Download of Docker install script failed", description)
-		assert.NotNil(t, err)
-		assert.Equal(t, errorMessage, err.Error())
+	stopProcessCallCount := 0
+	stopProcess = func(s *spinner.Spinner) {
+		stopProcessCallCount++
+	}
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Download of Docker install script failed", message)
 		assert.True(t, exit)
 	}
 	downloadFile = func(url string, filepath string) error {
 		assert.Equal(t, downloadUrl, url)
 		assert.Equal(t, filePath, filepath)
-		return errors.New(errorMessage)
+		return errors.New("Error message")
 	}
 	executeAndWait = func(c ...string) {}
 	// Execute test
 	InstallDocker()
 	// Assert
 	assert.Equal(t, 1, startProcessCallCount)
+	assert.Equal(t, 1, stopProcessCallCount)
 }
 
 func TestInstallDocker3(t *testing.T) {
@@ -83,8 +90,11 @@ func TestInstallDocker3(t *testing.T) {
 		return false
 	}
 	startProcess = func(text string) (s *spinner.Spinner) {
-		assert.Fail(t, "Unexpected call of p")
+		assert.Fail(t, "Unexpected call of startProcess")
 		return nil
+	}
+	stopProcess = func(s *spinner.Spinner) {
+		assert.Fail(t, "Unexpected call of stopProcess")
 	}
 	// Execute test
 	InstallDocker()

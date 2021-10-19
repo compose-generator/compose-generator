@@ -18,14 +18,16 @@ import (
 	"github.com/otiai10/copy"
 )
 
-var isDockerizedEnvironment = util.IsDockerizedEnvironment
-var printError = util.Error
-var printWarning = util.Warning
+// Logging
+var logError = util.LogError
+var logWarning = util.LogWarning
+var infoLogger = util.InfoLogger
+var warningLogger = util.WarningLogger
+var errorLogger = util.ErrorLogger
+
+// Text output
 var printSuccess = util.Success
 var printHeading = util.Heading
-var printSuccessMessage = util.Success
-var commandExists = util.CommandExists
-var getDockerVersion = util.GetDockerVersion
 var pl = util.Pl
 var pel = util.Pel
 var yesNoQuestion = util.YesNoQuestion
@@ -34,19 +36,24 @@ var menuQuestionIndex = util.MenuQuestionIndex
 var clearScreen = util.ClearScreen
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
-var getAvailablePredefinedTemplates = parser.GetAvailablePredefinedTemplates
-var getCustomTemplatesPath = util.GetCustomTemplatesPath
+
+// File operations
 var readDir = ioutil.ReadDir
-var loadProjectMetadata = project.LoadProjectMetadata
 var abs = filepath.Abs
 var rel = filepath.Rel
 var copyDir = copy.Copy
 var fileExists = util.FileExists
+var loadProjectMetadata = project.LoadProjectMetadata
 var normalizePaths = util.NormalizePaths
-var installDockerPass = installPass.InstallDocker
-var removeVolumesPass = removePass.RemoveVolumes
-var removeNetworksPass = removePass.RemoveNetworks
-var removeDependenciesPass = removePass.RemoveDependencies
+
+// Environment
+var isDockerizedEnvironment = util.IsDockerizedEnvironment
+var commandExists = util.CommandExists
+var getDockerVersion = util.GetDockerVersion
+var getAvailablePredefinedTemplates = parser.GetAvailablePredefinedTemplates
+var getCustomTemplatesPath = util.GetCustomTemplatesPath
+
+// Passes
 var generateChooseProxiesPass = genPass.GenerateChooseProxies
 var generateChooseTlsHelpersPass = genPass.GenerateChooseTlsHelpers
 var generateChooseFrontendsPass = genPass.GenerateChooseFrontends
@@ -62,3 +69,7 @@ var generateCopyVolumesPass = genPass.GenerateCopyVolumes
 var generateReplaceVarsInConfigFilesPass = genPass.GenerateReplacePlaceholdersInConfigFiles
 var generateExecServiceInitCommandsPass = genPass.GenerateExecServiceInitCommands
 var generateExecDemoAppInitCommandsPass = genPass.GenerateExecDemoAppInitCommands
+var removeVolumesPass = removePass.RemoveVolumes
+var removeNetworksPass = removePass.RemoveNetworks
+var removeDependenciesPass = removePass.RemoveDependencies
+var installDockerPass = installPass.InstallDocker

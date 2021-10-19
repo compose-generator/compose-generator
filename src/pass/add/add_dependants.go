@@ -7,6 +7,7 @@ package pass
 
 import (
 	"compose-generator/model"
+	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
@@ -20,6 +21,7 @@ func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 	if len(project.Composition.Services) > 0 && yesNoQuestion("Do you want other services depend on the new one?", false) {
 		pel()
 		selectedServices := multiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
+		infoLogger.Println("Selected dependants: " + strings.Join(selectedServices, ", "))
 		// Add service dependencies
 		for _, name := range selectedServices {
 			otherService, err := project.Composition.GetService(name)
@@ -28,7 +30,8 @@ func AddDependants(service *spec.ServiceConfig, project *model.CGProject) {
 			}
 			// Check if the dependency would produce a cycle
 			if checkForDependencyCycleMockable(service, otherService.Name, project.Composition) {
-				printWarning("Could not add dependency from '" + otherService.Name + "' to '" + service.Name + "' because it would cause a cycle")
+				warningLogger.Println("Could not add dependency from '" + otherService.Name + "' to '" + service.Name + "' because it would cause a cycle")
+				logWarning("Could not add dependency from '" + otherService.Name + "' to '" + service.Name + "' because it would cause a cycle")
 				continue
 			}
 			// Create map if not exists

@@ -26,7 +26,8 @@ func EvaluateConditionalSections(
 	cmd := exec.Command("ccom", "-s", "-f", "-o", filePath, "-d", dataString, filePath)
 	if output, err := cmd.CombinedOutput(); err != nil {
 		if strings.TrimRight(string(output), "\r\n") != "Unknown lang" {
-			Error("Could not execute CCom: "+string(output), err, true)
+			ErrorLogger.Println("Could not execute CCom: " + string(output) + ": " + err.Error())
+			logError("Could not execute CCom: "+string(output), true)
 		}
 	}
 }
@@ -43,7 +44,8 @@ func EvaluateConditionalSectionsToString(
 	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", input)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		Error("Could not execute CCom: "+string(output), err, true)
+		ErrorLogger.Println("Could not execute CCom: " + string(output) + ": " + err.Error())
+		logError("Could not execute CCom: "+string(output), true)
 	}
 	return strings.TrimRight(string(output), "\r\n")
 }
@@ -60,7 +62,8 @@ func EvaluateCondition(
 	cmd := exec.Command("ccom", "-m", "-s", "-d", dataString, condition)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		Warning("CCom returned with an error: " + string(output))
+		WarningLogger.Println("CCom returned with an error: " + string(output) + ": " + err.Error())
+		logWarning("CCom returned with an error: " + string(output))
 	}
 	return strings.TrimRight(string(output), "\r\n") == "true"
 }
@@ -68,14 +71,16 @@ func EvaluateCondition(
 // EnsureCComIsInstalled checks if CCom is present on the current machine
 func EnsureCComIsInstalled() {
 	if !commandExists("ccom") {
-		printError("CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", nil, true)
+		ErrorLogger.Println("CCom installation could not be found")
+		logError("CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", true)
 	}
 }
 
 // EnsureDockerIsRunning checks if Docker is running
 func EnsureDockerIsRunning() {
 	if !isDockerRunning() {
-		printError("Docker engine is not running. Please start it and execute Compose Generator again.", nil, true)
+		ErrorLogger.Println("Docker engine seems to be down")
+		logError("Docker engine is not running. Please start it and execute Compose Generator again.", true)
 	}
 }
 
@@ -93,7 +98,8 @@ func prepareInputData(
 	// Marshal to json
 	dataJson, err := json.Marshal(data)
 	if err != nil {
-		Error("Could not evaluate conditional sections in template. Input could be corrupted", err, true)
+		ErrorLogger.Println("Could not evaluate conditional sections in template: " + err.Error())
+		logError("Could not evaluate conditional sections in template. Input could be corrupted", true)
 	}
 	return string(dataJson)
 }

@@ -136,8 +136,8 @@ func TestAskForExternalNetwork1(t *testing.T) {
 		assert.Equal(t, "Existing network 2", defaultValue)
 		return testNetworkName
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	askForExternalNetwork(service, project, cli)
@@ -164,9 +164,8 @@ func TestAskForExternalNetwork2(t *testing.T) {
 		assert.Fail(t, "Unexpected call of MenuQuestionIndex")
 		return 0
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "There is no external network existing", description)
-		assert.Nil(t, err)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "There is no external network existing", message)
 		assert.False(t, exit)
 	}
 	// Execute test
@@ -259,7 +258,9 @@ func TestAskForNewNetwork2(t *testing.T) {
 		assert.False(t, defaultValue)
 		return false
 	}
-	printError = func(description string, err error, exit bool) {}
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
+	}
 	// Execute test
 	askForNewNetwork(service, project, cli)
 	// Assert

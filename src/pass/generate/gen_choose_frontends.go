@@ -20,6 +20,7 @@ func GenerateChooseFrontends(
 ) {
 	if config != nil && config.FromFile {
 		// Generate from config file
+		infoLogger.Println("Generating frontends from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeFrontend)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -55,8 +56,10 @@ func GenerateChooseFrontends(
 				}
 			}
 		}
+		infoLogger.Println("Generating frontends from config file (done)")
 	} else {
 		// Generate from user input
+		infoLogger.Println("Generating frontends from user input ...")
 		items := templateListToLabelList(available.FrontendServices)
 		items = append(items, "Custom frontend service")
 		itemsPreselected := templateListToPreselectedLabelList(available.FrontendServices, selected)
@@ -78,5 +81,6 @@ func GenerateChooseFrontends(
 				selected.FrontendServices = append(selected.FrontendServices, selectedConfig)
 			}
 		}
+		infoLogger.Println("Generating frontends from user input (done)")
 	}
 }

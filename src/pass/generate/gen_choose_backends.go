@@ -18,6 +18,7 @@ func GenerateChooseBackends(
 ) {
 	if config != nil && config.FromFile {
 		// Generate from config file
+		infoLogger.Println("Generating backends from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeBackend)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -53,8 +54,10 @@ func GenerateChooseBackends(
 				}
 			}
 		}
+		infoLogger.Println("Generating backends from config file (done)")
 	} else {
 		// Generate from user input
+		infoLogger.Println("Generating backends from user input ...")
 		items := templateListToLabelList(available.BackendServices)
 		items = append(items, "Custom backend service")
 		itemsPreselected := templateListToPreselectedLabelList(available.BackendServices, selected)
@@ -66,6 +69,7 @@ func GenerateChooseBackends(
 			} else { // Predefined service was selected
 				// Get selected template config
 				selectedConfig := available.BackendServices[index]
+				infoLogger.Println("Selected backend service: " + selectedConfig.Label)
 				// Ask questions to the user
 				askTemplateQuestions(project, &selectedConfig)
 				// Ask proxy questions to the user
@@ -76,5 +80,6 @@ func GenerateChooseBackends(
 				selected.BackendServices = append(selected.BackendServices, selectedConfig)
 			}
 		}
+		infoLogger.Println("Generating backends from user input (done)")
 	}
 }

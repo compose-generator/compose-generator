@@ -44,19 +44,22 @@ func GetDockerVersion() string {
 	cmd := exec.Command("docker", "-v")
 	dockerVersion, err := cmd.CombinedOutput()
 	if err != nil {
-		printError("Could not read Docker version", err, true)
+		ErrorLogger.Println("Failed to obtain Docker version: " + err.Error())
+		logError("Could not read Docker version", true)
 	}
 	return strings.TrimRight(string(dockerVersion), "\r\n")
 }
 
 // GetCustomTemplatesPath returns the path to the custom templates directory
 func GetCustomTemplatesPath() string {
-	if fileExists("/usr/lib/compose-generator/templates") {
-		return "/usr/lib/compose-generator/templates" // Linux
+	templatesPath := "/usr/lib/compose-generator/templates"
+	if fileExists(templatesPath) {
+		return templatesPath // Linux
 	}
 	filename, err := executable()
 	if err != nil {
-		printError("Cannot retrieve path of executable", err, true)
+		ErrorLogger.Println("Cannot retrieve path of executable: " + err.Error())
+		logError("Cannot retrieve path of executable", true)
 	}
 	filename = filepath.ToSlash(filename)
 	filename = filename[:strings.LastIndex(filename, "/")]
@@ -68,12 +71,14 @@ func GetCustomTemplatesPath() string {
 
 // GetPredefinedServicesPath returns the path to the predefined services directory
 func GetPredefinedServicesPath() string {
-	if fileExists("/usr/lib/compose-generator/predefined-services") {
-		return "/usr/lib/compose-generator/predefined-services" // Linux
+	psPathLinux := "/usr/lib/compose-generator/predefined-services"
+	if fileExists(psPathLinux) {
+		return psPathLinux // Linux
 	}
 	filename, err := executable()
 	if err != nil {
-		printError("Cannot retrieve path of executable", err, true)
+		ErrorLogger.Println("Cannot retrieve path of executable: " + err.Error())
+		logError("Cannot retrieve path of executable", true)
 	}
 	filename = filepath.ToSlash(filename)
 	filename = filename[:strings.LastIndex(filename, "/")]
@@ -89,12 +94,14 @@ func IsToolboxPresent() bool {
 	toolboxTag := "chillibits/compose-generator-toolbox:" + getToolboxImageVersionMockable()
 	client, err := newClientWithOpts(client.FromEnv)
 	if err != nil {
-		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
+		ErrorLogger.Println("Docker client initialization failed: " + err.Error())
+		logError("Could not intanciate Docker client. Please check your Docker installation", true)
 		return false
 	}
 	images, err := imageList(client, context.Background(), types.ImageListOptions{})
 	if err != nil {
-		printError("Could not load Docker images", err, true)
+		ErrorLogger.Println("Could not load Docker images: " + err.Error())
+		logError("Could not load Docker images", true)
 		return false
 	}
 	for _, image := range images {
@@ -114,23 +121,43 @@ func IsDockerRunning() bool {
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
+func getLogfilesPath() string {
+	logPathLinux := "/usr/lib/compose-generator/log"
+	if fileExists(logPathLinux) {
+		return logPathLinux // Linux
+	}
+	filename, err := executable()
+	if err != nil {
+		logError("Cannot retrieve path of executable", true)
+	}
+	filename = filepath.ToSlash(filename)
+	filename = filename[:strings.LastIndex(filename, "/")]
+	if fileExists(filename + "/log") {
+		return filename + "/log" // Windows + Docker
+	}
+	return "../log" // Dev
+}
+
 func getOuterVolumePathOnDockerizedEnvironment() string {
 	// Obtain Docker client
 	client, err := newClientWithOpts(client.FromEnv)
 	if err != nil {
-		printError("Could not intanciate Docker client. Please check your Docker installation", err, true)
+		ErrorLogger.Println("Docker client initialization failed: " + err.Error())
+		logError("Could not intanciate Docker client. Please check your Docker installation", true)
 		return ""
 	}
 	// Get hostname as it is the container id
 	hostname, err := os.Hostname()
 	if err != nil {
-		printError("Could not obtain the hostname of the container", err, true)
+		ErrorLogger.Println("Could not obtain hostname: " + err.Error())
+		logError("Could not obtain the hostname of the container", true)
 		return ""
 	}
 	// Get container details
 	container, err := client.ContainerInspect(context.Background(), hostname)
 	if err != nil {
-		printError("Could not inspect the container", err, true)
+		ErrorLogger.Println("Could not obtain container details: " + err.Error())
+		logError("Could not inspect the container", true)
 		return ""
 	}
 	// Search for volume which is mounted to /cg/out
@@ -140,6 +167,7 @@ func getOuterVolumePathOnDockerizedEnvironment() string {
 		}
 	}
 	// Volume not found => error
-	printError("Could not find a volume that is mounted to /cg/out", err, true)
+	ErrorLogger.Println("Could not find volume on host")
+	logError("Could not find a volume that is mounted to /cg/out", true)
 	return ""
 }

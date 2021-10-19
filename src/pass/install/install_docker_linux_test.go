@@ -54,7 +54,6 @@ func TestInstallDocker1(t *testing.T) {
 func TestInstallDocker2(t *testing.T) {
 	// Test data
 	filePath := os.TempDir() + "/install-docker.sh"
-	errorMessage := "Test download error"
 	// Mock functions
 	isPrivileged = func() bool {
 		return true
@@ -68,16 +67,14 @@ func TestInstallDocker2(t *testing.T) {
 	stopProcess = func(s *spinner.Spinner) {
 		stopProcessCallCount++
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Download of Docker install script failed", description)
-		assert.NotNil(t, err)
-		assert.Equal(t, errorMessage, err.Error())
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Download of Docker install script failed", message)
 		assert.True(t, exit)
 	}
 	downloadFile = func(url string, filepath string) error {
 		assert.Equal(t, downloadUrl, url)
 		assert.Equal(t, filePath, filepath)
-		return errors.New(errorMessage)
+		return errors.New("Error message")
 	}
 	executeAndWait = func(c ...string) {}
 	// Execute test

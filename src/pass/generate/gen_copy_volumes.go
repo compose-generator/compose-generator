@@ -21,6 +21,7 @@ var copyBuildDirMockable = copyBuildDir
 
 // GenerateCopyVolumes reads the volume paths from the composition and copies them over to the current work dir
 func GenerateCopyVolumes(project *model.CGProject) {
+	infoLogger.Println("Copying volumes ...")
 	spinner := startProcess("Copying volumes ...")
 	for serviceIndex, service := range project.Composition.Services {
 		// Copy volumes if existing
@@ -29,6 +30,7 @@ func GenerateCopyVolumes(project *model.CGProject) {
 			if strings.Contains(srcPath, getPredefinedServicesPath()) {
 				dstPath := srcPath[len(getPredefinedServicesPath()):]
 				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+				infoLogger.Println("Copying volume from '" + srcPath + "' to '" + dstPath + "'")
 				copyVolumeMockable(
 					&project.Composition.Services[serviceIndex].Volumes[volumeIndex],
 					srcPath,
@@ -42,6 +44,7 @@ func GenerateCopyVolumes(project *model.CGProject) {
 			if strings.Contains(srcPath, getPredefinedServicesPath()) {
 				dstPath := srcPath[len(getPredefinedServicesPath()):]
 				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+				infoLogger.Println("Copying build dir from '" + srcPath + "' to '" + dstPath + "'")
 				copyBuildDirMockable(service.Build, filepath.Clean(srcPath), filepath.Clean(dstPath))
 			}
 		}
@@ -55,8 +58,9 @@ func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath strin
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
-		if mkdirAll(dstPath, 0777) != nil {
-			printWarning("Could not create volume dir")
+		if err := mkdirAll(dstPath, 0777); err != nil {
+			warningLogger.Println("Could not create volume dir: " + err.Error())
+			logWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
@@ -64,7 +68,8 @@ func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath strin
 			AddPermission: 0777,
 		}
 		if err := copyFile(srcPath, dstPath, opt); err != nil {
-			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
+			warningLogger.Println("Could not copy volume from '" + srcPath + "' to '" + dstPath + "': " + err.Error())
+			logWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
 		}
 	}
 	// Set the volume bind path to the destination
@@ -75,8 +80,9 @@ func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
-		if mkdirAll(dstPath, 0777) != nil {
-			printWarning("Could not create volume dir")
+		if err := mkdirAll(dstPath, 0777); err != nil {
+			warningLogger.Println("Could not create volume dir: " + err.Error())
+			logWarning("Could not create volume dir")
 		}
 	} else {
 		// Copy volume
@@ -84,7 +90,8 @@ func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
 			AddPermission: 0777,
 		}
 		if err := copyFile(srcPath, dstPath, opt); err != nil {
-			printWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
+			warningLogger.Println("Could not copy volume from '" + srcPath + "' to '" + dstPath + "': " + err.Error())
+			logWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
 		}
 	}
 	// Set the volume bind path to the destination

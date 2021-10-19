@@ -20,6 +20,7 @@ func GenerateChooseDbAdmins(
 ) {
 	if config != nil && config.FromFile {
 		// Generate from config file
+		infoLogger.Println("Generating db admins from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeDbAdmin)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -55,8 +56,10 @@ func GenerateChooseDbAdmins(
 				}
 			}
 		}
+		infoLogger.Println("Generating db admins from config file (done)")
 	} else {
 		// Generate from user input
+		infoLogger.Println("Generating db admins from user input ...")
 		items := templateListToLabelList(available.DbAdminServices)
 		items = append(items, "Custom db admin service")
 		itemsPreselected := templateListToPreselectedLabelList(available.DbAdminServices, selected)
@@ -78,5 +81,6 @@ func GenerateChooseDbAdmins(
 				selected.DbAdminServices = append(selected.DbAdminServices, selectedConfig)
 			}
 		}
+		infoLogger.Println("Generating db admins from user input (done)")
 	}
 }

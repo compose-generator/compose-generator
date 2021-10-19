@@ -56,7 +56,8 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 		}
 		stopProcess(spinner)
 	} else {
-		printError("No templates selected. Aborting ...", nil, true)
+		errorLogger.Println("No templates selected. Aborting")
+		logError("No templates selected. Aborting ...", true)
 	}
 }
 
@@ -69,6 +70,7 @@ func generateService(
 	templateType string,
 	serviceName string,
 ) {
+	infoLogger.Println("Generating service '" + serviceName + "' ...")
 	// Load service configuration
 	service := loadTemplateService(
 		proj,
@@ -99,4 +101,5 @@ func generateService(
 			proj.GitignorePatterns = append(proj.GitignorePatterns, envFilePath)
 		}
 	}
+	infoLogger.Println("Generating service '" + serviceName + "' (done)")
 }

@@ -1,12 +1,12 @@
 # Ignore executables
-bin/*
+bin
 compose-generator
 
 # Ignore predefined services archive
 predefined-services/*.tar.gz
 
 # Ignore custom templates
-templates/*
+templates
 
 # Ignore compose-generator output
 ./docker-compose.yml
@@ -22,4 +22,7 @@ node_modules/*
 .venv/*
 
 # Ignore test directory
-test/*
+test
+
+# Ignore logs
+log

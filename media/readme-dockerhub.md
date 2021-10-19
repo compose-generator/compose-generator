@@ -15,6 +15,19 @@
 
 ---
 
+## Quick reference
+- **Maintained by:** [the Compose Generator contributors](https://github.com/compose-generator/compose-generator)
+- **Where to get help:** [Official Website](https://www.compose-generator.com), [GitHub](https://github.com/compose-generator/compose-generator)
+
+## Supported tags and respective `Dockerfile` links
+- `1.1.0`, `1.1`, `1`, `latest`
+- `1.0.0`
+
+## Quick reference (cont.)
+- **Where to file issues:** https://github.com/compose-generator/compose-generator
+- **Supported architectures:** `amd64`, `i386`, `arm32v6`, `arm32v7`
+- **Image updates:** [releases page](https://github.com/compose-generator/compose-generator/releases)
+
 ## Documentation
 Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).
 

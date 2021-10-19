@@ -58,7 +58,7 @@ func TestGenerateAddProfiles1(t *testing.T) {
 	}
 	// Mock functions
 	startProcess = func(text string) *spinner.Spinner {
-		assert.Equal(t, "Adding dev and production profiles", text)
+		assert.Equal(t, "Adding dev and prod profiles", text)
 		return nil
 	}
 	stopProcess = func(s *spinner.Spinner) {

@@ -19,9 +19,13 @@ builds:
       - -s -w -X compose-generator/util.Version={{ .Version }} -X compose-generator/util.Commit={{ .Commit }} -X compose-generator/util.Date={{ .CommitDate }} -X compose-generator/util.BuiltBy=github-actions
 dockers:
   - image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-amd64
       - ghcr.io/compose-generator/compose-generator:latest-amd64
-      - chillibits/compose-generator:{{ .Version }}-amd64
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-amd64
+      - chillibits/compose-generator:{{ .Major }}-amd64
       - chillibits/compose-generator:latest-amd64
     dockerfile: Dockerfile
     skip_push: auto
@@ -40,9 +44,13 @@ dockers:
       - --build-arg=ARCH=amd64
       - --platform=linux/amd64
   - image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-i386
       - ghcr.io/compose-generator/compose-generator:latest-i386
-      - chillibits/compose-generator:{{ .Version }}-i386
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-i386
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-i386
+      - chillibits/compose-generator:{{ .Major }}-i386
       - chillibits/compose-generator:latest-i386
     dockerfile: Dockerfile
     skip_push: auto
@@ -61,9 +69,13 @@ dockers:
       - --build-arg=ARCH=386
       - --platform=linux/i386
   - image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-arm32v6
       - ghcr.io/compose-generator/compose-generator:latest-arm32v6
-      - chillibits/compose-generator:{{ .Version }}-arm32v6
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v6
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v6
+      - chillibits/compose-generator:{{ .Major }}-arm32v6
       - chillibits/compose-generator:latest-arm32v6
     dockerfile: Dockerfile
     skip_push: auto
@@ -83,9 +95,13 @@ dockers:
       - --build-arg=ARCH=armv6
       - --platform=linux/arm/v6
   - image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v7
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v7
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-arm32v7
       - ghcr.io/compose-generator/compose-generator:latest-arm32v7
-      - chillibits/compose-generator:{{ .Version }}-arm32v7
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v7
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v7
+      - chillibits/compose-generator:{{ .Major }}-arm32v7
       - chillibits/compose-generator:latest-arm32v7
     dockerfile: Dockerfile
     skip_push: auto
@@ -105,33 +121,62 @@ dockers:
       - --build-arg=ARCH=armv7
       - --platform=linux/arm/v7
 docker_manifests:
-  - name_template: chillibits/compose-generator:{{ .Version }}
+  - name_template: chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}
     image_templates:
-      - chillibits/compose-generator:{{ .Version }}-amd64
-      - chillibits/compose-generator:{{ .Version }}-i386
-      - chillibits/compose-generator:{{ .Version }}-arm32v6
-      - chillibits/compose-generator:{{ .Version }}-arm32v7
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-i386
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v6
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v7
+    skip_push: auto
+  - name_template: chillibits/compose-generator:{{ .Major }}.{{ .Minor }}
+    image_templates:
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-amd64
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-i386
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v6
+      - chillibits/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v7
+    skip_push: auto
+  - name_template: chillibits/compose-generator:{{ .Major }}
+    image_templates:
+      - chillibits/compose-generator:{{ .Major }}-amd64
+      - chillibits/compose-generator:{{ .Major }}-i386
+      - chillibits/compose-generator:{{ .Major }}-arm32v6
+      - chillibits/compose-generator:{{ .Major }}-arm32v7
     skip_push: auto
   - name_template: chillibits/compose-generator:latest
     image_templates:
-      - chillibits/compose-generator:{{ .Version }}-amd64
-      - chillibits/compose-generator:{{ .Version }}-i386
-      - chillibits/compose-generator:{{ .Version }}-arm32v6
-      - chillibits/compose-generator:{{ .Version }}-arm32v7
+      - chillibits/compose-generator:latest-amd64
+      - chillibits/compose-generator:latest-i386
+      - chillibits/compose-generator:latest-arm32v6
+      - chillibits/compose-generator:latest-arm32v7
     skip_push: auto
-  - name_template: ghcr.io/compose-generator/compose-generator:{{ .Version }}
+
+  - name_template: ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}
     image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm32v7
+    skip_push: auto
+  - name_template: ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}
+    image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}.{{ .Minor }}-arm32v7
+    skip_push: auto
+  - name_template: ghcr.io/compose-generator/compose-generator:{{ .Major }}
+    image_templates:
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-amd64
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-i386
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-arm32v6
+      - ghcr.io/compose-generator/compose-generator:{{ .Major }}-arm32v7
     skip_push: auto
   - name_template: ghcr.io/compose-generator/compose-generator:latest
     image_templates:
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-amd64
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-i386
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v6
-      - ghcr.io/compose-generator/compose-generator:{{ .Version }}-arm32v7
+      - ghcr.io/compose-generator/compose-generator:latest-amd64
+      - ghcr.io/compose-generator/compose-generator:latest-i386
+      - ghcr.io/compose-generator/compose-generator:latest-arm32v6
+      - ghcr.io/compose-generator/compose-generator:latest-arm32v7
     skip_push: auto
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
