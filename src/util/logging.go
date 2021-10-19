@@ -3,6 +3,7 @@ package util
 import (
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -35,6 +36,9 @@ func init() {
 	InfoLogger = log.New(logfile, "INFO: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
 	WarningLogger = log.New(logfile, "WARNING: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
 	ErrorLogger = log.New(logfile, "ERROR: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
+
+	// Write header to file
+	InfoLogger.Println("\n" + getLogFileHeader())
 }
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -54,6 +58,15 @@ func LogWarning(message string) {
 }
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func getLogFileHeader() string {
+	headerFields := []string{}
+	headerFields = append(headerFields, "Version: "+strings.ReplaceAll(BuildVersion(Version, Commit, Date, BuiltBy), "\n", ", "))
+	headerFields = append(headerFields, "Priviledged: "+strconv.FormatBool(IsPrivileged()))
+	headerFields = append(headerFields, "Dockerized: "+strconv.FormatBool(isDockerizedEnvironment()))
+	headerFields = append(headerFields, "CI: "+strconv.FormatBool(IsCIEnvironment()))
+	return strings.Join(headerFields, "\n")
+}
 
 func getLogfilePath() string {
 	// Create filename
