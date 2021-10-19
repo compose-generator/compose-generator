@@ -132,7 +132,7 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 				// #nosec G304
 				childContent, err := ioutil.ReadFile(path)
 				if err != nil {
-					errorLogger.Panicln("Could not load README.md from service template: " + err.Error())
+					errorLogger.Println("Could not load README.md from service template: " + err.Error())
 					logError("Could not load README.md from service template", false)
 					continue
 				}
