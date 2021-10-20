@@ -20,9 +20,8 @@ A template must contain a file called `config.json`, which holds metadata about 
 It consists of following parts:
 
 - `label` - Specifies the display name of the template. This name is used in the list for template selection
-- `dir` - Name of the directory, the template is located in e.g.: `1_lamp`
-- `type` - Type of the service. One of: `proxy`, `tls-helper`, `frontend`, `backend`, `database` or `db-admin-tool`
 - `preselected` - Conditional string which defines, whether a service is initially selected in the list or not.
+- `proxied`- `true` for services which are usually accessible from the outside when being proxied, otherwise `false`.
 - `demoAppInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for generating example projects or similar. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine.
 - `serviceInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for preparing work files, etc. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine.
 - `files` - List of important files the template comes with. For example the compose file or certain Dockerfiles.
