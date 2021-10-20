@@ -1,0 +1,68 @@
+{
+    "label": "SingleStore",
+    "preselected": "false",
+    "proxied": false,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your SingleStore instance?",
+            "type": 2,
+            "defaultValue": "3306",
+            "validator": "port",
+            "variable": "SINGLESTORE_DB_PORT"
+        },
+        {
+            "text": "On which port you want to expose the management UI of your SingleStore instance?",
+            "type": 2,
+            "defaultValue": "8080",
+            "validator": "port",
+            "variable": "SINGLESTORE_UI_PORT"
+        },
+        {
+            "text": "SingleStore license key:",
+            "type": 2,
+            "variable": "SINGLESTORE_LICENSE_KEY"
+        },
+        {
+            "text": "Which SingleStore version do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "SINGLESTORE_VERSION",
+            "advanced": true
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for SingleStore data volume?",
+            "defaultValue": "./volumes/singlestore-data",
+            "variable": "VOLUME_SINGLESTORE_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for SingleStore config volume?",
+            "defaultValue": "./volumes/singlestore-config",
+            "variable": "VOLUME_SINGLESTORE_CONFIG",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "SingleStore password",
+            "variable": "_PW_SINGLESTORE",
+            "length": 50
+        }
+    ]
+}
