@@ -1,0 +1,14 @@
+image: memsql/cluster-in-a-box:${{SINGLESTORE_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-singlestore
+restart: always
+networks:
+#? if has services.backend {
+#  - backend-database
+#? }
+ports:
+  - ${{SINGLESTORE_DB_PORT}}:3306
+  - ${{SINGLESTORE_UI_PORT}}:8080
+volumes: 
+  - ${{VOLUME_SINGLESTORE_DATA}}:/var/lib/scylla/data
+env_file:
+  - environment.env
