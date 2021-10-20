@@ -1,5 +1,5 @@
 ## SingleStore
-SingleStore is a distrubuted, relational, SQL database management system that is known for its speed in data ingest, query and transaction processing.
+SingleStore is a distributed, relational, SQL database management system that is known for its speed in data ingest, query and transaction processing.
 
 ### Setup
 SingleStore is considered as database service and can therefore be found in database collection, when generating the compose configuration with Compose Generator.
