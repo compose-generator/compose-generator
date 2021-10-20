@@ -16,8 +16,9 @@
 
 ---
 
-## Documentation
 **Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).**
+
+If Compose Generator helps you, please consider a GitHub star star! ⭐
 
 ### Install Compose Generator
 To install Compose Generator on your system, please visit the [installation section](https://www.compose-generator.com/install/linux/) in the documentation. Compose Generator is available for the latest versions of Alpine, CentOS, Debian, Fedora, Raspbian, Ubuntu and Windows. If you want to install Compose Generator manually by downloading a package file, please take a look at the table below.
@@ -55,7 +56,7 @@ There are downloadable packages available for all supported platforms:
 | **Windows Portable (zip)**  | [download](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_windows_amd64.zip)   | [download](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_windows_386.zip) | -                                                                                                                       | -                                                                                                                       | -                                                                                                                       | -                                                                                                                       |
 
 ## Contribute by providing predefined templates
-If you miss a predefined template and you want to create one for the public, please read the [instructions to create one](./predefined-services/README.md). Fork the repository, create the template and open a pr to the latest `release/v...` branch.
+If you miss a predefined template and you want to create one for the public, please read the [instructions to create a template](./predefined-services/README.md). Fork the repository, create the template and open a pr against the latest `release/v...` branch.
 The community is thankful for every predefined template!
 
 ## Contribute otherwise to the project
