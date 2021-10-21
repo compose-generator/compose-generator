@@ -21,6 +21,7 @@ func CheckForServiceTemplateUpdate() {
 	if IsDevVersion() || IsDockerizedEnvironment() {
 		return
 	}
+	InfoLogger.Println("Checking for predefined service template update ...")
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
 	spinner := StartProcess("Checking for predefined service template updates ...")
@@ -63,12 +64,14 @@ func CheckForServiceTemplateUpdate() {
 		shouldUpdate = true
 	}
 	StopProcess(spinner)
+	InfoLogger.Println("Checking for predefined service template update (done)")
 
 	// Download update if necessary
 	if shouldUpdate {
 		if IsPrivileged() {
 			// Download predefined services update
 			processMessage := "Downloading predefined services update and the toolbox image (this can take a while) ..."
+			InfoLogger.Println("Download predefined service template update ...")
 			if IsToolboxPresent() {
 				processMessage = "Downloading predefined services update ..."
 			}
@@ -84,6 +87,7 @@ func CheckForServiceTemplateUpdate() {
 			}
 			ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
 			StopProcess(spinner)
+			InfoLogger.Println("Download predefined service template update (done)")
 		} else {
 			InfoLogger.Println("Predefined services update found")
 			logError("Predefined services update found. Root privileges are required to install the update. Please run Compose Generator again with elevated privileges", true)

@@ -222,6 +222,7 @@ nfpms:
         type: symlink
     empty_folders:
       - /usr/lib/compose-generator/templates
+      - /usr/lib/compose-generator/log
 release:
   name_template: v{{ .Tag }}
   prerelease: auto
