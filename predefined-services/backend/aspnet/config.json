@@ -3,8 +3,9 @@
     "preselected": "false",
     "proxied": true,
     "demoAppInitCmd": [
-        "cd ${{ASPNET_SOURCE_DIRECTORY}}",
-        "dotnet new webapp"
+        "dotnet new webapp --force --name ${{ASPNET_APP_NAME}}",
+        "mv ./${{ASPNET_APP_NAME}}/* ./${{ASPNET_SOURCE_DIRECTORY}}/",
+        "rm -rf ./${{ASPNET_APP_NAME}}"
     ],
     "files": [
         {

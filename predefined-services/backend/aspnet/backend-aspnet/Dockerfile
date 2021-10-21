@@ -14,4 +14,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:${{ASPNET_VERSION}}
 WORKDIR /app
 COPY --from=builder /app/out .
 EXPOSE 80
-ENTRYPOINT ["dotnet", "backend.dll"]
+ENTRYPOINT [ "dotnet", "${{ASPNET_APP_NAME}}.dll" ]
