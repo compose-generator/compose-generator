@@ -73,21 +73,19 @@ func TestIsCIEnvironment2(t *testing.T) {
 
 func TestGetCustomTemplatesPath1(t *testing.T) {
 	// Test data
-	pathLinux := "/usr/lib/compose-generator/templates"
 	// Mock functions
 	fileExists = func(path string) bool {
-		assert.Equal(t, pathLinux, path)
+		assert.Equal(t, "/usr/bin/compose-generator", path)
 		return true
 	}
 	// Execute test
 	result := GetCustomTemplatesPath()
 	// Assert
-	assert.Equal(t, pathLinux, result)
+	assert.Equal(t, "/usr/lib/compose-generator/templates", result)
 }
 
 func TestGetCustomTemplatesPath2(t *testing.T) {
 	// Test data
-	pathLinux := "/usr/lib/compose-generator/templates"
 	pathWindowsDocker := "/usr/bin/compose-generator/test/path/templates"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
 	// Mock functions
@@ -95,7 +93,7 @@ func TestGetCustomTemplatesPath2(t *testing.T) {
 	fileExists = func(path string) bool {
 		fileExistsCallCount++
 		if fileExistsCallCount == 1 {
-			assert.Equal(t, pathLinux, path)
+			assert.Equal(t, "/usr/bin/compose-generator", path)
 			return false
 		}
 		assert.Equal(t, pathWindowsDocker, path)
@@ -115,7 +113,6 @@ func TestGetCustomTemplatesPath2(t *testing.T) {
 
 func TestGetCustomTemplatesPath3(t *testing.T) {
 	// Test data
-	pathLinux := "/usr/lib/compose-generator/templates"
 	pathWindowsDocker := "/usr/bin/compose-generator/test/path/templates"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
 	// Mock functions
@@ -123,7 +120,7 @@ func TestGetCustomTemplatesPath3(t *testing.T) {
 	fileExists = func(path string) bool {
 		fileExistsCallCount++
 		if fileExistsCallCount == 1 {
-			assert.Equal(t, pathLinux, path)
+			assert.Equal(t, "/usr/bin/compose-generator", path)
 			return false
 		}
 		assert.Equal(t, pathWindowsDocker, path)
@@ -147,7 +144,6 @@ func TestGetCustomTemplatesPath3(t *testing.T) {
 
 func TestGetCustomTemplatesPath4(t *testing.T) {
 	// Test data
-	pathLinux := "/usr/lib/compose-generator/templates"
 	pathWindowsDocker := "/usr/bin/compose-generator/test/path/templates"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
 	pathDev := "../templates"
@@ -156,7 +152,7 @@ func TestGetCustomTemplatesPath4(t *testing.T) {
 	fileExists = func(path string) bool {
 		fileExistsCallCount++
 		if fileExistsCallCount == 1 {
-			assert.Equal(t, pathLinux, path)
+			assert.Equal(t, "/usr/bin/compose-generator", path)
 			return false
 		}
 		assert.Equal(t, pathWindowsDocker, path)
@@ -206,22 +202,19 @@ func TestGetUsername2(t *testing.T) {
 // ----------------------------------------------------------- GetPredefinedServicesPath -----------------------------------------------------------
 
 func TestGetPredefinedServicesPath1(t *testing.T) {
-	// Test data
-	pathLinux := "/usr/lib/compose-generator/predefined-services"
 	// Mock functions
 	fileExists = func(path string) bool {
-		assert.Equal(t, pathLinux, path)
+		assert.Equal(t, "/usr/bin/compose-generator", path)
 		return true
 	}
 	// Execute test
 	result := GetPredefinedServicesPath()
 	// Assert
-	assert.Equal(t, pathLinux, result)
+	assert.Equal(t, "/usr/lib/compose-generator/predefined-services", result)
 }
 
 func TestGetPredefinedServicesPath2(t *testing.T) {
 	// Test data
-	pathLinux := "/usr/lib/compose-generator/predefined-services"
 	pathWindowsDocker := "/usr/bin/compose-generator/test/path/predefined-services"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
 	// Mock functions
@@ -229,7 +222,7 @@ func TestGetPredefinedServicesPath2(t *testing.T) {
 	fileExists = func(path string) bool {
 		fileExistsCallCount++
 		if fileExistsCallCount == 1 {
-			assert.Equal(t, pathLinux, path)
+			assert.Equal(t, "/usr/bin/compose-generator", path)
 			return false
 		}
 		assert.Equal(t, pathWindowsDocker, path)
@@ -249,7 +242,6 @@ func TestGetPredefinedServicesPath2(t *testing.T) {
 
 func TestGetPredefinedServicesPath3(t *testing.T) {
 	// Test data
-	pathLinux := "/usr/lib/compose-generator/predefined-services"
 	pathWindowsDocker := "/usr/bin/compose-generator/test/path/predefined-services"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
 	// Mock functions
@@ -257,7 +249,7 @@ func TestGetPredefinedServicesPath3(t *testing.T) {
 	fileExists = func(path string) bool {
 		fileExistsCallCount++
 		if fileExistsCallCount == 1 {
-			assert.Equal(t, pathLinux, path)
+			assert.Equal(t, "/usr/bin/compose-generator", path)
 			return false
 		}
 		assert.Equal(t, pathWindowsDocker, path)
@@ -281,7 +273,6 @@ func TestGetPredefinedServicesPath3(t *testing.T) {
 
 func TestGetPredefinedServicesPath4(t *testing.T) {
 	// Test data
-	pathLinux := "/usr/lib/compose-generator/predefined-services"
 	pathWindowsDocker := "/usr/bin/compose-generator/test/path/predefined-services"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
 	pathDev := "../predefined-services"
@@ -290,7 +281,7 @@ func TestGetPredefinedServicesPath4(t *testing.T) {
 	fileExists = func(path string) bool {
 		fileExistsCallCount++
 		if fileExistsCallCount == 1 {
-			assert.Equal(t, pathLinux, path)
+			assert.Equal(t, "/usr/bin/compose-generator", path)
 			return false
 		}
 		assert.Equal(t, pathWindowsDocker, path)

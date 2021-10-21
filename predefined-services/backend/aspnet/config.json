@@ -3,8 +3,9 @@
     "preselected": "false",
     "proxied": true,
     "demoAppInitCmd": [
-        "cd ${{ASPNET_SOURCE_DIRECTORY}}",
-        "dotnet new webapp"
+        "dotnet new webapp --force --name ${{ASPNET_APP_NAME}}",
+        "mv ./${{ASPNET_APP_NAME}}/* ./${{ASPNET_SOURCE_DIRECTORY}}/",
+        "rm -rf ./${{ASPNET_APP_NAME}}"
     ],
     "files": [
         {
@@ -14,6 +15,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{ASPNET_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
         }
     ],
     "questions": [
@@ -27,7 +32,13 @@
         {
             "text": "Which .NET version do you want to use?",
             "type": 2,
-            "defaultValue": "3.2.3",
+            "defaultValue": "5.0",
+            "variable": "DOTNET_VERSION"
+        },
+        {
+            "text": "Which ASP.NET version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.1",
             "variable": "ASPNET_VERSION"
         },
         {

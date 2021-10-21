@@ -52,9 +52,8 @@ func GetDockerVersion() string {
 
 // GetCustomTemplatesPath returns the path to the custom templates directory
 func GetCustomTemplatesPath() string {
-	templatesPath := "/usr/lib/compose-generator/templates"
-	if fileExists(templatesPath) {
-		return templatesPath // Linux
+	if fileExists("/usr/bin/compose-generator") {
+		return "/usr/lib/compose-generator/templates" // Linux
 	}
 	filename, err := executable()
 	if err != nil {
@@ -71,9 +70,8 @@ func GetCustomTemplatesPath() string {
 
 // GetPredefinedServicesPath returns the path to the predefined services directory
 func GetPredefinedServicesPath() string {
-	psPathLinux := "/usr/lib/compose-generator/predefined-services"
-	if fileExists(psPathLinux) {
-		return psPathLinux // Linux
+	if fileExists("/usr/bin/compose-generator") {
+		return "/usr/lib/compose-generator/predefined-services" // Linux
 	}
 	filename, err := executable()
 	if err != nil {
@@ -122,9 +120,8 @@ func IsDockerRunning() bool {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func getLogfilesPath() string {
-	logPathLinux := "/usr/lib/compose-generator/log"
-	if fileExists(logPathLinux) {
-		return logPathLinux // Linux
+	if fileExists("/usr/bin/compose-generator") {
+		return "/usr/lib/compose-generator/log" // Linux
 	}
 	filename, err := executable()
 	if err != nil {
