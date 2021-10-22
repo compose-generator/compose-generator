@@ -21,15 +21,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"  # Light mode
       scheme: default
-      primary: teal
-      accent: teal
+      primary: green
+      accent: green
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
     - media: "(prefers-color-scheme: dark)"  # Dark mode
       scheme: slate
-      primary: teal
-      accent: teal
+      primary: green
+      accent: green
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
