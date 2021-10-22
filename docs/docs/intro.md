@@ -8,6 +8,6 @@ The focus of Compose Generator is to increase productivity and efficiency of com
 
 Here you can see a demo, how fast you can setup a Compose configuration for a stack with Angular, Node.js, MySQL and PhpMyAdmin in under 30 seconds (!):
 
-<script id="asciicast-441106" src="https://asciinema.org/a/441106.js" async></script>
+<script id="asciicast-444036" src="https://asciinema.org/a/444036.js" async></script>
 
 If this is what you are looking for, go ahead and read the [quick-start guide](../quick-start).
