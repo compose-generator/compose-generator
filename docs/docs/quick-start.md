@@ -60,11 +60,7 @@ The first step is, to start your Docker instance on your host system. That given
     After you answered all questions, Compose Generator starts to generate the compose configuration for you and saves the provided outcome into the current directory. After finishing, you can run `$ docker compose up` to run Docker Compose with the generated configuration.
 
 ??? question "I already have project(s) to deploy by building the image(s) in-place (not recommended for production)"
-    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services that you need apart from the services, you want to build.
-
-    After generating the configuration without the relevant services, you can add them via `$ compose-generator add` one by one.
+    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Select `Custom service` plus the predefined templates for the companion services that you need. Select `y` to build the custom service from source.
 
 ??? question "I already have project(s) to deploy by pulling remote images"
-    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Please only select the services that you need apart from the services, you want to build.
-
-    After generating the configuration without the relevant services, you can add them via `$ compose-generator add` one by one.
+    Clone the project to your system if not done already and execute `$ compose-generator --with-instructions` in the root directory of the project. Select `Custom service` plus the predefined templates for the companion services that you need. Select `N` to pull the custom service image from a container registry.
