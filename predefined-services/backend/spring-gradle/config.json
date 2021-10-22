@@ -32,7 +32,7 @@
         {
             "text": "Spring version",
             "type": 2,
-            "defaultValue": "2.5.5",
+            "defaultValue": "2.5.6",
             "variable": "SPRING_GRADLE_VERSION"
         },
         {
