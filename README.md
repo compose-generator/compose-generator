@@ -18,7 +18,7 @@
 
 **Please visit the documentation on [compose-generator.com](https://www.compose-generator.com).**
 
-If Compose Generator helps you, please consider a GitHub star star! ⭐
+If Compose Generator helps you, please consider a GitHub star! ⭐
 
 ### Install Compose Generator
 To install Compose Generator on your system, please visit the [installation section](https://www.compose-generator.com/install/linux/) in the documentation. Compose Generator is available for the latest versions of Alpine, CentOS, Debian, Fedora, Raspbian, Ubuntu and Windows. If you want to install Compose Generator manually by downloading a package file, please take a look at the table below.
