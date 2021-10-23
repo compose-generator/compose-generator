@@ -56,8 +56,8 @@ func TestLoadGenerateConfig1(t *testing.T) {
 		assert.False(t, defaultValue)
 		return false
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, "")
@@ -90,18 +90,17 @@ func TestLoadGenerateConfig2(t *testing.T) {
 		assert.Fail(t, "Unexpected call of yesNoQuestion")
 		return false
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "You must specify a project name!", description)
-		assert.Nil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "You must specify a project name!", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, "")
 	// Assert
 	assert.Equal(t, 1, pelCallCount)
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 func TestLoadGenerateConfig3(t *testing.T) {
@@ -199,17 +198,16 @@ func TestLoadGenerateConfig4(t *testing.T) {
 		assert.Fail(t, "Unexpected call of openFile")
 		return nil, nil
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Config file could not be found", description)
-		assert.Nil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Config file could not be found", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, configPath)
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 func TestLoadGenerateConfig5(t *testing.T) {
@@ -244,17 +242,16 @@ func TestLoadGenerateConfig5(t *testing.T) {
 		assert.Fail(t, "Unexpected call of readAllFromFile")
 		return []byte{}, nil
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Could not load config file. Permissions granted?", description)
-		assert.Equal(t, "Error message", err.Error())
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Could not load config file. Permissions granted?", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, configPath)
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 func TestLoadGenerateConfig6(t *testing.T) {
@@ -292,17 +289,16 @@ func TestLoadGenerateConfig6(t *testing.T) {
 		assert.Fail(t, "Unexpected call of unmarshalYaml")
 		return nil
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Could not load config file. Permissions granted?", description)
-		assert.Equal(t, "Error message", err.Error())
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Could not load config file. Permissions granted?", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, configPath)
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 func TestLoadGenerateConfig7(t *testing.T) {
@@ -339,15 +335,14 @@ func TestLoadGenerateConfig7(t *testing.T) {
 	unmarshalYaml = func(in []byte, out interface{}) error {
 		return errors.New("Error message")
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Could not unmarshal config file", description)
-		assert.Equal(t, "Error message", err.Error())
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Could not unmarshal config file", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, configPath)
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }

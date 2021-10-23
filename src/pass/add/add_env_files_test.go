@@ -71,9 +71,8 @@ func TestAddEnvFiles1(t *testing.T) {
 		}
 		return false
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "File is not valid. Please select another file", description)
-		assert.Nil(t, err)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "File is not valid. Please select another file", message)
 		assert.False(t, exit)
 	}
 	// Execute test

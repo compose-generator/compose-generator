@@ -151,8 +151,8 @@ func TestCopyVolume1(t *testing.T) {
 		assert.Equal(t, os.FileMode(0777), perm)
 		return nil
 	}
-	printWarning = func(description string) {
-		assert.Fail(t, "Unexpected call of printWarning")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	copyVolume(volume, srcPath, dstPath)
@@ -180,8 +180,8 @@ func TestCopyVolume2(t *testing.T) {
 		assert.Equal(t, os.FileMode(0777), perm)
 		return errors.New("MkdirAll error")
 	}
-	printWarning = func(description string) {
-		assert.Equal(t, "Could not create volume dir", description)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not create volume dir", message)
 	}
 	// Execute test
 	copyVolume(volume, srcPath, dstPath)
@@ -241,8 +241,8 @@ func TestCopyBuildDir1(t *testing.T) {
 		assert.Equal(t, os.FileMode(0777), perm)
 		return nil
 	}
-	printWarning = func(description string) {
-		assert.Fail(t, "Unexpected call of printWarning")
+	logWarning = func(message string) {
+		assert.Fail(t, "Unexpected call of logWarning")
 	}
 	// Execute test
 	copyBuildDir(buildDir, srcPath, dstPath)
@@ -269,8 +269,8 @@ func TestCopyBuildDir2(t *testing.T) {
 		assert.Equal(t, os.FileMode(0777), perm)
 		return errors.New("MkdirAll error")
 	}
-	printWarning = func(description string) {
-		assert.Equal(t, "Could not create volume dir", description)
+	logWarning = func(message string) {
+		assert.Equal(t, "Could not create volume dir", message)
 	}
 	// Execute test
 	copyBuildDir(buildDir, srcPath, dstPath)

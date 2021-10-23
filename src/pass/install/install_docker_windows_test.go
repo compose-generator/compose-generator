@@ -28,9 +28,8 @@ func TestInstallDockers1(t *testing.T) {
 		assert.Equal(t, filePath, filepath)
 		return nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Download of Docker installer failed", description)
-		assert.Nil(t, err)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Download of Docker installer failed", message)
 		assert.True(t, exit)
 	}
 	pl = func(text string) {
@@ -63,16 +62,14 @@ func TestInstallDocker2(t *testing.T) {
 		assert.Equal(t, filePath, filepath)
 		return errors.New(errorMessage)
 	}
-	errorCalled := false
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Download of Docker installer failed", description)
-		assert.NotNil(t, err)
-		assert.Equal(t, errorMessage, err.Error())
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Download of Docker installer failed", message)
 		assert.True(t, exit)
-		errorCalled = true
 	}
 	// Execute test
 	InstallDocker()
 	// Assert
-	assert.True(t, errorCalled)
+	assert.Equal(t, 1, logErrorCallCount)
 }

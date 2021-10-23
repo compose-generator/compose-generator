@@ -69,8 +69,8 @@ func TestGenerateSecrets(t *testing.T) {
 		assert.Equal(t, 30, length)
 		return "HTRqX9Cb72LHSM4LahwVTtWQktFwx6", nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	GenerateSecrets(project, selected)

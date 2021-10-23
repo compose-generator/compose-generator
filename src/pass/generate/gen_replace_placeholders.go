@@ -20,6 +20,7 @@ var replaceVarsInFileMockable = replaceVarsInFile
 func GenerateReplacePlaceholdersInConfigFiles(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	for _, template := range selectedTemplates.GetAll() {
 		// Replace vars for all config files in this template
+		infoLogger.Println("Replacing placeholders in config files for '" + template.Label + "' ...")
 		spinner := startProcess("Applying custom config for " + template.Label + " ...")
 		for _, configFile := range template.GetFilePathsByType(model.FileTypeConfig) {
 			filePath := filepath.Clean(project.Composition.WorkingDir + util.ReplaceVarsInString(configFile, project.Vars))
@@ -31,6 +32,7 @@ func GenerateReplacePlaceholdersInConfigFiles(project *model.CGProject, selected
 			}
 		}
 		stopProcess(spinner)
+		infoLogger.Println("Replacing placeholders in config files for '" + template.Label + "' (done)")
 	}
 }
 
@@ -40,7 +42,8 @@ func replaceVarsInFile(filePath string, vars map[string]string) {
 	// Read contents from file
 	content, err := readFile(filePath)
 	if err != nil {
-		printError("Unable to read config file '"+filePath+"'", err, false)
+		errorLogger.Println("Unable to read config file '"+filePath+"': " + err.Error())
+		logError("Unable to read config file '"+filePath+"'", false)
 		return
 	}
 	contentStr := string(content)
@@ -50,6 +53,7 @@ func replaceVarsInFile(filePath string, vars map[string]string) {
 	}
 	// Write contents back
 	if err := writeFile(filePath, []byte(contentStr), 0600); err != nil {
-		printError("Unable to write config file '"+filePath+"' back to the disk", err, false)
+		errorLogger.Println("Unable to write config file '"+filePath+"' back to the disk: " + err.Error())
+		logError("Unable to write config file '"+filePath+"' back to the disk", false)
 	}
 }

@@ -32,7 +32,7 @@ func TestInstall1(t *testing.T) {
 		return expectedDockerVersion
 	}
 	printSuccessMessageCallCount := 0
-	printSuccessMessage = func(text string) {
+	printSuccess = func(text string) {
 		printSuccessMessageCallCount++
 		assert.Equal(t, "Congrats! You have installed "+expectedDockerVersion+". You now can start by executing 'compose-generator generate' to generate your compose file.", text)
 	}
@@ -54,18 +54,17 @@ func TestInstall2(t *testing.T) {
 	isDockerizedEnvironment = func() bool {
 		return true
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "You are currently using the dockerized version of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", description)
-		assert.Nil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "You are currently using the dockerized version of Compose Generator. To use this command, please install Compose Generator on your system. Visit https://www.compose-generator.com/install/linux or https://www.compose-generator.com/install/windows for more details.", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	result := Install(nil)
 	// Assert
 	assert.Nil(t, result)
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 func TestInstall3(t *testing.T) {
@@ -85,9 +84,8 @@ func TestInstall3(t *testing.T) {
 	pel = func() {
 		pelCallCount++
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "An error occurred while installing Docker", description)
-		assert.Nil(t, err)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "An error occurred while installing Docker", message)
 		assert.True(t, exit)
 	}
 	// Execute test

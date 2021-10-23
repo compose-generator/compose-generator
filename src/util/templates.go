@@ -21,12 +21,14 @@ func CheckForServiceTemplateUpdate() {
 	if IsDevVersion() || IsDockerizedEnvironment() {
 		return
 	}
+	InfoLogger.Println("Checking for predefined service template update ...")
 	// Create predefined templates dir if not exitsts
 	predefinedTemplatesDir := GetPredefinedServicesPath()
 	spinner := StartProcess("Checking for predefined service template updates ...")
 	if !FileExists(predefinedTemplatesDir) {
 		if err := os.MkdirAll(predefinedTemplatesDir, 0750); err != nil {
-			Error("Could not create directory for predefined templates", err, true)
+			ErrorLogger.Println("Could not create directory for predefined templates: " + err.Error())
+			logError("Could not create directory for predefined templates", true)
 		}
 	}
 
@@ -37,20 +39,23 @@ func CheckForServiceTemplateUpdate() {
 	if FileExists(outputPath) { // File exists => version check
 		file, err := os.Stat(outputPath)
 		if err != nil {
-			Error("Could not access existing template archive", err, true)
+			ErrorLogger.Println("Could not access existing template archive: " + err.Error())
+			logError("Could not access existing template archive", true)
 		}
 		lastModifiedLocal := file.ModTime().Unix()
 
 		// Issue HEAD request for services archive
 		res, err := http.Head(fileUrl)
 		if err != nil {
-			Warning("Could not check for template updates")
+			WarningLogger.Println("Could not check for template updates: " + err.Error())
+			logWarning("Could not check for template updates")
 			return
 		}
 		lastModified := res.Header["Last-Modified"][0]
 		t, err := time.Parse(time.RFC1123, lastModified)
 		if err != nil {
-			Error("Cannot parse last modified of remote file", err, true)
+			ErrorLogger.Println("Cannot parse last modified of remote file: " + err.Error())
+			logError("Cannot parse last modified of remote file", true)
 		}
 		if t.Unix() > lastModifiedLocal {
 			shouldUpdate = true
@@ -59,27 +64,33 @@ func CheckForServiceTemplateUpdate() {
 		shouldUpdate = true
 	}
 	StopProcess(spinner)
+	InfoLogger.Println("Checking for predefined service template update (done)")
 
 	// Download update if necessary
 	if shouldUpdate {
 		if IsPrivileged() {
 			// Download predefined services update
 			processMessage := "Downloading predefined services update and the toolbox image (this can take a while) ..."
+			InfoLogger.Println("Download predefined service template update ...")
 			if IsToolboxPresent() {
 				processMessage = "Downloading predefined services update ..."
 			}
 			spinner = StartProcess(processMessage)
 			if err := DownloadFile(fileUrl, outputPath); err != nil {
-				Error("Failed to download predefined services update. Please check your internet connection", err, true)
+				ErrorLogger.Println("Failed to download predefined services update: " + err.Error())
+				logError("Failed to download predefined services update. Please check your internet connection", true)
 			}
 			filepath, err := filepath.Abs(predefinedTemplatesDir)
 			if err != nil {
-				Error("Could not build path", err, true)
+				ErrorLogger.Println("Could not build path: " + err.Error())
+				logError("Could not build path", true)
 			}
 			ExecuteOnToolboxCustomVolume("tar xfvz predefined-services.tar.gz", filepath)
 			StopProcess(spinner)
+			InfoLogger.Println("Download predefined service template update (done)")
 		} else {
-			Error("Predefined services update found. Root privileges are required to install the update. Please run Compose Generator again with elevated privileges", nil, true)
+			InfoLogger.Println("Predefined services update found")
+			logError("Predefined services update found. Root privileges are required to install the update. Please run Compose Generator again with elevated privileges", true)
 		}
 	}
 }
@@ -94,7 +105,8 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 			// If the port is already in use, find unused one
 			port, err := strconv.Atoi(defaultValue)
 			if err != nil {
-				Error("Could not convert port to integer. Please check template", err, true)
+				ErrorLogger.Println("Could not convert port to integer: " + err.Error())
+				logError("Could not convert port to integer. Please check template", true)
 			}
 			for SliceContainsInt(project.Ports, port) {
 				port++
@@ -109,10 +121,12 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 				// Ask a yes/no question
 				defaultValue, err := strconv.ParseBool(defaultValue)
 				if err != nil {
-					Error("Mistake in predefined template '"+template.Name+"'. Default value of yes/no question was no bool", err, true)
+					ErrorLogger.Println("Default value of yes/no was no bool in '" + template.Name + "': " + err.Error())
+					logError("Mistake in predefined template '"+template.Name+"'. Default value of yes/no question was no bool", true)
 				}
-				answer := YesNoQuestion(text, defaultValue)
-				project.Vars[question.Variable] = strconv.FormatBool(answer)
+				answer := strconv.FormatBool(YesNoQuestion(text, defaultValue))
+				InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
+				project.Vars[question.Variable] = answer
 			case model.QuestionTypeText:
 				// Ask a text question
 				answer := ""
@@ -123,7 +137,8 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 					if question.Validator == "port" {
 						port, err := strconv.Atoi(answer)
 						if err != nil {
-							Error("Internal error", err, true)
+							ErrorLogger.Println("Could not convert port to integer: " + err.Error())
+							logError("Could not convert port to integer. Please check template", true)
 						}
 						project.Ports = append(project.Ports, port)
 					}
@@ -131,19 +146,23 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 					// Ask a text question without validator
 					answer = TextQuestionWithDefault(text, defaultValue)
 				}
+				InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				project.Vars[question.Variable] = answer
 			case model.QuestionTypeMenu:
 				// Ask a menu question
 				answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
+				InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				project.Vars[question.Variable] = answer
 			}
 		} else {
 			// Advanced question falls back to default value
+			InfoLogger.Println("Falling back to default: " + question.Variable + "=" + question.DefaultValue)
 			project.Vars[question.Variable] = question.DefaultValue
 		}
 	}
 }
 
+// AskTemplateProxyQuestions aks the user all collected proxy questions for every selected service
 func AskTemplateProxyQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
 	// Ask proxy questions only if the service wants to get proxied
 	if template.Proxied {
@@ -166,10 +185,12 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 					// Ask a yes/no question
 					defaultValue, err := strconv.ParseBool(defaultValue)
 					if err != nil {
-						Error("Mistake in proxy question configuration. Default value of yes/no question was no bool", err, true)
+						ErrorLogger.Println("Default value of yes/no was no bool in '" + template.Name + "': " + err.Error())
+						logError("Mistake in proxy question configuration. Default value of yes/no question was no bool", true)
 					}
-					answer := YesNoQuestion(text, defaultValue)
-					proxyVars[question.Variable] = strconv.FormatBool(answer)
+					answer := strconv.FormatBool(YesNoQuestion(text, defaultValue))
+					proxyVars[question.Variable] = answer
+					InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				case model.QuestionTypeText:
 					// Ask a text question
 					answer := ""
@@ -180,7 +201,8 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 						if question.Validator == "port" {
 							port, err := strconv.Atoi(answer)
 							if err != nil {
-								Error("Internal error", err, true)
+								ErrorLogger.Println("Could not convert port to integer: " + err.Error())
+								logError("Could not convert port to integer. Please check template", true)
 							}
 							project.Ports = append(project.Ports, port)
 						}
@@ -189,14 +211,17 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 						answer = TextQuestionWithDefault(text, defaultValue)
 					}
 					proxyVars[question.Variable] = answer
+					InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				case model.QuestionTypeMenu:
 					// Ask a menu question
 					answer := MenuQuestionWithDefault(text, question.Options, question.DefaultValue)
 					proxyVars[question.Variable] = answer
+					InfoLogger.Println("User chose: " + question.Variable + "=" + answer)
 				}
 			} else {
 				// Advanced question falls back to default value
 				proxyVars[question.Variable] = question.DefaultValue
+				InfoLogger.Println("Falling back to default: " + question.Variable + "=" + question.DefaultValue)
 			}
 		}
 		// Add collected proxy vars to project
@@ -214,9 +239,11 @@ func AskForCustomVolumePaths(project *model.CGProject, template *model.Predefine
 			// Ask a text question with validator
 			answer = TextQuestionWithDefault(volume.Text, defaultValue)
 			project.Vars[volume.Variable] = answer
+			InfoLogger.Println("User chose: " + volume.Variable + "=" + answer)
 		} else {
 			// Advanced question falls back to default value
 			project.Vars[volume.Variable] = volume.DefaultValue
+			InfoLogger.Println("Falling back to default: " + volume.Variable + "=" + volume.DefaultValue)
 		}
 	}
 }

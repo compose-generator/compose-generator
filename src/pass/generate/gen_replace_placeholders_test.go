@@ -141,8 +141,8 @@ func TestReplaceVarsInFile1(t *testing.T) {
 		assert.Equal(t, fs.FileMode(0600), perm)
 		return nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	replaceVarsInFile(filePath, vars)
@@ -164,9 +164,8 @@ func TestReplaceVarsInFile2(t *testing.T) {
 		assert.Fail(t, "Unexpected call of writeFile")
 		return nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Unable to read config file './work-dir/test/Dockerfile'", description)
-		assert.Equal(t, "Error message", err.Error())
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Unable to read config file './work-dir/test/Dockerfile'", message)
 		assert.False(t, exit)
 	}
 	// Execute test
@@ -191,9 +190,8 @@ func TestReplaceVarsInFile3(t *testing.T) {
 		assert.Equal(t, fs.FileMode(0600), perm)
 		return errors.New("Error message")
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Unable to write config file './work-dir/test/Dockerfile' back to the disk", description)
-		assert.Equal(t, "Error message", err.Error())
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Unable to write config file './work-dir/test/Dockerfile' back to the disk", message)
 		assert.False(t, exit)
 	}
 	// Execute test

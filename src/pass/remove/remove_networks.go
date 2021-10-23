@@ -17,6 +17,7 @@ var getServicesWhichUseNetworkMockable = getServicesWhichUseNetwork
 
 // RemoveNetworks removes all networks from a service
 func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
+	infoLogger.Println("Removing networks ...")
 	for networkName := range service.Networks {
 		// Get project-wide network config by the name of the network
 		networkConfig := project.Composition.Networks[networkName]
@@ -33,6 +34,7 @@ func RemoveNetworks(service *spec.ServiceConfig, project *model.CGProject) {
 		// Remove network from project-wide network section
 		delete(project.Composition.Networks, networkName)
 	}
+	infoLogger.Println("Removing networks (done)")
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

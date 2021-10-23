@@ -27,6 +27,7 @@ func AddEnvVars(service *spec.ServiceConfig, _ *model.CGProject) {
 			variableValue := textQuestion("Variable value:")
 			// Add env var to service
 			service.Environment[variableName] = &variableValue
+			infoLogger.Println("Selected env var: " + variableName + "=" + variableValue)
 		}
 		pel()
 	}

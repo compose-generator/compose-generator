@@ -27,17 +27,16 @@ func TestCommonCheckForDependencyCycles1(t *testing.T) {
 		assert.Equal(t, project.Composition, proj)
 		return true
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		assert.Equal(t, "Configuration contains dependency cycles", description)
-		assert.Nil(t, err)
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Configuration contains dependency cycles", message)
 		assert.True(t, exit)
 	}
 	// Execute test
 	CommonCheckForDependencyCycles(project)
 	// Assert
-	assert.Equal(t, 1, printErrorCallCount)
+	assert.Equal(t, 1, logErrorCallCount)
 }
 
 func TestCommonCheckForDependencyCycles2(t *testing.T) {
@@ -52,8 +51,8 @@ func TestCommonCheckForDependencyCycles2(t *testing.T) {
 		assert.Equal(t, project.Composition, proj)
 		return false
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	CommonCheckForDependencyCycles(project)

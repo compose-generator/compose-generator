@@ -8,14 +8,17 @@ package pass
 import "compose-generator/model"
 
 const (
+	// ProfileDev is the name of the profile for development
 	ProfileDev        = "dev"
+	// ProfileProduction is the name of the profile for production
 	ProfileProduction = "prod"
 )
 
 // GenerateAddProfiles adds two profiles to the project in case the production-ready variant was selected
 func GenerateAddProfiles(project *model.CGProject) {
 	if project.CGProjectMetadata.ProductionReady {
-		spinner := startProcess("Adding dev and production profiles")
+		infoLogger.Println("Supplying dev and prod profiles ...")
+		spinner := startProcess("Adding dev and prod profiles")
 		for i := range project.Composition.Services {
 			service := &project.Composition.Services[i]
 			if len(service.Profiles) == 0 {
@@ -23,5 +26,6 @@ func GenerateAddProfiles(project *model.CGProject) {
 			}
 		}
 		stopProcess(spinner)
+		infoLogger.Println("Supplying dev and prod profiles done")
 	}
 }

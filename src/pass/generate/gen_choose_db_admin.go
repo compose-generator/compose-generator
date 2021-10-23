@@ -18,8 +18,9 @@ func GenerateChooseDbAdmins(
 	selected *model.SelectedTemplates,
 	config *model.GenerateConfig,
 ) {
-	if config.FromFile {
+	if config != nil && config.FromFile {
 		// Generate from config file
+		infoLogger.Println("Generating db admins from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeDbAdmin)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -35,30 +36,51 @@ func GenerateChooseDbAdmins(
 							project.Vars[question.Variable] = question.DefaultValue
 						}
 					}
+					for _, question := range template.ProxyQuestions {
+						if value, ok := selectedConfig.Params[question.Variable]; ok {
+							project.Vars[question.Variable] = value
+						} else {
+							project.Vars[question.Variable] = question.DefaultValue
+						}
+					}
+					for _, question := range template.Volumes {
+						if value, ok := selectedConfig.Params[question.Variable]; ok {
+							project.Vars[question.Variable] = value
+						} else {
+							project.Vars[question.Variable] = question.DefaultValue
+						}
+					}
 					// Add template to selected templates
 					selected.DbAdminServices = append(selected.DbAdminServices, template)
 					break
 				}
 			}
 		}
+		infoLogger.Println("Generating db admins from config file (done)")
 	} else {
 		// Generate from user input
-		availableDbAdmins := available.DbAdminServices
-		items := templateListToLabelList(availableDbAdmins)
-		itemsPreselected := templateListToPreselectedLabelList(availableDbAdmins, selected)
+		infoLogger.Println("Generating db admins from user input ...")
+		items := templateListToLabelList(available.DbAdminServices)
+		items = append(items, "Custom db admin service")
+		itemsPreselected := templateListToPreselectedLabelList(available.DbAdminServices, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which db admin services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
-			// Get selected template config
-			selectedConfig := available.DbAdminServices[index]
-			// Ask questions to the user
-			askTemplateQuestions(project, &selectedConfig)
-			// Ask proxy questions to the user
-			askTemplateProxyQuestions(project, &selectedConfig, selected)
-			// Ask volume questions to the user
-			askForCustomVolumePaths(project, &selectedConfig)
-			// Save template to the selected templates
-			selected.DbAdminServices = append(selected.DbAdminServices, selectedConfig)
+			if index == len(available.DbAdminServices) { // Custom service was selected
+				GenerateAddCustomService(project, model.TemplateTypeDbAdmin)
+			} else { // Predefined service was selected
+				// Get selected template config
+				selectedConfig := available.DbAdminServices[index]
+				// Ask questions to the user
+				askTemplateQuestions(project, &selectedConfig)
+				// Ask proxy questions to the user
+				askTemplateProxyQuestions(project, &selectedConfig, selected)
+				// Ask volume questions to the user
+				askForCustomVolumePaths(project, &selectedConfig)
+				// Save template to the selected templates
+				selected.DbAdminServices = append(selected.DbAdminServices, selectedConfig)
+			}
 		}
+		infoLogger.Println("Generating db admins from user input (done)")
 	}
 }

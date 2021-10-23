@@ -11,9 +11,14 @@ import (
 	"path/filepath"
 )
 
-// Function list for mocking
+// Logging
+var logWarning = util.LogWarning
+var infoLogger = util.InfoLogger
+
+// Text output
 var yesNoQuestion = util.YesNoQuestion
-var printWarning = util.Warning
+
+// File operations
 var fileExists = util.FileExists
 var removeAll = os.RemoveAll
 var abs = filepath.Abs

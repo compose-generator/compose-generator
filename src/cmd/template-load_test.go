@@ -55,8 +55,8 @@ func TestAskForTemplate1(t *testing.T) {
 		}
 		return 1
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	result := askForTemplate()
@@ -87,9 +87,8 @@ func TestAskForTemplate2(t *testing.T) {
 		assert.Fail(t, "Unexpected call of menuQuestionIndex")
 		return 1
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "No templates found. Use \"$ compose-generator save <template-name>\" to save one.", description)
-		assert.Nil(t, err)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "No templates found. Use \"$ compose-generator save <template-name>\" to save one.", message)
 		assert.True(t, exit)
 	}
 	// Execute test
@@ -161,9 +160,8 @@ func TestShowTemplateList2(t *testing.T) {
 	printHeading = func(text string) {
 		assert.Fail(t, "Unexpected call of printHeading")
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "No templates found. Use \"$ compose-generator save <template-name>\" to save one.", description)
-		assert.Nil(t, err)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "No templates found. Use \"$ compose-generator save <template-name>\" to save one.", message)
 		assert.True(t, exit)
 	}
 	// Execute test
@@ -185,8 +183,8 @@ func TestGetTemplateMetatdataList1(t *testing.T) {
 	getCustomTemplatesPath = func() string {
 		return customTemplatesPath
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	result := getTemplateMetadataList()
@@ -206,9 +204,8 @@ func TestGetTemplateMetatdataList2(t *testing.T) {
 	getCustomTemplatesPath = func() string {
 		return customTemplatesPath
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Cannot access directory for custom templates", description)
-		assert.Equal(t, "Error message", err.Error())
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Cannot access directory for custom templates", message)
 		assert.True(t, exit)
 	}
 	// Execute test
@@ -292,34 +289,31 @@ func TestCopyVolumesFromTemplate1(t *testing.T) {
 			assert.Equal(t, "././Template 1/volume1", src)
 			assert.Equal(t, "./volume1", dest)
 			return nil
-		} else {
-			assert.Equal(t, "././Template 2/volume3", src)
-			assert.Equal(t, "../volume3", dest)
 		}
+		assert.Equal(t, "././Template 2/volume3", src)
+		assert.Equal(t, "../volume3", dest)
 		return errors.New("Error message")
 	}
-	printErrorCallCount := 0
-	printError = func(description string, err error, exit bool) {
-		printErrorCallCount++
-		if printErrorCallCount == 1 {
-			assert.Equal(t, "Could not copy volume '../volume3'", description)
-			assert.Equal(t, "Error message 1", err.Error())
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		if logErrorCallCount == 1 {
+			assert.Equal(t, "Could not copy volume '../volume3'", message)
 			assert.False(t, exit)
 		} else {
-			assert.Equal(t, "Could not find absolute path of volume dir", description)
-			assert.Equal(t, "Error message", err.Error())
+			assert.Equal(t, "Could not find absolute path of volume dir", message)
 			assert.True(t, exit)
 		}
 	}
-	printWarning = func(description string) {
-		assert.Equal(t, "Could not copy volumes from '././Template 2/volume3' to '../volume3'", description)
+	logWarning = func(message string) {
+		assert.Equal(t, "Could not copy volume '../volume3'", message)
 	}
 	// Execute test
 	copyVolumesAndBuildContextsFromTemplate(project, sourceDir)
 	// Assert
 	assert.Equal(t, 4, absCallCount)
 	assert.Equal(t, 1, copyDirCallCount)
-	assert.Equal(t, 2, printErrorCallCount)
+	assert.Equal(t, 2, logErrorCallCount)
 }
 
 func TestCopyVolumesFromTemplate2(t *testing.T) {
@@ -331,9 +325,8 @@ func TestCopyVolumesFromTemplate2(t *testing.T) {
 		assert.Equal(t, ".", path)
 		return "", errors.New("Error message")
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "Could not find absolute path of current dir", description)
-		assert.Equal(t, "Error message", err.Error())
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not find absolute path of current dir", message)
 		assert.True(t, exit)
 	}
 	// Execute test

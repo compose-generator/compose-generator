@@ -34,6 +34,7 @@ func SaveProject(project *model.CGProject, options ...SaveOption) {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func saveComposeFile(project *model.CGProject, opt SaveOptions) {
+	infoLogger.Println("Saving Compose file ...")
 	// Minify compose file
 	project.Composition.WithoutUnnecessaryResources()
 	// Remove unsupported options
@@ -45,12 +46,15 @@ func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	// Save docker compose file
 	content, err := yaml.Marshal(project.Composition)
 	if err != nil {
-		util.Error("Could not save "+opt.ComposeFileName, err, true)
+		errorLogger.Println("Could not save " + opt.ComposeFileName + ": " + err.Error())
+		logError("Could not save "+opt.ComposeFileName, true)
 	}
 	err = ioutil.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0600)
 	if err != nil {
-		util.Error("Could not save "+opt.ComposeFileName, err, true)
+		errorLogger.Println("Could not save " + opt.ComposeFileName + ": " + err.Error())
+		logError("Could not save "+opt.ComposeFileName, true)
 	}
+	infoLogger.Println("Saving Compose file (done)")
 }
 
 func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
@@ -73,6 +77,7 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 	}
 	// Write each file to the disk
 	for fileName, envVars := range envFiles {
+		infoLogger.Println("Saving env file '" + fileName + "' ...")
 		// Sort env variables alphabetically
 		keys := make([]string, 0, len(envVars))
 		for key := range envVars {
@@ -94,26 +99,32 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 		content = util.ReplaceVarsInString(content, secretMap)
 		// Write to disk
 		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0600); err != nil {
-			util.Error("Unable to write environment file '"+fileName+"' to the disk", err, true)
+			errorLogger.Println("Unable to write environment file '" + fileName + "' to the disk: " + err.Error())
+			logError("Unable to write environment file '"+fileName+"' to the disk", true)
 		}
+		infoLogger.Println("Saving env file '" + fileName + "' (done)")
 	}
 }
 
 func saveGitignore(project *model.CGProject, opt SaveOptions) {
 	if project.WithGitignore && len(project.GitignorePatterns) > 0 {
+		infoLogger.Println("Saving Gitignore ...")
 		// Create gitignore file with all the paths from the list
 		content := ""
 		for _, pattern := range project.GitignorePatterns {
 			content += pattern + "\n"
 		}
 		if err := ioutil.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0600); err != nil {
-			util.Error("Could not write .gitignore file", err, true)
+			errorLogger.Println("Could not write .gitignore file: " + err.Error())
+			logError("Could not write .gitignore file", true)
 		}
+		infoLogger.Println("Saving Gitignore (done)")
 	}
 }
 
 func saveReadme(project *model.CGProject, opt SaveOptions) {
 	if project.WithReadme && len(project.ReadmeChildPaths) > 0 {
+		infoLogger.Println("Saving Readme ...")
 		// Create Readme file, which consists of the content of all stated files
 		content := ""
 		for _, path := range project.ReadmeChildPaths {
@@ -121,7 +132,8 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 				// #nosec G304
 				childContent, err := ioutil.ReadFile(path)
 				if err != nil {
-					util.Error("Could not load README.md from service template", err, false)
+					errorLogger.Println("Could not load README.md from service template: " + err.Error())
+					logError("Could not load README.md from service template", false)
 					continue
 				}
 				content += string(childContent) + "\n\n"
@@ -131,12 +143,15 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 		content = util.ReplaceVarsInString(content, project.Vars)
 		// Write to output file
 		if err := ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0600); err != nil {
-			util.Error("Could not write README file", err, true)
+			errorLogger.Println("Could not write README file: " + err.Error())
+			logError("Could not write README file", true)
 		}
+		infoLogger.Println("Saving Readme (done)")
 	}
 }
 
 func saveCGFile(project *model.CGProject, opt SaveOptions) {
+	infoLogger.Println("Saving .cg.yml file ...")
 	// Get some information
 	project.LastModifiedBy = util.GetUsername()
 	project.LastModifiedAt = time.Now().UnixNano()
@@ -152,6 +167,8 @@ func saveCGFile(project *model.CGProject, opt SaveOptions) {
 	config.Set("modified-by", project.LastModifiedBy)
 	config.Set("modified-at", project.LastModifiedAt)
 	if err := config.WriteConfigAs(opt.WorkingDir + ".cg.yml"); err != nil {
-		util.Error("Could not write CG config file", err, true)
+		errorLogger.Println("Could not write CG config file: " + err.Error())
+		logError("Could not write CG config file", true)
 	}
+	infoLogger.Println("Saving .cg.yml file (done)")
 }

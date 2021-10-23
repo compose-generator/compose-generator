@@ -40,12 +40,18 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 		GitignorePatterns: []string{},
 		ReadmeChildPaths:  []string{"README.md"},
 		ForceConfig:       false,
+		Vars:              make(model.Vars),
+		ProxyVars:         make(map[string]model.Vars),
+		Secrets:           []model.ProjectSecret{},
 	}
 
 	// Load components
 	loadComposeFileMockable(project, opts)
 	loadGitignoreFileMockable(project, opts)
 	loadCGFileMockable(&project.CGProjectMetadata, opts)
+
+	project.Vars["PROJECT_NAME"] = project.CGProjectMetadata.Name
+	project.Vars["PROJECT_NAME_CONTAINER"] = project.CGProjectMetadata.ContainerName
 
 	return project
 }
@@ -88,19 +94,24 @@ func LoadTemplateService(
 
 func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	// Check if file exists
+	infoLogger.Println("Loading Compose file ...")
 	if !fileExists(opt.WorkingDir + opt.ComposeFileName) {
-		printError("Compose file not found", nil, true)
+		errorLogger.Println("Compose file not found")
+		logError("Compose file not found", true)
 	}
 	// Parse compose file
 	content, err := readFile(opt.WorkingDir + opt.ComposeFileName)
 	if err != nil {
-		printError("Unable to parse '"+opt.ComposeFileName+"'", err, true)
+		errorLogger.Println("Unable to parse '" + opt.ComposeFileName + "': " + err.Error())
+		logError("Unable to parse '"+opt.ComposeFileName+"'", true)
 	}
 	dict, err := parseCompositionYAML(content)
 	if err != nil {
-		printError("Unable to parse '"+opt.ComposeFileName+"' file", err, true)
+		errorLogger.Println("Unable to parse '" + opt.ComposeFileName + "': " + err.Error())
+		logError("Unable to parse '"+opt.ComposeFileName+"' file", true)
 	}
 
+	// Load
 	configs := []spec.ConfigFile{
 		{
 			Filename: opt.ComposeFileName,
@@ -113,8 +124,18 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	}
 	project.Composition, err = loadComposition(config)
 	if err != nil {
-		printError("Could not load project from the current directory", err, true)
+		errorLogger.Println("Could not load project from the current directory: " + err.Error())
+		logError("Could not load project from the current directory", true)
 	}
+
+	// Enrich project with data from composition
+	project.Composition.WorkingDir = opt.WorkingDir
+	for _, service := range project.Composition.Services {
+		for _, port := range service.Ports {
+			project.Ports = append(project.Ports, int(port.Published))
+		}
+	}
+	infoLogger.Println("Loading Compose file (done)")
 }
 
 func loadComposeFileSingleService(
@@ -124,8 +145,10 @@ func loadComposeFileSingleService(
 	serviceName string,
 	opt LoadOptions,
 ) *spec.ServiceConfig {
+	infoLogger.Println("Loading service '" + serviceName + "' from Compose file ...")
 	if !util.FileExists(opt.WorkingDir + opt.ComposeFileName) {
-		util.Error("Compose file not found in template "+templateTypeName+"-"+serviceName, nil, true)
+		errorLogger.Println("Compose file not found in template " + templateTypeName + "-" + serviceName)
+		logError("Compose file not found in template "+templateTypeName+"-"+serviceName, true)
 	}
 	// Evaluate conditional sections
 	evaluated := util.EvaluateConditionalSectionsToString(
@@ -138,21 +161,26 @@ func loadComposeFileSingleService(
 	// Parse file contents to service
 	serviceDict, err := loader.ParseYAML([]byte(evaluated))
 	if err != nil {
-		util.Error("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", err, true)
+		errorLogger.Println("Unable to unmarshal the evaluated version of '" + templateTypeName + "-" + serviceName + "': " + err.Error())
+		logError("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", true)
 	}
 	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil, true)
 	if err != nil {
-		util.Error("Unable to load '"+templateTypeName+"-"+serviceName+"'", err, true)
+		errorLogger.Println("Unable to load '" + templateTypeName + "-" + serviceName + "': " + err.Error())
+		logError("Unable to load '"+templateTypeName+"-"+serviceName+"'", true)
 	}
+	infoLogger.Println("Loading service '" + serviceName + "' from Compose file (done)")
 	return service
 }
 
 func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 	if project.WithGitignore {
+		infoLogger.Println("Loading Gitignore ...")
 		// Load patterns from .gitignore file
 		content, err := ioutil.ReadFile(opt.WorkingDir + ".gitignore")
 		if err != nil {
-			util.Error("Unable to parse .gitignore file", err, true)
+			errorLogger.Println("Unable to parse .gitignore file: " + err.Error())
+			logError("Unable to parse .gitignore file", true)
 		}
 		contentStr := strings.ReplaceAll(string(content), "\r\n", "\n")
 		// Save them into the project
@@ -162,10 +190,12 @@ func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 				project.GitignorePatterns = append(project.GitignorePatterns, trimmedLine)
 			}
 		}
+		infoLogger.Println("Loading Gitignore (done)")
 	}
 }
 
 func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
+	infoLogger.Println("Loading .cg.yml file ...")
 	// Get default config values
 	defaultProjectName := path.Base(opt.WorkingDir)
 	defaultContainerName := strings.ReplaceAll(strings.ToLower(defaultProjectName), " ", "-")
@@ -198,7 +228,8 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		config.AddConfigPath(opt.WorkingDir)
 		err := config.ReadInConfig()
 		if err != nil {
-			util.Error("Could not read '"+configFileName+"' file", err, true)
+			errorLogger.Println("Could not read '" + configFileName + "' file: " + err.Error())
+			logError("Could not read '"+configFileName+"' file", true)
 		}
 		// Assign values
 		metadata.Name = config.GetString("project-name")
@@ -218,4 +249,5 @@ func loadCGFile(metadata *model.CGProjectMetadata, opt LoadOptions) {
 		metadata.LastModifiedBy = defaultModifiedBy
 		metadata.LastModifiedAt = defaultModifiedAt
 	}
+	infoLogger.Println("Loading .cg.yml file (done)")
 }

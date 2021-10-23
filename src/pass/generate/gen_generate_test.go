@@ -44,10 +44,6 @@ func TestGenerate1(t *testing.T) {
 		ReadmeChildPaths: []string{
 			predefinedTemplatesPath + "/INSTRUCTIONS_HEADER.md",
 		},
-		Composition: &spec.Project{
-			WorkingDir: "./",
-			Services:   spec.Services{},
-		},
 	}
 	// Mock functions
 	pelCallCount := 0
@@ -81,8 +77,8 @@ func TestGenerate1(t *testing.T) {
 	stopProcess = func(s *spinner.Spinner) {
 		stopProcessCallCount++
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Fail(t, "Unexpected call of printError")
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
 	Generate(proj, selectedTemplates)
@@ -105,9 +101,8 @@ func TestGenerate2(t *testing.T) {
 		assert.Fail(t, "Unexpected error of startProcess")
 		return nil
 	}
-	printError = func(description string, err error, exit bool) {
-		assert.Equal(t, "No templates selected. Aborting ...", description)
-		assert.Nil(t, err)
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "No templates selected. Aborting ...", message)
 		assert.True(t, exit)
 	}
 	// Execute test

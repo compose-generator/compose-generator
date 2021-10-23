@@ -26,11 +26,13 @@ func AddEnvFiles(service *spec.ServiceConfig, _ *model.CGProject) {
 			})
 			// Check if the selected file is valid
 			if !fileExists(envFile) || isDir(envFile) {
-				printError("File is not valid. Please select another file", nil, false)
+				errorLogger.Println("File is not valid. Please select another file")
+				logError("File is not valid. Please select another file", false)
 				continue
 			}
 			// Add env file to service
 			service.EnvFile = append(service.EnvFile, envFile)
+			infoLogger.Println("Selected env file: " + envFile)
 		}
 		pel()
 	}

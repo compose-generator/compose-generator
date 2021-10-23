@@ -12,7 +12,17 @@ import (
 	"github.com/compose-generator/diu"
 )
 
-// Function list for mocking
+// Logging
+var logError = util.LogError
+var logWarning = util.LogWarning
+var infoLogger = util.InfoLogger
+var warningLogger = util.WarningLogger
+var errorLogger = util.ErrorLogger
+
+// Text output
+var p = util.P
+var pel = util.Pel
+var success = util.Success
 var textQuestion = util.TextQuestion
 var textQuestionWithDefault = util.TextQuestionWithDefault
 var textQuestionWithSuggestions = util.TextQuestionWithSuggestions
@@ -22,12 +32,11 @@ var yesNoQuestion = util.YesNoQuestion
 var menuQuestion = util.MenuQuestion
 var menuQuestionIndex = util.MenuQuestionIndex
 var multiSelectMenuQuestion = util.MultiSelectMenuQuestion
-var printError = util.Error
-var printWarning = util.Warning
-var getImageManifest = diu.GetImageManifest
-var p = util.P
-var pel = util.Pel
-var success = util.Success
+
+// File operations
 var fileExists = util.FileExists
 var isDir = util.IsDir
+
+// Other
+var getImageManifest = diu.GetImageManifest
 var visitServiceDependencies = commonPass.VisitServiceDependencies

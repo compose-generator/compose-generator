@@ -88,10 +88,10 @@ func TestAddDependants1(t *testing.T) {
 	pel = func() {
 		pelCallCount++
 	}
-	printWarningCallCount := 0
-	printWarning = func(description string) {
-		printWarningCallCount++
-		assert.Equal(t, "Could not add dependency from 'Service 1' to 'Service 0' because it would cause a cycle", description)
+	logWarningCallCount := 0
+	logWarning = func(message string) {
+		logWarningCallCount++
+		assert.Equal(t, "Could not add dependency from 'Service 1' to 'Service 0' because it would cause a cycle", message)
 	}
 	checkForDependencyCycleCallCount := 0
 	checkForDependencyCycleMockable = func(currentService *spec.ServiceConfig, otherServiceName string, project *spec.Project) bool {
@@ -108,15 +108,54 @@ func TestAddDependants1(t *testing.T) {
 	// Assert
 	assert.Equal(t, expectedProject, project)
 	assert.Equal(t, 2, pelCallCount)
-	assert.Equal(t, 1, printWarningCallCount)
+	assert.Equal(t, 1, logWarningCallCount)
 	assert.Equal(t, 2, checkForDependencyCycleCallCount)
 }
 
 func TestAddDependants2(t *testing.T) {
 	// Test data
-	project := &model.CGProject{}
+	project := &model.CGProject{
+		Composition: &spec.Project{},
+	}
 	service := &spec.ServiceConfig{}
-	expectedProject := &model.CGProject{}
+	expectedProject := &model.CGProject{
+		Composition: &spec.Project{},
+	}
+	// Mock functions
+	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
+		assert.Equal(t, "Do you want other services depend on the new one?", question)
+		assert.False(t, defaultValue)
+		return false
+	}
+	multiSelectMenuQuestion = func(label string, items []string) (result []string) {
+		return []string{}
+	}
+	pel = func() {
+		assert.Fail(t, "Unexpected call of pel")
+	}
+	// Execute test
+	AddDependants(service, project)
+	// Assert
+	assert.Equal(t, expectedProject, project)
+}
+
+func TestAddDependants3(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{},
+			},
+		},
+	}
+	service := &spec.ServiceConfig{}
+	expectedProject := &model.CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{},
+			},
+		},
+	}
 	// Mock functions
 	yesNoQuestion = func(question string, defaultValue bool) (result bool) {
 		assert.Equal(t, "Do you want other services depend on the new one?", question)

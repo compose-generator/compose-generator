@@ -9,6 +9,7 @@ on:
       #- feature/**
       #- service/**
       #- fix/**
+      - chore/**
     paths:
       - docs/**
   workflow_dispatch:

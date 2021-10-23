@@ -18,8 +18,9 @@ func GenerateChooseTlsHelpers(
 	selected *model.SelectedTemplates,
 	config *model.GenerateConfig,
 ) {
-	if config.FromFile {
+	if config != nil && config.FromFile {
 		// Generate from config file
+		infoLogger.Println("Generating tls helpers from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeTlsHelper)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -35,17 +36,25 @@ func GenerateChooseTlsHelpers(
 							project.Vars[question.Variable] = question.DefaultValue
 						}
 					}
+					for _, question := range template.Volumes {
+						if value, ok := selectedConfig.Params[question.Variable]; ok {
+							project.Vars[question.Variable] = value
+						} else {
+							project.Vars[question.Variable] = question.DefaultValue
+						}
+					}
 					// Add template to selected templates
 					selected.TlsHelperService = append(selected.TlsHelperService, template)
 					break
 				}
 			}
 		}
+		infoLogger.Println("Generating tls helpers from config file (done)")
 	} else {
 		// Generate from user input
-		availableTlsHelpers := available.TlsHelperService
-		items := templateListToLabelList(availableTlsHelpers)
-		itemsPreselected := templateListToPreselectedLabelList(availableTlsHelpers, selected)
+		infoLogger.Println("Generating tls helpers from user input ...")
+		items := templateListToLabelList(available.TlsHelperService)
+		itemsPreselected := templateListToPreselectedLabelList(available.TlsHelperService, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which tls helper services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
@@ -58,5 +67,6 @@ func GenerateChooseTlsHelpers(
 			// Save template to the selected templates
 			selected.TlsHelperService = append(selected.TlsHelperService, selectedConfig)
 		}
+		infoLogger.Println("Generating tls helpers from user input (done)")
 	}
 }

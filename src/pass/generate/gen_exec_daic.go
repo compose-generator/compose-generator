@@ -17,6 +17,7 @@ import (
 func GenerateExecDemoAppInitCommands(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	for _, template := range selectedTemplates.GetAll() {
 		if len(template.DemoAppInitCmd) > 0 {
+			infoLogger.Println("Generating demo app for '" + template.Label + "' ...")
 			// Retrieve service init commands
 			cmds := []string{}
 			for _, cmd := range template.DemoAppInitCmd {
@@ -26,6 +27,7 @@ func GenerateExecDemoAppInitCommands(project *model.CGProject, selectedTemplates
 			spinner := startProcess("Generating demo app for " + template.Label + " ...")
 			executeOnToolbox(strings.Join(cmds, " && "))
 			stopProcess(spinner)
+			infoLogger.Println("Generating demo app for '" + template.Label + "' (done)")
 		}
 	}
 }

@@ -7,6 +7,7 @@ package pass
 
 import (
 	"compose-generator/model"
+	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
 )
@@ -15,10 +16,11 @@ import (
 
 // AddDepends asks the user if he/she wants to let a service depend on other services of the configuration
 func AddDepends(service *spec.ServiceConfig, project *model.CGProject) {
-	if yesNoQuestion("Do you want your service to depend on other services?", false) {
+	if len(project.Composition.Services) > 0 && yesNoQuestion("Do you want your service to depend on other services?", false) {
 		pel()
 		// Ask for services
 		selectedServices := multiSelectMenuQuestion("Which ones?", project.Composition.ServiceNames())
+		infoLogger.Println("Selected depends: " + strings.Join(selectedServices, ", "))
 		// Create map if not exists
 		if service.DependsOn == nil {
 			service.DependsOn = make(spec.DependsOnConfig)

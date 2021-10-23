@@ -40,6 +40,8 @@ var getTemplateMetadataListMockable = getTemplateMetadataList
 
 // LoadTemplate copies a template from the central templates directory to the working directory
 func LoadTemplate(c *cli.Context) error {
+	infoLogger.Println("LoadTemplate command executed")
+
 	// Extract flags
 	dirName := c.Args().Get(0)
 	flagForce := c.Bool("force")
@@ -48,7 +50,7 @@ func LoadTemplate(c *cli.Context) error {
 	if flagShow {
 		showTemplateList()
 	} else {
-		sourceDir := util.GetCustomTemplatesPath() + "/" + dirName
+		sourceDir := getCustomTemplatesPath() + "/" + dirName
 		if dirName == "" {
 			// Let the user choose a template
 			dirName = askForTemplate()
@@ -56,30 +58,31 @@ func LoadTemplate(c *cli.Context) error {
 		} else {
 			// Check if the stated template exists
 			if !util.FileExists(sourceDir) {
-				util.Error("Could not find template '"+dirName+"'", nil, true)
+				errorLogger.Println("Template directory '" + sourceDir + "' could not be found. Aborting")
+				logError("Could not find template '"+dirName+"'", true)
 			}
 		}
 
 		// Load project
-		spinner := util.StartProcess("Loading project ...")
+		spinner := startProcess("Loading project ...")
 		proj := project.LoadProject(
 			project.LoadFromDir(sourceDir),
 		)
 		proj.ForceConfig = flagForce
-		util.StopProcess(spinner)
+		stopProcess(spinner)
 
 		// Copy volumes and build contexts over to the new template dir
-		spinner = util.StartProcess("Loading volumes and build contexts ...")
+		spinner = startProcess("Loading volumes and build contexts ...")
 		copyVolumesAndBuildContextsFromTemplate(proj, sourceDir)
-		util.StopProcess(spinner)
+		stopProcess(spinner)
 
 		// Save the project to the current dir
-		spinner = util.StartProcess("Saving project ...")
+		spinner = startProcess("Saving project ...")
 		project.SaveProject(
 			proj,
 			project.SaveIntoDir("."),
 		)
-		util.StopProcess(spinner)
+		stopProcess(spinner)
 	}
 	return nil
 }
@@ -103,7 +106,8 @@ func askForTemplate() string {
 		index := menuQuestionIndex("Which template do you want to load?", items)
 		return keys[index]
 	}
-	printError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
+	errorLogger.Println("Template dir is empty")
+	logError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", true)
 	return ""
 }
 
@@ -122,14 +126,16 @@ func showTemplateList() {
 		}
 		pel()
 	} else {
-		printError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", nil, true)
+		errorLogger.Println("Template dir is empty")
+		logError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", true)
 	}
 }
 
 func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
 	files, err := readDir(getCustomTemplatesPath())
 	if err != nil {
-		printError("Cannot access directory for custom templates", err, true)
+		errorLogger.Println("Could not access '" + getCustomTemplatesPath() + "': " + err.Error())
+		logError("Cannot access directory for custom templates", true)
 		return nil
 	}
 	templateMetadata := make(map[string]*model.CGProjectMetadata)
@@ -148,23 +154,27 @@ func getTemplateMetadataList() map[string]*model.CGProjectMetadata {
 func copyVolumesAndBuildContextsFromTemplate(proj *model.CGProject, sourceDir string) {
 	currentAbs, err := abs(".")
 	if err != nil {
-		printError("Could not find absolute path of current dir", err, true)
+		errorLogger.Println("Could not find absolute path of current dir: " + err.Error())
+		logError("Could not find absolute path of current dir", true)
 		return
 	}
 	paths := append(proj.GetAllVolumePaths(), proj.GetAllBuildContextPaths()...)
 	for _, path := range normalizePaths(paths) {
 		pathAbs, err := abs(path)
 		if err != nil {
-			printError("Could not find absolute path of volume dir", err, true)
+			errorLogger.Println("Could not find absolute path of current dir: " + err.Error())
+			logError("Could not find absolute path of volume dir", true)
 			return
 		}
 		pathRel, err := rel(currentAbs, pathAbs)
 		if err != nil {
-			printError("Could not copy volume '"+path+"'", err, false)
+			warningLogger.Println("Could not copy volume '" + path + "': " + err.Error())
+			logError("Could not copy volume '" + path + "'", false)
 			continue
 		}
-		if copyDir(sourceDir+"/"+pathRel, path) != nil {
-			printWarning("Could not copy volumes from '" + sourceDir + "/" + pathRel + "' to '" + path + "'")
+		if err := copyDir(sourceDir+"/"+pathRel, path); err != nil {
+			warningLogger.Println("Could not copy volumes from '" + sourceDir + "/" + pathRel + "' to '" + path + "': " + err.Error())
+			logWarning("Could not copy volumes from '" + sourceDir + "/" + pathRel + "' to '" + path + "'")
 		}
 	}
 }

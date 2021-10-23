@@ -66,11 +66,13 @@ func askForExistingExternalVolume(service *spec.ServiceConfig, project *model.CG
 	// Search for external volumes
 	externalVolumes, err := ListDockerVolumes(client)
 	if err != nil {
-		printError("Error parsing external volumes", err, false)
+		errorLogger.Println("Error parsing external volumes: " + err.Error())
+		logError("Error parsing external volumes", false)
 		return
 	}
 	if externalVolumes.Volumes == nil || len(externalVolumes.Volumes) == 0 {
-		printError("There is no external volume existing", nil, false)
+		errorLogger.Println("There is no external volume existing")
+		logError("There is no external volume existing", false)
 		return
 	}
 	// Let the user choose one
@@ -112,6 +114,7 @@ func askForExistingExternalVolume(service *spec.ServiceConfig, project *model.CG
 			External: true,
 		},
 	}
+	infoLogger.Println("Added external volume '" + selectedVolume.Name + "' to new service")
 }
 
 func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProject, client *client.Client) {
@@ -120,7 +123,8 @@ func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProje
 	// Add external volume
 	err := CreateDockerVolume(client, name)
 	if err != nil {
-		printError("Could not create external volume", err, false)
+		errorLogger.Println("Could not create external volume: " + err.Error())
+		logError("Could not create external volume", false)
 		return
 	}
 
@@ -154,6 +158,7 @@ func askForNewExternalVolume(service *spec.ServiceConfig, project *model.CGProje
 			External: true,
 		},
 	}
+	infoLogger.Println("Added new external volume '" + name + "' to new service")
 }
 
 func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
@@ -183,4 +188,5 @@ func askForFileVolume(service *spec.ServiceConfig, project *model.CGProject) {
 		Target:   volumeInner,
 		ReadOnly: readOnly,
 	})
+	infoLogger.Println("Added bind volume '" + volumeOuter + ":" + volumeInner + "' to new service")
 }
