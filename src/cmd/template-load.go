@@ -169,7 +169,7 @@ func copyVolumesAndBuildContextsFromTemplate(proj *model.CGProject, sourceDir st
 		pathRel, err := rel(currentAbs, pathAbs)
 		if err != nil {
 			warningLogger.Println("Could not copy volume '" + path + "': " + err.Error())
-			logError("Could not copy volume '" + path + "'", false)
+			logError("Could not copy volume '"+path+"'", false)
 			continue
 		}
 		if err := copyDir(sourceDir+"/"+pathRel, path); err != nil {

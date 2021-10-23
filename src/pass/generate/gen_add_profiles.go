@@ -9,7 +9,7 @@ import "compose-generator/model"
 
 const (
 	// ProfileDev is the name of the profile for development
-	ProfileDev        = "dev"
+	ProfileDev = "dev"
 	// ProfileProduction is the name of the profile for production
 	ProfileProduction = "prod"
 )
