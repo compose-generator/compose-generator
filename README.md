@@ -38,7 +38,7 @@ $ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/cg
 ```sh
 $ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ${pwd}:/cg/out chillibits/compose-generator [<command>]
 ```
-*Note: This command does not work with Windows CMD command line. Please use Windows PowerShell instead.*
+*Note: This command does not work with Windows CMD command line. Please use Windows Terminal or PowerShell instead.*
 
 ## Supported host systems & file downloads
 There are downloadable packages available for all supported platforms:

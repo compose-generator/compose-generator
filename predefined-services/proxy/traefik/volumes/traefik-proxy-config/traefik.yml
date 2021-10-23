@@ -1,0 +1,13 @@
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: your-email@chillibits.com
+      storage: acme.json
+      httpChallenge:
+        # used during the challenge
+        entryPoint: web

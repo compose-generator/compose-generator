@@ -1,5 +1,5 @@
 {
-    "label": "JWilder Nginx Proxy",
+    "label": "Traefik Proxy",
     "preselected": "true",
     "proxied": true,
     "files": [
@@ -10,6 +10,10 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "./volumes/traefik-proxy-config/traefik.yml",
+            "type": "config"
         }
     ],
     "questions": [
@@ -17,13 +21,19 @@
             "text": "Default virtual domain (e.g. example.com):",
             "type": 2,
             "validator": "hostname",
-            "variable": "JWILDER_DEFAULT_HOST"
+            "variable": "DEFAULT_HOST"
         },
         {
-            "text": "Which version of of JWilder Nginx Proxy do you want to use?",
-            "defaultValue": "0.8.0",
+            "text": "Default email address (e.g. webmaster@${{DEFAULT_HOST}}):",
             "type": 2,
-            "variable": "JWILDER_PROXY_VERSION",
+            "validator": "email",
+            "variable": "DEFAULT_EMAIL"
+        },
+        {
+            "text": "Which version of of Traefik Proxy do you want to use?",
+            "defaultValue": "2.5.3",
+            "type": 2,
+            "variable": "TRAEFIK_PROXY_VERSION",
             "advanced": true
         },
         {
@@ -31,7 +41,7 @@
             "defaultValue": "80",
             "type": 2,
             "validator": "port",
-            "variable": "JWILDER_PROXY_HTTP_PORT",
+            "variable": "TRAEFIK_PROXY_HTTP_PORT",
             "advanced": true
         },
         {
@@ -39,8 +49,15 @@
             "defaultValue": "443",
             "type": 2,
             "validator": "port",
-            "variable": "JWILDER_PROXY_HTTPS_PORT",
+            "variable": "TRAEFIK_PROXY_HTTPS_PORT",
             "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for the Traefik web interface?",
+            "defaultValue": "8080",
+            "type": 2,
+            "validator": "port",
+            "variable": "TRAEFIK_PROXY_INTERFACE_PORT"
         }
     ],
     "proxy-questions": [
@@ -61,26 +78,8 @@
     "volumes": [
         {
             "text": "Custom path for proxy config volume?",
-            "defaultValue": "./volumes/nginx-proxy-config",
-            "variable": "VOLUME_JWILDER_PROXY_CONFIG",
-            "advanced": true
-        },
-        {
-            "text": "Custom path for proxy certificates volume?",
-            "defaultValue": "./volumes/nginx-proxy-certs",
-            "variable": "VOLUME_JWILDER_PROXY_CERTS",
-            "advanced": true
-        },
-        {
-            "text": "Custom path for proxy virtual hosts volume?",
-            "defaultValue": "./volumes/nginx-proxy-vhosts",
-            "variable": "VOLUME_JWILDER_PROXY_VHOSTS",
-            "advanced": true
-        },
-        {
-            "text": "Custom path for proxy HTML volume?",
-            "defaultValue": "./volumes/nginx-proxy-html",
-            "variable": "VOLUME_JWILDER_PROXY_HTML",
+            "defaultValue": "./volumes/traefik-proxy-config",
+            "variable": "VOLUME_TRAEFIK_PROXY_CONFIG",
             "advanced": true
         }
     ]

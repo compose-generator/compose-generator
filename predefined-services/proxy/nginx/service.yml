@@ -1,12 +1,12 @@
-image: jwilder/nginx-proxy:${{PROXY_VERSION}}
+image: jwilder/nginx-proxy:${{JWILDER_PROXY_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-proxy-nginx
 restart: always
 volumes:
   - /var/run/docker.sock:/tmp/docker.sock:ro
-  - ${{VOLUME_PROXY_CERTS}}:/etc/nginx/certs:ro
-  - ${{VOLUME_PROXY_CONFIG}}:/etc/nginx/conf.d
-  - ${{VOLUME_PROXY_VHOSTS}}:/etc/nginx/vhost.d:ro
-  - ${{VOLUME_PROXY_HTML}}:/usr/share/nginx/html
+  - ${{VOLUME_JWILDER_PROXY_CERTS}}:/etc/nginx/certs:ro
+  - ${{VOLUME_JWILDER_PROXY_CONFIG}}:/etc/nginx/conf.d
+  - ${{VOLUME_JWILDER_PROXY_VHOSTS}}:/etc/nginx/vhost.d:ro
+  - ${{VOLUME_JWILDER_PROXY_HTML}}:/usr/share/nginx/html
 ports:
   - 80:80
   - 443:443
