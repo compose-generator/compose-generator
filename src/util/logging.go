@@ -16,12 +16,16 @@ import (
 )
 
 var (
+	// DebugLogger is the logger object for debug output
+	DebugLogger *log.Logger
+	// InfoLogger is the logger object for info output
+	InfoLogger *log.Logger
+	// WarningLogger is the logger object for warning output
+	WarningLogger *log.Logger
+	// ErrorLogger is the logger object for error output
+	ErrorLogger          *log.Logger
 	consoleWarningLogger *log.Logger
 	consoleErrorLogger   *log.Logger
-	DebugLogger          *log.Logger
-	InfoLogger           *log.Logger
-	WarningLogger        *log.Logger
-	ErrorLogger          *log.Logger
 )
 
 func init() {
