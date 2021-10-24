@@ -1,6 +1,6 @@
 {
     "label": "Traefik Proxy",
-    "preselected": "true",
+    "preselected": "false",
     "proxied": true,
     "files": [
         {
@@ -81,6 +81,12 @@
             "defaultValue": "./volumes/traefik-proxy-config",
             "variable": "VOLUME_TRAEFIK_PROXY_CONFIG",
             "advanced": true
+        }
+    ],
+    "labels": [
+        {
+            "content": "",
+            "condition": "true"
         }
     ]
 }

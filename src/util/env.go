@@ -8,7 +8,6 @@ package util
 import (
 	"context"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -40,14 +39,21 @@ func GetUsername() string {
 }
 
 // GetDockerVersion retrives and returns the version of the installed Docker instance
-func GetDockerVersion() string {
-	cmd := exec.Command("docker", "-v")
-	dockerVersion, err := cmd.CombinedOutput()
+func GetDockerVersion() (string, error) {
+	// Initialize Docker client
+	client, err := newClientWithOpts(client.FromEnv)
 	if err != nil {
-		ErrorLogger.Println("Failed to obtain Docker version: " + err.Error())
-		logError("Could not read Docker version", true)
+		ErrorLogger.Println("Could not intanciate Docker client: " + err.Error())
+		logError("Could not intanciate Docker client. Please check your Docker installation", true)
+		return "", err
 	}
-	return strings.TrimRight(string(dockerVersion), "\r\n")
+	serverVersion, err := client.ServerVersion(context.Background())
+	if err != nil {
+		ErrorLogger.Println("Could not obtain Docker engine version: " + err.Error())
+		logError("Could not obtain Docker engine version. Please check your Docker installation", true)
+		return "", err
+	}
+	return serverVersion.Version, nil
 }
 
 // GetCustomTemplatesPath returns the path to the custom templates directory

@@ -28,13 +28,14 @@ func Install(_ *cli.Context) error {
 
 	// Check if installation was successful
 	if commandExists("docker") {
-		pel()
-		dockerVersion := getDockerVersion()
-		printSuccess("Congrats! You have installed " + dockerVersion + ". You now can start by executing 'compose-generator generate' to generate your compose file.")
-		util.InfoLogger.Println("Installation successful")
-	} else {
-		util.ErrorLogger.Println("Installation failed")
-		logError("An error occurred while installing Docker", true)
+		if dockerVersion, err := getDockerVersion(); err == nil {
+			pel()
+			printSuccess("Congrats! You have installed Docker " + dockerVersion + ". You now can start by executing '$ compose-generator generate' to generate your compose file.")
+			util.InfoLogger.Println("Installation successful")
+			return nil
+		}
 	}
+	util.ErrorLogger.Println("Installation failed")
+	logError("An error occurred while installing Docker", true)
 	return nil
 }

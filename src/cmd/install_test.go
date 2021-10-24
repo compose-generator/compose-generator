@@ -6,6 +6,7 @@ All rights reserved.
 package cmd
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,7 +16,7 @@ import (
 
 func TestInstall1(t *testing.T) {
 	// Test data
-	expectedDockerVersion := "Docker version 20.10.8, build 3967b7d"
+	expectedDockerVersion := "20.10.8"
 	// Mock functions
 	isDockerizedEnvironment = func() bool {
 		return false
@@ -28,13 +29,13 @@ func TestInstall1(t *testing.T) {
 		assert.Equal(t, "docker", cmd)
 		return true
 	}
-	getDockerVersion = func() string {
-		return expectedDockerVersion
+	getDockerVersion = func() (string, error) {
+		return expectedDockerVersion, nil
 	}
 	printSuccessMessageCallCount := 0
 	printSuccess = func(text string) {
 		printSuccessMessageCallCount++
-		assert.Equal(t, "Congrats! You have installed "+expectedDockerVersion+". You now can start by executing 'compose-generator generate' to generate your compose file.", text)
+		assert.Equal(t, "Congrats! You have installed Docker "+expectedDockerVersion+". You now can start by executing '$ compose-generator generate' to generate your compose file.", text)
 	}
 	pelCallCount := 0
 	pel = func() {
@@ -79,6 +80,38 @@ func TestInstall3(t *testing.T) {
 	commandExists = func(cmd string) bool {
 		assert.Equal(t, "docker", cmd)
 		return false
+	}
+	pelCallCount := 0
+	pel = func() {
+		pelCallCount++
+	}
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "An error occurred while installing Docker", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	result := Install(nil)
+	// Assert
+	assert.Nil(t, result)
+	assert.Equal(t, 1, installDockerPassCallCount)
+	assert.Zero(t, pelCallCount)
+}
+
+func TestInstall4(t *testing.T) {
+	// Mock functions
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	installDockerPassCallCount := 0
+	installDockerPass = func() {
+		installDockerPassCallCount++
+	}
+	commandExists = func(cmd string) bool {
+		assert.Equal(t, "docker", cmd)
+		return true
+	}
+	getDockerVersion = func() (string, error) {
+		return "", errors.New("Error message")
 	}
 	pelCallCount := 0
 	pel = func() {

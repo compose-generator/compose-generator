@@ -4,7 +4,7 @@ providers:
     exposedByDefault: false
 
 certificatesResolvers:
-  myresolver:
+  cert-resolver:
     acme:
       email: your-email@chillibits.com
       storage: acme.json
