@@ -20,7 +20,7 @@ func GenerateChooseTlsHelpers(
 ) {
 	if config != nil && config.FromFile {
 		// Generate from config file
-		infoLogger.Println("Generating tls helpers from config file ...")
+		infoLogger.Println("Generating TLS helpers from config file ...")
 		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeTlsHelper)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
@@ -44,7 +44,7 @@ func GenerateChooseTlsHelpers(
 						}
 					}
 					// Add template to selected templates
-					selected.TlsHelperService = append(selected.TlsHelperService, template)
+					selected.TlsHelperServices = append(selected.TlsHelperServices, template)
 					break
 				}
 			}
@@ -55,7 +55,7 @@ func GenerateChooseTlsHelpers(
 		infoLogger.Println("Generating tls helpers from user input ...")
 		items := templateListToLabelList(available.TlsHelperService)
 		itemsPreselected := templateListToPreselectedLabelList(available.TlsHelperService, selected)
-		templateSelections := multiSelectMenuQuestionIndex("Which tls helper services do you need?", items, itemsPreselected)
+		templateSelections := multiSelectMenuQuestionIndex("Which TLS helper services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
 			// Get selected template config
@@ -65,7 +65,7 @@ func GenerateChooseTlsHelpers(
 			// Ask volume questions to the user
 			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
-			selected.TlsHelperService = append(selected.TlsHelperService, selectedConfig)
+			selected.TlsHelperServices = append(selected.TlsHelperServices, selectedConfig)
 		}
 		infoLogger.Println("Generating tls helpers from user input (done)")
 	}

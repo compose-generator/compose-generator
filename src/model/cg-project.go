@@ -23,11 +23,15 @@ type CGProject struct {
 	Secrets           []ProjectSecret
 	Vars              Vars
 	ProxyVars         map[string]Vars
+	ProxyLabels       map[string]Labels
 	Ports             []int
 }
 
 // Vars represents a list of environment variables
 type Vars map[string]string
+
+// Labels represents a list of service labels
+type Labels map[string]string
 
 // CGProjectMetadata represents the metadata that is attached to a CGProject
 type CGProjectMetadata struct {
@@ -118,6 +122,22 @@ func (p CGProject) GetAllEnvFilePathsNormalized() []string {
 		normalizedPaths = append(normalizedPaths, path)
 	}
 	return normalizedPaths
+}
+
+// GetServiceRef returns a reference to a service in the composition
+func (p CGProject) GetServiceRef(serviceName string) *spec.ServiceConfig {
+	// Return nil if composition is nil
+	if p.Composition == nil {
+		return nil
+	}
+	// Loop through services and search for service name
+	for index := range p.Composition.Services {
+		service := &p.Composition.Services[index]
+		if service.Name == serviceName {
+			return service
+		}
+	}
+	return nil
 }
 
 // ProjectSecret represents a secret in a CGProject

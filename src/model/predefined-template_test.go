@@ -32,10 +32,10 @@ func TestGetAll(t *testing.T) {
 		DbAdminServices: []PredefinedTemplateConfig{
 			{Name: "pgadmin"},
 		},
-		ProxyService: []PredefinedTemplateConfig{
+		ProxyServices: []PredefinedTemplateConfig{
 			{Name: "nginx"},
 		},
-		TlsHelperService: []PredefinedTemplateConfig{
+		TlsHelperServices: []PredefinedTemplateConfig{
 			{Name: "letsencrypt"},
 		},
 	}

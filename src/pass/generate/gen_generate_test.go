@@ -31,7 +31,7 @@ func TestGenerate1(t *testing.T) {
 				Name: "angular",
 			},
 		},
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "nginx",
 			},
@@ -70,7 +70,7 @@ func TestGenerate1(t *testing.T) {
 			assert.Equal(t, selectedTemplates.FrontendServices[0], template)
 		} else {
 			assert.Equal(t, model.TemplateTypeProxy, templateType)
-			assert.Equal(t, selectedTemplates.ProxyService[0], template)
+			assert.Equal(t, selectedTemplates.ProxyServices[0], template)
 		}
 	}
 	stopProcessCallCount := 0
@@ -146,6 +146,7 @@ func TestGenerateService1(t *testing.T) {
 			Services: spec.Services{
 				{
 					Name: "faunadb",
+					Labels: make(spec.Labels),
 				},
 			},
 		},

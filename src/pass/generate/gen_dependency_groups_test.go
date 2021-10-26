@@ -97,13 +97,13 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 				Label: "PhpMyAdmin",
 			},
 		},
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "nginx",
 				Label: "JWilder Nginx",
 			},
 		},
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TlsHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "letsencrypt",
 				Label: "Let's Encrypt",

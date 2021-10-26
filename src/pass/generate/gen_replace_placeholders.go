@@ -38,7 +38,7 @@ func GenerateReplacePlaceholdersInConfigFiles(project *model.CGProject, selected
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func replaceVarsInFile(filePath string, vars map[string]string) {
+func replaceVarsInFile(filePath string, vars model.Vars) {
 	// Read contents from file
 	content, err := readFile(filePath)
 	if err != nil {

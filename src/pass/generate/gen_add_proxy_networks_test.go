@@ -57,13 +57,13 @@ func TestGenerateAddProxyNetworks1(t *testing.T) {
 				Type:    model.TemplateTypeBackend,
 			},
 		},
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "nginx",
 				Type: model.TemplateTypeProxy,
 			},
 		},
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TlsHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "letsencrypt",
 				Type: model.TemplateTypeTlsHelper,
@@ -97,28 +97,10 @@ func TestGenerateAddProxyNetworks1(t *testing.T) {
 			},
 		},
 	}
-	// Mock functions
-	getServiceRefCallCount := 0
-	getServiceRefMockable = func(proj *spec.Project, serviceName string) *spec.ServiceConfig {
-		getServiceRefCallCount++
-		assert.Equal(t, project.Composition, proj)
-		switch getServiceRefCallCount {
-		case 1:
-			assert.Equal(t, "proxy-nginx", serviceName)
-			return &project.Composition.Services[3]
-		case 2:
-			assert.Equal(t, "backend-spring-maven", serviceName)
-			return &project.Composition.Services[2]
-		case 3:
-			assert.Equal(t, "backend-spring-gradle", serviceName)
-		}
-		return nil
-	}
 	// Execute test
 	GenerateAddProxyNetworks(project, selectedTemplates)
 	// Assert
 	assert.Equal(t, expectedProject, project)
-	assert.Equal(t, 3, getServiceRefCallCount)
 }
 
 func TestGenerateAddProxyNetworks2(t *testing.T) {
@@ -129,11 +111,6 @@ func TestGenerateAddProxyNetworks2(t *testing.T) {
 		},
 	}
 	selectedTemplates := &model.SelectedTemplates{}
-	// Mock functions
-	getServiceRefMockable = func(project *spec.Project, serviceName string) *spec.ServiceConfig {
-		assert.Fail(t, "Unexpected call of getServiceRef")
-		return nil
-	}
 	// Execute test
 	GenerateAddProxyNetworks(project, selectedTemplates)
 }
@@ -146,7 +123,7 @@ func TestGenerateAddProxyNetworks3(t *testing.T) {
 		},
 	}
 	selectedTemplates := &model.SelectedTemplates{
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "nginx",
 				Type: model.TemplateTypeProxy,
@@ -154,11 +131,6 @@ func TestGenerateAddProxyNetworks3(t *testing.T) {
 		},
 	}
 	// Mock functions
-	getServiceRefCallCount := 0
-	getServiceRefMockable = func(project *spec.Project, serviceName string) *spec.ServiceConfig {
-		getServiceRefCallCount++
-		return nil
-	}
 	logErrorCallCount := 0
 	logError = func(message string, exit bool) {
 		logErrorCallCount++
@@ -168,52 +140,5 @@ func TestGenerateAddProxyNetworks3(t *testing.T) {
 	// Execute test
 	GenerateAddProxyNetworks(project, selectedTemplates)
 	// Assert
-	assert.Equal(t, 1, getServiceRefCallCount)
 	assert.Equal(t, 1, logErrorCallCount)
-}
-
-// ------------------------------------------------------------------ getServiceRef ----------------------------------------------------------------
-
-func TestGetServiceRef1(t *testing.T) {
-	// Test data
-	project := &spec.Project{
-		Services: spec.Services{
-			{
-				Name: "Service 1",
-			},
-			{
-				Name: "Service 2",
-			},
-			{
-				Name: "Service 3",
-			},
-		},
-	}
-	serviceName := "Service 2"
-	// Execute test
-	result := getServiceRef(project, serviceName)
-	// Assert
-	assert.Equal(t, &project.Services[1], result)
-}
-
-func TestGetServiceRef2(t *testing.T) {
-	// Test data
-	project := &spec.Project{
-		Services: spec.Services{
-			{
-				Name: "Service 1",
-			},
-			{
-				Name: "Service 2",
-			},
-			{
-				Name: "Service 3",
-			},
-		},
-	}
-	serviceName := "Service 4"
-	// Execute test
-	result := getServiceRef(project, serviceName)
-	// Assert
-	assert.Nil(t, result)
 }

@@ -1,0 +1,103 @@
+{
+    "label": "Traefik Proxy",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "./volumes/traefik-proxy-config/traefik.yml",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Default virtual domain (e.g. example.com):",
+            "type": 2,
+            "validator": "hostname",
+            "variable": "TRAEFIK_DEFAULT_HOST"
+        },
+        {
+            "text": "Default email address:",
+            "defaultValue": "webmaster@${{TRAEFIK_DEFAULT_HOST}}",
+            "type": 2,
+            "validator": "email",
+            "variable": "TRAEFIK_DEFAULT_EMAIL"
+        },
+        {
+            "text": "Which version of of Traefik Proxy do you want to use?",
+            "defaultValue": "2.5.3",
+            "type": 2,
+            "variable": "TRAEFIK_PROXY_VERSION",
+            "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for HTTP?",
+            "defaultValue": "80",
+            "type": 2,
+            "validator": "port",
+            "variable": "TRAEFIK_PROXY_HTTP_PORT",
+            "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for HTTPS?",
+            "defaultValue": "443",
+            "type": 2,
+            "validator": "port",
+            "variable": "TRAEFIK_PROXY_HTTPS_PORT",
+            "advanced": true
+        },
+        {
+            "text": "Which port do you want to use for the Traefik web interface?",
+            "defaultValue": "8080",
+            "type": 2,
+            "validator": "port",
+            "variable": "TRAEFIK_PROXY_INTERFACE_PORT"
+        }
+    ],
+    "proxy-questions": [
+        {
+            "text": "Virtual domain:",
+            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{TRAEFIK_DEFAULT_HOST}}",
+            "type": 2,
+            "validator": "hostname",
+            "variable": "TRAEFIK_VIRTUAL_HOST"
+        }
+    ],
+    "proxy-labels": [
+        {
+            "name": "traefik.enable",
+            "value": "true",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.rule",
+            "value": "Host(`${{TRAEFIK_VIRTUAL_HOST}}`)",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.tls",
+            "value": "true",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.tls.certresolver",
+            "value": "letsEncrypt",
+            "condition": "true"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for proxy config volume?",
+            "defaultValue": "./volumes/traefik-proxy-config",
+            "variable": "VOLUME_TRAEFIK_PROXY_CONFIG",
+            "advanced": true
+        }
+    ]
+}

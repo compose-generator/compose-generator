@@ -1,0 +1,13 @@
+image: traefik:v${{TRAEFIK_PROXY_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-proxy-traefik
+restart: always
+volumes:
+  - /var/run/docker.sock:/var/run/docker.sock
+  - ${{VOLUME_TRAEFIK_PROXY_CONFIG}}:/etc/traefik:ro
+ports:
+  - 80:80
+  - 443:443
+  - ${{TRAEFIK_PROXY_INTERFACE_PORT}}:8080
+profiles:
+  - prod
+command: --providers.docker

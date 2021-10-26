@@ -11,8 +11,6 @@ import (
 	spec "github.com/compose-spec/compose-go/types"
 )
 
-var getServiceRefMockable = getServiceRef
-
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // GenerateAddProxyNetworks connects all proxied services via networks to the proxy and removes their port configs
@@ -20,7 +18,7 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 	if project.ProductionReady {
 		infoLogger.Println("Adding proxy networks to proxied services ...")
 		// Get reference of proxy service
-		proxyService := getServiceRefMockable(project.Composition, "proxy-"+selectedTemplates.ProxyService[0].Name)
+		proxyService := project.GetServiceRef("proxy-" + selectedTemplates.ProxyServices[0].Name)
 		if proxyService == nil {
 			errorLogger.Println("Proxy service cannot be found for network inserting")
 			logError("Proxy service cannot be found for network inserting", true)
@@ -34,7 +32,7 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 			if template.Type != model.TemplateTypeProxy && template.Type != model.TemplateTypeTlsHelper && template.Proxied {
 				networkName := "proxy-" + template.Name
 				// Get reference to current service
-				service := getServiceRefMockable(project.Composition, template.Type+"-"+template.Name)
+				service := project.GetServiceRef(template.Type + "-" + template.Name)
 				if service == nil {
 					continue
 				}
@@ -50,16 +48,4 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 		}
 		infoLogger.Println("Adding proxy networks to proxied services (done)")
 	}
-}
-
-// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
-
-func getServiceRef(project *spec.Project, serviceName string) *spec.ServiceConfig {
-	for index := range project.Services {
-		service := &project.Services[index]
-		if service.Name == serviceName {
-			return service
-		}
-	}
-	return nil
 }
