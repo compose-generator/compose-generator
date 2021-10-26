@@ -1,1 +1,2 @@
 ## Traefik Reverse Proxy
+Traefik is an open-source edge router that supports automatic service detection/exposure and fully-automated TLS certificate issueing/renewal. Thus, it can be used as single-service reverse proxy without a TLS helper service.
