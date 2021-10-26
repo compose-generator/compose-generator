@@ -6,7 +6,7 @@ providers:
 certificatesResolvers:
   cert-resolver:
     acme:
-      email: your-email@chillibits.com
+      email: ${{DEFAULT_EMAIL}}
       storage: acme.json
       httpChallenge:
         # used during the challenge

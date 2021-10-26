@@ -90,6 +90,21 @@
             "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.tls.certresolver",
             "value": "cert-resolver",
             "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.entrypoint",
+            "value": "websecure",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.whoami_http.middlewares",
+            "value": "redirect-to-https",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme",
+            "value": "https",
+            "condition": "true"
         }
     ],
     "volumes": [
