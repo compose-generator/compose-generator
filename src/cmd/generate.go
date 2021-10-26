@@ -121,11 +121,15 @@ func Generate(c *cli.Context) error {
 	// Run if the corresponding flag is set. Otherwise, print success message
 	if flagRun || flagDetached {
 		infoLogger.Println("Running Docker Compose ...")
-		util.DockerComposeUp(flagDetached)
+		util.DockerComposeUp(flagDetached, proj.ProductionReady)
 		infoLogger.Println("Running Docker Compose (done)")
 	} else {
 		pel()
-		printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")
+		if proj.ProductionReady {
+			printSuccess("🎉 Done! You now can execute \"$ docker compose --profile prod up\" to launch your app! 🎉")
+		} else {
+			printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")
+		}
 		pel()
 	}
 	return nil
