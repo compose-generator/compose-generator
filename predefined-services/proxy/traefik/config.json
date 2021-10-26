@@ -21,14 +21,14 @@
             "text": "Default virtual domain (e.g. example.com):",
             "type": 2,
             "validator": "hostname",
-            "variable": "DEFAULT_HOST"
+            "variable": "TRAEFIK_DEFAULT_HOST"
         },
         {
             "text": "Default email address:",
-            "defaultValue": "webmaster@${{DEFAULT_HOST}}",
+            "defaultValue": "webmaster@${{TRAEFIK_DEFAULT_HOST}}",
             "type": 2,
             "validator": "email",
-            "variable": "DEFAULT_EMAIL"
+            "variable": "TRAEFIK_DEFAULT_EMAIL"
         },
         {
             "text": "Which version of of Traefik Proxy do you want to use?",
@@ -64,10 +64,10 @@
     "proxy-questions": [
         {
             "text": "Virtual domain:",
-            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{DEFAULT_HOST}}",
+            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{TRAEFIK_DEFAULT_HOST}}",
             "type": 2,
             "validator": "hostname",
-            "variable": "VIRTUAL_HOST"
+            "variable": "TRAEFIK_VIRTUAL_HOST"
         }
     ],
     "proxy-labels": [
@@ -78,7 +78,7 @@
         },
         {
             "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.rule",
-            "value": "Host(`${{VIRTUAL_HOST}}`)",
+            "value": "Host(`${{TRAEFIK_VIRTUAL_HOST}}`)",
             "condition": "true"
         },
         {

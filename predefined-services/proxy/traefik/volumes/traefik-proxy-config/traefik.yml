@@ -21,7 +21,7 @@ entryPoints:
 certificatesResolvers:
   letsEncrypt:
     acme:
-      email: ${{DEFAULT_EMAIL}}
+      email: ${{TRAEFIK_DEFAULT_EMAIL}}
       storage: acme.json
       tlsChallenge: {}
 
