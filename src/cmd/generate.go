@@ -97,6 +97,7 @@ func Generate(c *cli.Context) error {
 		ForceConfig: flagForce,
 		Vars:        make(model.Vars),
 		ProxyVars:   make(map[string]model.Vars),
+		ProxyLabels: make(map[string]model.Labels),
 		Secrets:     []model.ProjectSecret{},
 	}
 	config := &model.GenerateConfig{}

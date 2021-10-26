@@ -143,7 +143,7 @@ func TestGenerateChooseTlsHelpers2(t *testing.T) {
 		return []string{}
 	}
 	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
-		assert.Equal(t, "Which tls helper services do you need?", label)
+		assert.Equal(t, "Which TLS helper services do you need?", label)
 		assert.Equal(t, []string{"Test TlsHelper"}, items)
 		return []int{0}
 	}

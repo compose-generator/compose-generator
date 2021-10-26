@@ -10,6 +10,8 @@ import (
 	"compose-generator/project"
 	"path/filepath"
 	"strconv"
+
+	"github.com/compose-spec/compose-go/types"
 )
 
 var generateServiceMockable = generateService
@@ -88,6 +90,13 @@ func generateService(
 	for varName := range proj.ProxyVars[template.Name] {
 		varValue := proj.ProxyVars[template.Name][varName]
 		service.Environment[varName] = &varValue
+	}
+	// Add labels for proxy labels
+	if service.Labels == nil {
+		service.Labels = make(types.Labels)
+	}
+	for labelName := range proj.ProxyLabels[template.Name] {
+		service.Labels[labelName] = proj.ProxyVars[template.Name][labelName]
 	}
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)

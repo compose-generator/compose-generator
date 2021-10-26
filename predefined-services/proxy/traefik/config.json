@@ -24,7 +24,8 @@
             "variable": "DEFAULT_HOST"
         },
         {
-            "text": "Default email address (e.g. webmaster@${{DEFAULT_HOST}}):",
+            "text": "Default email address:",
+            "defaultValue": "webmaster@${{DEFAULT_HOST}}",
             "type": 2,
             "validator": "email",
             "variable": "DEFAULT_EMAIL"
@@ -75,18 +76,34 @@
             "variable": "VIRTUAL_PORT"
         }
     ],
+    "proxy-labels": [
+        {
+            "name": "traefik.enable",
+            "value": "true",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.rule",
+            "value": "Host(`${{VIRTUAL_HOST}}`)",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.tls",
+            "value": "true",
+            "condition": "true"
+        },
+        {
+            "name": "traefik.http.routers.${{CURRENT_SERVICE_NAME}}.tls.certresolver",
+            "value": "cert-resolver",
+            "condition": "true"
+        }
+    ],
     "volumes": [
         {
             "text": "Custom path for proxy config volume?",
             "defaultValue": "./volumes/traefik-proxy-config",
             "variable": "VOLUME_TRAEFIK_PROXY_CONFIG",
             "advanced": true
-        }
-    ],
-    "labels": [
-        {
-            "content": "",
-            "condition": "true"
         }
     ]
 }

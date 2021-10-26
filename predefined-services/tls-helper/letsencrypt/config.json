@@ -1,6 +1,6 @@
 {
     "label": "Lets Encrypt Companion",
-    "preselected": "true",
+    "preselected": "services.proxy contains name == \"nginx\"",
     "proxied": true,
     "files": [
         {

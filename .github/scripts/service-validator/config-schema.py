@@ -141,5 +141,25 @@
                 }
             }
         }
+    },
+    'proxy-labels': {
+        'type': 'list',
+        'schema': {
+            'type': 'dict',
+            'schema': {
+                'name': {
+                    'type': 'string',
+                    'required': True
+                },
+                'value': {
+                    'type': 'string',
+                    'required': True
+                },
+                'condition': {
+                    'type': 'string',
+                    'required': True
+                }
+            }
+        }
     }
 }

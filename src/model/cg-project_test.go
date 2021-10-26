@@ -158,3 +158,53 @@ func TestGetAllEnvFilePathsNormalized2(t *testing.T) {
 	// Assert
 	assert.Zero(t, len(result))
 }
+
+// ------------------------------------------------------------------ GetServiceRef ----------------------------------------------------------------
+
+func TestGetServiceRef1(t *testing.T) {
+	// Test data
+	project := &CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{
+					Name: "Service 1",
+				},
+				{
+					Name: "Service 2",
+				},
+				{
+					Name: "Service 3",
+				},
+			},
+		},
+	}
+	serviceName := "Service 2"
+	// Execute test
+	result := project.GetServiceRef(serviceName)
+	// Assert
+	assert.Equal(t, &project.Composition.Services[1], result)
+}
+
+func TestGetServiceRef2(t *testing.T) {
+	// Test data
+	project := &CGProject{
+		Composition: &spec.Project{
+			Services: spec.Services{
+				{
+					Name: "Service 1",
+				},
+				{
+					Name: "Service 2",
+				},
+				{
+					Name: "Service 3",
+				},
+			},
+		},
+	}
+	serviceName := "Service 4"
+	// Execute test
+	result := project.GetServiceRef(serviceName)
+	// Assert
+	assert.Nil(t, result)
+}

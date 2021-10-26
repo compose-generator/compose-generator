@@ -42,6 +42,7 @@ func LoadProject(options ...LoadOption) *model.CGProject {
 		ForceConfig:       false,
 		Vars:              make(model.Vars),
 		ProxyVars:         make(map[string]model.Vars),
+		ProxyLabels:       make(map[string]model.Labels),
 		Secrets:           []model.ProjectSecret{},
 	}
 

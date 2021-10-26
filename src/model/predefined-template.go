@@ -75,6 +75,18 @@ func (t SelectedTemplates) GetAllProxyQuestions() []Question {
 	return questions
 }
 
+// GetAllProxyLabels returns all labels, which are marked as proxy labels
+func (t SelectedTemplates) GetAllProxyLabels() []Label {
+	labels := []Label{}
+	for _, template := range t.ProxyService {
+		labels = append(labels, template.ProxyLabels...)
+	}
+	for _, template := range t.TlsHelperService {
+		labels = append(labels, template.ProxyLabels...)
+	}
+	return labels
+}
+
 // AvailableTemplates represents all available predefined service templates
 type AvailableTemplates struct {
 	FrontendServices []PredefinedTemplateConfig
@@ -98,6 +110,7 @@ type PredefinedTemplateConfig struct {
 	Files          []File     `json:"files,omitempty"`
 	Questions      []Question `json:"questions,omitempty"`
 	ProxyQuestions []Question `json:"proxy-questions,omitempty"`
+	ProxyLabels    []Label    `json:"proxy-labels,omitempty"`
 	Volumes        []Volume   `json:"volumes,omitempty"`
 	Secrets        []Secret   `json:"secrets,omitempty"`
 }
@@ -143,4 +156,11 @@ type Secret struct {
 	Name     string `json:"name,omitempty"`
 	Variable string `json:"variable,omitempty"`
 	Length   int    `json:"length,omitempty"`
+}
+
+// Label represents the JSON structure of a label of a predefined template
+type Label struct {
+	Name      string `json:"name,omitempty"`
+	Value     string `json:"value,omitempty"`
+	Condition string `json:"condition,omitempty"`
 }

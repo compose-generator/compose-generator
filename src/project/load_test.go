@@ -33,6 +33,7 @@ func TestLoadProject(t *testing.T) {
 			"PROJECT_NAME_CONTAINER": "example-project",
 		},
 		ProxyVars: make(map[string]model.Vars),
+		ProxyLabels: make(map[string]model.Labels),
 		Secrets:   []model.ProjectSecret{},
 	}
 	expectedOptions := LoadOptions{
