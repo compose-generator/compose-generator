@@ -36,8 +36,8 @@ type SelectedTemplates struct {
 	BackendServices  []PredefinedTemplateConfig `json:"backend,omitempty"`
 	DatabaseServices []PredefinedTemplateConfig `json:"database,omitempty"`
 	DbAdminServices  []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
-	ProxyService     []PredefinedTemplateConfig `json:"proxy,omitempty"`
-	TlsHelperService []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
+	ProxyServices     []PredefinedTemplateConfig `json:"proxy,omitempty"`
+	TlsHelperServices []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
 // GetAll returns all templates of all types, mixed in a single slice
@@ -47,8 +47,8 @@ func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
 	templates = append(templates, t.BackendServices...)
 	templates = append(templates, t.DatabaseServices...)
 	templates = append(templates, t.DbAdminServices...)
-	templates = append(templates, t.ProxyService...)
-	templates = append(templates, t.TlsHelperService...)
+	templates = append(templates, t.ProxyServices...)
+	templates = append(templates, t.TlsHelperServices...)
 	return templates
 }
 
@@ -58,18 +58,18 @@ func (t SelectedTemplates) GetTotal() int {
 	count += len(t.BackendServices)
 	count += len(t.DatabaseServices)
 	count += len(t.DbAdminServices)
-	count += len(t.ProxyService)
-	count += len(t.TlsHelperService)
+	count += len(t.ProxyServices)
+	count += len(t.TlsHelperServices)
 	return count
 }
 
 // GetAllProxyQuestions returns all questions, which are marked as proxy questions
 func (t SelectedTemplates) GetAllProxyQuestions() []Question {
 	questions := []Question{}
-	for _, template := range t.ProxyService {
+	for _, template := range t.ProxyServices {
 		questions = append(questions, template.ProxyQuestions...)
 	}
-	for _, template := range t.TlsHelperService {
+	for _, template := range t.TlsHelperServices {
 		questions = append(questions, template.ProxyQuestions...)
 	}
 	return questions
@@ -78,10 +78,10 @@ func (t SelectedTemplates) GetAllProxyQuestions() []Question {
 // GetAllProxyLabels returns all labels, which are marked as proxy labels
 func (t SelectedTemplates) GetAllProxyLabels() []Label {
 	labels := []Label{}
-	for _, template := range t.ProxyService {
+	for _, template := range t.ProxyServices {
 		labels = append(labels, template.ProxyLabels...)
 	}
-	for _, template := range t.TlsHelperService {
+	for _, template := range t.TlsHelperServices {
 		labels = append(labels, template.ProxyLabels...)
 	}
 	return labels

@@ -18,7 +18,7 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 	if project.ProductionReady {
 		infoLogger.Println("Adding proxy networks to proxied services ...")
 		// Get reference of proxy service
-		proxyService := project.GetServiceRef("proxy-" + selectedTemplates.ProxyService[0].Name)
+		proxyService := project.GetServiceRef("proxy-" + selectedTemplates.ProxyServices[0].Name)
 		if proxyService == nil {
 			errorLogger.Println("Proxy service cannot be found for network inserting")
 			logError("Proxy service cannot be found for network inserting", true)

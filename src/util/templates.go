@@ -234,17 +234,20 @@ func EvaluateProxyLabels(project *model.CGProject, template *model.PredefinedTem
 	if template.Proxied {
 		proxyLabels := make(model.Labels)
 		for _, label := range selectedTemplates.GetAllProxyLabels() {
-			// Replace vars
-			name := ReplaceVarsInString(label.Name, project.Vars)
-			value := ReplaceVarsInString(label.Value, project.Vars)
-			// Replace current service variables
-			name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_LABEL}}", template.Label)
-			name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_NAME}}", template.Name)
-			value = strings.ReplaceAll(value, "${{CURRENT_SERVICE_LABEL}}", template.Label)
-			value = strings.ReplaceAll(value, "${{CURRENT_SERVICE_NAME}}", template.Name)
+			// Check if condition evaluates to true
+			if evaluateCondition(label.Condition, selectedTemplates, project.Vars) {
+				// Replace vars
+				name := ReplaceVarsInString(label.Name, project.Vars)
+				value := ReplaceVarsInString(label.Value, project.Vars)
+				// Replace current service variables
+				name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+				name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_NAME}}", template.Name)
+				value = strings.ReplaceAll(value, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+				value = strings.ReplaceAll(value, "${{CURRENT_SERVICE_NAME}}", template.Name)
 
-			proxyLabels[name] = value
-			InfoLogger.Println("Specified label: " + label.Name + "=" + label.Value)
+				proxyLabels[name] = value
+				InfoLogger.Println("Specified label: " + label.Name + "=" + label.Value)
+			}
 		}
 		// Add collected proxy labels to project
 		project.ProxyLabels[template.Name] = proxyLabels
@@ -281,10 +284,7 @@ func TemplateListToLabelList(templates []model.PredefinedTemplateConfig) (labels
 // TemplateListToPreselectedLabelList retrieves a slice of all preselected other services for each service
 func TemplateListToPreselectedLabelList(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) (labels []string) {
 	for _, t := range templates {
-		if t.Preselected == "false" {
-			continue
-		}
-		if t.Preselected == "true" || EvaluateCondition(t.Preselected, selected, nil) {
+		if evaluateCondition(t.Preselected, selected, nil) {
 			labels = append(labels, t.Label)
 		}
 	}

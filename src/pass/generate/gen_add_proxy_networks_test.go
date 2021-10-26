@@ -57,13 +57,13 @@ func TestGenerateAddProxyNetworks1(t *testing.T) {
 				Type:    model.TemplateTypeBackend,
 			},
 		},
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "nginx",
 				Type: model.TemplateTypeProxy,
 			},
 		},
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TlsHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "letsencrypt",
 				Type: model.TemplateTypeTlsHelper,
@@ -123,7 +123,7 @@ func TestGenerateAddProxyNetworks3(t *testing.T) {
 		},
 	}
 	selectedTemplates := &model.SelectedTemplates{
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "nginx",
 				Type: model.TemplateTypeProxy,

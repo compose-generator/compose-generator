@@ -44,7 +44,7 @@ func GenerateChooseProxies(
 						}
 					}
 					// Add template to selected templates
-					selected.ProxyService = append(selected.ProxyService, template)
+					selected.ProxyServices = append(selected.ProxyServices, template)
 					break
 				}
 			}
@@ -65,7 +65,7 @@ func GenerateChooseProxies(
 			// Ask volume questions to the user
 			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
-			selected.ProxyService = append(selected.ProxyService, selectedConfig)
+			selected.ProxyServices = append(selected.ProxyServices, selectedConfig)
 		}
 		infoLogger.Println("Generating proxies from user input (done)")
 	}

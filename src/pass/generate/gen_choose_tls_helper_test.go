@@ -46,7 +46,7 @@ func TestGenerateChooseTlsHelpers1(t *testing.T) {
 		},
 	}
 	expectedSelected := &model.SelectedTemplates{
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TlsHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -114,7 +114,7 @@ func TestGenerateChooseTlsHelpers2(t *testing.T) {
 	selected := &model.SelectedTemplates{}
 	expectedProject := &model.CGProject{}
 	expectedSelected := &model.SelectedTemplates{
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TlsHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -135,11 +135,11 @@ func TestGenerateChooseTlsHelpers2(t *testing.T) {
 	}
 	// Mock functions
 	templateListToLabelList = func(templates []model.PredefinedTemplateConfig) []string {
-		assert.Equal(t, expectedSelected.TlsHelperService, templates)
+		assert.Equal(t, expectedSelected.TlsHelperServices, templates)
 		return []string{"Test TlsHelper"}
 	}
 	templateListToPreselectedLabelList = func(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) []string {
-		assert.Equal(t, expectedSelected.TlsHelperService, templates)
+		assert.Equal(t, expectedSelected.TlsHelperServices, templates)
 		return []string{}
 	}
 	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {

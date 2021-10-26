@@ -149,8 +149,8 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 		BackendServices:  []model.PredefinedTemplateConfig{},
 		DatabaseServices: []model.PredefinedTemplateConfig{},
 		DbAdminServices:  []model.PredefinedTemplateConfig{},
-		ProxyService:     []model.PredefinedTemplateConfig{},
-		TlsHelperService: []model.PredefinedTemplateConfig{},
+		ProxyServices:     []model.PredefinedTemplateConfig{},
+		TlsHelperServices: []model.PredefinedTemplateConfig{},
 	}
 	if project.ProductionReady {
 		generateChooseProxiesPass(project, availableTemplates, selectedTemplates, config)

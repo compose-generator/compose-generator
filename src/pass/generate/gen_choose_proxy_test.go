@@ -46,7 +46,7 @@ func TestGenerateChooseProxies1(t *testing.T) {
 		},
 	}
 	expectedSelected := &model.SelectedTemplates{
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-proxy",
 				Label: "Test Proxy",
@@ -114,7 +114,7 @@ func TestGenerateChooseProxies2(t *testing.T) {
 	selected := &model.SelectedTemplates{}
 	expectedProject := &model.CGProject{}
 	expectedSelected := &model.SelectedTemplates{
-		ProxyService: []model.PredefinedTemplateConfig{
+		ProxyServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-proxy",
 				Label: "Test Proxy",
@@ -135,11 +135,11 @@ func TestGenerateChooseProxies2(t *testing.T) {
 	}
 	// Mock functions
 	templateListToLabelList = func(templates []model.PredefinedTemplateConfig) []string {
-		assert.Equal(t, expectedSelected.ProxyService, templates)
+		assert.Equal(t, expectedSelected.ProxyServices, templates)
 		return []string{"Test Proxy"}
 	}
 	templateListToPreselectedLabelList = func(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) []string {
-		assert.Equal(t, expectedSelected.ProxyService, templates)
+		assert.Equal(t, expectedSelected.ProxyServices, templates)
 		return []string{}
 	}
 	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {

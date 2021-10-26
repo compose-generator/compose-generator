@@ -39,6 +39,9 @@ var getOuterVolumePathOnDockerizedEnvironmentMockable = getOuterVolumePathOnDock
 // File operations
 var fileExists = FileExists
 
+// Conditions
+var evaluateCondition = EvaluateCondition
+
 // Other
 var newClientWithOpts = client.NewClientWithOpts
 var imageList = func(cli *client.Client, ctx context.Context, opts types.ImageListOptions) ([]types.ImageSummary, error) {

@@ -18,7 +18,7 @@ import (
 func EvaluateConditionalSections(
 	filePath string,
 	selected *model.SelectedTemplates,
-	varMap map[string]string,
+	varMap model.Vars,
 ) {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
@@ -36,7 +36,7 @@ func EvaluateConditionalSections(
 func EvaluateConditionalSectionsToString(
 	input string,
 	selected *model.SelectedTemplates,
-	varMap map[string]string,
+	varMap model.Vars,
 ) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
@@ -54,8 +54,13 @@ func EvaluateConditionalSectionsToString(
 func EvaluateCondition(
 	condition string,
 	selected *model.SelectedTemplates,
-	varMap map[string]string,
+	varMap model.Vars,
 ) bool {
+	// Cancel if condition is 'true' or 'false'
+	if condition == "true" || condition == "false" {
+		return condition == "true"
+	}
+	// Prepare data input for CCom
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
 	// #nosec G204
@@ -88,7 +93,7 @@ func EnsureDockerIsRunning() {
 
 func prepareInputData(
 	selected *model.SelectedTemplates,
-	varMap map[string]string,
+	varMap model.Vars,
 ) string {
 	// Create data object
 	data := model.CComDataInput{
