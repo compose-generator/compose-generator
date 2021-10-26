@@ -68,12 +68,6 @@
             "type": 2,
             "validator": "hostname",
             "variable": "VIRTUAL_HOST"
-        },
-        {
-            "text": "Virtual port:",
-            "type": 2,
-            "validator": "port",
-            "variable": "VIRTUAL_PORT"
         }
     ],
     "proxy-labels": [

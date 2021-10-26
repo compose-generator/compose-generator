@@ -96,7 +96,7 @@ func generateService(
 		service.Labels = make(types.Labels)
 	}
 	for labelName := range proj.ProxyLabels[template.Name] {
-		service.Labels[labelName] = proj.ProxyVars[template.Name][labelName]
+		service.Labels[labelName] = proj.ProxyLabels[template.Name][labelName]
 	}
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)

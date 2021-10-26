@@ -236,9 +236,11 @@ func EvaluateProxyLabels(project *model.CGProject, template *model.PredefinedTem
 		for _, label := range selectedTemplates.GetAllProxyLabels() {
 			// Check if condition evaluates to true
 			if evaluateCondition(label.Condition, selectedTemplates, project.Vars) {
-				// Replace vars
+				// Replace vars and proxy vars
 				name := ReplaceVarsInString(label.Name, project.Vars)
+				name = ReplaceVarsInString(name, project.ProxyVars[template.Name])
 				value := ReplaceVarsInString(label.Value, project.Vars)
+				value = ReplaceVarsInString(value, project.ProxyVars[template.Name])
 				// Replace current service variables
 				name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_LABEL}}", template.Label)
 				name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_NAME}}", template.Name)
