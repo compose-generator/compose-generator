@@ -46,7 +46,7 @@
     "proxy-questions": [
         {
             "text": "Virtual domain:",
-            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{DEFAULT_HOST}}",
+            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{JWILDER_DEFAULT_HOST}}",
             "type": 2,
             "validator": "hostname",
             "variable": "VIRTUAL_HOST"
