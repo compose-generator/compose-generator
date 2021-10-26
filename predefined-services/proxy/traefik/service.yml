@@ -10,6 +10,6 @@ ports:
   - ${{TRAEFIK_PROXY_INTERFACE_PORT}}:8080
 profiles:
   - prod
-network:
+networks:
   - default
 command: --providers.docker --api.insecure=true
