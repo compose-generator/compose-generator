@@ -92,6 +92,27 @@ func TestRemoveVolumes2(t *testing.T) {
 	// Test data
 	service := &spec.ServiceConfig{
 		Name: "current-service",
+	}
+	project := &model.CGProject{
+		Composition: &spec.Project{
+			Volumes: spec.Volumes{
+				"test": {},
+			},
+		},
+	}
+	// Mock functions
+	yesNoQuestion = func(question string, defaultValue bool) bool {
+		assert.Fail(t, "Unexpected call of yesNoQuestion")
+		return false
+	}
+	// Execute test
+	RemoveVolumes(service, project)
+}
+
+func TestRemoveVolumes3(t *testing.T) {
+	// Test data
+	service := &spec.ServiceConfig{
+		Name: "current-service",
 		Volumes: []spec.ServiceVolumeConfig{
 			{
 				Source: "./volumes/test-volume",
