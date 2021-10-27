@@ -31,6 +31,10 @@ func applyLoadOptions(options ...LoadOption) LoadOptions {
 	if !strings.HasSuffix(opts.WorkingDir, "/") {
 		opts.WorkingDir += "/"
 	}
+	// Check also docker-compose.yaml file
+	if fileExists(opts.WorkingDir + "docker-compose.yaml") {
+		opts.ComposeFileName = "docker-compose.yaml"
+	}
 	return opts
 }
 
