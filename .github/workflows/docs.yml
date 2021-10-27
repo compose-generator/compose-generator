@@ -7,9 +7,9 @@ on:
       - main
       - docs/**
       #- feature/**
-      #- service/**
+      - service/**
       #- fix/**
-      - chore/**
+      #- chore/**
     paths:
       - docs/**
   workflow_dispatch:
