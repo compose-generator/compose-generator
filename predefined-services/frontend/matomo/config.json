@@ -1,0 +1,34 @@
+{
+    "label": "Matomo",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Matomo instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "MATOMO_PORT"
+        },
+        {
+            "text": "Which version of Matomo do you want to use?",
+            "type": 2,
+            "defaultValue": "4.5",
+            "variable": "MATOMO_VERSION"
+        }
+    ]
+}

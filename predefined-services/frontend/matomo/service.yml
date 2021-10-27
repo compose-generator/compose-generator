@@ -1,0 +1,9 @@
+image: matomo:${{MATOMO_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-matomo
+restart: always
+networks:
+  - frontend-database
+ports:
+  - ${{MATOMO_PORT}}:80
+env_file:
+  - environment.env
