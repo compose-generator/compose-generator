@@ -116,7 +116,7 @@ func Remove(c *cli.Context) error {
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
-		util.DockerComposeUp(flagDetached)
+		util.DockerComposeUp(flagDetached, proj.ProductionReady)
 	}
 	util.InfoLogger.Println("Docker Compose command terminated")
 	return nil

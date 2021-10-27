@@ -32,9 +32,9 @@ func TestLoadProject(t *testing.T) {
 			"PROJECT_NAME":           "Example project",
 			"PROJECT_NAME_CONTAINER": "example-project",
 		},
-		ProxyVars: make(map[string]model.Vars),
+		ProxyVars:   make(map[string]model.Vars),
 		ProxyLabels: make(map[string]model.Labels),
-		Secrets:   []model.ProjectSecret{},
+		Secrets:     []model.ProjectSecret{},
 	}
 	expectedOptions := LoadOptions{
 		ComposeFileName: "docker.yml",
@@ -135,6 +135,10 @@ func TestLoadTemplateService(t *testing.T) {
 		assert.Equal(t, templateType, templateTypeName)
 		assert.Equal(t, expectedServiceName, serviceName)
 		return expectedServiceConfig
+	}
+	fileExists = func(path string) bool {
+		assert.Equal(t, "./docker-compose.yaml", path)
+		return false
 	}
 	// Execute test
 	result := LoadTemplateService(project, selectedTemplates, templateType, expectedServiceName)

@@ -49,14 +49,24 @@ func IsPrivileged() bool {
 }
 
 // DockerComposeUp executes 'docker compose up' in the current directory
-func DockerComposeUp(detached bool) {
+func DockerComposeUp(detached bool, production bool) {
 	Pel()
 	Pl("Running docker compose ... ")
 	Pel()
 
-	cmd := exec.Command("docker", "compose", "up", "--remove-orphans")
-	if detached {
-		cmd = exec.Command("docker", "compose", "up", "-d", "--remove-orphans")
+	var cmd *exec.Cmd
+	if production {
+		if detached {
+			cmd = exec.Command("docker", "compose", "--profile", "prod", "up", "-d", "--remove-orphans")
+		} else {
+			cmd = exec.Command("docker", "compose", "--profile", "prod", "up", "--remove-orphans")
+		}
+	} else {
+		if detached {
+			cmd = exec.Command("docker", "compose", "up", "-d", "--remove-orphans")
+		} else {
+			cmd = exec.Command("docker", "compose", "up", "--remove-orphans")
+		}
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
