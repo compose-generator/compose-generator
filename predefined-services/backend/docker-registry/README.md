@@ -1,1 +1,2 @@
 ## Docker Registry
+Official Docker Container Registry for self-hosting container images. This template only aims for local configurations. If you want to expose your registry to the public, please refer to the [official guide](https://docs.docker.com/registry/deploying/).
