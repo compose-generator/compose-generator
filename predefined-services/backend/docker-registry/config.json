@@ -1,0 +1,37 @@
+{
+    "label": "Docker Registry",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Django app?",
+            "type": 2,
+            "defaultValue": "5000",
+            "validator": "port",
+            "variable": "REGISTRY_PORT"
+        },
+        {
+            "text": "Which Django version do you want to use?",
+            "type": 2,
+            "defaultValue": "2.7.1",
+            "variable": "REGISTRY_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for data volume directory?",
+            "defaultValue": "./volume/registry-data",
+            "variable": "VOLUME_REGISTRY_DATA"
+        }
+    ]
+}
