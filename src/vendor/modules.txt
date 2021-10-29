@@ -19,7 +19,7 @@ github.com/compose-generator/diu
 github.com/compose-generator/diu/cli
 github.com/compose-generator/diu/model
 github.com/compose-generator/diu/parser
-# github.com/compose-spec/compose-go v1.0.3
+# github.com/compose-spec/compose-go v1.0.4
 ## explicit; go 1.16
 github.com/compose-spec/compose-go/errdefs
 github.com/compose-spec/compose-go/interpolation
