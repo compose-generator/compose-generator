@@ -143,8 +143,8 @@ github.com/cncf/xds/go v0.0.0-20210312221358-fbca930ec8ed/go.mod h1:eXthEFrGJvWH
 github.com/cockroachdb/datadriven v0.0.0-20190809214429-80d97fb3cbaa/go.mod h1:zn76sxSg3SzpJ0PPJaLDCu+Bu0Lg3sKTORVIj19EIF8=
 github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8 h1:wXkQsocCLPwqw27YQhonsK2+fu1fDLCfZHsx5nPnsys=
 github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8/go.mod h1:dtCz9JfVc0yS+V6wn1afxvk2LqEDkTnIDpmJvMYySQQ=
-github.com/compose-spec/compose-go v1.0.3 h1:yvut1x9H4TUMptNA4mZ63VGVtDNX1OKy2TZCi6yFw8Q=
-github.com/compose-spec/compose-go v1.0.3/go.mod h1:gCIA3No0j5nNszz2X0yd/mkigTIWcOgHiPa9guWvoec=
+github.com/compose-spec/compose-go v1.0.4 h1:JQdq1WGJqMh4CIKiPx5N995NdUfzRenFsl6Fbg6HdjY=
+github.com/compose-spec/compose-go v1.0.4/go.mod h1:gCIA3No0j5nNszz2X0yd/mkigTIWcOgHiPa9guWvoec=
 github.com/compose-spec/godotenv v1.0.0 h1:TV24JYhh5GCC1G14npQVhCtxeoiwd0NcT0VdwcCQyXU=
 github.com/compose-spec/godotenv v1.0.0/go.mod h1:zF/3BOa18Z24tts5qnO/E9YURQanJTBUf7nlcCTNsyc=
 github.com/containerd/aufs v0.0.0-20200908144142-dab0cbea06f4/go.mod h1:nukgQABAEopAHvB6j7cnP5zJ+/3aVcE7hCYqvIwAHyE=
