@@ -122,6 +122,18 @@ func TestGenerateAddProxyNetworks3(t *testing.T) {
 			ProductionReady: true,
 		},
 	}
+	selectedTemplates := &model.SelectedTemplates{}
+	// Execute test
+	GenerateAddProxyNetworks(project, selectedTemplates)
+}
+
+func TestGenerateAddProxyNetworks4(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			ProductionReady: true,
+		},
+	}
 	selectedTemplates := &model.SelectedTemplates{
 		ProxyServices: []model.PredefinedTemplateConfig{
 			{

@@ -7,12 +7,14 @@ package pass
 
 import (
 	"compose-generator/model"
-	"compose-generator/util"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
 )
+
+var loadConfigFromUrlMockable = loadConfigFromUrl
+var loadConfigFromFileMockable = loadConfigFromFile
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -37,10 +39,10 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 		infoLogger.Println("Production-ready: '" + strconv.FormatBool(config.ProductionReady) + "'")
 	} else {
 		// Check if the input is an url
-		if util.IsUrl(configInput) {
-			loadConfigFromUrl(config, configInput)
+		if isUrl(configInput) {
+			loadConfigFromUrlMockable(config, configInput)
 		} else {
-			loadConfigFromFile(config, configInput)
+			loadConfigFromFileMockable(config, configInput)
 		}
 		config.FromFile = true
 	}

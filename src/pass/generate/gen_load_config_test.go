@@ -7,7 +7,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"errors"
 	"io"
 	"os"
 	"testing"
@@ -149,25 +148,24 @@ func TestLoadGenerateConfig3(t *testing.T) {
 		},
 	}
 	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, configPath, path)
+	isUrl = func(str string) bool {
+		assert.Equal(t, configPath, str)
 		return true
 	}
-	openFile = func(name string) (*os.File, error) {
-		assert.Equal(t, configPath, name)
-		return nil, nil
+	loadConfigFromUrlCallCount := 0
+	loadConfigFromUrlMockable = func(config *model.GenerateConfig, configUrl string) {
+		loadConfigFromUrlCallCount++
+		assert.Equal(t, configPath, configUrl)
 	}
-	readAllFromFile = func(r io.Reader) ([]byte, error) {
-		return []byte{}, nil
-	}
-	unmarshalYaml = func(in []byte, out interface{}) error {
-		return nil
+	loadConfigFromFileMockable = func(config *model.GenerateConfig, configPath string) {
+		assert.Fail(t, "Unexpected call of loadConfigFromFile")
 	}
 	// Execute test
 	LoadGenerateConfig(project, config, configPath)
 	// Assert
 	assert.Equal(t, expectedConfig, config)
 	assert.Equal(t, expectedProject, project)
+	assert.Equal(t, 1, loadConfigFromUrlCallCount)
 }
 
 func TestLoadGenerateConfig4(t *testing.T) {
@@ -189,160 +187,97 @@ func TestLoadGenerateConfig4(t *testing.T) {
 			},
 		},
 	}
+	expectedProject := &model.CGProject{
+		CGProjectMetadata: model.CGProjectMetadata{
+			Name:            projectName,
+			ProductionReady: true,
+			ContainerName:   "test-project",
+		},
+		Vars: map[string]string{
+			"PROJECT_NAME":           projectName,
+			"PROJECT_NAME_CONTAINER": "test-project",
+		},
+	}
+	expectedConfig := &model.GenerateConfig{
+		FromFile:        true,
+		ProjectName:     projectName,
+		ProductionReady: true,
+		ServiceConfig: []model.ServiceConfig{
+			{
+				Name: "angular",
+				Type: "frontend",
+				Params: map[string]string{
+					"PARAM1": "value 1",
+					"PARAM2": "value 2",
+				},
+			},
+		},
+	}
+	// Mock functions
+	isUrl = func(str string) bool {
+		assert.Equal(t, configPath, str)
+		return false
+	}
+	loadConfigFromUrlMockable = func(config *model.GenerateConfig, configUrl string) {
+		assert.Fail(t, "Unexpected call of loadConfigFromUrl")
+	}
+	loadConfigFromFileCallCount := 0
+	loadConfigFromFileMockable = func(config *model.GenerateConfig, configPath string) {
+		loadConfigFromFileCallCount++
+		assert.Equal(t, configPath, configPath)
+	}
+	// Execute test
+	LoadGenerateConfig(project, config, configPath)
+	// Assert
+	assert.Equal(t, expectedConfig, config)
+	assert.Equal(t, expectedProject, project)
+	assert.Equal(t, 1, loadConfigFromFileCallCount)
+}
+
+// --------------------------------------------------------------- loadConfigFromFile --------------------------------------------------------------
+
+func TestLoadConfigFromFile1(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configPath := "./test/path/config.yml"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, configPath, path)
+		return true
+	}
+	openFile = func(name string) (*os.File, error) {
+		assert.Equal(t, configPath, name)
+		return nil, nil
+	}
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		return []byte("This is a test"), nil
+	}
+	unmarshalYaml = func(in []byte, out interface{}) error {
+		assert.Equal(t, []byte("This is a test"), in)
+		return nil
+	}
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected logError")
+	}
+	// Execute test
+	loadConfigFromFile(config, configPath)
+}
+
+func TestLoadConfigFromFile2(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configPath := "./test/path/config.yml"
 	// Mock functions
 	fileExists = func(path string) bool {
 		assert.Equal(t, configPath, path)
 		return false
 	}
-	openFile = func(name string) (*os.File, error) {
-		assert.Fail(t, "Unexpected call of openFile")
-		return nil, nil
-	}
-	logErrorCallCount := 0
 	logError = func(message string, exit bool) {
-		logErrorCallCount++
 		assert.Equal(t, "Config file could not be found", message)
 		assert.True(t, exit)
 	}
 	// Execute test
-	LoadGenerateConfig(project, config, configPath)
-	// Assert
-	assert.Equal(t, 1, logErrorCallCount)
+	loadConfigFromFile(config, configPath)
 }
 
-func TestLoadGenerateConfig5(t *testing.T) {
-	// Test data
-	configPath := "./config-path.yml"
-	projectName := "Test Project"
-	project := &model.CGProject{}
-	config := &model.GenerateConfig{
-		ProjectName:     projectName,
-		ProductionReady: true,
-		ServiceConfig: []model.ServiceConfig{
-			{
-				Name: "angular",
-				Type: "frontend",
-				Params: map[string]string{
-					"PARAM1": "value 1",
-					"PARAM2": "value 2",
-				},
-			},
-		},
-	}
-	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, configPath, path)
-		return true
-	}
-	openFile = func(name string) (*os.File, error) {
-		assert.Equal(t, configPath, name)
-		return nil, errors.New("Error message")
-	}
-	readAllFromFile = func(r io.Reader) ([]byte, error) {
-		assert.Fail(t, "Unexpected call of readAllFromFile")
-		return []byte{}, nil
-	}
-	logErrorCallCount := 0
-	logError = func(message string, exit bool) {
-		logErrorCallCount++
-		assert.Equal(t, "Could not load config file. Permissions granted?", message)
-		assert.True(t, exit)
-	}
-	// Execute test
-	LoadGenerateConfig(project, config, configPath)
-	// Assert
-	assert.Equal(t, 1, logErrorCallCount)
-}
-
-func TestLoadGenerateConfig6(t *testing.T) {
-	// Test data
-	configPath := "./config-path.yml"
-	projectName := "Test Project"
-	project := &model.CGProject{}
-	config := &model.GenerateConfig{
-		ProjectName:     projectName,
-		ProductionReady: true,
-		ServiceConfig: []model.ServiceConfig{
-			{
-				Name: "angular",
-				Type: "frontend",
-				Params: map[string]string{
-					"PARAM1": "value 1",
-					"PARAM2": "value 2",
-				},
-			},
-		},
-	}
-	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, configPath, path)
-		return true
-	}
-	openFile = func(name string) (*os.File, error) {
-		assert.Equal(t, configPath, name)
-		return nil, nil
-	}
-	readAllFromFile = func(r io.Reader) ([]byte, error) {
-		return []byte{}, errors.New("Error message")
-	}
-	unmarshalYaml = func(in []byte, out interface{}) error {
-		assert.Fail(t, "Unexpected call of unmarshalYaml")
-		return nil
-	}
-	logErrorCallCount := 0
-	logError = func(message string, exit bool) {
-		logErrorCallCount++
-		assert.Equal(t, "Could not load config file. Permissions granted?", message)
-		assert.True(t, exit)
-	}
-	// Execute test
-	LoadGenerateConfig(project, config, configPath)
-	// Assert
-	assert.Equal(t, 1, logErrorCallCount)
-}
-
-func TestLoadGenerateConfig7(t *testing.T) {
-	// Test data
-	configPath := "./config-path.yml"
-	projectName := "Test Project"
-	project := &model.CGProject{}
-	config := &model.GenerateConfig{
-		ProjectName:     projectName,
-		ProductionReady: true,
-		ServiceConfig: []model.ServiceConfig{
-			{
-				Name: "angular",
-				Type: "frontend",
-				Params: map[string]string{
-					"PARAM1": "value 1",
-					"PARAM2": "value 2",
-				},
-			},
-		},
-	}
-	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, configPath, path)
-		return true
-	}
-	openFile = func(name string) (*os.File, error) {
-		assert.Equal(t, configPath, name)
-		return nil, nil
-	}
-	readAllFromFile = func(r io.Reader) ([]byte, error) {
-		return []byte{}, nil
-	}
-	unmarshalYaml = func(in []byte, out interface{}) error {
-		return errors.New("Error message")
-	}
-	logErrorCallCount := 0
-	logError = func(message string, exit bool) {
-		logErrorCallCount++
-		assert.Equal(t, "Could not unmarshal config file", message)
-		assert.True(t, exit)
-	}
-	// Execute test
-	LoadGenerateConfig(project, config, configPath)
-	// Assert
-	assert.Equal(t, 1, logErrorCallCount)
-}
+// ---------------------------------------------------------------- loadConfigFromUrl --------------------------------------------------------------
