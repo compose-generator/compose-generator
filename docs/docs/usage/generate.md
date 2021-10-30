@@ -28,14 +28,14 @@ You can use the `generate` command to generate Docker Compose configurations. Th
 ## Options
 You can apply following options to the `generate` command:
 
-| Option                | Short       | Description                                                               |
-| --------------------- | ----------- | ------------------------------------------------------------------------- |
-| `--advanced`          | `-a`        | Enable advanced mode with advanced questions to allow more customization. |
-| `--config <file>`     | `-c <file>` | Pass a configuration file with predefined answers. Works good for CI.[^1] |
-| `--detached`          | `-d`        | Run the compose configuration subsequently in detached mode.              |
-| `--force`             | `-f`        | Skip safety checks and overwrite all files, that may exist.               |
-| `--run`               | `-r`        | Run the compose configuration subsequently.                               |
-| `--with-instructions` | `-i`        | Generate a README.md file with usage instruction for predefined template. |
+| Option                | Short           | Description                                                                          |
+| --------------------- | --------------- | ------------------------------------------------------------------------------------ |
+| `--advanced`          | `-a`            | Enable advanced mode with advanced questions to allow more customization.            |
+| `--config <resource>` | `-c <resource>` | Pass a config file / config file URL with predefined answers. Works good for CI.[^1] |
+| `--detached`          | `-d`            | Run the compose configuration subsequently in detached mode.                         |
+| `--force`             | `-f`            | Skip safety checks and overwrite all files, that may exist.                          |
+| `--run`               | `-r`            | Run the compose configuration subsequently.                                          |
+| `--with-instructions` | `-i`            | Generate a README.md file with usage instruction for predefined template.            |
 
 [^1]:
     You can find an example configuration file [here](https://github.com/compose-generator/compose-generator/blob/main/media/example-config.yml).
