@@ -11,6 +11,7 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/docker/docker/client"
@@ -56,6 +57,9 @@ var writeFile = ioutil.WriteFile
 var unmarshalYaml = yaml.Unmarshal
 var loadTemplateService = project.LoadTemplateService
 
+// Web operations
+var httpGet = http.Get
+
 // Passes
 var addBuildOrImagePass = addPass.AddBuildOrImage
 var addNamePass = addPass.AddName
@@ -76,6 +80,7 @@ var templateListToLabelList = util.TemplateListToLabelList
 var templateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
 var generatePassword = password.Generate
 var sliceContainsString = util.SliceContainsString
+var isUrl = util.IsUrl
 var getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 	return config.GetServiceConfigurationsByType(templateType)
 }

@@ -6,7 +6,10 @@ All rights reserved.
 package util
 
 import (
+	"net"
+	"net/url"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -84,4 +87,17 @@ func Success(text string) {
 		ErrorLogger.Println("Could not print success message: " + err.Error())
 		logError("Could not print success message", false)
 	}
+}
+
+// IsUrl checks if the input is a valid url: true = valid, false = invalid
+func IsUrl(str string) bool {
+	url, err := url.ParseRequestURI(str)
+	if err != nil {
+		return false
+	}
+
+	if net.ParseIP(url.Host) == nil {
+		return strings.Contains(url.Host, ".")
+	}
+	return true
 }

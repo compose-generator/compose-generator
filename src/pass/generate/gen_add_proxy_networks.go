@@ -15,7 +15,7 @@ import (
 
 // GenerateAddProxyNetworks connects all proxied services via networks to the proxy and removes their port configs
 func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
-	if project.ProductionReady {
+	if project.ProductionReady && len(selectedTemplates.ProxyServices) > 0 {
 		infoLogger.Println("Adding proxy networks to proxied services ...")
 		// Get reference of proxy service
 		proxyService := project.GetServiceRef("proxy-" + selectedTemplates.ProxyServices[0].Name)
