@@ -89,6 +89,7 @@ func loadConfigFromFile(config *model.GenerateConfig, configPath string) {
 
 func loadConfigFromUrl(config *model.GenerateConfig, configUrl string) {
 	// Make web request
+	// #nosec G107
 	response, err := http.Get(configUrl)
 	if err != nil {
 		errorLogger.Println("Config url could not be read")
