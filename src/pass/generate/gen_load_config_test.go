@@ -7,7 +7,9 @@ package pass
 
 import (
 	"compose-generator/model"
+	"errors"
 	"io"
+	"net/http"
 	"os"
 	"testing"
 
@@ -272,6 +274,10 @@ func TestLoadConfigFromFile2(t *testing.T) {
 		assert.Equal(t, configPath, path)
 		return false
 	}
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		assert.Fail(t, "Unexpected call of readAllFromFile")
+		return []byte{}, nil
+	}
 	logError = func(message string, exit bool) {
 		assert.Equal(t, "Config file could not be found", message)
 		assert.True(t, exit)
@@ -280,4 +286,158 @@ func TestLoadConfigFromFile2(t *testing.T) {
 	loadConfigFromFile(config, configPath)
 }
 
+func TestLoadConfigFromFile3(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configPath := "./test/path/config.yml"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, configPath, path)
+		return true
+	}
+	readAllFromFileCallCount := 0
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		readAllFromFileCallCount++
+		return []byte{}, errors.New("Error message")
+	}
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not load config file. Permissions granted?", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	loadConfigFromFile(config, configPath)
+	// Assert
+	assert.Equal(t, 1, readAllFromFileCallCount)
+}
+
+func TestLoadConfigFromFile4(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configPath := "./test/path/config.yml"
+	// Mock functions
+	fileExists = func(path string) bool {
+		assert.Equal(t, configPath, path)
+		return true
+	}
+	readAllFromFileCallCount := 0
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		readAllFromFileCallCount++
+		return []byte("Hello world"), nil
+	}
+	unmarshalYamlCallCount := 0
+	unmarshalYaml = func(in []byte, out interface{}) error {
+		unmarshalYamlCallCount++
+		assert.Equal(t, []byte("Hello world"), in)
+		return errors.New("Error message")
+	}
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not unmarshal config file", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	loadConfigFromFile(config, configPath)
+	// Assert
+	assert.Equal(t, 1, readAllFromFileCallCount)
+	assert.Equal(t, 1, unmarshalYamlCallCount)
+}
+
 // ---------------------------------------------------------------- loadConfigFromUrl --------------------------------------------------------------
+
+func TestLoadConfigFromUrl1(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configUrl := "https://raw.githubusercontent.com/compose-generator/compose-generator/main/media/example-config.yml"
+	// Mock functions
+	httpGet = func(url string) (resp *http.Response, err error) {
+		assert.Equal(t, configUrl, url)
+		return &http.Response{
+			Body: &http.NoBody,
+		}, nil
+	}
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		return []byte("Hello world"), nil
+	}
+	unmarshalYamlCallCount := 0
+	unmarshalYaml = func(in []byte, out interface{}) error {
+		unmarshalYamlCallCount++
+		assert.Equal(t, []byte("Hello world"), in)
+		return nil
+	}
+	// Execute test
+	loadConfigFromUrl(config, configUrl)
+	// Assert
+	assert.Equal(t, 1, unmarshalYamlCallCount)
+}
+
+func TestLoadConfigFromUrl2(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configUrl := "https://server.chillibits.com/files/config.yml"
+	// Mock functions
+	httpGet = func(url string) (resp *http.Response, err error) {
+		assert.Equal(t, configUrl, url)
+		return nil, errors.New("Error message")
+	}
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		assert.Fail(t, "Unexpected call of readAllFromFile")
+		return []byte{}, nil
+	}
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Config url could not be read", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	loadConfigFromUrl(config, configUrl)
+}
+
+func TestLoadConfigFromUrl3(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configUrl := "https://server.chillibits.com/files/config.yml"
+	// Mock functions
+	httpGet = func(url string) (resp *http.Response, err error) {
+		assert.Equal(t, configUrl, url)
+		return &http.Response{
+			Body: &http.NoBody,
+		}, nil
+	}
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		return []byte("Hello world"), errors.New("Error message")
+	}
+	unmarshalYaml = func(in []byte, out interface{}) error {
+		assert.Fail(t, "Unexpected call of unmarshalYaml")
+		return nil
+	}
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not parse yaml", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	loadConfigFromUrl(config, configUrl)
+}
+
+func TestLoadConfigFromUrl4(t *testing.T) {
+	// Test data
+	config := &model.GenerateConfig{}
+	configUrl := "https://server.chillibits.com/files/config.yml"
+	// Mock functions
+	httpGet = func(url string) (resp *http.Response, err error) {
+		assert.Equal(t, configUrl, url)
+		return &http.Response{
+			Body: http.NoBody,
+		}, nil
+	}
+	readAllFromFile = func(r io.Reader) ([]byte, error) {
+		return []byte("Hello world"), nil
+	}
+	unmarshalYaml = func(in []byte, out interface{}) error {
+		assert.Equal(t, []byte("Hello world"), in)
+		return errors.New("Error message")
+	}
+	logError = func(message string, exit bool) {
+		assert.Equal(t, "Could not unmarshal config file", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	loadConfigFromUrl(config, configUrl)
+}

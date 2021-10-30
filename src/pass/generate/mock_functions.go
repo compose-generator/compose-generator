@@ -11,6 +11,7 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/docker/docker/client"
@@ -55,6 +56,9 @@ var readFile = ioutil.ReadFile
 var writeFile = ioutil.WriteFile
 var unmarshalYaml = yaml.Unmarshal
 var loadTemplateService = project.LoadTemplateService
+
+// Web operations
+var httpGet = http.Get
 
 // Passes
 var addBuildOrImagePass = addPass.AddBuildOrImage

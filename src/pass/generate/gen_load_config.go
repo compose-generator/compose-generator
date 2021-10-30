@@ -7,8 +7,6 @@ package pass
 
 import (
 	"compose-generator/model"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 	"strings"
 )
@@ -90,17 +88,19 @@ func loadConfigFromFile(config *model.GenerateConfig, configPath string) {
 func loadConfigFromUrl(config *model.GenerateConfig, configUrl string) {
 	// Make web request
 	// #nosec G107
-	response, err := http.Get(configUrl)
+	response, err := httpGet(configUrl)
 	if err != nil {
 		errorLogger.Println("Config url could not be read")
 		logError("Config url could not be read", true)
+		return
 	}
 	defer response.Body.Close()
 	// Read response
-	bytes, err := ioutil.ReadAll(response.Body)
+	bytes, err := readAllFromFile(response.Body)
 	if err != nil {
-		errorLogger.Println("Config not parse yaml")
-		logError("Config not parse yaml", true)
+		errorLogger.Println("Could not parse yaml")
+		logError("Could not parse yaml", true)
+		return
 	}
 	// Parse yaml
 	if err := unmarshalYaml(bytes, &config); err != nil {
