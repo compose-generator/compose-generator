@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGeneratePrintSecrets(t *testing.T) {
+func TestGeneratePrintSecrets1(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
 		Secrets: []model.ProjectSecret{
@@ -56,4 +56,17 @@ func TestGeneratePrintSecrets(t *testing.T) {
 	GeneratePrintSecrets(project)
 	// Assert
 	assert.Equal(t, 1, pelCallCount)
+}
+
+func TestGeneratePrintSecrets2(t *testing.T) {
+	// Test data
+	project := &model.CGProject{
+		Secrets: []model.ProjectSecret{},
+	}
+	// Mock functions
+	pel = func() {
+		assert.Fail(t, "Unexpected call of pel")
+	}
+	// Execute test
+	GeneratePrintSecrets(project)
 }
