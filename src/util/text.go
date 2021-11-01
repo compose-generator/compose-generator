@@ -8,7 +8,6 @@ package util
 import (
 	"net"
 	"net/url"
-	"runtime"
 	"strings"
 	"time"
 
@@ -50,7 +49,7 @@ func StartProcess(text string) (s *spinner.Spinner) {
 	}
 	charSet := 14
 	finalChar := "⠿"
-	if runtime.GOOS == "windows" {
+	if isWindows() {
 		charSet = 9
 		finalChar = "-"
 	}
