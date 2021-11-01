@@ -30,5 +30,3 @@ ports:
 #   - 5443:5443/tcp
 #   - 5443:5443/udp
 #? }
-env_file:
-  - environment.env
