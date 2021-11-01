@@ -72,11 +72,54 @@ func TestIsCIEnvironment2(t *testing.T) {
 // ------------------------------------------------------------- GetCustomTemplatesPath ------------------------------------------------------------
 
 func TestGetCustomTemplatesPath1(t *testing.T) {
-	// Test data
 	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, "/usr/bin/compose-generator", path)
+	isDevVersion = func() bool {
 		return true
+	}
+	isDockerizedEnvironment = func() bool {
+		assert.Fail(t, "Unexpected call of isDockerizedEnvironment")
+		return false
+	}
+	// Execute test
+	result := GetCustomTemplatesPath()
+	// Assert
+	assert.Equal(t, "../templates", result)
+}
+
+func TestGetCustomTemplatesPath2(t *testing.T) {
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return true
+	}
+	isLinux = func() bool {
+		assert.Fail(t, "Unexpected call of isLinux")
+		return true
+	}
+	// Execute test
+	result := GetCustomTemplatesPath()
+	// Assert
+	assert.Equal(t, "/cg/templates", result)
+}
+
+func TestGetCustomTemplatesPath3(t *testing.T) {
+	// Test data
+	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return true
+	}
+	executable = func() (string, error) {
+		assert.Fail(t, "Unexpected call of executable")
+		return pathExecutable, nil
 	}
 	// Execute test
 	result := GetCustomTemplatesPath()
@@ -84,78 +127,17 @@ func TestGetCustomTemplatesPath1(t *testing.T) {
 	assert.Equal(t, "/usr/lib/compose-generator/templates", result)
 }
 
-func TestGetCustomTemplatesPath2(t *testing.T) {
-	// Test data
-	pathWindowsDocker := "/usr/bin/compose-generator/test/path/templates"
-	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
-	// Mock functions
-	fileExistsCallCount := 0
-	fileExists = func(path string) bool {
-		fileExistsCallCount++
-		if fileExistsCallCount == 1 {
-			assert.Equal(t, "/usr/bin/compose-generator", path)
-			return false
-		}
-		assert.Equal(t, pathWindowsDocker, path)
-		return true
-	}
-	executable = func() (string, error) {
-		return pathExecutable, nil
-	}
-	logError = func(message string, exit bool) {
-		assert.Fail(t, "Unexpected call of logError")
-	}
-	// Execute test
-	result := GetCustomTemplatesPath()
-	// Assert
-	assert.Equal(t, pathWindowsDocker, result)
-}
-
-func TestGetCustomTemplatesPath3(t *testing.T) {
-	// Test data
-	pathWindowsDocker := "/usr/bin/compose-generator/test/path/templates"
-	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
-	// Mock functions
-	fileExistsCallCount := 0
-	fileExists = func(path string) bool {
-		fileExistsCallCount++
-		if fileExistsCallCount == 1 {
-			assert.Equal(t, "/usr/bin/compose-generator", path)
-			return false
-		}
-		assert.Equal(t, pathWindowsDocker, path)
-		return true
-	}
-	executable = func() (string, error) {
-		return pathExecutable, errors.New("Test error")
-	}
-	logErrorCallCount := 0
-	logError = func(message string, exit bool) {
-		logErrorCallCount++
-		assert.Equal(t, "Cannot retrieve path of executable", message)
-		assert.True(t, exit)
-	}
-	// Execute test
-	result := GetCustomTemplatesPath()
-	// Assert
-	assert.Equal(t, pathWindowsDocker, result)
-	assert.Equal(t, 1, logErrorCallCount)
-}
-
 func TestGetCustomTemplatesPath4(t *testing.T) {
 	// Test data
-	pathWindowsDocker := "/usr/bin/compose-generator/test/path/templates"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
-	pathDev := "../templates"
 	// Mock functions
-	fileExistsCallCount := 0
-	fileExists = func(path string) bool {
-		fileExistsCallCount++
-		if fileExistsCallCount == 1 {
-			assert.Equal(t, "/usr/bin/compose-generator", path)
-			return false
-		}
-		assert.Equal(t, pathWindowsDocker, path)
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
 		return false
 	}
 	executable = func() (string, error) {
@@ -167,7 +149,60 @@ func TestGetCustomTemplatesPath4(t *testing.T) {
 	// Execute test
 	result := GetCustomTemplatesPath()
 	// Assert
-	assert.Equal(t, pathDev, result)
+	assert.Equal(t, "/usr/bin/compose-generator/test/path/templates", result)
+}
+
+func TestGetCustomTemplatesPath5(t *testing.T) {
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return false
+	}
+	executable = func() (string, error) {
+		return "", errors.New("Error message")
+	}
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Cannot retrieve path of executable", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	result := GetCustomTemplatesPath()
+	// Assert
+	assert.Equal(t, "", result)
+	assert.Equal(t, 1, logErrorCallCount)
+}
+
+func TestGetCustomTemplatesPath6(t *testing.T) {
+	// Test data
+	expectedPath := "/usr/bin/compose-generator/test/path/templates"
+	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return false
+	}
+	executable = func() (string, error) {
+		return pathExecutable, nil
+	}
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
+	}
+	// Execute test
+	result := GetCustomTemplatesPath()
+	// Assert
+	assert.Equal(t, expectedPath, result)
 }
 
 // ------------------------------------------------------------------ GetUsername ------------------------------------------------------------------
@@ -203,9 +238,53 @@ func TestGetUsername2(t *testing.T) {
 
 func TestGetPredefinedServicesPath1(t *testing.T) {
 	// Mock functions
-	fileExists = func(path string) bool {
-		assert.Equal(t, "/usr/bin/compose-generator", path)
+	isDevVersion = func() bool {
 		return true
+	}
+	isDockerizedEnvironment = func() bool {
+		assert.Fail(t, "Unexpected call of isDockerizedEnvironment")
+		return false
+	}
+	// Execute test
+	result := GetPredefinedServicesPath()
+	// Assert
+	assert.Equal(t, "../predefined-services", result)
+}
+
+func TestGetPredefinedServicesPath2(t *testing.T) {
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return true
+	}
+	isLinux = func() bool {
+		assert.Fail(t, "Unexpected call of isLinux")
+		return true
+	}
+	// Execute test
+	result := GetPredefinedServicesPath()
+	// Assert
+	assert.Equal(t, "/cg/predefined-services", result)
+}
+
+func TestGetPredefinedServicesPath3(t *testing.T) {
+	// Test data
+	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return true
+	}
+	executable = func() (string, error) {
+		assert.Fail(t, "Unexpected call of executable")
+		return pathExecutable, nil
 	}
 	// Execute test
 	result := GetPredefinedServicesPath()
@@ -213,78 +292,17 @@ func TestGetPredefinedServicesPath1(t *testing.T) {
 	assert.Equal(t, "/usr/lib/compose-generator/predefined-services", result)
 }
 
-func TestGetPredefinedServicesPath2(t *testing.T) {
-	// Test data
-	pathWindowsDocker := "/usr/bin/compose-generator/test/path/predefined-services"
-	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
-	// Mock functions
-	fileExistsCallCount := 0
-	fileExists = func(path string) bool {
-		fileExistsCallCount++
-		if fileExistsCallCount == 1 {
-			assert.Equal(t, "/usr/bin/compose-generator", path)
-			return false
-		}
-		assert.Equal(t, pathWindowsDocker, path)
-		return true
-	}
-	executable = func() (string, error) {
-		return pathExecutable, nil
-	}
-	logError = func(message string, exit bool) {
-		assert.Fail(t, "Unexpected call of logError")
-	}
-	// Execute test
-	result := GetPredefinedServicesPath()
-	// Assert
-	assert.Equal(t, pathWindowsDocker, result)
-}
-
-func TestGetPredefinedServicesPath3(t *testing.T) {
-	// Test data
-	pathWindowsDocker := "/usr/bin/compose-generator/test/path/predefined-services"
-	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
-	// Mock functions
-	fileExistsCallCount := 0
-	fileExists = func(path string) bool {
-		fileExistsCallCount++
-		if fileExistsCallCount == 1 {
-			assert.Equal(t, "/usr/bin/compose-generator", path)
-			return false
-		}
-		assert.Equal(t, pathWindowsDocker, path)
-		return true
-	}
-	executable = func() (string, error) {
-		return pathExecutable, errors.New("Test error")
-	}
-	logErrorCallCount := 0
-	logError = func(message string, exit bool) {
-		logErrorCallCount++
-		assert.Equal(t, "Cannot retrieve path of executable", message)
-		assert.True(t, exit)
-	}
-	// Execute test
-	result := GetPredefinedServicesPath()
-	// Assert
-	assert.Equal(t, pathWindowsDocker, result)
-	assert.Equal(t, 1, logErrorCallCount)
-}
-
 func TestGetPredefinedServicesPath4(t *testing.T) {
 	// Test data
-	pathWindowsDocker := "/usr/bin/compose-generator/test/path/predefined-services"
 	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
-	pathDev := "../predefined-services"
 	// Mock functions
-	fileExistsCallCount := 0
-	fileExists = func(path string) bool {
-		fileExistsCallCount++
-		if fileExistsCallCount == 1 {
-			assert.Equal(t, "/usr/bin/compose-generator", path)
-			return false
-		}
-		assert.Equal(t, pathWindowsDocker, path)
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
 		return false
 	}
 	executable = func() (string, error) {
@@ -296,7 +314,60 @@ func TestGetPredefinedServicesPath4(t *testing.T) {
 	// Execute test
 	result := GetPredefinedServicesPath()
 	// Assert
-	assert.Equal(t, pathDev, result)
+	assert.Equal(t, "/usr/bin/compose-generator/test/path/predefined-services", result)
+}
+
+func TestGetPredefinedServicesPath5(t *testing.T) {
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return false
+	}
+	executable = func() (string, error) {
+		return "", errors.New("Error message")
+	}
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Cannot retrieve path of executable", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	result := GetPredefinedServicesPath()
+	// Assert
+	assert.Equal(t, "", result)
+	assert.Equal(t, 1, logErrorCallCount)
+}
+
+func TestGetPredefinedServicesPath6(t *testing.T) {
+	// Test data
+	expectedPath := "/usr/bin/compose-generator/test/path/predefined-services"
+	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return false
+	}
+	executable = func() (string, error) {
+		return pathExecutable, nil
+	}
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
+	}
+	// Execute test
+	result := GetPredefinedServicesPath()
+	// Assert
+	assert.Equal(t, expectedPath, result)
 }
 
 // --------------------------------------------------------------- IsToolboxPresent ----------------------------------------------------------------
@@ -476,4 +547,140 @@ func TestIsDockerRunning3(t *testing.T) {
 	result := IsDockerRunning()
 	// Assert
 	assert.False(t, result)
+}
+
+// ---------------------------------------------------------------- GetLogfilesPath ----------------------------------------------------------------
+
+func TestGetLogfilesPath1(t *testing.T) {
+	// Mock functions
+	isDevVersion = func() bool {
+		return true
+	}
+	isDockerizedEnvironment = func() bool {
+		assert.Fail(t, "Unexpected call of isDockerizedEnvironment")
+		return false
+	}
+	// Execute test
+	result := getLogfilesPath()
+	// Assert
+	assert.Equal(t, "../log", result)
+}
+
+func TestGetLogfilesPath2(t *testing.T) {
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return true
+	}
+	isLinux = func() bool {
+		assert.Fail(t, "Unexpected call of isLinux")
+		return true
+	}
+	// Execute test
+	result := getLogfilesPath()
+	// Assert
+	assert.Equal(t, "/cg/log", result)
+}
+
+func TestGetLogfilesPath3(t *testing.T) {
+	// Test data
+	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return true
+	}
+	executable = func() (string, error) {
+		assert.Fail(t, "Unexpected call of executable")
+		return pathExecutable, nil
+	}
+	// Execute test
+	result := getLogfilesPath()
+	// Assert
+	assert.Equal(t, "/usr/lib/compose-generator/log", result)
+}
+
+func TestGetLogfilesPath4(t *testing.T) {
+	// Test data
+	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return false
+	}
+	executable = func() (string, error) {
+		return pathExecutable, nil
+	}
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
+	}
+	// Execute test
+	result := getLogfilesPath()
+	// Assert
+	assert.Equal(t, "/usr/bin/compose-generator/test/path/log", result)
+}
+
+func TestGetLogfilesPath5(t *testing.T) {
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return false
+	}
+	executable = func() (string, error) {
+		return "", errors.New("Error message")
+	}
+	logErrorCallCount := 0
+	logError = func(message string, exit bool) {
+		logErrorCallCount++
+		assert.Equal(t, "Cannot retrieve path of executable", message)
+		assert.True(t, exit)
+	}
+	// Execute test
+	result := getLogfilesPath()
+	// Assert
+	assert.Equal(t, "", result)
+	assert.Equal(t, 1, logErrorCallCount)
+}
+
+func TestGetLogfilesPath6(t *testing.T) {
+	// Test data
+	expectedPath := "/usr/bin/compose-generator/test/path/log"
+	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	// Mock functions
+	isDevVersion = func() bool {
+		return false
+	}
+	isDockerizedEnvironment = func() bool {
+		return false
+	}
+	isLinux = func() bool {
+		return false
+	}
+	executable = func() (string, error) {
+		return pathExecutable, nil
+	}
+	logError = func(message string, exit bool) {
+		assert.Fail(t, "Unexpected call of logError")
+	}
+	// Execute test
+	result := getLogfilesPath()
+	// Assert
+	assert.Equal(t, expectedPath, result)
 }
