@@ -1,7 +1,4 @@
-version: "3"
-
 # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
-
 container_name: ${{PROJECT_NAME_CONTAINER}}-backend-pihole
 image: pihole/pihole:latest
 ports:
