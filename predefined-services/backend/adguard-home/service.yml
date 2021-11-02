@@ -1,5 +1,5 @@
 image: adguard/adguardhome:v${{ADGUARD_VERSION}}
-container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-adguard
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-adguard
 restart: always
 volumes:
   - ${{VOLUME_ADGUARD_DATA}}:/opt/adguardhome/work
