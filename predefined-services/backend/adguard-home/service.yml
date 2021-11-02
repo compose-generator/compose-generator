@@ -1,0 +1,32 @@
+image: adguard/adguardhome:v${{ADGUARD_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-adguard
+restart: always
+volumes:
+  - ${{VOLUME_ADGUARD_DATA}}:/opt/adguardhome/work
+  - ${{VOLUME_ADGUARD_CONFIG}}:/opt/adguardhome/conf
+ports:
+  - 53:53/tcp
+  - 53:53/udp
+#? if var.ADGUARD_ENABLE_DHCP == "true" {
+#  - 67:67/udp
+#  - 68:68/tcp
+#  - 68:68/udp
+#? }
+#? if var.ADGUARD_ENABLE_UI == "true" {
+#  - 80:80/tcp
+#  - 443:443/tcp
+#  - 443:443/udp
+#  - 3000:3000/tcp
+#? }
+#? if var.ADGUARD_ENABLE_DOT == "true" {
+#  - 853:853/tcp
+#? }
+#? if var.ADGUARD_ENABLE_DOQ == "true" {
+#  - 784:784/udp
+#  - 853:853/udp
+#  - 8853:8853/udp
+#? }
+#? if var.ADGUARD_ENABLE_DNS_CRYPT == "true" {
+#  - 5443:5443/tcp
+#  - 5443:5443/udp
+#? }
