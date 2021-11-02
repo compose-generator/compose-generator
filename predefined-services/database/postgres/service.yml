@@ -5,7 +5,7 @@ networks:
 #? if has services.backend {
 #  - backend-database
 #? }
-#? if services.frontend contains name == "nextcloud" | services.frontend contains name == "owncloud" | services.frontend contains name == "gitea" | services.frontend contains name == "sonarqube" | services.frontend contains name == "jira" | services.frontend contains name == "bitbucket" {
+#? if services.frontend contains name == "nextcloud" | services.frontend contains name == "owncloud" | services.frontend contains name == "gitea" | services.frontend contains name == "sonarqube" | services.frontend contains name == "jira" | services.frontend contains name == "bitbucket" | services.frontend contains name == "accent" {
 #  - frontend-database
 #? }
 #? if services.dbadmin contains name == "pgadmin" {
