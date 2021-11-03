@@ -231,6 +231,9 @@ func readFile(filename string, lookupFn LookupFn) (envMap map[string]string, err
 var exportRegex = regexp.MustCompile(`^\s*(?:export\s+)?(.*?)\s*$`)
 
 func parseLine(line string, envMap map[string]string) (key string, value string, err error) {
+	return parseLineWithLookup(line, envMap, nil)
+}
+func parseLineWithLookup(line string, envMap map[string]string, lookupFn LookupFn) (key string, value string, err error) {
 	if len(line) == 0 {
 		err = errors.New("zero length string")
 		return
@@ -271,18 +274,10 @@ func parseLine(line string, envMap map[string]string) (key string, value string,
 		err = errors.New("Can't separate key from value")
 		return
 	}
-
-	// Parse the key
-	key = splitString[0]
-	if strings.HasPrefix(key, "export") {
-		key = strings.TrimPrefix(key, "export")
-	}
-	key = strings.TrimSpace(key)
-
 	key = exportRegex.ReplaceAllString(splitString[0], "$1")
 
 	// Parse the value
-	value = parseValue(splitString[1], envMap)
+	value = parseValue(splitString[1], envMap, lookupFn)
 	return
 }
 
@@ -293,7 +288,7 @@ var (
 	unescapeCharsRegex = regexp.MustCompile(`\\([^$])`)
 )
 
-func parseValue(value string, envMap map[string]string) string {
+func parseValue(value string, envMap map[string]string, lookupFn LookupFn) string {
 
 	// trim
 	value = strings.Trim(value, " ")
@@ -327,7 +322,7 @@ func parseValue(value string, envMap map[string]string) string {
 		}
 
 		if singleQuotes == nil {
-			value = expandVariables(value, envMap)
+			value = expandVariables(value, envMap, lookupFn)
 		}
 	}
 
@@ -336,7 +331,7 @@ func parseValue(value string, envMap map[string]string) string {
 
 var expandVarRegex = regexp.MustCompile(`(\\)?(\$)(\()?\{?([A-Z0-9_]+)?\}?`)
 
-func expandVariables(v string, m map[string]string) string {
+func expandVariables(v string, envMap map[string]string, lookupFn LookupFn) string {
 	return expandVarRegex.ReplaceAllStringFunc(v, func(s string) string {
 		submatch := expandVarRegex.FindStringSubmatch(s)
 
@@ -346,7 +341,20 @@ func expandVariables(v string, m map[string]string) string {
 		if submatch[1] == "\\" || submatch[2] == "(" {
 			return submatch[0][1:]
 		} else if submatch[4] != "" {
-			return m[submatch[4]]
+			//first check if we have defined this already earlier
+			if envMap[submatch[4]] != "" {
+				return envMap[submatch[4]]
+			}
+			if lookupFn == nil {
+				return ""
+			}
+			//if we have not defined it, check the lookup function provided
+			//by the user
+			s2, ok := lookupFn(submatch[4])
+			if ok {
+				return s2
+			}
+			return ""
 		}
 		return s
 	})
