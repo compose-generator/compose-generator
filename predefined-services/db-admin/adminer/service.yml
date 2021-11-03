@@ -17,9 +17,3 @@ ports:
   - ${{ADMINER_PORT}}:8080
 env_file:
   - environment.env
-depends_on:
-  - database-mysql
-  - database-mariadb
-  - database-postgres
-  - database-elasticsearch
-  - database-mongodb

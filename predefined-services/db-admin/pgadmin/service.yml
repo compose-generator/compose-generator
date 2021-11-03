@@ -10,5 +10,3 @@ ports:
   - ${{PGADMIN_PORT}}:80
 env_file:
   - environment.env
-depends_on:
-  - database

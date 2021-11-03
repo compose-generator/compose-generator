@@ -1,0 +1,11 @@
+image: mirego/accent:v${{ACCENT_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-accent
+restart: always
+networks:
+#? if has services.database {
+#  - frontend-database
+#? }
+ports:
+  - ${{ACCENT_PORT}}:4000
+env_file:
+  - environment.env
