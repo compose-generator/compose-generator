@@ -171,7 +171,7 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 	generateSecretsPass(project, selectedTemplates)
 	generateAddProfilesPass(project)
 	generateAddProxyNetworks(project, selectedTemplates)
-	generateCopyVolumesPass(project)
+	generateCopyVolumesPass(project, selectedTemplates)
 	generateReplaceVarsInConfigFilesPass(project, selectedTemplates)
 	generateExecServiceInitCommandsPass(project, selectedTemplates)
 	generateExecDemoAppInitCommandsPass(project, selectedTemplates)
