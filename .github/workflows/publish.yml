@@ -136,15 +136,15 @@ jobs:
 
       - name: Deploy to CentOS repo
         run: |
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/centos/compose-generator-latest.rpm
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/centos/${{ steps.get_version.outputs.version }}/compose-generator-${{ matrix.arch }}.rpm
       
       - name: Deploy to Fedora repo
         run: |
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/fedora/compose-generator-latest.rpm
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --upload-file ./compose-generator_${{ matrix.arch }}.rpm ${{ secrets.NEXUS_URL }}/fedora/${{ steps.get_version.outputs.version }}/compose-generator-${{ matrix.arch }}.rpm
 
       #- name: Deploy to Alpine repo
       #  run: |
-      #    curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.apk" "${{ secrets.NEXUS_URL }}/alpine/compose-generator-latest.apk"
+      #    curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.apk" "${{ secrets.NEXUS_URL }}/alpine/${{ steps.get_version.outputs.version }}/compose-generator-${{ matrix.arch }}.apk"
 
   build-win-installers:
     name: Build installers

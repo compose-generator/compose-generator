@@ -43,7 +43,7 @@ def test_combination(comb):
     remove(BIN_PATH + "/config.yml")
 
     # Execute Compose Generator with the config file
-    if system(f"cd {BIN_PATH} && docker compose up -d") != 0:
+    if system(f"cd {BIN_PATH} && docker compose up -d --quiet-pull") != 0:
         sys.exit("Docker failed when generating stack for combination " + str(comb))
 
     if system(f"cd {BIN_PATH} && docker compose down") != 0:
