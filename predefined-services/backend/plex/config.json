@@ -1,0 +1,47 @@
+{
+    "label": "Plex",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Plex instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "PLEX_PORT"
+        },
+        {
+            "text": "Which version of Plex do you want to use?",
+            "type": 2,
+            "defaultValue": "1.24.5",
+            "variable": "PLEX_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Plex config directory?",
+            "defaultValue": "./volumes/plex-config",
+            "variable": "VOLUME_PLEX_CONFIG"
+        },
+        {
+            "text": "Custom path for Plex TV directory?",
+            "defaultValue": "./volumes/plex-tv",
+            "variable": "VOLUME_PLEX_TV"
+        },
+        {
+            "text": "Custom path for Plex movies directory?",
+            "defaultValue": "./volumes/plex-movies",
+            "variable": "VOLUME_PLEX_MOVIES"
+        }
+    ]
+}
