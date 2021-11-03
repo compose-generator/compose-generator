@@ -1,6 +1,8 @@
 # Predefined service templates
 If you miss a predefined template and you want to create one for the public, please first read our [contribution guidelines](../CONTRIBUTING.md) and then continue reading the following guide. Fork the repository, create the template and open a pr to the latest `release/v...` branch. The community is thankful for every predefined template!
 
+For more information about creating predefined service templates in a more consumable way, please visit [this Medium article](https://medium.com/p/aed077396a28).
+
 ## Service template structure
 ```
 <template-name>
@@ -15,37 +17,37 @@ If you miss a predefined template and you want to create one for the public, ple
 └─README.md
 ```
 
-## Configuration file ([example file](frontend/angular/config.json))
+### Configuration file ([example file](frontend/angular/config.json))
 A template must contain a file called `config.json`, which holds metadata about the template.<br>
 It consists of following parts:
 
-- `label` - Specifies the display name of the template. This name is used in the list for template selection
+- `label` - Specifies the display name of the template. This name is used in the list for template selection.
 - `preselected` - Conditional string which defines, whether a service is initially selected in the list or not.
-- `proxied`- `true` for services which are usually accessible from the outside when being proxied, otherwise `false`.
-- `demoAppInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for generating example projects or similar. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine.
-- `serviceInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for preparing work files, etc. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine.
-- `files` - List of important files the template comes with. For example the compose file or certain Dockerfiles.
-	- `path`: Path to a particular file
-	- `type`: Type of the file. Needs to be one of: `service`, `env`, `docs` or `config`
+- `proxied` - `true` for services which are usually accessible from the outside when being proxied, otherwise `false`.
+- `demoAppInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for generating example projects or similar. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine. Usage of placeholders allowed.
+- `serviceInitCmd` - String array of Linux commands, which get executed in a [containerized environment](https://github.com/compose-generator/toolbox). This list of commands are meant to be used for preparing work files, populating configurations, etc. Note that the commands are getting executed in an Alpine Linux container, so make sure to only use commands which are compatible with Alpine. Usage of placeholders allowed.
+- `files` - List of important files the template comes with. For example the service file or certain Dockerfiles.
+	- `path`: Path to a particular file. Usage of placeholders allowed.
+	- `type`: Type of the file. Needs to be one of: `service`, `env`, `docs` or `config`.
 - `questions` - Lists of quesions, which the cli will ask the user.
-	- `text` - Question itself (keep it as short as possible).
-	- `type` - 1 = Yes/No question, 2 = Text question, 3 = Menu question
-	- `options` - String array with answer options (Only when type is 3)
-	- `defaultValue` - Default value of the question (Will be displayed in braces after the question)
+	- `text` - Question itself (keep it as short as possible). Usage of placeholders allowed.
+	- `type` - 1 = Yes/No question, 2 = Text question, 3 = Menu question.
+	- `options` - String array with answer options (Only when type is 3).
+	- `defaultValue` - Default value of the question (Will be displayed in braces after the question). Usage of placeholders allowed.
 	- `validator` - Validate the user input. All validators are listed in the section about [input validators](#input-validators).
-	- `var` - Name of the variable, which the answer of the question will be assigned to.
-	- `advanced` - false = show question always, true = show question only in advanced mode
-- `volumes` - List of volumes which are used in the compose file
-	- `text` - Question for customizing the volume
-	- `defaultValue` - Default path on the host system. Relative to the generated compose file
-	- `var` - Name of the variable, which the answer of the question will be assigned to (Must have the prefix `VOLUME_`).
-	- `advanced` - false = show question always, true = show question only in advanced mode
+	- `variable` - Name of the placeholder, which the answer of the question will be assigned to.
+	- `advanced` - false = show question always, true = show question only in advanced mode.
+- `volumes` - List of volumes which are used in the compose file.
+	- `text` - Question for customizing the volume. Usage of placeholders allowed.
+	- `defaultValue` - Default path on the host system. Relative to the execution directory of Compose Generator. Usage of placeholders allowed.
+	- `variable` - Name of the placeholder, which the answer of the question will be assigned to (Must have the prefix `VOLUME_`).
+	- `advanced` - false = show question always, true = show question only in advanced mode.
 - `secrets` - List of secrets, that will be generated by the cli
-	- `name` - Designation of the secret (should be precise and understandable to the user)
-	- `var` - Name of the variable, which the generated password will be assigned to (Must start with an underscore).
-	- `length` - Length of the secret in characters
+	- `name` - Designation of the secret (should be precise and understandable to the user). Usage of placeholders allowed.
+	- `variable` - Name of the placeholder, which the generated password will be assigned to (Must start with `_PW_`, e.g.: `_PW_MYSQL_PASSWORD`).
+	- `length` - Length of the secret in characters.
 
-## Service file ([example file](frontend/angular/service.yml))
+### Service file ([example file](frontend/angular/service.yml))
 A template also must contain the main service template file `service.yml`, which contains the container configuration for the stack.<br>
 Within the configuration, you can make use of the defined variables in the configuration file with doubled curly braces and a leading dollar sign like so: `${{VARIABLE_NAME}}`.<br>
 An example:
@@ -64,7 +66,7 @@ There are two variables, which the cli will provide automatically:
 
 *Note: This configuration will use an environment variable from the host system: `${VARIABLE_NAME}`. Don't confuse the notations*
 
-### Use of conditional sections
+#### Use of conditional sections
 For service files and other files like Dockerfiles, Compose Generator supports condition sections in those files. <br>
 Following situation as example: <br>
 The MySQL servies should be in the same network with the PhpMyAdmin service, but only if the PhpMyAdmin service was selected while generating the stack. This can be achieved with following conditional section in the service file of the MySQL service:
@@ -81,23 +83,26 @@ networks:
 
 For more information about different condition types, etc., please refer to the [CCom documentation](https://ccom.compose-generator.com), where the conditional sections and conditional statements are described in more detail.
 
-## Environment file ([example file](frontend/angular/environment.env))
-This file consists of key-value pares, and is not mandatory and should only be used for secrets, usernames, configurable paths, urls, etc.
+### Environment file ([example file](frontend/angular/environment.env))
+This file consists of key-value pares, is not mandatory and should only be used for secrets, usernames, configurable paths, urls, etc.
 The `environment.env` file is the only one where the secret variables (the ones starting with an underscore) from the configuration file will be applied by the cli.<br>
 The environment file can be attached to a container by including it into the compose file like this:
 ```
 ...
-services:
-  database:
-	env_file:
-	  - environment.env
+env_file:
+	- environment.env
 ...
 ```
 
-## README file ([example file](frontend/angular/README.md))
+### README file ([example file](frontend/angular/README.md))
 This file contains instructions about using the predefined template.
 
-## Input validators
+### Input validators
 You have the option to validate the user input for questions. Compose Generator is able to use all validators from the [go-playground/validator library](https://github.com/go-playground/validator#baked-in-validations). Furthermore you can use the following additional validators:
 
 -	`port`: Requires an integer number between 0 and 65535
+
+## Test your service templates
+Build Compose Generator from source by executing `build.sh` (Linux) or `build.bat` (Windows) from the root dir of the repo. The build output can be found in the `bin` subdirectory.
+
+For testing your local predefined service templates, you can execute `./compose-generator -irf` (Linux) or `.\compose-generator.exe -irf` (Windows). Your service template should now show up in the respective list. Select it (and maybe some other random templates) and let Compose Generator generate the stack for you. After that, Docker Compose should launch your stack without any error message.

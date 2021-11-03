@@ -64,9 +64,9 @@ func TestGenerateReplacePlaceholdersInConfigFiles(t *testing.T) {
 	startProcess = func(text string) (s *spinner.Spinner) {
 		startProcessCallCount++
 		if startProcessCallCount == 1 {
-			assert.Equal(t, "Applying custom config for Node.js ...", text)
+			assert.Equal(t, "Applying custom configuration for Node.js ...", text)
 		} else {
-			assert.Equal(t, "Applying custom config for PhpMyAdmin ...", text)
+			assert.Equal(t, "Applying custom configuration for PhpMyAdmin ...", text)
 		}
 		return nil
 	}

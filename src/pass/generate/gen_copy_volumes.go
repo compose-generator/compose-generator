@@ -10,42 +10,40 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/compose-spec/compose-go/types"
 	"github.com/otiai10/copy"
 )
 
 var copyVolumeMockable = copyVolume
-var copyBuildDirMockable = copyBuildDir
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // GenerateCopyVolumes reads the volume paths from the composition and copies them over to the current work dir
-func GenerateCopyVolumes(project *model.CGProject) {
+func GenerateCopyVolumes(project *model.CGProject, selected *model.SelectedTemplates) {
 	infoLogger.Println("Copying volumes ...")
 	spinner := startProcess("Copying volumes ...")
-	for serviceIndex, service := range project.Composition.Services {
-		// Copy volumes if existing
-		for volumeIndex, volume := range service.Volumes {
-			srcPath := filepath.ToSlash(volume.Source)
-			if strings.Contains(srcPath, getPredefinedServicesPath()) {
-				dstPath := srcPath[len(getPredefinedServicesPath()):]
-				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
-				infoLogger.Println("Copying volume from '" + srcPath + "' to '" + dstPath + "'")
-				copyVolumeMockable(
-					&project.Composition.Services[serviceIndex].Volumes[volumeIndex],
-					srcPath,
-					dstPath,
-				)
-			}
+	// Copy volumes
+	for _, template := range selected.GetAll() {
+		for _, volume := range template.Volumes {
+			srcPath := filepath.Clean(getPredefinedServicesPath() + "/" + template.Type + "/" + template.Name + "/" + volume.DefaultValue)
+			dstPath := filepath.Clean(project.Composition.WorkingDir + project.Vars[volume.Variable])
+			infoLogger.Println("Copying volume from '" + srcPath + "' to '" + dstPath + "'")
+			copyVolumeMockable(srcPath, dstPath)
 		}
-		// Copy build dir if existing
-		if service.Build != nil {
-			srcPath := filepath.ToSlash(service.Build.Context)
-			if strings.Contains(srcPath, getPredefinedServicesPath()) {
-				dstPath := srcPath[len(getPredefinedServicesPath()):]
+	}
+	// Change volume and build context paths in composition to the new ones
+	for serviceIndex, service := range project.Composition.Services {
+		// Build contexts
+		if service.Build != nil && strings.Contains(service.Build.Context, getPredefinedServicesPath()) {
+			dstPath := service.Build.Context[len(getPredefinedServicesPath()):]
+			dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+			project.Composition.Services[serviceIndex].Build.Context = dstPath
+		}
+		// Volumes
+		for volumeIndex, volume := range service.Volumes {
+			if strings.Contains(volume.Source, getPredefinedServicesPath()) {
+				dstPath := volume.Source[len(getPredefinedServicesPath()):]
 				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
-				infoLogger.Println("Copying build dir from '" + srcPath + "' to '" + dstPath + "'")
-				copyBuildDirMockable(service.Build, filepath.Clean(srcPath), filepath.Clean(dstPath))
+				project.Composition.Services[serviceIndex].Volumes[volumeIndex].Source = dstPath
 			}
 		}
 	}
@@ -54,7 +52,7 @@ func GenerateCopyVolumes(project *model.CGProject) {
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath string) {
+func copyVolume(srcPath string, dstPath string) {
 	if !fileExists(srcPath) {
 		// If srcPath does not exist, simply create a directory at dstPath
 		// #nosec G301
@@ -72,28 +70,4 @@ func copyVolume(volume *types.ServiceVolumeConfig, srcPath string, dstPath strin
 			logWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
 		}
 	}
-	// Set the volume bind path to the destination
-	volume.Source = dstPath
-}
-
-func copyBuildDir(build *types.BuildConfig, srcPath string, dstPath string) {
-	if !fileExists(srcPath) {
-		// If srcPath does not exist, simply create a directory at dstPath
-		// #nosec G301
-		if err := mkdirAll(dstPath, 0777); err != nil {
-			warningLogger.Println("Could not create volume dir: " + err.Error())
-			logWarning("Could not create volume dir")
-		}
-	} else {
-		// Copy volume
-		opt := copy.Options{
-			AddPermission: 0777,
-		}
-		if err := copyFile(srcPath, dstPath, opt); err != nil {
-			warningLogger.Println("Could not copy volume from '" + srcPath + "' to '" + dstPath + "': " + err.Error())
-			logWarning("Could not copy volume from '" + srcPath + "' to '" + dstPath + "'")
-		}
-	}
-	// Set the volume bind path to the destination
-	build.Context = dstPath
 }
