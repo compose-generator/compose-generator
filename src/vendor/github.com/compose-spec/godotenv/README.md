@@ -10,3 +10,9 @@ From the original Library:
 
 This is a fork of [joho/godotenv](https://github.com/joho/godotenv) focussing on `.env` file support by the compose specification
 
+
+
+To run linter and tests, please install [Earthly](https://earthly.dev/get-earthly) and run:
+```sh
+earthly +all
+```
