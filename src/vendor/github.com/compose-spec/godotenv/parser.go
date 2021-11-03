@@ -46,7 +46,7 @@ func parseBytes(src []byte, out map[string]string, lookupFn LookupFn) error {
 			}
 		}
 
-		value, left, err := extractVarValue(left, out)
+		value, left, err := extractVarValue(left, out, lookupFn)
 		if err != nil {
 			return err
 		}
@@ -126,16 +126,16 @@ loop:
 }
 
 // extractVarValue extracts variable value and returns rest of slice
-func extractVarValue(src []byte, vars map[string]string) (value string, rest []byte, err error) {
+func extractVarValue(src []byte, envMap map[string]string, lookupFn LookupFn) (value string, rest []byte, err error) {
 	quote, hasPrefix := hasQuotePrefix(src)
 	if !hasPrefix {
 		// unquoted value - read until whitespace
 		end := bytes.IndexFunc(src, unicode.IsSpace)
 		if end == -1 {
-			return expandVariables(string(src), vars), nil, nil
+			return expandVariables(string(src), envMap, lookupFn), nil, nil
 		}
 
-		return expandVariables(string(src[0:end]), vars), src[end:], nil
+		return expandVariables(string(src[0:end]), envMap, lookupFn), src[end:], nil
 	}
 
 	// lookup quoted string terminator
@@ -155,7 +155,7 @@ func extractVarValue(src []byte, vars map[string]string) (value string, rest []b
 		if quote == prefixDoubleQuote {
 			// unescape newlines for double quote (this is compat feature)
 			// and expand environment variables
-			value = expandVariables(expandEscapes(value), vars)
+			value = expandVariables(expandEscapes(value), envMap, lookupFn)
 		}
 
 		return value, src[i+1:], nil
