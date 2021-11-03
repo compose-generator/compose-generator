@@ -105,7 +105,7 @@ func TestEnrichProjectWithServices1(t *testing.T) {
 		generateAddProxyNetworksCallCount++
 	}
 	generateCopyVolumesPassCallCount := 0
-	generateCopyVolumesPass = func(project *model.CGProject) {
+	generateCopyVolumesPass = func(project *model.CGProject, selected *model.SelectedTemplates) {
 		generateCopyVolumesPassCallCount++
 	}
 	generateReplaceVarsInConfigFilesPassCallCount := 0
@@ -229,7 +229,7 @@ func TestEnrichProjectWithServices2(t *testing.T) {
 		generateAddProxyNetworksCallCount++
 	}
 	generateCopyVolumesPassCallCount := 0
-	generateCopyVolumesPass = func(project *model.CGProject) {
+	generateCopyVolumesPass = func(project *model.CGProject, selected *model.SelectedTemplates) {
 		generateCopyVolumesPassCallCount++
 	}
 	generateReplaceVarsInConfigFilesPassCallCount := 0

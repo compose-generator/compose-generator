@@ -32,17 +32,17 @@ const (
 
 // SelectedTemplates represents predefined service templates, which were selected by the user to add to the stack
 type SelectedTemplates struct {
-	FrontendServices []PredefinedTemplateConfig `json:"frontend,omitempty"`
-	BackendServices  []PredefinedTemplateConfig `json:"backend,omitempty"`
-	DatabaseServices []PredefinedTemplateConfig `json:"database,omitempty"`
-	DbAdminServices  []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
+	FrontendServices  []PredefinedTemplateConfig `json:"frontend,omitempty"`
+	BackendServices   []PredefinedTemplateConfig `json:"backend,omitempty"`
+	DatabaseServices  []PredefinedTemplateConfig `json:"database,omitempty"`
+	DbAdminServices   []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
 	ProxyServices     []PredefinedTemplateConfig `json:"proxy,omitempty"`
 	TlsHelperServices []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
 // GetAll returns all templates of all types, mixed in a single slice
 func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
-	templates := []PredefinedTemplateConfig{}
+	var templates []PredefinedTemplateConfig
 	templates = append(templates, t.FrontendServices...)
 	templates = append(templates, t.BackendServices...)
 	templates = append(templates, t.DatabaseServices...)
@@ -65,7 +65,7 @@ func (t SelectedTemplates) GetTotal() int {
 
 // GetAllProxyQuestions returns all questions, which are marked as proxy questions
 func (t SelectedTemplates) GetAllProxyQuestions() []Question {
-	questions := []Question{}
+	var questions []Question
 	for _, template := range t.ProxyServices {
 		questions = append(questions, template.ProxyQuestions...)
 	}
@@ -77,7 +77,7 @@ func (t SelectedTemplates) GetAllProxyQuestions() []Question {
 
 // GetAllProxyLabels returns all labels, which are marked as proxy labels
 func (t SelectedTemplates) GetAllProxyLabels() []Label {
-	labels := []Label{}
+	var labels []Label
 	for _, template := range t.ProxyServices {
 		labels = append(labels, template.ProxyLabels...)
 	}
