@@ -21,7 +21,7 @@ func GenerateReplacePlaceholdersInConfigFiles(project *model.CGProject, selected
 	for _, template := range selectedTemplates.GetAll() {
 		// Replace vars for all config files in this template
 		infoLogger.Println("Replacing placeholders in config files for '" + template.Label + "' ...")
-		spinner := startProcess("Applying custom config for " + template.Label + " ...")
+		spinner := startProcess("Applying custom configuration for " + template.Label + " ...")
 		for _, configFile := range template.GetFilePathsByType(model.FileTypeConfig) {
 			filePath := filepath.Clean(project.Composition.WorkingDir + util.ReplaceVarsInString(configFile, project.Vars))
 			if fileExists(filePath) {

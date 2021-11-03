@@ -21,10 +21,66 @@ import (
 
 func TestGenerateCopyVolumes1(t *testing.T) {
 	// Test data
-	templatesPath := "../predefined-templates/path"
+	templatesPath := "../predefined-templates"
 	project := &model.CGProject{
 		Composition: &spec.Project{
 			WorkingDir: "./",
+			Services: spec.Services{
+				{
+					Build: &spec.BuildConfig{
+						Context: templatesPath + "/frontend/angular/frontend-angular",
+					},
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: templatesPath + "/frontend/angular/volumes/angular-data",
+							Target: "/angular-data/test",
+						},
+					},
+				},
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: templatesPath + "/database/postgres/database-postgres",
+							Target: "/postgres-data",
+						},
+					},
+				},
+			},
+		},
+		Vars: model.Vars{
+			"ANGULAR_BUILD_CONTEXT_DIR": "./angular",
+			"ANGULAR_DATA":              "./volumes/angular-data",
+			"POSTGRES_CONFIG":           "./vol/postgres-configuration",
+		},
+	}
+	expectedProject := &model.CGProject{
+		Composition: &spec.Project{
+			WorkingDir: "./",
+			Services: spec.Services{
+				{
+					Build: &spec.BuildConfig{
+						Context: "./frontend-angular",
+					},
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "./volumes/angular-data",
+							Target: "/angular-data/test",
+						},
+					},
+				},
+				{
+					Volumes: []spec.ServiceVolumeConfig{
+						{
+							Type:   spec.VolumeTypeBind,
+							Source: "./database-postgres",
+							Target: "/postgres-data",
+						},
+					},
+				},
+			},
 		},
 		Vars: model.Vars{
 			"ANGULAR_BUILD_CONTEXT_DIR": "./angular",
@@ -77,13 +133,13 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 		copyVolumeCallCount++
 		switch copyVolumeCallCount {
 		case 1:
-			assert.Equal(t, "../predefined-templates/path/frontend/angular/frontend-angular", srcPath)
+			assert.Equal(t, "../predefined-templates/frontend/angular/frontend-angular", srcPath)
 			assert.Equal(t, "angular", dstPath)
 		case 2:
-			assert.Equal(t, "../predefined-templates/path/frontend/angular/volumes/angular-data", srcPath)
+			assert.Equal(t, "../predefined-templates/frontend/angular/volumes/angular-data", srcPath)
 			assert.Equal(t, "volumes/angular-data", dstPath)
 		case 3:
-			assert.Equal(t, "../predefined-templates/path/database/postgres/database-postgres", srcPath)
+			assert.Equal(t, "../predefined-templates/database/postgres/database-postgres", srcPath)
 			assert.Equal(t, "vol/postgres-configuration", dstPath)
 		}
 	}
@@ -93,6 +149,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 	// Execute test
 	GenerateCopyVolumes(project, selectedTemplates)
 	// Assert
+	assert.Equal(t, expectedProject, project)
 	assert.Equal(t, 1, stopProcessCallCount)
 	assert.Equal(t, 3, copyVolumeCallCount)
 }

@@ -8,6 +8,7 @@ package pass
 import (
 	"compose-generator/model"
 	"path/filepath"
+	"strings"
 
 	"github.com/otiai10/copy"
 )
@@ -20,12 +21,30 @@ var copyVolumeMockable = copyVolume
 func GenerateCopyVolumes(project *model.CGProject, selected *model.SelectedTemplates) {
 	infoLogger.Println("Copying volumes ...")
 	spinner := startProcess("Copying volumes ...")
+	// Copy volumes
 	for _, template := range selected.GetAll() {
 		for _, volume := range template.Volumes {
 			srcPath := filepath.Clean(getPredefinedServicesPath() + "/" + template.Type + "/" + template.Name + "/" + volume.DefaultValue)
 			dstPath := filepath.Clean(project.Composition.WorkingDir + project.Vars[volume.Variable])
 			infoLogger.Println("Copying volume from '" + srcPath + "' to '" + dstPath + "'")
 			copyVolumeMockable(srcPath, dstPath)
+		}
+	}
+	// Change volume and build context paths in composition to the new ones
+	for serviceIndex, service := range project.Composition.Services {
+		// Build contexts
+		if service.Build != nil && strings.Contains(service.Build.Context, getPredefinedServicesPath()) {
+			dstPath := service.Build.Context[len(getPredefinedServicesPath()):]
+			dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+			project.Composition.Services[serviceIndex].Build.Context = dstPath
+		}
+		// Volumes
+		for volumeIndex, volume := range service.Volumes {
+			if strings.Contains(volume.Source, getPredefinedServicesPath()) {
+				dstPath := volume.Source[len(getPredefinedServicesPath()):]
+				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
+				project.Composition.Services[serviceIndex].Volumes[volumeIndex].Source = dstPath
+			}
 		}
 	}
 	stopProcess(spinner)
