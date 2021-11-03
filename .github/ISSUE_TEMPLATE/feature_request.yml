@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest an idea for this project
+title: "[FEAT] <title>"
+labels: [feature-request, needs-triage]
+assignees: [marcauberer]
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists with the same or a similar feature request.
+    options:
+    - label: I have searched the existing issues
+      required: true
+- type: textarea
+  attributes:
+    label: Problem-related
+    description: Is your feature request related to a problem? Please describe.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Suggestion
+    description: Describe the solution you'd like
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Alternative
+    description: Describe alternatives you've considered.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Additional context
+    description: Give any additional context how you would like the feature to look like.
+  validations:
+    required: false

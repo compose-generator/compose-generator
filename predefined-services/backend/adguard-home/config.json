@@ -1,0 +1,66 @@
+{
+    "label": "AdGuard Home",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Do you want to enable the admin panel for your AdGuard Home instance?",
+            "type": 3,
+            "options": ["true", "false"],
+            "defaultValue": "true",
+            "variable": "ADGUARD_ENABLE_UI"
+        },
+        {
+            "text": "Do you want to enable DHCP for your AdGuard Home instance?",
+            "type": 3,
+            "options": ["true", "false"],
+            "defaultValue": "false",
+            "variable": "ADGUARD_ENABLE_DHCP"
+        },
+        {
+            "text": "Do you want to enable DNS over TLS for your AdGuard Home instance?",
+            "type": 3,
+            "options": ["true", "false"],
+            "defaultValue": "false",
+            "variable": "ADGUARD_ENABLE_DOT"
+        },
+        {
+            "text": "Do you want to enable DNS over QUIC for your AdGuard Home instance?",
+            "type": 3,
+            "options": ["true", "false"],
+            "defaultValue": "false",
+            "variable": "ADGUARD_ENABLE_DOQ",
+            "advanced": true
+        },
+        {
+            "text": "Which version of AdGuard Home do you want to use?",
+            "type": 2,
+            "defaultValue": "0.106.3",
+            "variable": "ADGUARD_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for AdGuard Home data volume?",
+            "defaultValue": "./volumes/adguard-data",
+            "variable": "VOLUME_ADGUARD_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for AdGuard Home config volume?",
+            "defaultValue": "./volumes/adguard-config",
+            "variable": "VOLUME_ADGUARD_CONFIG",
+            "advanced": true
+        }
+    ]
+}
