@@ -13,5 +13,3 @@ volumes:
   - ${{VOLUME_PMA_SESSIONS}}:/sessions
 env_file:
   - environment.env
-depends_on:
-  - database

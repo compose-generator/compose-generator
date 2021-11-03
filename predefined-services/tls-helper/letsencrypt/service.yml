@@ -9,8 +9,6 @@ volumes:
 environment:
   - DEFAULT_EMAIL=${{TLS_DEFAULT_EMAIL}}
   - NGINX_PROXY_CONTAINER=proxy
-depends_on:
-  - proxy
 profiles:
   - prod
 networks:
