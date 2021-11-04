@@ -49,4 +49,8 @@
     'command': {
         'type': 'string'
     },
+    'cap_add': {
+        'type': 'list',
+        'nullable': True
+    }
 }
