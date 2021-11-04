@@ -94,6 +94,18 @@ func generateService(
 	for labelName := range proj.ProxyLabels[template.Name] {
 		service.Labels[labelName] = proj.ProxyLabels[template.Name][labelName]
 	}
+	// Add dependency groups depending on the template type
+	switch templateType {
+	case model.TemplateTypeFrontend:
+		service.DependsOn = make(types.DependsOnConfig)
+		service.DependsOn[model.TemplateTypeBackend] = types.ServiceDependency{}
+	case model.TemplateTypeBackend:
+		service.DependsOn = make(types.DependsOnConfig)
+		service.DependsOn[model.TemplateTypeDatabase] = types.ServiceDependency{}
+	case model.TemplateTypeDbAdmin:
+		service.DependsOn = make(types.DependsOnConfig)
+		service.DependsOn[model.TemplateTypeDatabase] = types.ServiceDependency{}
+	}
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)
 	// Add child readme files
