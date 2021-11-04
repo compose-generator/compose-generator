@@ -28,7 +28,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 			Services: spec.Services{
 				{
 					Build: &spec.BuildConfig{
-						Context: templatesPath + "/frontend/angular/frontend-angular",
+						Context: "./angular",
 					},
 					Volumes: []spec.ServiceVolumeConfig{
 						{
@@ -61,7 +61,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 			Services: spec.Services{
 				{
 					Build: &spec.BuildConfig{
-						Context: "./frontend-angular",
+						Context: "./angular",
 					},
 					Volumes: []spec.ServiceVolumeConfig{
 						{
@@ -93,6 +93,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 			{
 				Name: "angular",
 				Type: "frontend",
+				Dir:  templatesPath + "/frontend/angular",
 				Volumes: []model.Volume{
 					{
 						DefaultValue: "./frontend-angular",
@@ -109,6 +110,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 			{
 				Name: "postgres",
 				Type: "database",
+				Dir:  templatesPath + "/database/postgres",
 				Volumes: []model.Volume{
 					{
 						DefaultValue: "./database-postgres",
