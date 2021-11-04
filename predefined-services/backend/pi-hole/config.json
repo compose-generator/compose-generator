@@ -1,0 +1,35 @@
+{
+    "label": "Pi-hole",
+    "preselected": "false",
+    "proxied": false,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "${{ASPNET_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        }
+    ],
+    "questions": [],
+    "volumes": [
+        {
+            "text": "Custom path for BitBucket data volume?",
+            "defaultValue": "./volumes/pi-hole-data",
+            "variable": "VOLUME_PI_HOLE_DATA",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Pi-hole password for web interface",
+            "variable": "_PW_PI_HOLE_WEB_INTERFACE",
+            "length": 50
+        }
+    ]
+}
