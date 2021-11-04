@@ -9,7 +9,7 @@ ports:
 env_file:
   - environment.env
 volumes:
-  - ${{VOLUME_PI_HOLE_DATA}}/etc-pihole/:/etc/pihole/
-  - ${{VOLUME_PI_HOLE_DATA}}/etc-dnsmasq.d/:/etc/dnsmasq.d/
+  - ${{VOLUME_PI_HOLE_DATA_ETC}}:/etc/pihole/
+  - ${{VOLUME_PI_HOLE_DATA_DNSMASQ}}:/etc/dnsmasq.d/
 cap_add:
   - NET_ADMIN

@@ -29,8 +29,14 @@
     "volumes": [
         {
             "text": "Custom path for Pi-hole data volume?",
-            "defaultValue": "./volumes/pi-hole-data",
-            "variable": "VOLUME_PI_HOLE_DATA",
+            "defaultValue": "./volumes/pi-hole-data/etc-pihole",
+            "variable": "VOLUME_PI_HOLE_DATA_ETC",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Pi-hole data volume?",
+            "defaultValue": "./volumes/pi-hole-data/etc-dnsmasq.d",
+            "variable": "VOLUME_PI_HOLE_DATA_DNSMASQ",
             "advanced": true
         }
     ],
