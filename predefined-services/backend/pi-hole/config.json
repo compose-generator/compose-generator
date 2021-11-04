@@ -10,16 +10,25 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "${{ASPNET_SOURCE_DIRECTORY}}/Dockerfile",
-            "type": "config"
         }
     ],
-    "questions": [],
+    "questions": [
+        {
+            "text": "On which timezone do you want to set your Pi-hole?",
+            "type": 2,
+            "defaultValue": "America/Chicago",
+            "variable": "PI_HOLE_TZ"
+        },
+        {
+            "text": "Which version of Pi-hole do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "PI_HOLE_VERSION"
+        }
+    ],
     "volumes": [
         {
-            "text": "Custom path for BitBucket data volume?",
+            "text": "Custom path for Pi-hole data volume?",
             "defaultValue": "./volumes/pi-hole-data",
             "variable": "VOLUME_PI_HOLE_DATA",
             "advanced": true
