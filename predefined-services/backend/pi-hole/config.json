@@ -34,7 +34,7 @@
             "advanced": true
         },
         {
-            "text": "Custom path for Pi-hole data volume?",
+            "text": "Custom path for Pi-hole dnsmasq config volume?",
             "defaultValue": "./volumes/pi-hole-data/etc-dnsmasq.d",
             "variable": "VOLUME_PI_HOLE_DATA_DNSMASQ",
             "advanced": true
