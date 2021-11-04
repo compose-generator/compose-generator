@@ -82,10 +82,6 @@ func generateService(
 		project.LoadFromDir(template.Dir),
 		project.LoadFromComposeFile("service.yml"),
 	)
-	// Change to build context path to contain more information
-	if service.Build != nil && service.Build.Context != "" {
-		service.Build.Context = template.Dir + "/" + service.Build.Context
-	}
 	// Add env variables for proxy questions
 	for varName := range proj.ProxyVars[template.Name] {
 		varValue := proj.ProxyVars[template.Name][varName]
