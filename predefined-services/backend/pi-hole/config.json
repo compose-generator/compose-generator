@@ -1,0 +1,50 @@
+{
+    "label": "Pi-hole",
+    "preselected": "false",
+    "proxied": false,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which timezone do you want to set your Pi-hole?",
+            "type": 2,
+            "defaultValue": "America/Chicago",
+            "variable": "PI_HOLE_TZ"
+        },
+        {
+            "text": "Which version of Pi-hole do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "PI_HOLE_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Pi-hole data volume?",
+            "defaultValue": "./volumes/pi-hole-data/etc-pihole",
+            "variable": "VOLUME_PI_HOLE_DATA_ETC",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Pi-hole dnsmasq config volume?",
+            "defaultValue": "./volumes/pi-hole-data/etc-dnsmasq.d",
+            "variable": "VOLUME_PI_HOLE_DATA_DNSMASQ",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Pi-hole password for web interface",
+            "variable": "_PW_PI_HOLE_WEB_INTERFACE",
+            "length": 50
+        }
+    ]
+}
