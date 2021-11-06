@@ -11,6 +11,7 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/docker/docker/client"
@@ -40,6 +41,7 @@ var stopProcess = util.StopProcess
 var printSecretValue = color.Yellow
 var askTemplateQuestions = util.AskTemplateQuestions
 var askTemplateProxyQuestions = util.AskTemplateProxyQuestions
+var evaluateProxyLabels = util.EvaluateProxyLabels
 var askForCustomVolumePaths = util.AskForCustomVolumePaths
 var evaluateConditionalSections = util.EvaluateConditionalSections
 
@@ -54,6 +56,9 @@ var readFile = ioutil.ReadFile
 var writeFile = ioutil.WriteFile
 var unmarshalYaml = yaml.Unmarshal
 var loadTemplateService = project.LoadTemplateService
+
+// Web operations
+var httpGet = http.Get
 
 // Passes
 var addBuildOrImagePass = addPass.AddBuildOrImage
@@ -75,6 +80,7 @@ var templateListToLabelList = util.TemplateListToLabelList
 var templateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
 var generatePassword = password.Generate
 var sliceContainsString = util.SliceContainsString
+var isUrl = util.IsUrl
 var getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 	return config.GetServiceConfigurationsByType(templateType)
 }

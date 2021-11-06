@@ -32,23 +32,23 @@ const (
 
 // SelectedTemplates represents predefined service templates, which were selected by the user to add to the stack
 type SelectedTemplates struct {
-	FrontendServices []PredefinedTemplateConfig `json:"frontend,omitempty"`
-	BackendServices  []PredefinedTemplateConfig `json:"backend,omitempty"`
-	DatabaseServices []PredefinedTemplateConfig `json:"database,omitempty"`
-	DbAdminServices  []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
-	ProxyService     []PredefinedTemplateConfig `json:"proxy,omitempty"`
-	TlsHelperService []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
+	FrontendServices  []PredefinedTemplateConfig `json:"frontend,omitempty"`
+	BackendServices   []PredefinedTemplateConfig `json:"backend,omitempty"`
+	DatabaseServices  []PredefinedTemplateConfig `json:"database,omitempty"`
+	DbAdminServices   []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
+	ProxyServices     []PredefinedTemplateConfig `json:"proxy,omitempty"`
+	TlsHelperServices []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
 // GetAll returns all templates of all types, mixed in a single slice
 func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
-	templates := []PredefinedTemplateConfig{}
+	var templates []PredefinedTemplateConfig
 	templates = append(templates, t.FrontendServices...)
 	templates = append(templates, t.BackendServices...)
 	templates = append(templates, t.DatabaseServices...)
 	templates = append(templates, t.DbAdminServices...)
-	templates = append(templates, t.ProxyService...)
-	templates = append(templates, t.TlsHelperService...)
+	templates = append(templates, t.ProxyServices...)
+	templates = append(templates, t.TlsHelperServices...)
 	return templates
 }
 
@@ -58,21 +58,33 @@ func (t SelectedTemplates) GetTotal() int {
 	count += len(t.BackendServices)
 	count += len(t.DatabaseServices)
 	count += len(t.DbAdminServices)
-	count += len(t.ProxyService)
-	count += len(t.TlsHelperService)
+	count += len(t.ProxyServices)
+	count += len(t.TlsHelperServices)
 	return count
 }
 
 // GetAllProxyQuestions returns all questions, which are marked as proxy questions
 func (t SelectedTemplates) GetAllProxyQuestions() []Question {
-	questions := []Question{}
-	for _, template := range t.ProxyService {
+	var questions []Question
+	for _, template := range t.ProxyServices {
 		questions = append(questions, template.ProxyQuestions...)
 	}
-	for _, template := range t.TlsHelperService {
+	for _, template := range t.TlsHelperServices {
 		questions = append(questions, template.ProxyQuestions...)
 	}
 	return questions
+}
+
+// GetAllProxyLabels returns all labels, which are marked as proxy labels
+func (t SelectedTemplates) GetAllProxyLabels() []Label {
+	var labels []Label
+	for _, template := range t.ProxyServices {
+		labels = append(labels, template.ProxyLabels...)
+	}
+	for _, template := range t.TlsHelperServices {
+		labels = append(labels, template.ProxyLabels...)
+	}
+	return labels
 }
 
 // AvailableTemplates represents all available predefined service templates
@@ -98,6 +110,7 @@ type PredefinedTemplateConfig struct {
 	Files          []File     `json:"files,omitempty"`
 	Questions      []Question `json:"questions,omitempty"`
 	ProxyQuestions []Question `json:"proxy-questions,omitempty"`
+	ProxyLabels    []Label    `json:"proxy-labels,omitempty"`
 	Volumes        []Volume   `json:"volumes,omitempty"`
 	Secrets        []Secret   `json:"secrets,omitempty"`
 }
@@ -143,4 +156,11 @@ type Secret struct {
 	Name     string `json:"name,omitempty"`
 	Variable string `json:"variable,omitempty"`
 	Length   int    `json:"length,omitempty"`
+}
+
+// Label represents the JSON structure of a label of a predefined template
+type Label struct {
+	Name      string `json:"name,omitempty"`
+	Value     string `json:"value,omitempty"`
+	Condition string `json:"condition,omitempty"`
 }

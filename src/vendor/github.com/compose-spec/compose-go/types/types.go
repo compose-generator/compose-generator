@@ -89,7 +89,7 @@ type ServiceConfig struct {
 	Profiles []string `mapstructure:"profiles" yaml:"profiles,omitempty" json:"profiles,omitempty"`
 
 	Build           *BuildConfig                     `yaml:",omitempty" json:"build,omitempty"`
-	BlkioConfig     *BlkioConfig                     `yaml:",omitempty" json:"blkio_config,omitempty"`
+	BlkioConfig     *BlkioConfig                     `mapstructure:"blkio_config" yaml:",omitempty" json:"blkio_config,omitempty"`
 	CapAdd          []string                         `mapstructure:"cap_add" yaml:"cap_add,omitempty" json:"cap_add,omitempty"`
 	CapDrop         []string                         `mapstructure:"cap_drop" yaml:"cap_drop,omitempty" json:"cap_drop,omitempty"`
 	CgroupParent    string                           `mapstructure:"cgroup_parent" yaml:"cgroup_parent,omitempty" json:"cgroup_parent,omitempty"`
@@ -748,6 +748,7 @@ type NetworkConfig struct {
 	Internal   bool                   `yaml:",omitempty" json:"internal,omitempty"`
 	Attachable bool                   `yaml:",omitempty" json:"attachable,omitempty"`
 	Labels     Labels                 `yaml:",omitempty" json:"labels,omitempty"`
+	EnableIPv6 bool                   `mapstructure:"enable_ipv6" yaml:"enable_ipv6,omitempty" json:"enable_ipv6,omitempty"`
 	Extensions map[string]interface{} `yaml:",inline" json:"-"`
 }
 

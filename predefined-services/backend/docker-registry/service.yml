@@ -1,0 +1,7 @@
+image: registry:${{REGISTRY_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-registry
+restart: always
+volumes:
+  - ${{VOLUME_REGISTRY_DATA}}:/var/lib/registry
+ports:
+  - ${{REGISTRY_PORT}}:5000

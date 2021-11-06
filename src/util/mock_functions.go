@@ -33,11 +33,14 @@ var getEnv = os.Getenv
 var executable = osext.Executable
 var currentUser = user.Current
 var isDockerizedEnvironment = IsDockerizedEnvironment
+var isDevVersion = IsDevVersion
+var isLinux = IsLinux
+var isWindows = IsWindows
 var getwd = os.Getwd
 var getOuterVolumePathOnDockerizedEnvironmentMockable = getOuterVolumePathOnDockerizedEnvironment
 
-// File operations
-var fileExists = FileExists
+// Conditions
+var evaluateCondition = EvaluateCondition
 
 // Other
 var newClientWithOpts = client.NewClientWithOpts

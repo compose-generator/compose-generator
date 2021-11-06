@@ -97,6 +97,7 @@ func Generate(c *cli.Context) error {
 		ForceConfig: flagForce,
 		Vars:        make(model.Vars),
 		ProxyVars:   make(map[string]model.Vars),
+		ProxyLabels: make(map[string]model.Labels),
 		Secrets:     []model.ProjectSecret{},
 	}
 	config := &model.GenerateConfig{}
@@ -120,11 +121,15 @@ func Generate(c *cli.Context) error {
 	// Run if the corresponding flag is set. Otherwise, print success message
 	if flagRun || flagDetached {
 		infoLogger.Println("Running Docker Compose ...")
-		util.DockerComposeUp(flagDetached)
+		util.DockerComposeUp(flagDetached, proj.ProductionReady)
 		infoLogger.Println("Running Docker Compose (done)")
 	} else {
 		pel()
-		printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")
+		if proj.ProductionReady {
+			printSuccess("🎉 Done! You now can execute \"$ docker compose --profile prod up\" to launch your app! 🎉")
+		} else {
+			printSuccess("🎉 Done! You now can execute \"$ docker compose up\" to launch your app! 🎉")
+		}
 		pel()
 	}
 	return nil
@@ -148,8 +153,8 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 		BackendServices:  []model.PredefinedTemplateConfig{},
 		DatabaseServices: []model.PredefinedTemplateConfig{},
 		DbAdminServices:  []model.PredefinedTemplateConfig{},
-		ProxyService:     []model.PredefinedTemplateConfig{},
-		TlsHelperService: []model.PredefinedTemplateConfig{},
+		ProxyServices:     []model.PredefinedTemplateConfig{},
+		TlsHelperServices: []model.PredefinedTemplateConfig{},
 	}
 	if project.ProductionReady {
 		generateChooseProxiesPass(project, availableTemplates, selectedTemplates, config)
@@ -166,7 +171,7 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 	generateSecretsPass(project, selectedTemplates)
 	generateAddProfilesPass(project)
 	generateAddProxyNetworks(project, selectedTemplates)
-	generateCopyVolumesPass(project)
+	generateCopyVolumesPass(project, selectedTemplates)
 	generateReplaceVarsInConfigFilesPass(project, selectedTemplates)
 	generateExecServiceInitCommandsPass(project, selectedTemplates)
 	generateExecDemoAppInitCommandsPass(project, selectedTemplates)

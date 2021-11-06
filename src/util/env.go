@@ -8,8 +8,8 @@ package util
 import (
 	"context"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
@@ -40,50 +40,65 @@ func GetUsername() string {
 }
 
 // GetDockerVersion retrives and returns the version of the installed Docker instance
-func GetDockerVersion() string {
-	cmd := exec.Command("docker", "-v")
-	dockerVersion, err := cmd.CombinedOutput()
+func GetDockerVersion() (string, error) {
+	// Initialize Docker client
+	client, err := newClientWithOpts(client.FromEnv)
 	if err != nil {
-		ErrorLogger.Println("Failed to obtain Docker version: " + err.Error())
-		logError("Could not read Docker version", true)
+		ErrorLogger.Println("Could not intanciate Docker client: " + err.Error())
+		logError("Could not intanciate Docker client. Please check your Docker installation", true)
+		return "", err
 	}
-	return strings.TrimRight(string(dockerVersion), "\r\n")
+	serverVersion, err := client.ServerVersion(context.Background())
+	if err != nil {
+		ErrorLogger.Println("Could not obtain Docker engine version: " + err.Error())
+		logError("Could not obtain Docker engine version. Please check your Docker installation", true)
+		return "", err
+	}
+	return serverVersion.Version, nil
 }
 
 // GetCustomTemplatesPath returns the path to the custom templates directory
 func GetCustomTemplatesPath() string {
-	if fileExists("/usr/bin/compose-generator") {
-		return "/usr/lib/compose-generator/templates" // Linux
+	if isDevVersion() { // Dev
+		return "../templates"
 	}
-	filename, err := executable()
+	if isDockerizedEnvironment() { // Docker
+		return "/cg/templates"
+	}
+	if isLinux() { // Linux
+		return "/usr/lib/compose-generator/templates"
+	}
+	// Windows
+	path, err := executable()
 	if err != nil {
 		ErrorLogger.Println("Cannot retrieve path of executable: " + err.Error())
 		logError("Cannot retrieve path of executable", true)
+		return ""
 	}
-	filename = filepath.ToSlash(filename)
-	filename = filename[:strings.LastIndex(filename, "/")]
-	if fileExists(filename + "/templates") {
-		return filename + "/templates" // Windows + Docker
-	}
-	return "../templates" // Dev
+	path = filepath.ToSlash(path)
+	return path[:strings.LastIndex(path, "/")] + "/templates"
 }
 
 // GetPredefinedServicesPath returns the path to the predefined services directory
 func GetPredefinedServicesPath() string {
-	if fileExists("/usr/bin/compose-generator") {
-		return "/usr/lib/compose-generator/predefined-services" // Linux
+	if isDevVersion() { // Dev
+		return "../predefined-services"
 	}
-	filename, err := executable()
+	if isDockerizedEnvironment() { // Docker
+		return "/cg/predefined-services"
+	}
+	if isLinux() { // Linux
+		return "/usr/lib/compose-generator/predefined-services"
+	}
+	// Windows
+	path, err := executable()
 	if err != nil {
 		ErrorLogger.Println("Cannot retrieve path of executable: " + err.Error())
 		logError("Cannot retrieve path of executable", true)
+		return ""
 	}
-	filename = filepath.ToSlash(filename)
-	filename = filename[:strings.LastIndex(filename, "/")]
-	if fileExists(filename + "/predefined-services") {
-		return filename + "/predefined-services" // Windows + Docker
-	}
-	return "../predefined-services" // Dev
+	path = filepath.ToSlash(path)
+	return path[:strings.LastIndex(path, "/")] + "/predefined-services"
 }
 
 // IsToolboxPresent checks if the Compose Generator toolbox image is present on the Docker host
@@ -120,19 +135,23 @@ func IsDockerRunning() bool {
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func getLogfilesPath() string {
-	if fileExists("/usr/bin/compose-generator") {
-		return "/usr/lib/compose-generator/log" // Linux
+	if isDevVersion() { // Dev
+		return "../log"
 	}
-	filename, err := executable()
+	if isDockerizedEnvironment() { // Docker
+		return "/cg/log"
+	}
+	if isLinux() { // Linux
+		return "/usr/lib/compose-generator/log"
+	}
+	// Windows
+	path, err := executable()
 	if err != nil {
 		logError("Cannot retrieve path of executable", true)
+		return ""
 	}
-	filename = filepath.ToSlash(filename)
-	filename = filename[:strings.LastIndex(filename, "/")]
-	if fileExists(filename + "/log") {
-		return filename + "/log" // Windows + Docker
-	}
-	return "../log" // Dev
+	path = filepath.ToSlash(path)
+	return path[:strings.LastIndex(path, "/")] + "/log"
 }
 
 func getOuterVolumePathOnDockerizedEnvironment() string {
@@ -167,4 +186,14 @@ func getOuterVolumePathOnDockerizedEnvironment() string {
 	ErrorLogger.Println("Could not find volume on host")
 	logError("Could not find a volume that is mounted to /cg/out", true)
 	return ""
+}
+
+// IsLinux checks if the os in Linux
+func IsLinux() bool {
+	return runtime.GOOS == "linux"
+}
+
+// IsWindows checks if the os is Windows
+func IsWindows() bool {
+	return runtime.GOOS == "windows"
 }

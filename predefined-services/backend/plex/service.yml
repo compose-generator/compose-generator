@@ -1,0 +1,9 @@
+image: linuxserver/plex:${{PLEX_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-plex
+restart: always
+volumes:
+  - ${{VOLUME_PLEX_CONFIG}}:/config
+  - ${{VOLUME_PLEX_TV}}:/tv
+  - ${{VOLUME_PLEX_MOVIES}}:/movies
+ports:
+  - ${{PLEX_PORT}}:32400

@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"os"
 	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
 
@@ -26,7 +25,7 @@ func CommandExists(cmd string) bool {
 
 // IsPrivileged checks if the user has root priviledges
 func IsPrivileged() bool {
-	if runtime.GOOS == "linux" {
+	if isLinux() {
 		cmd := exec.Command("id", "-u")
 		output, err := cmd.Output()
 
@@ -41,7 +40,7 @@ func IsPrivileged() bool {
 			panic(err)
 		}
 		return i == 0
-	} else if runtime.GOOS == "windows" {
+	} else if isWindows() {
 		_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
 		return err == nil
 	}
@@ -49,14 +48,24 @@ func IsPrivileged() bool {
 }
 
 // DockerComposeUp executes 'docker compose up' in the current directory
-func DockerComposeUp(detached bool) {
+func DockerComposeUp(detached bool, production bool) {
 	Pel()
 	Pl("Running docker compose ... ")
 	Pel()
 
-	cmd := exec.Command("docker", "compose", "up", "--remove-orphans")
-	if detached {
-		cmd = exec.Command("docker", "compose", "up", "-d", "--remove-orphans")
+	var cmd *exec.Cmd
+	if production {
+		if detached {
+			cmd = exec.Command("docker", "compose", "--profile", "prod", "up", "-d", "--remove-orphans")
+		} else {
+			cmd = exec.Command("docker", "compose", "--profile", "prod", "up", "--remove-orphans")
+		}
+	} else {
+		if detached {
+			cmd = exec.Command("docker", "compose", "up", "-d", "--remove-orphans")
+		} else {
+			cmd = exec.Command("docker", "compose", "up", "--remove-orphans")
+		}
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -134,7 +143,7 @@ func ExecuteOnToolboxCustomVolume(c string, volumePath string) {
 // ClearScreen errases the console contents
 func ClearScreen() {
 	cmd := exec.Command("clear")
-	if runtime.GOOS == "windows" {
+	if isWindows() {
 		cmd = exec.Command("cmd", "/c", "cls")
 	}
 	cmd.Stdout = os.Stdout

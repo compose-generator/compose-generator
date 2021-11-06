@@ -10,6 +10,8 @@ import (
 	"compose-generator/project"
 	"path/filepath"
 	"strconv"
+
+	"github.com/compose-spec/compose-go/types"
 )
 
 var generateServiceMockable = generateService
@@ -47,11 +49,11 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeDbAdmin, template.Name)
 		}
 		// Generate proxies
-		for _, template := range selectedTemplates.ProxyService {
+		for _, template := range selectedTemplates.ProxyServices {
 			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeProxy, template.Name)
 		}
 		// Generate tls helpers
-		for _, template := range selectedTemplates.TlsHelperService {
+		for _, template := range selectedTemplates.TlsHelperServices {
 			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeTlsHelper, template.Name)
 		}
 		stopProcess(spinner)
@@ -80,14 +82,29 @@ func generateService(
 		project.LoadFromDir(template.Dir),
 		project.LoadFromComposeFile("service.yml"),
 	)
-	// Change to build context path to contain more information
-	if service.Build != nil && service.Build.Context != "" {
-		service.Build.Context = template.Dir + "/" + service.Build.Context
-	}
 	// Add env variables for proxy questions
 	for varName := range proj.ProxyVars[template.Name] {
 		varValue := proj.ProxyVars[template.Name][varName]
 		service.Environment[varName] = &varValue
+	}
+	// Add labels for proxy labels
+	if service.Labels == nil {
+		service.Labels = make(types.Labels)
+	}
+	for labelName := range proj.ProxyLabels[template.Name] {
+		service.Labels[labelName] = proj.ProxyLabels[template.Name][labelName]
+	}
+	// Add dependency groups depending on the template type
+	switch templateType {
+	case model.TemplateTypeFrontend:
+		service.DependsOn = make(types.DependsOnConfig)
+		service.DependsOn[model.TemplateTypeBackend] = types.ServiceDependency{}
+	case model.TemplateTypeBackend:
+		service.DependsOn = make(types.DependsOnConfig)
+		service.DependsOn[model.TemplateTypeDatabase] = types.ServiceDependency{}
+	case model.TemplateTypeDbAdmin:
+		service.DependsOn = make(types.DependsOnConfig)
+		service.DependsOn[model.TemplateTypeDatabase] = types.ServiceDependency{}
 	}
 	// Add service to the project
 	proj.Composition.Services = append(proj.Composition.Services, *service)

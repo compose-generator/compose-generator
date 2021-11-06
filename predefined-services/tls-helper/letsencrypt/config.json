@@ -1,6 +1,6 @@
 {
     "label": "Lets Encrypt Companion",
-    "preselected": "true",
+    "preselected": "services.proxy contains name == \"nginx\"",
     "proxied": true,
     "files": [
         {
@@ -15,7 +15,7 @@
     "questions": [
         {
             "text": "Default TLS Certificate E-Mail Address:",
-            "defaultValue": "webmaster@${{DEFAULT_HOST}}",
+            "defaultValue": "webmaster@${{JWILDER_DEFAULT_HOST}}",
             "type": 2,
             "validator": "email",
             "variable": "TLS_DEFAULT_EMAIL"
@@ -24,13 +24,13 @@
     "proxy-questions": [
         {
             "text": "Let's Encrypt host:",
-            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{DEFAULT_HOST}}",
+            "defaultValue": "${{CURRENT_SERVICE_NAME}}.${{JWILDER_DEFAULT_HOST}}",
             "type": 2,
             "validator": "hostname",
             "variable": "LETSENCRYPT_HOST"
         },{
             "text": "TLS Certificate E-Mail Address:",
-            "defaultValue": "webmaster@${{DEFAULT_HOST}}",
+            "defaultValue": "webmaster@${{JWILDER_DEFAULT_HOST}}",
             "type": 2,
             "validator": "email",
             "variable": "TLS_EMAIL"
@@ -38,26 +38,20 @@
     ],
     "volumes": [
         {
-            "text": "Custom path for proxy config volume?",
-            "defaultValue": "./volumes/proxy-config",
-            "variable": "VOLUME_PROXY_CONFIG",
-            "advanced": true
-        },
-        {
             "text": "Custom path for proxy certificates volume?",
-            "defaultValue": "./volumes/proxy-certs",
+            "defaultValue": "./volumes/nginx-proxy-certs",
             "variable": "VOLUME_PROXY_CERTS",
             "advanced": true
         },
         {
             "text": "Custom path for proxy virtual hosts volume?",
-            "defaultValue": "./volumes/proxy-vhosts",
+            "defaultValue": "./volumes/nginx-proxy-vhosts",
             "variable": "VOLUME_PROXY_VHOSTS",
             "advanced": true
         },
         {
             "text": "Custom path for proxy HTML volume?",
-            "defaultValue": "./volumes/proxy-html",
+            "defaultValue": "./volumes/nginx-proxy-html",
             "variable": "VOLUME_PROXY_HTML",
             "advanced": true
         }

@@ -37,11 +37,11 @@ func GenerateResolveDependencyGroups(project *model.CGProject, selectedTemplates
 		}
 		// Search for proxy group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeProxy]; ok {
-			replaceGroupDependency(service, selectedTemplates.ProxyService, model.TemplateTypeProxy)
+			replaceGroupDependency(service, selectedTemplates.ProxyServices, model.TemplateTypeProxy)
 		}
 		// Search for tlshelper group dependency
 		if _, ok := service.DependsOn[model.TemplateTypeTlsHelper]; ok {
-			replaceGroupDependency(service, selectedTemplates.TlsHelperService, model.TemplateTypeTlsHelper)
+			replaceGroupDependency(service, selectedTemplates.TlsHelperServices, model.TemplateTypeTlsHelper)
 		}
 	}
 	stopProcess(spinner)

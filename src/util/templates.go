@@ -229,6 +229,33 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 	}
 }
 
+// EvaluateProxyLabels adds proxy labels with values to the project based on the answers of the proxy questions
+func EvaluateProxyLabels(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
+	if template.Proxied {
+		proxyLabels := make(model.Labels)
+		for _, label := range selectedTemplates.GetAllProxyLabels() {
+			// Check if condition evaluates to true
+			if evaluateCondition(label.Condition, selectedTemplates, project.Vars) {
+				// Replace vars and proxy vars
+				name := ReplaceVarsInString(label.Name, project.Vars)
+				name = ReplaceVarsInString(name, project.ProxyVars[template.Name])
+				value := ReplaceVarsInString(label.Value, project.Vars)
+				value = ReplaceVarsInString(value, project.ProxyVars[template.Name])
+				// Replace current service variables
+				name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+				name = strings.ReplaceAll(name, "${{CURRENT_SERVICE_NAME}}", template.Name)
+				value = strings.ReplaceAll(value, "${{CURRENT_SERVICE_LABEL}}", template.Label)
+				value = strings.ReplaceAll(value, "${{CURRENT_SERVICE_NAME}}", template.Name)
+
+				proxyLabels[name] = value
+				InfoLogger.Println("Specified label: " + label.Name + "=" + label.Value)
+			}
+		}
+		// Add collected proxy labels to project
+		project.ProxyLabels[template.Name] = proxyLabels
+	}
+}
+
 // AskForCustomVolumePaths asks the user for custom volume paths for a template
 func AskForCustomVolumePaths(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, volume := range template.Volumes {
@@ -259,10 +286,7 @@ func TemplateListToLabelList(templates []model.PredefinedTemplateConfig) (labels
 // TemplateListToPreselectedLabelList retrieves a slice of all preselected other services for each service
 func TemplateListToPreselectedLabelList(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) (labels []string) {
 	for _, t := range templates {
-		if t.Preselected == "false" {
-			continue
-		}
-		if t.Preselected == "true" || EvaluateCondition(t.Preselected, selected, nil) {
+		if evaluateCondition(t.Preselected, selected, nil) {
 			labels = append(labels, t.Label)
 		}
 	}

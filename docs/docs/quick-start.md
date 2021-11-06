@@ -16,9 +16,6 @@ Compose Generator offers several different methods to start with. Choose the one
         ??? summary "Use it as Docker Container without installing"
             Please refer to the guide on how to <a href="../install/docker" target="_blank">use Compose Generator with Docker</a>.
 
-        ??? summary "Install it on your development machine via NPM"
-            If you have already installed NPM on your development machine, you can <a href="../install/npm" target="_blank">install Compose Generator via NPM</a>. The only thing NPM does, is to unpack the binary for your platform and architecture to the binaries directory of your system. Compose Generator will post-install predefined service templates and other essential files.
-
     ??? summary "Docker is not installed yet"
         No problem. Some commands of Compose Generator can even by used without having Docker installed, although it is recommended to have Docker installed.
 
@@ -26,9 +23,6 @@ Compose Generator offers several different methods to start with. Choose the one
 
         ??? summary "Install it on your development machine"
             If you use Windows on your development machine, please refer to the guide on how to <a href="../install/windows" target="_blank">install Compose Generator on Windows</a> and if you work with Linux, you can visit the guide on how to  <a href="../install/linux" target="_blank">install Compose Generator on Linux</a>.
-
-        ??? summary "Install it on your development machine via NPM"
-            If you have already installed NPM on your development machine, you can <a href="../install/npm" target="_blank">install Compose Generator via NPM</a>. The only thing NPM does, is to unpack the binary for your platform and architecture to the binaries directory of your system. Compose Generator will post-install predefined service templates and other essential files.
 
 ??? summary "I want to use it in production"
     Compose Generator can also be used to generate production ready Docker Compose configurations. To use it in a production environment we have two options: One-time use or more frequent usage.

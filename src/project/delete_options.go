@@ -34,6 +34,10 @@ func applyDeleteOptions(options ...DeleteOption) DeleteOptions {
 	if !strings.HasSuffix(opts.WorkingDir, "/") {
 		opts.WorkingDir += "/"
 	}
+	// Check also docker-compose.yaml file
+	if opts.ComposeFileName == "docker-compose.yml" && fileExists(opts.WorkingDir + "docker-compose.yaml") {
+		opts.ComposeFileName = "docker-compose.yaml"
+	}
 	return opts
 }
 

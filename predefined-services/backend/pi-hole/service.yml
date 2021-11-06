@@ -1,0 +1,15 @@
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-pihole
+image: pihole/pihole:${{PI_HOLE_VERSION}}
+restart: always
+ports:
+  - 53:53/tcp
+  - 53:53/udp
+  - 67:67/udp
+  - 80:80/tcp
+env_file:
+  - environment.env
+volumes:
+  - ${{VOLUME_PI_HOLE_DATA_ETC}}:/etc/pihole/
+  - ${{VOLUME_PI_HOLE_DATA_DNSMASQ}}:/etc/dnsmasq.d/
+cap_add:
+  - NET_ADMIN

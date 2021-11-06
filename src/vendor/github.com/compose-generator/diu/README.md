@@ -1,3 +1,6 @@
+|:warning: | This library is deprecated and is only used by Compose Generator until Docker Manifests are fully supported by the official Docker client. For that reason, please mind that this repository is not maintained anymore. |
+|----------|:-------------------------------|
+
 # Docker Inspect Utils
 ![GitHub release](https://img.shields.io/github/v/release/compose-generator/diu?include_prereleases)
 ![Go CI](https://github.com/compose-generator/diu/workflows/Go%20CI/badge.svg)
@@ -51,8 +54,6 @@ if err == nil && len(networks) > 0 {
     fmt.println("Name of first networks: "+networks[0].Name)
 }
 ```
-
-*TODO: To be extended*
 
 ## Contribute to the project
 If you want to contribute to this project, please ensure you comply with the [contribution guidelines](CONTRIBUTING.md).

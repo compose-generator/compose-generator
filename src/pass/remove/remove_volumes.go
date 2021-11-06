@@ -19,28 +19,30 @@ var isVolumeUsedByOtherServicesMockable = isVolumeUsedByOtherServices
 
 // RemoveVolumes removes all volumes of a service
 func RemoveVolumes(service *spec.ServiceConfig, project *model.CGProject) {
-	deleteFromDisk := yesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false)
-	infoLogger.Println("Removing volumes ...")
-	for i := range service.Volumes {
-		volume := &service.Volumes[i]
-		// Check if volume exists
-		if !fileExists(volume.Source) {
-			continue // Volume is either a external volume or was already deleted
-		}
-		// Check if the volume is used by other services
-		if !isVolumeUsedByOtherServicesMockable(volume, service, project) {
-			// Delete volume recursively
-			if deleteFromDisk {
-				if err := removeAll(volume.Source); err != nil {
-					util.WarningLogger.Println("Could not remove volume at path '" + volume.Source + "': " + err.Error())
-					logWarning("Could not remove volume at path '" + volume.Source + "'")
-				}
+	if len(service.Volumes) > 0 {
+		deleteFromDisk := yesNoQuestion("Do you really want to delete all attached volumes of '"+service.Name+"' on disk?", false)
+		infoLogger.Println("Removing volumes ...")
+		for i := range service.Volumes {
+			volume := &service.Volumes[i]
+			// Check if volume exists
+			if !fileExists(volume.Source) {
+				continue // Volume is either a external volume or was already deleted
 			}
-			// Remove in project-wide volumes section
-			delete(project.Composition.Volumes, volume.Source)
+			// Check if the volume is used by other services
+			if !isVolumeUsedByOtherServicesMockable(volume, service, project) {
+				// Delete volume recursively
+				if deleteFromDisk {
+					if err := removeAll(volume.Source); err != nil {
+						util.WarningLogger.Println("Could not remove volume at path '" + volume.Source + "': " + err.Error())
+						logWarning("Could not remove volume at path '" + volume.Source + "'")
+					}
+				}
+				// Remove in project-wide volumes section
+				delete(project.Composition.Volumes, volume.Source)
+			}
 		}
+		infoLogger.Println("Removing volumes (done)")
 	}
-	infoLogger.Println("Removing volumes (done)")
 }
 
 // ---------------------------------------------------------------- Private functions ---------------------------------------------------------------

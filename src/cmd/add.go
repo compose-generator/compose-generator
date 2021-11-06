@@ -93,7 +93,7 @@ func Add(c *cli.Context) error {
 
 	// Run if the corresponding flag is set
 	if flagRun || flagDetached {
-		util.DockerComposeUp(flagDetached)
+		util.DockerComposeUp(flagDetached, proj.ProductionReady)
 	}
 
 	return nil

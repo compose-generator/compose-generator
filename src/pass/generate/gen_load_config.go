@@ -11,11 +11,14 @@ import (
 	"strings"
 )
 
+var loadConfigFromUrlMockable = loadConfigFromUrl
+var loadConfigFromFileMockable = loadConfigFromFile
+
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // LoadGenerateConfig loads a generate configuration from a file
-func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, configPath string) {
-	if configPath == "" {
+func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, configInput string) {
+	if configInput == "" {
 		// Welcome Message
 		heading("Welcome to Compose Generator! 👋")
 		pl("Please continue by answering a few questions:")
@@ -33,33 +36,13 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 		config.FromFile = false
 		infoLogger.Println("Production-ready: '" + strconv.FormatBool(config.ProductionReady) + "'")
 	} else {
-		// Take the given config file and load config from there
-		if fileExists(configPath) {
-			infoLogger.Println("Config file was attached")
-			yamlFile, err := openFile(configPath)
-			if err != nil {
-				errorLogger.Println("Could not load config file: " + err.Error())
-				logError("Could not load config file. Permissions granted?", true)
-				return
-			}
-			content, err := readAllFromFile(yamlFile)
-			if err != nil {
-				errorLogger.Println("Could not load config file: " + err.Error())
-				logError("Could not load config file. Permissions granted?", true)
-				return
-			}
-			// Parse yaml
-			if err := unmarshalYaml(content, &config); err != nil {
-				errorLogger.Println("Could not unmarshal config file: " + err.Error())
-				logError("Could not unmarshal config file", true)
-				return
-			}
-			config.FromFile = true
+		// Check if the input is an url
+		if isUrl(configInput) {
+			loadConfigFromUrlMockable(config, configInput)
 		} else {
-			errorLogger.Println("Config file could not be found")
-			logError("Config file could not be found", true)
-			return
+			loadConfigFromFileMockable(config, configInput)
 		}
+		config.FromFile = true
 	}
 
 	project.Name = config.ProjectName
@@ -70,4 +53,58 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 	}
 	project.Vars["PROJECT_NAME"] = project.Name
 	project.Vars["PROJECT_NAME_CONTAINER"] = project.ContainerName
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func loadConfigFromFile(config *model.GenerateConfig, configPath string) {
+	// Take the given config file and load config from there
+	if fileExists(configPath) {
+		infoLogger.Println("Config file was attached")
+		yamlFile, err := openFile(configPath)
+		if err != nil {
+			errorLogger.Println("Could not load config file: " + err.Error())
+			logError("Could not load config file. Permissions granted?", true)
+			return
+		}
+		content, err := readAllFromFile(yamlFile)
+		if err != nil {
+			errorLogger.Println("Could not load config file: " + err.Error())
+			logError("Could not load config file. Permissions granted?", true)
+			return
+		}
+		// Parse yaml
+		if err := unmarshalYaml(content, &config); err != nil {
+			errorLogger.Println("Could not unmarshal config file: " + err.Error())
+			logError("Could not unmarshal config file", true)
+			return
+		}
+	} else {
+		errorLogger.Println("Config file could not be found")
+		logError("Config file could not be found", true)
+	}
+}
+
+func loadConfigFromUrl(config *model.GenerateConfig, configUrl string) {
+	// Make web request
+	// #nosec G107
+	response, err := httpGet(configUrl)
+	if err != nil {
+		errorLogger.Println("Config url could not be read")
+		logError("Config url could not be read", true)
+		return
+	}
+	defer response.Body.Close()
+	// Read response
+	bytes, err := readAllFromFile(response.Body)
+	if err != nil {
+		errorLogger.Println("Could not parse yaml")
+		logError("Could not parse yaml", true)
+		return
+	}
+	// Parse yaml
+	if err := unmarshalYaml(bytes, &config); err != nil {
+		errorLogger.Println("Could not unmarshal config file: " + err.Error())
+		logError("Could not unmarshal config file", true)
+	}
 }
