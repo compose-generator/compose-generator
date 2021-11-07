@@ -41,6 +41,7 @@ var stopProcess = util.StopProcess
 var printSecretValue = color.Yellow
 var askTemplateQuestions = util.AskTemplateQuestions
 var askTemplateProxyQuestions = util.AskTemplateProxyQuestions
+var askSecretQuestions = util.AskSecretQuestions
 var evaluateProxyLabels = util.EvaluateProxyLabels
 var askForCustomVolumePaths = util.AskForCustomVolumePaths
 var evaluateConditionalSections = util.EvaluateConditionalSections

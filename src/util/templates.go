@@ -229,6 +229,30 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 	}
 }
 
+// AskSecretQuestions asks the user password questions for all customizable secrets of the template
+func AskSecretQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
+	for _, secret := range template.Secrets {
+		if secret.Customizable {
+			// Ask for password
+			password := PasswordQuestion(secret.Name + " (recommended length: " + strconv.Itoa(secret.Length) + ", blank to auto-generate)")
+			if password == "" {
+				res, err := generatePassword(secret.Length, 10, 0, false, false)
+				if err != nil {
+					ErrorLogger.Println("Password generation failed: " + err.Error())
+					logError("Password generation failed", true)
+					return
+				}
+				password = res
+			}
+			project.Secrets = append(project.Secrets, model.ProjectSecret{
+				Name:     secret.Name,
+				Variable: secret.Variable,
+				Value:    password,
+			})
+		}
+	}
+}
+
 // EvaluateProxyLabels adds proxy labels with values to the project based on the answers of the proxy questions
 func EvaluateProxyLabels(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
 	if template.Proxied {

@@ -75,6 +75,8 @@ func GenerateChooseFrontends(
 				askTemplateQuestions(project, &selectedConfig)
 				// Ask proxy questions to the user
 				askTemplateProxyQuestions(project, &selectedConfig, selected)
+				// Ask customizable secrets
+				askSecretQuestions(project, &selectedConfig)
 				// Evaluate proxy labels
 				evaluateProxyLabels(project, &selectedConfig, selected)
 				// Ask volume questions to the user

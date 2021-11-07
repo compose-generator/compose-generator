@@ -163,6 +163,15 @@ func MultiSelectMenuQuestionIndex(label string, items []string, defaultItems []s
 	return
 }
 
+// PasswordQuestion asks the user for a password and returns it
+func PasswordQuestion(question string) (result string) {
+	prompt := &survey.Password{
+		Message: question,
+	}
+	handleInterrupt(survey.AskOne(prompt, &result))
+	return
+}
+
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func handleInterrupt(err error) {
