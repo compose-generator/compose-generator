@@ -1,3 +1,8 @@
+/*
+Copyright © 2021 Compose Generator Contributors
+All rights reserved.
+*/
+
 package cmd
 
 import "github.com/urfave/cli/v2"
