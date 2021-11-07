@@ -149,10 +149,10 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 
 	// Generate composition
 	selectedTemplates := &model.SelectedTemplates{
-		FrontendServices: []model.PredefinedTemplateConfig{},
-		BackendServices:  []model.PredefinedTemplateConfig{},
-		DatabaseServices: []model.PredefinedTemplateConfig{},
-		DbAdminServices:  []model.PredefinedTemplateConfig{},
+		FrontendServices:  []model.PredefinedTemplateConfig{},
+		BackendServices:   []model.PredefinedTemplateConfig{},
+		DatabaseServices:  []model.PredefinedTemplateConfig{},
+		DbAdminServices:   []model.PredefinedTemplateConfig{},
 		ProxyServices:     []model.PredefinedTemplateConfig{},
 		TlsHelperServices: []model.PredefinedTemplateConfig{},
 	}
