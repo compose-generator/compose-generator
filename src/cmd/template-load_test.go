@@ -59,7 +59,7 @@ func TestAskForTemplate1(t *testing.T) {
 		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
-	result := askForTemplate()
+	result := askForTemplate("Which template do you want to load?")
 	// Assert
 	assert.Equal(t, "Template 1", result)
 	assert.Equal(t, 1, pelCallCount)
@@ -92,7 +92,7 @@ func TestAskForTemplate2(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	result := askForTemplate()
+	result := askForTemplate("Which template do you want to load?")
 	// Assert
 	assert.Equal(t, "", result)
 	assert.Equal(t, 1, pelCallCount)
@@ -160,9 +160,8 @@ func TestShowTemplateList2(t *testing.T) {
 	printHeading = func(text string) {
 		assert.Fail(t, "Unexpected call of printHeading")
 	}
-	logError = func(message string, exit bool) {
+	logWarning = func(message string) {
 		assert.Equal(t, "No templates found. Use \"$ compose-generator save <template-name>\" to save one.", message)
-		assert.True(t, exit)
 	}
 	// Execute test
 	showTemplateList()

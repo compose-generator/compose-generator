@@ -13,6 +13,7 @@ import (
 	"compose-generator/project"
 	"compose-generator/util"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/otiai10/copy"
@@ -45,6 +46,7 @@ var copyDir = copy.Copy
 var fileExists = util.FileExists
 var loadProjectMetadata = project.LoadProjectMetadata
 var normalizePaths = util.NormalizePaths
+var removeAll = os.RemoveAll
 
 // Environment
 var isDockerizedEnvironment = util.IsDockerizedEnvironment
