@@ -160,9 +160,8 @@ func TestShowTemplateList2(t *testing.T) {
 	printHeading = func(text string) {
 		assert.Fail(t, "Unexpected call of printHeading")
 	}
-	logError = func(message string, exit bool) {
+	logWarning = func(message string) {
 		assert.Equal(t, "No templates found. Use \"$ compose-generator save <template-name>\" to save one.", message)
-		assert.True(t, exit)
 	}
 	// Execute test
 	showTemplateList()

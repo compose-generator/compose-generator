@@ -78,6 +78,13 @@ func main() {
 						Flags:   cmd.TemplateLoadCliFlags,
 						Action:  cmd.LoadTemplate,
 					},
+					{
+						Name:    "delete",
+						Aliases: []string{"d"},
+						Usage:   "Delete a custom template.",
+						Flags:   cmd.TemplateDeleteCliFlags,
+						Action:  cmd.DeleteTemplate,
+					},
 				},
 			},
 			{

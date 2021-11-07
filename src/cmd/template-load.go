@@ -106,8 +106,8 @@ func askForTemplate() string {
 		index := menuQuestionIndex("Which template do you want to load?", items)
 		return keys[index]
 	}
-	errorLogger.Println("Template dir is empty")
-	logError("No templates found. Use \"$ compose-generator save <template-name>\" to save one.", true)
+	warningLogger.Println("Template dir is empty")
+	logWarning("No templates found. Use \"$ compose-generator save <template-name>\" to save one.")
 	return ""
 }
 
