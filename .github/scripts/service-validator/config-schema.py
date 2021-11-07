@@ -138,6 +138,9 @@
                 'length': {
                     'type': 'integer',
                     'required': True
+                },
+                'customizable': {
+                    'type': 'boolean'
                 }
             }
         }

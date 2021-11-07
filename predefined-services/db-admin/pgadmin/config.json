@@ -50,7 +50,8 @@
         {
             "name": "Default password for pgAdmin",
             "variable": "_PW_PGADMIN_DEFAULT",
-            "length": 30
+            "length": 30,
+            "customizable": true
         }
     ]
 }

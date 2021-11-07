@@ -76,6 +76,8 @@ func GenerateChooseBackends(
 				askTemplateProxyQuestions(project, &selectedConfig, selected)
 				// Evaluate proxy labels
 				evaluateProxyLabels(project, &selectedConfig, selected)
+				// Ask customizable secrets
+				askSecretQuestions(project, &selectedConfig)
 				// Ask volume questions to the user
 				askForCustomVolumePaths(project, &selectedConfig)
 				// Save template to the selected templates

@@ -16,6 +16,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/fatih/color"
 	"github.com/kardianos/osext"
+	"github.com/sethvargo/go-password/password"
 )
 
 // Logging
@@ -51,3 +52,4 @@ var executeCommand = exec.Command
 var getCommandOutput = func(cmd *exec.Cmd) ([]byte, error) {
 	return cmd.Output()
 }
+var generatePassword = password.Generate
