@@ -157,6 +157,9 @@ func TestGenerateChooseDbAdmins2(t *testing.T) {
 	askTemplateProxyQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
 		assert.Equal(t, available.DbAdminServices[0], *template)
 	}
+	askSecretQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
+		assert.Equal(t, available.DbAdminServices[0], *template)
+	}
 	askForCustomVolumePaths = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 		assert.Equal(t, available.DbAdminServices[0], *template)
 	}

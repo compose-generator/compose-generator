@@ -157,6 +157,9 @@ func TestGenerateChooseBackends2(t *testing.T) {
 	askTemplateProxyQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
 		assert.Equal(t, available.BackendServices[0], *template)
 	}
+	askSecretQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
+		assert.Equal(t, available.BackendServices[0], *template)
+	}
 	askForCustomVolumePaths = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 		assert.Equal(t, available.BackendServices[0], *template)
 	}
