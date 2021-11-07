@@ -44,7 +44,8 @@
         {
             "name": "Pi-hole password for web interface",
             "variable": "_PW_PI_HOLE_WEB_INTERFACE",
-            "length": 50
+            "length": 50,
+            "customizable": true
         }
     ]
 }

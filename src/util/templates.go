@@ -232,6 +232,7 @@ func AskTemplateProxyQuestions(project *model.CGProject, template *model.Predefi
 // AskSecretQuestions asks the user password questions for all customizable secrets of the template
 func AskSecretQuestions(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 	for _, secret := range template.Secrets {
+		// Only generate customizable secrets. Not customizable secrets will be generated later on
 		if secret.Customizable {
 			// Ask for password
 			password := PasswordQuestion(secret.Name + " (recommended length: " + strconv.Itoa(secret.Length) + ", blank to auto-generate)")
