@@ -35,6 +35,7 @@ var TemplateLoadCliFlags = []cli.Flag{
 }
 
 var getTemplateMetadataListMockable = getTemplateMetadataList
+var askForTemplateMockable = askForTemplate
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
@@ -53,7 +54,7 @@ func LoadTemplate(c *cli.Context) error {
 		sourceDir := getCustomTemplatesPath() + "/" + dirName
 		if dirName == "" {
 			// Let the user choose a template
-			dirName = askForTemplate()
+			dirName = askForTemplate("Which template do you want to load?")
 			sourceDir += dirName
 		} else {
 			// Check if the stated template exists
@@ -89,7 +90,7 @@ func LoadTemplate(c *cli.Context) error {
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func askForTemplate() string {
+func askForTemplate(question string) string {
 	spinner := startProcess("Loading template list ...")
 	templateMetadataList := getTemplateMetadataListMockable()
 	stopProcess(spinner)
@@ -103,7 +104,7 @@ func askForTemplate() string {
 			keys = append(keys, key)
 			items = append(items, metadata.Name+" (Saved at: "+creationDate+")")
 		}
-		index := menuQuestionIndex("Which template do you want to load?", items)
+		index := menuQuestionIndex(question, items)
 		return keys[index]
 	}
 	warningLogger.Println("Template dir is empty")

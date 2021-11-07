@@ -1,10 +1,6 @@
 package cmd
 
-import (
-	"compose-generator/util"
-
-	"github.com/urfave/cli/v2"
-)
+import "github.com/urfave/cli/v2"
 
 // TemplateLoadCliFlags are the cli flags for the template load command
 var TemplateDeleteCliFlags = []cli.Flag{
@@ -26,28 +22,39 @@ func DeleteTemplate(c *cli.Context) error {
 	dirName := c.Args().Get(0)
 	flagForce := c.Bool("force")
 
+	return delete(dirName, flagForce)
+}
+
+// --------------------------------------------------------------- Private functions ---------------------------------------------------------------
+
+func delete(dirName string, flagForce bool) error {
+	// Determine template dir
 	sourceDir := getCustomTemplatesPath() + "/" + dirName
 	if dirName == "" {
 		// Let the user choose a template
-		dirName = askForTemplate()
+		dirName = askForTemplateMockable("Which template do you want to delete?")
 		sourceDir += dirName
 	} else {
 		// Check if the stated template exists
-		if !util.FileExists(sourceDir) {
+		if !fileExists(sourceDir) {
 			errorLogger.Println("Template directory '" + sourceDir + "' could not be found. Aborting")
 			logError("Could not find template '"+dirName+"'", true)
+			return nil
 		}
 	}
 
-	if !flagForce && !yesNoQuestion("Do you really wanto to delete this template?", false) {
+	// Safety check
+	if !flagForce && !yesNoQuestion("Do you really want to delete this template?", false) {
 		return nil
 	}
-	spinner := startProcess("Delete project ...")
+
+	// Delete the stated directory recursively
+	spinner := startProcess("Deleting project ...")
 	if err := removeAll(sourceDir); err != nil {
 		errorLogger.Println("Could not delete template '" + sourceDir + "'")
 		logError("Could not delete template", true)
+		return err
 	}
 	stopProcess(spinner)
-
 	return nil
 }

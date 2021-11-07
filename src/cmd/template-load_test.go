@@ -59,7 +59,7 @@ func TestAskForTemplate1(t *testing.T) {
 		assert.Fail(t, "Unexpected call of logError")
 	}
 	// Execute test
-	result := askForTemplate()
+	result := askForTemplate("Which template do you want to load?")
 	// Assert
 	assert.Equal(t, "Template 1", result)
 	assert.Equal(t, 1, pelCallCount)
@@ -92,7 +92,7 @@ func TestAskForTemplate2(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	result := askForTemplate()
+	result := askForTemplate("Which template do you want to load?")
 	// Assert
 	assert.Equal(t, "", result)
 	assert.Equal(t, 1, pelCallCount)

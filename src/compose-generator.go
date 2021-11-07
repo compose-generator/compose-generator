@@ -33,10 +33,11 @@ func main() {
 				Email: "marc.auberer@chillibits.com",
 			},
 		},
-		Copyright: "© 2021 Compose Generator Contributors",
-		Usage:     "Generate and manage docker compose configuration files for your projects.",
-		Flags:     cmd.GenerateCliFlags,
-		Action:    cmd.Generate,
+		UseShortOptionHandling: true,
+		Usage:                  "Generate and manage docker compose configuration files for your projects.",
+		Copyright:              "© 2021 Compose Generator Contributors",
+		Flags:                  cmd.GenerateCliFlags,
+		Action:                 cmd.Generate,
 		Commands: []*cli.Command{
 			{
 				Name:    "generate",
@@ -94,11 +95,11 @@ func main() {
 				Action:  cmd.Install,
 			},
 		},
-		UseShortOptionHandling: true,
 	}
 
 	err := app.Run(os.Args)
 	if err != nil {
+		util.ErrorLogger.Println("Fatal error initializing cli. Aborting.")
 		log.Fatal(err)
 	}
 }
