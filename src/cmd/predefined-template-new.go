@@ -67,8 +67,8 @@ func savePredefinedTemplate(config *model.PredefinedTemplateConfig, service, rea
 	// Save config.json
 	file, err := json.MarshalIndent(config, "", "    ")
 	if err != nil {
-		errorLogger.Println("Error marshalling predefined template config to json: " + err.Error())
-		logError("Error marshalling config to json", true)
+		errorLogger.Println("Error marshaling predefined template config to json: " + err.Error())
+		logError("Error marshaling config to json", true)
 		return
 	}
 	if err = ioutil.WriteFile(config.Dir+"/config.json", file, 0600); err != nil {
