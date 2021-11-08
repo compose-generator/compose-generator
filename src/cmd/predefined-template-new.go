@@ -4,7 +4,6 @@ import (
 	"compose-generator/model"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"strings"
 
 	"github.com/urfave/cli/v2"
@@ -121,21 +120,21 @@ func savePredefinedTemplate(config *model.PredefinedTemplateConfig, service, rea
 		logError("Error marshaling config to json", true)
 		return
 	}
-	if err = ioutil.WriteFile(config.Dir+"/config.json", file, 0600); err != nil {
+	if err = writeFile(config.Dir+"/config.json", file, 0600); err != nil {
 		errorLogger.Println("Error writing predefined template config to file: " + err.Error())
 		logError("Error saving config.json", true)
 		return
 	}
 
 	// Save service.yml
-	if err = ioutil.WriteFile(config.Dir+"/service.yml", []byte(service), 0600); err != nil {
+	if err = writeFile(config.Dir+"/service.yml", []byte(service), 0600); err != nil {
 		errorLogger.Println("Error writing service to file: " + err.Error())
 		logError("Error saving service.yml", true)
 		return
 	}
 
 	// Save README.md
-	if err = ioutil.WriteFile(config.Dir+"/README.md", []byte(readme), 0600); err != nil {
+	if err = writeFile(config.Dir+"/README.md", []byte(readme), 0600); err != nil {
 		errorLogger.Println("Error writing Readme to file: " + err.Error())
 		logError("Error saving README.md", true)
 		return

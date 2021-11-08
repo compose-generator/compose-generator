@@ -12,6 +12,7 @@ import (
 	removePass "compose-generator/pass/remove"
 	"compose-generator/project"
 	"compose-generator/util"
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -39,6 +40,7 @@ var menuQuestionIndex = util.MenuQuestionIndex
 var clearScreen = util.ClearScreen
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
+var marshalIdent = json.MarshalIndent
 
 // File operations
 var readDir = ioutil.ReadDir
@@ -50,6 +52,7 @@ var fileExists = util.FileExists
 var loadProjectMetadata = project.LoadProjectMetadata
 var normalizePaths = util.NormalizePaths
 var removeAll = os.RemoveAll
+var writeFile = ioutil.WriteFile
 
 // Environment
 var isDockerizedEnvironment = util.IsDockerizedEnvironment
