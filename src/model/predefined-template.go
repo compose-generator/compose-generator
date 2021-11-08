@@ -101,8 +101,8 @@ type AvailableTemplates struct {
 type PredefinedTemplateConfig struct {
 	Label          string     `json:"label,omitempty"`
 	Name           string     `json:"name,omitempty"`
-	Dir            string     `json:"dir,omitempty"`
-	Type           string     `json:"type,omitempty"`
+	Dir            string     `json:"-"`
+	Type           string     `json:"-"`
 	Preselected    string     `json:"preselected,omitempty"`
 	Proxied        bool       `json:"proxied,omitempty"`
 	DemoAppInitCmd []string   `json:"demoAppInitCmd,omitempty"`

@@ -32,7 +32,9 @@ var printHeading = util.Heading
 var pl = util.Pl
 var pel = util.Pel
 var yesNoQuestion = util.YesNoQuestion
+var textQuestion = util.TextQuestion
 var textQuestionWithDefault = util.TextQuestionWithDefault
+var menuQuestion = util.MenuQuestion
 var menuQuestionIndex = util.MenuQuestionIndex
 var clearScreen = util.ClearScreen
 var startProcess = util.StartProcess
@@ -54,6 +56,7 @@ var isDevVersion = util.IsDevVersion
 var commandExists = util.CommandExists
 var getDockerVersion = util.GetDockerVersion
 var getAvailablePredefinedTemplates = parser.GetAvailablePredefinedTemplates
+var GetPredefinedServicesPath = util.GetPredefinedServicesPath
 var getCustomTemplatesPath = util.GetCustomTemplatesPath
 
 // Passes
