@@ -19,6 +19,12 @@ var PredefinedTemplateNewCliFlags = []cli.Flag{}
 func NewPredefinedTemplate(context *cli.Context) error {
 	infoLogger.Println("NewPredefinedTemplate command executed")
 
+	if !isDevVersion() {
+		errorLogger.Println("Executed NewPredefinedTemplate command without being dev. Aborting.")
+		logError("Cannot run this command in a production environment.", true)
+		return nil
+	}
+
 	// Ask user questions and save to disk subsequently
 	config, service, readme := createNewPredefinedTemplate()
 	savePredefinedTemplate(config, service, readme)

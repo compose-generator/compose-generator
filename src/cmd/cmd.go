@@ -4,6 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// CliCommands is a list of all available cli commands for Compose Generator
 var CliCommands = []*cli.Command{
 	{
 		Name:    "generate",
