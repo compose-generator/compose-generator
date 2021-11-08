@@ -41,7 +41,7 @@ body:
       example:
         - **OS**: Ubuntu 20.04
         - **Installation method**: APT package manager
-        - **Compose Generator version**: 1.2.0
+        - **Compose Generator version**: 1.2.1
     value: |
         - OS:
         - Installation method:
