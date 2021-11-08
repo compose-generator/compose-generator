@@ -50,6 +50,7 @@ var removeAll = os.RemoveAll
 
 // Environment
 var isDockerizedEnvironment = util.IsDockerizedEnvironment
+var isDevVersion = util.IsDevVersion
 var commandExists = util.CommandExists
 var getDockerVersion = util.GetDockerVersion
 var getAvailablePredefinedTemplates = parser.GetAvailablePredefinedTemplates

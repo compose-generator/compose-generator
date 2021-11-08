@@ -39,63 +39,7 @@ func main() {
 		Copyright:              "© 2021 Compose Generator Contributors",
 		Flags:                  cmd.GenerateCliFlags,
 		Action:                 cmd.Generate,
-		Commands: []*cli.Command{
-			{
-				Name:    "generate",
-				Aliases: []string{"g", "gen"},
-				Usage:   "Generates a docker compose configuration",
-				Flags:   cmd.GenerateCliFlags,
-				Action:  cmd.Generate,
-			},
-			{
-				Name:    "add",
-				Aliases: []string{"a"},
-				Usage:   "Adds a service to an existing compose file",
-				Flags:   cmd.AddCliFlags,
-				Action:  cmd.Add,
-			},
-			{
-				Name:    "remove",
-				Aliases: []string{"r", "rm"},
-				Usage:   "Removes a service from an existing compose file",
-				Flags:   cmd.RemoveCliFlags,
-				Action:  cmd.Remove,
-			},
-			{
-				Name:    "template",
-				Aliases: []string{"t"},
-				Usage:   "Saves / loads snapshots of your compose configuration for later use",
-				Subcommands: []*cli.Command{
-					{
-						Name:    "save",
-						Aliases: []string{"s"},
-						Usage:   "Save a custom template.",
-						Flags:   cmd.TemplateSaveCliFlags,
-						Action:  cmd.SaveTemplate,
-					},
-					{
-						Name:    "load",
-						Aliases: []string{"l"},
-						Usage:   "Load a custom template.",
-						Flags:   cmd.TemplateLoadCliFlags,
-						Action:  cmd.LoadTemplate,
-					},
-					{
-						Name:    "delete",
-						Aliases: []string{"d"},
-						Usage:   "Delete a custom template.",
-						Flags:   cmd.TemplateDeleteCliFlags,
-						Action:  cmd.DeleteTemplate,
-					},
-				},
-			},
-			{
-				Name:    "install",
-				Aliases: []string{"i", "in"},
-				Usage:   "Installs Docker and Docker Compose with a single command",
-				Action:  cmd.Install,
-			},
-		},
+		Commands:               cmd.CliCommands,
 	}
 
 	err := app.Run(os.Args)
