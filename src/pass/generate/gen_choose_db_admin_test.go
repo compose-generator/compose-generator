@@ -71,7 +71,7 @@ func TestGenerateChooseDbAdmins1(t *testing.T) {
 		return []model.ServiceConfig{
 			{
 				Name: "test-dbadmin",
-				Type: "dbadmin",
+				Type: model.TemplateTypeDbAdmin,
 				Params: map[string]string{
 					"QUESTION_2": "Extended test",
 				},

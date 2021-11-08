@@ -54,7 +54,7 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 	snakeUpperName := strings.ToUpper(strings.ReplaceAll(config.Name, "-", "_"))
 
 	// Ask for template type
-	config.Type = menuQuestion("", []string{
+	config.Type = menuQuestion("What is the closest match of specifying the type?", []string{
 		model.TemplateTypeFrontend,
 		model.TemplateTypeBackend,
 		model.TemplateTypeDatabase,
@@ -84,7 +84,7 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 	}
 
 	// Check if dir already exists
-	config.Dir = GetPredefinedServicesPath() + "/" + config.Type + "/" + config.Name
+	config.Dir = getPredefinedServicesPath() + "/" + config.Type + "/" + config.Name
 	if fileExists(config.Dir) {
 		errorLogger.Println("Predefined template dir '" + config.Dir + "' already exists. Aborting.")
 		logError("Template dir already exists. Aborting.", true)

@@ -71,7 +71,7 @@ func TestGenerateChooseDatabases1(t *testing.T) {
 		return []model.ServiceConfig{
 			{
 				Name: "test-database",
-				Type: "database",
+				Type: model.TemplateTypeDatabase,
 				Params: map[string]string{
 					"QUESTION_2": "Extended test",
 				},

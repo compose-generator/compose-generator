@@ -71,7 +71,7 @@ func TestGenerateChooseFrontends1(t *testing.T) {
 		return []model.ServiceConfig{
 			{
 				Name: "test-frontend",
-				Type: "frontend",
+				Type: model.TemplateTypeFrontend,
 				Params: map[string]string{
 					"QUESTION_2": "Extended test",
 				},

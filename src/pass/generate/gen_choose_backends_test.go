@@ -71,7 +71,7 @@ func TestGenerateChooseBackends1(t *testing.T) {
 		return []model.ServiceConfig{
 			{
 				Name: "test-backend",
-				Type: "backend",
+				Type: model.TemplateTypeBackend,
 				Params: map[string]string{
 					"QUESTION_2": "Extended test",
 				},

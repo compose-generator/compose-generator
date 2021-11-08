@@ -57,7 +57,7 @@ var isDevVersion = util.IsDevVersion
 var commandExists = util.CommandExists
 var getDockerVersion = util.GetDockerVersion
 var getAvailablePredefinedTemplates = parser.GetAvailablePredefinedTemplates
-var GetPredefinedServicesPath = util.GetPredefinedServicesPath
+var getPredefinedServicesPath = util.GetPredefinedServicesPath
 var getCustomTemplatesPath = util.GetCustomTemplatesPath
 
 // Passes

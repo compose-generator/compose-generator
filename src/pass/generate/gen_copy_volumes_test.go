@@ -92,7 +92,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 		FrontendServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "angular",
-				Type: "frontend",
+				Type: model.TemplateTypeFrontend,
 				Dir:  templatesPath + "/frontend/angular",
 				Volumes: []model.Volume{
 					{
@@ -109,7 +109,7 @@ func TestGenerateCopyVolumes1(t *testing.T) {
 		DatabaseServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "postgres",
-				Type: "database",
+				Type: model.TemplateTypeDatabase,
 				Dir:  templatesPath + "/database/postgres",
 				Volumes: []model.Volume{
 					{
