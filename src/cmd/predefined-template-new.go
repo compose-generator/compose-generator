@@ -32,6 +32,17 @@ func NewPredefinedTemplate(context *cli.Context) error {
 	return nil
 }
 
+const serviceTemplate = `image: hello-world:${{%s_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-%s-%s
+%snetworks:
+# ToDo: Insert or remove section
+ports:
+# ToDo: Insert or remove section
+volumes:
+# ToDo: Insert or remove section
+env_file:
+# ToDo: Insert or delete section`
+
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
 func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, string) {
@@ -40,9 +51,37 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 	// Ask for template label
 	config.Label = textQuestion("Template label:")
 	config.Name = strings.ReplaceAll(strings.ToLower(config.Label), " ", "-")
+	snakeUpperName := strings.ToUpper(strings.ReplaceAll(config.Name, "-", "_"))
 
 	// Ask for template type
-	config.Type = menuQuestion("", []string{"frontend", "backend", "database", "db-admin"})
+	config.Type = menuQuestion("", []string{
+		model.TemplateTypeFrontend,
+		model.TemplateTypeBackend,
+		model.TemplateTypeDatabase,
+		model.TemplateTypeDbAdmin,
+	})
+
+	// Set default configuration
+	config.Preselected = "false"
+	config.Proxied = config.Type == model.TemplateTypeFrontend || config.Type == model.TemplateTypeDbAdmin
+	config.Files = []model.File{
+		{
+			Path: "service.yml",
+			Type: "service",
+		},
+		{
+			Path: "README.md",
+			Type: "docs",
+		},
+	}
+	config.Questions = []model.Question{
+		{
+			Text:         "Which version of " + config.Label + " do you want to use?",
+			Type:         model.QuestionTypeText,
+			DefaultValue: "latest",
+			Variable:     snakeUpperName + "_VERSION",
+		},
+	}
 
 	// Check if dir already exists
 	config.Dir = GetPredefinedServicesPath() + "/" + config.Type + "/" + config.Name
@@ -55,7 +94,12 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 	// Prepare Readme contents
 	readme := fmt.Sprintf("## %s\nToDo: Insert software description here.\n\n### Setup\nToDo: Insert setup instructions here.", config.Label)
 
-	service := "image:"
+	// Prepare service contents
+	restartRule := ""
+	if config.Type != model.TemplateTypeDbAdmin {
+		restartRule = "restart: always\n"
+	}
+	service := fmt.Sprintf(serviceTemplate, snakeUpperName, config.Type, config.Name, restartRule)
 
 	return &config, service, readme
 }
