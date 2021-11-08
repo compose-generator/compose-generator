@@ -55,21 +55,21 @@ func savePredefinedTemplate(config *model.PredefinedTemplateConfig, service, rea
 		logError("Error marshalling config to json", true)
 		return
 	}
-	if err = ioutil.WriteFile("test.json", file, 0644); err != nil {
+	if err = ioutil.WriteFile("test.json", file, 0600); err != nil {
 		errorLogger.Println("Error writing predefined template config to file: " + err.Error())
 		logError("Error saving config.json", true)
 		return
 	}
 
 	// Save service.yml
-	if err = ioutil.WriteFile("service.yml", []byte(service), 0644); err != nil {
+	if err = ioutil.WriteFile("service.yml", []byte(service), 0600); err != nil {
 		errorLogger.Println("Error writing service to file: " + err.Error())
 		logError("Error saving service.yml", true)
 		return
 	}
 
 	// Save README.md
-	if err = ioutil.WriteFile("README.md", []byte(readme), 0644); err != nil {
+	if err = ioutil.WriteFile("README.md", []byte(readme), 0600); err != nil {
 		errorLogger.Println("Error writing Readme to file: " + err.Error())
 		logError("Error saving README.md", true)
 		return
