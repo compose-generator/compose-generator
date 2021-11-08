@@ -115,7 +115,7 @@ func TestLoadGenerateConfig3(t *testing.T) {
 		ServiceConfig: []model.ServiceConfig{
 			{
 				Name: "angular",
-				Type: "frontend",
+				Type: model.TemplateTypeFrontend,
 				Params: map[string]string{
 					"PARAM1": "value 1",
 					"PARAM2": "value 2",
@@ -141,7 +141,7 @@ func TestLoadGenerateConfig3(t *testing.T) {
 		ServiceConfig: []model.ServiceConfig{
 			{
 				Name: "angular",
-				Type: "frontend",
+				Type: model.TemplateTypeFrontend,
 				Params: map[string]string{
 					"PARAM1": "value 1",
 					"PARAM2": "value 2",
@@ -181,7 +181,7 @@ func TestLoadGenerateConfig4(t *testing.T) {
 		ServiceConfig: []model.ServiceConfig{
 			{
 				Name: "angular",
-				Type: "frontend",
+				Type: model.TemplateTypeFrontend,
 				Params: map[string]string{
 					"PARAM1": "value 1",
 					"PARAM2": "value 2",
@@ -207,7 +207,7 @@ func TestLoadGenerateConfig4(t *testing.T) {
 		ServiceConfig: []model.ServiceConfig{
 			{
 				Name: "angular",
-				Type: "frontend",
+				Type: model.TemplateTypeFrontend,
 				Params: map[string]string{
 					"PARAM1": "value 1",
 					"PARAM2": "value 2",

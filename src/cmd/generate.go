@@ -57,7 +57,7 @@ var GenerateCliFlags = []cli.Flag{
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// Generate a docker compose configuration
+// Generate generates a docker compose configuration
 func Generate(c *cli.Context) error {
 	infoLogger.Println("Generate command executed")
 
