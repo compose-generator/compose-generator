@@ -42,6 +42,7 @@ var stopProcess = util.StopProcess
 
 // File operations
 var readDir = ioutil.ReadDir
+var mkDir = os.Mkdir
 var abs = filepath.Abs
 var rel = filepath.Rel
 var copyDir = copy.Copy

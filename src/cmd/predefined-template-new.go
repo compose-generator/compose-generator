@@ -19,6 +19,7 @@ var PredefinedTemplateNewCliFlags = []cli.Flag{}
 func NewPredefinedTemplate(context *cli.Context) error {
 	infoLogger.Println("NewPredefinedTemplate command executed")
 
+	// Ask user questions and save to disk subsequently
 	config, service, readme := createNewPredefinedTemplate()
 	savePredefinedTemplate(config, service, readme)
 
@@ -36,40 +37,55 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 
 	// Ask for template type
 	config.Type = menuQuestion("", []string{"frontend", "backend", "database", "db-admin"})
+
+	// Check if dir already exists
 	config.Dir = GetPredefinedServicesPath() + "/" + config.Type + "/" + config.Name
+	if fileExists(config.Dir) {
+		errorLogger.Println("Predefined template dir '" + config.Dir + "' already exists. Aborting.")
+		logError("Template dir already exists. Aborting.", true)
+		return nil, "", ""
+	}
 
 	// Prepare Readme contents
 	readme := fmt.Sprintf("## %s\nToDo: Insert software description here.\n\n### Setup\nToDo: Insert setup instructions here.", config.Label)
 
-	service := ""
+	service := "image:"
 
 	return &config, service, readme
 }
 
 func savePredefinedTemplate(config *model.PredefinedTemplateConfig, service, readme string) {
+	pel()
 	spinner := startProcess("Saving predefined service template ...")
+	// Create dir
+	if err := mkDir(config.Dir, 0777); err != nil {
+		errorLogger.Println("Error creating the template dir '" + config.Dir + "': " + err.Error())
+		logError("Error creating the template dir", true)
+		return
+	}
+
 	// Save config.json
-	file, err := json.Marshal(config)
+	file, err := json.MarshalIndent(config, "", "    ")
 	if err != nil {
 		errorLogger.Println("Error marshalling predefined template config to json: " + err.Error())
 		logError("Error marshalling config to json", true)
 		return
 	}
-	if err = ioutil.WriteFile("test.json", file, 0600); err != nil {
+	if err = ioutil.WriteFile(config.Dir+"/config.json", file, 0600); err != nil {
 		errorLogger.Println("Error writing predefined template config to file: " + err.Error())
 		logError("Error saving config.json", true)
 		return
 	}
 
 	// Save service.yml
-	if err = ioutil.WriteFile("service.yml", []byte(service), 0600); err != nil {
+	if err = ioutil.WriteFile(config.Dir+"/service.yml", []byte(service), 0600); err != nil {
 		errorLogger.Println("Error writing service to file: " + err.Error())
 		logError("Error saving service.yml", true)
 		return
 	}
 
 	// Save README.md
-	if err = ioutil.WriteFile("README.md", []byte(readme), 0600); err != nil {
+	if err = ioutil.WriteFile(config.Dir+"/README.md", []byte(readme), 0600); err != nil {
 		errorLogger.Println("Error writing Readme to file: " + err.Error())
 		logError("Error saving README.md", true)
 		return
