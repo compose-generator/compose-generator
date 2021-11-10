@@ -35,7 +35,7 @@ func Copy(src, dest string, opt ...Options) error {
 func switchboard(src, dest string, info os.FileInfo, opt Options) (err error) {
 	switch {
 	case info.Mode()&os.ModeSymlink != 0:
-		err = onsymlink(src, dest, info, opt)
+		err = onsymlink(src, dest, opt)
 	case info.IsDir():
 		err = dcopy(src, dest, info, opt)
 	case info.Mode()&os.ModeNamedPipe != 0:
@@ -104,8 +104,15 @@ func fcopy(src, dest string, info os.FileInfo, opt Options) (err error) {
 		err = f.Sync()
 	}
 
+	if opt.PreserveOwner {
+		if err := preserveOwner(src, dest, info); err != nil {
+			return err
+		}
+	}
 	if opt.PreserveTimes {
-		return preserveTimes(info, dest)
+		if err := preserveTimes(info, dest); err != nil {
+			return err
+		}
 	}
 
 	return
@@ -154,13 +161,21 @@ func dcopy(srcdir, destdir string, info os.FileInfo, opt Options) (err error) {
 	}
 
 	if opt.PreserveTimes {
-		return preserveTimes(info, destdir)
+		if err := preserveTimes(info, destdir); err != nil {
+			return err
+		}
+	}
+
+	if opt.PreserveOwner {
+		if err := preserveOwner(srcdir, destdir, info); err != nil {
+			return err
+		}
 	}
 
 	return
 }
 
-func onsymlink(src, dest string, info os.FileInfo, opt Options) error {
+func onsymlink(src, dest string, opt Options) error {
 	switch opt.OnSymlink(src) {
 	case Shallow:
 		return lcopy(src, dest)
@@ -169,7 +184,7 @@ func onsymlink(src, dest string, info os.FileInfo, opt Options) error {
 		if err != nil {
 			return err
 		}
-		info, err = os.Lstat(orig)
+		info, err := os.Lstat(orig)
 		if err != nil {
 			return err
 		}
