@@ -7,7 +7,6 @@ package cmd
 
 import (
 	"compose-generator/model"
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -54,8 +53,8 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 
 	// Ask for template label
 	config.Label = textQuestion("Template label:")
-	config.Name = strings.ReplaceAll(strings.ToLower(config.Label), " ", "-")
-	snakeUpperName := strings.ToUpper(strings.ReplaceAll(config.Name, "-", "_"))
+	name := strings.ReplaceAll(strings.ToLower(config.Label), " ", "-")
+	snakeUpperName := strings.ToUpper(strings.ReplaceAll(name, "-", "_"))
 
 	// Ask for template type
 	config.Type = menuQuestion("What is the closest match of specifying the type?", []string{
@@ -88,7 +87,7 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 	}
 
 	// Check if dir already exists
-	config.Dir = getPredefinedServicesPath() + "/" + config.Type + "/" + config.Name
+	config.Dir = getPredefinedServicesPath() + "/" + config.Type + "/" + name
 	if fileExists(config.Dir) {
 		errorLogger.Println("Predefined template dir '" + config.Dir + "' already exists. Aborting.")
 		logError("Template dir already exists. Aborting.", true)
@@ -103,7 +102,7 @@ func createNewPredefinedTemplate() (*model.PredefinedTemplateConfig, string, str
 	if config.Type != model.TemplateTypeDbAdmin {
 		restartRule = "restart: always\n"
 	}
-	service := fmt.Sprintf(serviceTemplate, snakeUpperName, config.Type, config.Name, restartRule)
+	service := fmt.Sprintf(serviceTemplate, snakeUpperName, config.Type, name, restartRule)
 
 	return &config, service, readme
 }
@@ -119,7 +118,7 @@ func savePredefinedTemplate(config *model.PredefinedTemplateConfig, service, rea
 	}
 
 	// Save config.json
-	file, err := json.MarshalIndent(config, "", "    ")
+	file, err := marshalIndent(config, "", "    ")
 	if err != nil {
 		errorLogger.Println("Error marshaling predefined template config to json: " + err.Error())
 		logError("Error marshaling config to json", true)
