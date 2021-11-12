@@ -21,7 +21,6 @@ func TestCreateNewPredefinedTempate1(t *testing.T) { // Happy path
 	// Test data
 	expectedConfig := &model.PredefinedTemplateConfig{
 		Label:       "ChilliDB",
-		Name:        "chillidb",
 		Type:        model.TemplateTypeDatabase,
 		Dir:         "/usr/lib/compose-generator/predefined-services/database/chillidb",
 		Preselected: "false",
