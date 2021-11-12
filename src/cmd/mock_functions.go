@@ -40,7 +40,7 @@ var menuQuestionIndex = util.MenuQuestionIndex
 var clearScreen = util.ClearScreen
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
-var marshalIdent = json.MarshalIndent
+var marshalIndent = json.MarshalIndent
 
 // File operations
 var readDir = ioutil.ReadDir

@@ -7,7 +7,6 @@ package cmd
 
 import (
 	"compose-generator/model"
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -119,7 +118,7 @@ func savePredefinedTemplate(config *model.PredefinedTemplateConfig, service, rea
 	}
 
 	// Save config.json
-	file, err := json.MarshalIndent(config, "", "    ")
+	file, err := marshalIndent(config, "", "    ")
 	if err != nil {
 		errorLogger.Println("Error marshaling predefined template config to json: " + err.Error())
 		logError("Error marshaling config to json", true)

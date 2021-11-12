@@ -152,7 +152,7 @@ func TestSavePredefinedTemplate1(t *testing.T) { // Happy path
 		assert.Equal(t, "/usr/lib/compose-generator/predefined-services/database/chillidb", name)
 		return nil
 	}
-	marshalIdent = func(v interface{}, prefix, indent string) ([]byte, error) {
+	marshalIndent = func(v interface{}, prefix, indent string) ([]byte, error) {
 		assert.Empty(t, prefix)
 		assert.Equal(t, 4, len(indent))
 		return []byte{}, nil
