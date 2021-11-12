@@ -1,6 +1,5 @@
 {
     "label": "Ghost",
-    "name": "ghost",
     "preselected": "false",
     "proxied": true,
     "files": [
