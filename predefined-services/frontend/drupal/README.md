@@ -1,5 +1,5 @@
 ## Drupal
-Drupal is a free and open-source content managment system (CMS) written in PHP. It can be used for blogs or personal websites.
+Drupal is a free and open-source content management system (CMS) written in PHP. It can be used for blogs or personal websites.
 
 ### Setup
 Ghost is considered as frontend service and can therefore be found in frontends collection, when generating the compose configuration with Compose Generator.
