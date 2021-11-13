@@ -20,7 +20,7 @@ func GenerateSecrets(project *model.CGProject, selected *model.SelectedTemplates
 			// Only generate the secrets that are not customizable, the customizable ones are already generated
 			if !secret.Customizable {
 				// Generate secret
-				res, err := generatePassword(secret.Length, 10, 0, false, false)
+				res, err := generatePassword(secret.Length, 10, 0, false, true)
 				if err != nil {
 					errorLogger.Println("Password generation failed: " + err.Error())
 					logError("Password generation failed", true)

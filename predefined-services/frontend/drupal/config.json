@@ -14,7 +14,7 @@
     ],
     "questions": [
         {
-            "text": "On which port you want to expose Drupal",
+            "text": "On which port you want to expose Drupal?",
             "type": 2,
             "defaultValue": "80",
             "validator": "port",

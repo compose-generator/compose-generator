@@ -1,0 +1,12 @@
+image: mediawiki:${{MEDIAWIKI_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-mediawiki
+restart: always
+networks:
+  - frontend-database
+ports:
+  - ${{MEDIAWIKI_PORT}}:80
+volumes:
+  - ${{VOLUME_MEDIAWIKI_IMAGES}}:/var/www/html/images
+  #- ${{VOLUME_MEDIAWIKI_SETTINGS}}:/var/www/html/LocalSettings.php
+env_file:
+  - environment.env

@@ -5,7 +5,7 @@ networks:
 #? if has services.backend {
 #  - backend-database
 #? }
-#? if services.frontend contains name == "nextcloud" | services.frontend contains name == "owncloud" | services.frontend contains name == "gitea" | services.frontend contains name == "jira" | services.frontend contains name == "wordpress" | services.frontend contains name == "matomo" | services.frontend contains name == "ghost" | services.frontend contains name == "drupal" {
+#? if services.frontend contains name == "nextcloud" | services.frontend contains name == "owncloud" | services.frontend contains name == "gitea" | services.frontend contains name == "jira" | services.frontend contains name == "wordpress" | services.frontend contains name == "matomo" | services.frontend contains name == "ghost" | services.frontend contains name == "drupal" | services.frontend contains name == "mediawiki" {
 #  - frontend-database
 #? }
 #? if services.dbadmin contains name == "phpmyadmin" {
