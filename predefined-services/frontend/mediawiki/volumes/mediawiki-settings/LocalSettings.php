@@ -56,7 +56,7 @@ $wgDBtype = "mysql";
 $wgDBserver = "database-mysql";
 $wgDBname = "${{MYSQL_DATABASE}}";
 $wgDBuser = "${{MYSQL_USER}}";
-$wgDBpassword = "${{MYSQL_PASSWORD}}";
+$wgDBpassword = getenv("MYSQL_PASSWORD");
 
 # MySQL specific settings
 $wgDBprefix = "mw_";
