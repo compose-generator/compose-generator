@@ -237,7 +237,7 @@ func AskSecretQuestions(project *model.CGProject, template *model.PredefinedTemp
 			// Ask for password
 			password := PasswordQuestion(secret.Name + " (recommended length: " + strconv.Itoa(secret.Length) + ", blank to auto-generate)")
 			if password == "" {
-				res, err := generatePassword(secret.Length, 10, 0, false, false)
+				res, err := generatePassword(secret.Length, 10, 0, false, true)
 				if err != nil {
 					ErrorLogger.Println("Password generation failed: " + err.Error())
 					logError("Password generation failed", true)

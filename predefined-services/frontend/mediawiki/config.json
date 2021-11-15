@@ -1,0 +1,38 @@
+{
+    "label": "Mediawiki",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose Metawiki?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "MEDIAWIKI_PORT"
+        },
+        {
+            "text": "Which version of Mediawiki do you want to use?",
+            "type": 2,
+            "defaultValue": "1.36",
+            "variable": "MEDIAWIKI_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Mediawiki images volume?",
+            "defaultValue": "./volumes/mediawiki-images",
+            "variable": "VOLUME_MEDIAWIKI_IMAGES",
+            "advanced": true
+        }
+    ]
+}
