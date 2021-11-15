@@ -10,48 +10,15 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "environment.env",
-            "type": "env"
-        },
-        {
-            "path": "${{VOLUME_MEDIAWIKI_SETTINGS}}",
-            "type": "config"
         }
     ],
     "questions": [
-        {
-            "text": "How do you want to call your Mediawiki?",
-            "type": 2,
-            "defaultValue": "My Wiki",
-            "variable": "MEDIAWIKI_NAME"
-        },
-        {
-            "text": "Which email do you want to set for Mediawiki?",
-            "type": 2,
-            "validator": "email",
-            "variable": "MEDIAWIKI_EMAIL"
-        },
-        {
-            "text": "Which language do you want to set Metawiki (Country code in format: xx)?",
-            "type": 2,
-            "defaultValue": "en",
-            "variable": "MEDIAWIKI_LANGUAGE_CODE"
-        },
         {
             "text": "On which port you want to expose Metawiki?",
             "type": 2,
             "defaultValue": "80",
             "validator": "port",
             "variable": "MEDIAWIKI_PORT"
-        },
-        {
-            "text": "On which url is your wiki accessible from the outside?",
-            "type": 2,
-            "defaultValue": "http://localhost",
-            "validator": "url",
-            "variable": "MEDIAWIKI_URL"
         },
         {
             "text": "Which version of Mediawiki do you want to use?",
@@ -66,24 +33,6 @@
             "defaultValue": "./volumes/mediawiki-images",
             "variable": "VOLUME_MEDIAWIKI_IMAGES",
             "advanced": true
-        },
-        {
-            "text": "Custom path for Mediawiki settings file?",
-            "defaultValue": "./volumes/mediawiki-settings/LocalSettings.php",
-            "variable": "VOLUME_MEDIAWIKI_SETTINGS",
-            "advanced": true
-        }
-    ],
-    "secrets": [
-        {
-            "name": "Mediawiki secret key",
-            "variable": "_PW_MEDIAWIKI_SECRET_KEY",
-            "length": 64
-        },
-        {
-            "name": "Mediawiki upgrade key",
-            "variable": "_PW_MEDIAWIKI_UPGRADE_KEY",
-            "length": 16
         }
     ]
 }
