@@ -1,0 +1,56 @@
+{
+    "label": "Monica",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which url is your Monica instance accessible from the outside?",
+            "type": 2,
+            "defaultValue": "http://localhost",
+            "validator": "url",
+            "variable": "MONICA_APP_URL"
+        },
+        {
+            "text": "On which port you want to expose your Monica instance?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "MONICA_PORT"
+        },
+        {
+            "text": "Which version of Monica do you want to use?",
+            "type": 2,
+            "defaultValue": "3.4",
+            "variable": "MONICA_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Monica data volume?",
+            "defaultValue": "./volumes/monica-data",
+            "variable": "VOLUME_MONICA_DATA",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Monica app key",
+            "variable": "_PW_MONICA_APP_KEY",
+            "length": 32
+        }
+    ]
+}
