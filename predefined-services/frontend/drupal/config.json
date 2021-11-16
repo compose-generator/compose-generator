@@ -1,0 +1,56 @@
+{
+    "label": "Drupal",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose Drupal?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "DRUPAL_PORT"
+        },
+        {
+            "text": "Which version of Drupal do you want to use?",
+            "type": 2,
+            "defaultValue": "9.2",
+            "variable": "DRUPAL_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Drupal modules volume?",
+            "defaultValue": "./volumes/drupal-modules",
+            "variable": "VOLUME_DRUPAL_MODULES",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Drupal profiles volume?",
+            "defaultValue": "./volumes/drupal-profiles",
+            "variable": "VOLUME_DRUPAL_PROFILES",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Drupal sites volume?",
+            "defaultValue": "./volumes/drupal-sites",
+            "variable": "VOLUME_DRUPAL_SITES",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Drupal themes volume?",
+            "defaultValue": "./volumes/drupal-themes",
+            "variable": "VOLUME_DRUPAL_THEMES",
+            "advanced": true
+        }
+    ]
+}

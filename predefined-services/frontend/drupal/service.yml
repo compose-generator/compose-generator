@@ -1,0 +1,12 @@
+image: drupal:${{DRUPAL_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-drupal
+restart: always
+networks:
+  - frontend-database
+ports:
+  - ${{DRUPAL_PORT}}:80
+volumes:
+  - ${{VOLUME_DRUPAL_MODULES}}:/var/www/html/modules
+  - ${{VOLUME_DRUPAL_PROFILES}}:/var/www/html/profiles
+  - ${{VOLUME_DRUPAL_SITES}}:/var/www/html/sites
+  - ${{VOLUME_DRUPAL_THEMES}}:/var/www/html/themes

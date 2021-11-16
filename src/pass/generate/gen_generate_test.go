@@ -145,7 +145,7 @@ func TestGenerateService1(t *testing.T) {
 		Composition: &spec.Project{
 			Services: spec.Services{
 				{
-					Name: "faunadb",
+					Name:   "faunadb",
 					Labels: make(spec.Labels),
 				},
 			},

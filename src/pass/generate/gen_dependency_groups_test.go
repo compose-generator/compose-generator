@@ -191,7 +191,7 @@ func TestReplaceGroupDependency(t *testing.T) {
 	groupName := model.TemplateTypeFrontend
 	service := &spec.ServiceConfig{
 		DependsOn: spec.DependsOnConfig{
-			"frontend": spec.ServiceDependency{
+			model.TemplateTypeFrontend: spec.ServiceDependency{
 				Condition: spec.ServiceConditionStarted,
 			},
 		},

@@ -101,8 +101,8 @@ type AvailableTemplates struct {
 type PredefinedTemplateConfig struct {
 	Label          string     `json:"label,omitempty"`
 	Name           string     `json:"name,omitempty"`
-	Dir            string     `json:"dir,omitempty"`
-	Type           string     `json:"type,omitempty"`
+	Dir            string     `json:"-"`
+	Type           string     `json:"-"`
 	Preselected    string     `json:"preselected,omitempty"`
 	Proxied        bool       `json:"proxied,omitempty"`
 	DemoAppInitCmd []string   `json:"demoAppInitCmd,omitempty"`
@@ -153,9 +153,10 @@ type Volume struct {
 
 // Secret represents the JSON structure of a secret of a predefined template
 type Secret struct {
-	Name     string `json:"name,omitempty"`
-	Variable string `json:"variable,omitempty"`
-	Length   int    `json:"length,omitempty"`
+	Name         string `json:"name,omitempty"`
+	Variable     string `json:"variable,omitempty"`
+	Length       int    `json:"length,omitempty"`
+	Customizable bool   `json:"customizable,omitempty"`
 }
 
 // Label represents the JSON structure of a label of a predefined template

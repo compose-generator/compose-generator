@@ -99,6 +99,7 @@ func generateService(
 	case model.TemplateTypeFrontend:
 		service.DependsOn = make(types.DependsOnConfig)
 		service.DependsOn[model.TemplateTypeBackend] = types.ServiceDependency{}
+		service.DependsOn[model.TemplateTypeDatabase] = types.ServiceDependency{}
 	case model.TemplateTypeBackend:
 		service.DependsOn = make(types.DependsOnConfig)
 		service.DependsOn[model.TemplateTypeDatabase] = types.ServiceDependency{}

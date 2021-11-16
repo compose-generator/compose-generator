@@ -22,7 +22,7 @@
         {
             "text": "Which version of Pi-hole do you want to use?",
             "type": 2,
-            "defaultValue": "latest",
+            "defaultValue": "2021.10.1",
             "variable": "PI_HOLE_VERSION"
         }
     ],
@@ -44,7 +44,8 @@
         {
             "name": "Pi-hole password for web interface",
             "variable": "_PW_PI_HOLE_WEB_INTERFACE",
-            "length": 50
+            "length": 50,
+            "customizable": true
         }
     ]
 }

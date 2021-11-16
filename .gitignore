@@ -26,3 +26,6 @@ test
 
 # Ignore logs
 log
+
+# Ignore predefined template tests
+predefined-service/database/quark-db

@@ -71,7 +71,7 @@ func TestGenerateChooseBackends1(t *testing.T) {
 		return []model.ServiceConfig{
 			{
 				Name: "test-backend",
-				Type: "backend",
+				Type: model.TemplateTypeBackend,
 				Params: map[string]string{
 					"QUESTION_2": "Extended test",
 				},
@@ -155,6 +155,9 @@ func TestGenerateChooseBackends2(t *testing.T) {
 		assert.Equal(t, available.BackendServices[0], *template)
 	}
 	askTemplateProxyQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig, selectedTemplates *model.SelectedTemplates) {
+		assert.Equal(t, available.BackendServices[0], *template)
+	}
+	askSecretQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
 		assert.Equal(t, available.BackendServices[0], *template)
 	}
 	askForCustomVolumePaths = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {

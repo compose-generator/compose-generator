@@ -1,0 +1,11 @@
+image: ghost:${{GHOST_VERSION}}-alpine
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-ghost
+restart: always
+networks:
+  - frontend-database
+ports:
+  - ${{GHOST_PORT}}:2368
+volumes:
+  - ${{VOLUME_GHOST_DATA}}:/var/lib/ghost/content
+env_file:
+  - environment.env

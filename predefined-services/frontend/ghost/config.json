@@ -1,0 +1,71 @@
+{
+    "label": "Ghost",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose Ghost?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "GHOST_PORT"
+        },
+        {
+            "text": "On which url is your Ghost instance accessible from the outside?",
+            "type": 2,
+            "defaultValue": "http://localhost:${{GHOST_PORT}}",
+            "variable": "GHOST_URL"
+        },
+        {
+            "text": "Hostname of your SMTP server (smtp.provider.com):",
+            "type": 2,
+            "validator": "hostname",
+            "variable": "GHOST_SMTP_HOST"
+        },
+        {
+            "text": "Port of your SMTP server:",
+            "type": 2,
+            "validator": "port",
+            "defaultValue": "587",
+            "variable": "GHOST_SMTP_PORT"
+        },
+        {
+            "text": "Username to the SMTP:",
+            "type": 2,
+            "variable": "GHOST_SMTP_USER"
+        },
+        {
+            "text": "Password to the SMTP server for this user:",
+            "type": 2,
+            "variable": "GHOST_SMTP_PASSWORD"
+        },
+        {
+            "text": "Which version of Ghost do you want to use?",
+            "type": 2,
+            "defaultValue": "4.22",
+            "variable": "GHOST_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Ghost data volume?",
+            "defaultValue": "./volumes/ghost-data",
+            "variable": "VOLUME_GHOST_DATA",
+            "advanced": true
+        }
+    ]
+}
