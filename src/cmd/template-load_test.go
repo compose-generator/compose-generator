@@ -132,11 +132,21 @@ func TestShowTemplateList1(t *testing.T) {
 		printHeadingCallCount++
 		assert.Equal(t, "List of all templates:", text)
 	}
+	plCallCount := 0
+	pl = func(text string) {
+		plCallCount++
+		if plCallCount == 1 {
+			assert.Equal(t, "Template 1 (Saved at: Sep-25-21 2:20:23 PM)", text)
+		} else {
+			assert.Equal(t, "Template 2 (Saved at: Sep-25-21 2:21:01 PM)", text)
+		}
+	}
 	// Execute test
 	showTemplateList()
 	// Assert
 	assert.Equal(t, 2, pelCallCount)
 	assert.Equal(t, 1, printHeadingCallCount)
+	assert.Equal(t, 2, plCallCount)
 }
 
 func TestShowTemplateList2(t *testing.T) {
