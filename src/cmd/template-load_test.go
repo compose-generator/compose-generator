@@ -135,11 +135,10 @@ func TestShowTemplateList1(t *testing.T) {
 	plCallCount := 0
 	pl = func(text string) {
 		plCallCount++
-		if plCallCount == 1 {
-			assert.Equal(t, "Template 1 (Saved at: Sep-25-21 2:20:23 PM)", text)
-		} else {
-			assert.Equal(t, "Template 2 (Saved at: Sep-25-21 2:21:01 PM)", text)
-		}
+		assert.Contains(t, []string{
+			"Template 1 (Saved at: Sep-25-21 2:20:23 PM)",
+			"Template 2 (Saved at: Sep-25-21 2:21:01 PM)",
+		}, text)
 	}
 	// Execute test
 	showTemplateList()
