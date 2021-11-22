@@ -1,0 +1,36 @@
+{
+    "label": "TeamSpeak",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which version of TeamSpeak do you want to use?",
+            "type": 2,
+            "defaultValue": "3.13",
+            "variable": "TEAMSPEAK_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for TeamSpeak data volume?",
+            "defaultValue": "./volumes/teamspeak-data",
+            "variable": "VOLUME_TEAMSPEAK_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for TeamSpeak logs volume?",
+            "defaultValue": "./volumes/teamspeak-logs",
+            "variable": "VOLUME_TEAMSPEAK_LOGS",
+            "advanced": true
+        }
+    ]
+}
