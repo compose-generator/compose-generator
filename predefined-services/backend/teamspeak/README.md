@@ -1,5 +1,5 @@
 ## TeamSpeak
-ToDo: Insert software description here.
+TeamSpeak is an application for hosting interactive voice chats, primarily used for gaming. The primary focus of TeamSpeak is the ease of use and security.
 
 ### Setup
-ToDo: Insert setup instructions here.
+TeamSpeak is considered as backend service and can therefore be found in backends collection, when generating the compose configuration with Compose Generator.
