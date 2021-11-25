@@ -1,0 +1,14 @@
+image: teamspeak:${{TEAMSPEAK_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-teamspeak
+restart: always
+networks:
+  - backend-database
+ports:
+  - 9987:9987/udp
+  - 10011:10011
+  - 30033:30033
+volumes:
+  - ${{VOLUME_TEAMSPEAK_DATA}}:/var/ts3server
+  - ${{VOLUME_TEAMSPEAK_LOGS}}:/var/ts3server/logs/
+env_file:
+  - environment.env
