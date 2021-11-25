@@ -17,7 +17,7 @@ def get_all_template_names():
 
     template_tuples = []
     template_types = ["backend", "database", "db-admin", "frontend"]
-    skipped_names = ["rocket", "faunadb", "gitea",
+    skipped_names = ["rocket", "faunadb", "gitea", "spring-gradle",
                      "gitlab", "adguard-home", "pi-hole"]
     for template_type in template_types:
         template_type_path = TEMPLATES_PATH + '/' + template_type
