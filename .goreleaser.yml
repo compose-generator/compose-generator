@@ -232,6 +232,8 @@ release:
   extra_files:
     - glob: ./predefined-services/predefined-services.tar.gz
   footer: |
+    **Full Changelog**: https://github.com/compose-generator/compose-generator/compare/{{ .PreviousTag }}...{{ .Tag }}
+
     ## What to do next?
     - [Install Compose Generator](https://www.compose-generator.com/install/linux/)
     - Visit [www.compose-generator.com](https://www.compose-generator.com) to test the new features
