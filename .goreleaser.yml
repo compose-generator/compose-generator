@@ -224,7 +224,7 @@ nfpms:
         dst: /etc/bash_completion.d/compose-generator
       - dst: /usr/lib/compose-generator/templates
         type: dir
-      - dst: /usr/lib/compose-generator/log
+      - dst: /var/log/compose-generator
         type: dir
 release:
   name_template: v{{ .Tag }}
