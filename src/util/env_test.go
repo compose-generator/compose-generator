@@ -604,7 +604,7 @@ func TestGetLogfilesPath3(t *testing.T) {
 	// Execute test
 	result := getLogfilesPath()
 	// Assert
-	assert.Equal(t, "/usr/lib/compose-generator/log", result)
+	assert.Equal(t, "/var/log/compose-generator", result)
 }
 
 func TestGetLogfilesPath4(t *testing.T) {
