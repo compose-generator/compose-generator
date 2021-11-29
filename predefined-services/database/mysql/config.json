@@ -1,6 +1,6 @@
 {
     "label": "MySQL",
-    "preselected": "services.frontend contains name == \"wordpress\" | services.frontend contains name == \"nextcloud\" | services.frontend contains name == \"owncloud\" | services.frontend contains name == \"matomo\" | services.frontend contains name == \"ghost\" | services.frontend contains name == \"drupal\" | services.frontend contains name == \"mediawiki\" | services.backend contains name == \"live-poll-api\"",
+    "preselected": "services.frontend contains name == \"wordpress\" | services.frontend contains name == \"nextcloud\" | services.frontend contains name == \"owncloud\" | services.frontend contains name == \"matomo\" | services.frontend contains name == \"ghost\" | services.frontend contains name == \"drupal\" | services.frontend contains name == \"mediawiki\" | services.backend contains name == \"live-poll-api\" | services.backend contains name == \"monica\"",
     "proxied": false,
     "files": [
         {

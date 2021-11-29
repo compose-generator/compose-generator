@@ -1,0 +1,11 @@
+image: monica:${{MONICA_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-monica
+restart: always
+networks:
+  - backend-database
+ports:
+  - ${{MONICA_PORT}}:80
+volumes:
+  - ${{VOLUME_MONICA_DATA}}:/var/www/html/storage
+env_file:
+  - environment.env

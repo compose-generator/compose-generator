@@ -32,13 +32,13 @@
         {
             "text": "Which .NET version do you want to use?",
             "type": 2,
-            "defaultValue": "5.0",
+            "defaultValue": "6.0",
             "variable": "DOTNET_VERSION"
         },
         {
             "text": "Which ASP.NET version do you want to use?",
             "type": 2,
-            "defaultValue": "3.1",
+            "defaultValue": "6.0",
             "variable": "ASPNET_VERSION"
         },
         {

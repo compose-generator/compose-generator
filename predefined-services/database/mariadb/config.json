@@ -1,6 +1,6 @@
 {
     "label": "MariaDB",
-    "preselected": "false",
+    "preselected": "services.backend contains name == \"teamspeak\"",
     "proxied": false,
     "files": [
         {

@@ -30,7 +30,6 @@ var (
 
 func init() {
 	// Open logfile
-
 	logfile, err := os.OpenFile(getLogfilePath(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
 		log.Fatal(err)

@@ -142,7 +142,7 @@ func getLogfilesPath() string {
 		return "/cg/log"
 	}
 	if isLinux() { // Linux
-		return "/usr/lib/compose-generator/log"
+		return "/var/log/compose-generator"
 	}
 	// Windows
 	path, err := executable()
