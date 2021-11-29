@@ -232,6 +232,7 @@ release:
   extra_files:
     - glob: ./predefined-services/predefined-services.tar.gz
   footer: |
+    
     **Full Changelog**: https://github.com/compose-generator/compose-generator/compare/{{ .PreviousTag }}...{{ .Tag }}
 
     ## What to do next?
