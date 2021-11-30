@@ -84,7 +84,8 @@ markdown_extensions:
   - pymdownx.details
   - toc:
       permalink: true
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true 
   - pymdownx.superfences
   - attr_list
   - pymdownx.emoji:
