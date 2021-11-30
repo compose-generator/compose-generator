@@ -7,7 +7,7 @@ github.com/AlecAivazis/survey/v2/terminal
 ## explicit; go 1.12
 github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
-# github.com/briandowns/spinner v1.13.0
+# github.com/briandowns/spinner v1.16.0
 ## explicit; go 1.14
 github.com/briandowns/spinner
 # github.com/cli/safeexec v1.0.0
