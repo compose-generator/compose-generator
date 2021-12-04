@@ -84,6 +84,10 @@ func TestEnrichProjectWithServices1(t *testing.T) {
 	generateChooseTlsHelpersPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
 		generateChooseTlsHelpersPassCallCount++
 	}
+	generateAddWatchtowerPassCallCount := 0
+	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+		generateAddWatchtowerPassCallCount++
+	}
 	generatePassCallCount := 0
 	generatePass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 		generatePassCallCount++
@@ -130,6 +134,7 @@ func TestEnrichProjectWithServices1(t *testing.T) {
 	assert.Equal(t, 1, generateChooseDbAdminsPassCallCount)
 	assert.Equal(t, 1, generateChooseProxiesPassCallCount)
 	assert.Equal(t, 1, generateChooseTlsHelpersPassCallCount)
+	assert.Equal(t, 1, generateAddWatchtowerPassCallCount)
 	assert.Equal(t, 1, generatePassCallCount)
 	assert.Equal(t, 1, generateResolveDependencyGroupsPassCallCount)
 	assert.Equal(t, 1, generateSecretsPassCallCount)
@@ -208,6 +213,10 @@ func TestEnrichProjectWithServices2(t *testing.T) {
 	generateChooseTlsHelpersPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
 		generateChooseTlsHelpersPassCallCount++
 	}
+	generateAddWatchtowerPassCallCount := 0
+	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+		generateAddWatchtowerPassCallCount++
+	}
 	generatePassCallCount := 0
 	generatePass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 		generatePassCallCount++
@@ -254,6 +263,7 @@ func TestEnrichProjectWithServices2(t *testing.T) {
 	assert.Equal(t, 1, generateChooseDbAdminsPassCallCount)
 	assert.Equal(t, 1, generateChooseProxiesPassCallCount)
 	assert.Equal(t, 1, generateChooseTlsHelpersPassCallCount)
+	assert.Equal(t, 1, generateAddWatchtowerPassCallCount)
 	assert.Equal(t, 1, generatePassCallCount)
 	assert.Equal(t, 1, generateResolveDependencyGroupsPassCallCount)
 	assert.Equal(t, 1, generateSecretsPassCallCount)
