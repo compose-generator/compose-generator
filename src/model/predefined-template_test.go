@@ -58,6 +58,67 @@ func TestGetAll(t *testing.T) {
 	assert.EqualValues(t, expectedResult, result)
 }
 
+// -------------------------------------------------------------------- GetAllLabels ---------------------------------------------------------------
+
+func TestGetAllLabels(t *testing.T) {
+	// Test data
+	selectedTemplates := SelectedTemplates{
+		FrontendServices: []PredefinedTemplateConfig{
+			{
+				Name:  "drupal",
+				Label: "Drupal",
+			},
+			{
+				Name:  "mediawiki",
+				Label: "Mediawiki",
+			},
+		},
+		BackendServices: []PredefinedTemplateConfig{
+			{
+				Name:  "fiber",
+				Label: "Fiber",
+			},
+			{
+				Name:  "nexus",
+				Label: "Nexus",
+			},
+		},
+		DatabaseServices: []PredefinedTemplateConfig{
+			{
+				Name:  "scylladb",
+				Label: "ScyllaDB",
+			},
+			{
+				Name:  "singlestore",
+				Label: "SingleStore",
+			},
+		},
+		DbAdminServices: []PredefinedTemplateConfig{
+			{
+				Name:  "elasticsearch-hq",
+				Label: "Elasticsearch HQ",
+			},
+			{
+				Name:  "redis-insight",
+				Label: "Redis Insight",
+			},
+		},
+		ProxyServices: []PredefinedTemplateConfig{
+			{
+				Name:  "traefik",
+				Label: "Traefik",
+			},
+		},
+		TlsHelperServices: []PredefinedTemplateConfig{},
+	}
+	expectedResult := []string{"Drupal", "Mediawiki", "Fiber", "Nexus", "ScyllaDB", "SingleStore", "Elasticsearch HQ", "Redis Insight", "Traefik"}
+	// Execute test
+	result := selectedTemplates.GetAllLabels()
+	// Assert
+	assert.Equal(t, 9, len(result))
+	assert.EqualValues(t, expectedResult, result)
+}
+
 // ---------------------------------------------------------------------- GetTotal -----------------------------------------------------------------
 
 func TestTotal(t *testing.T) {
