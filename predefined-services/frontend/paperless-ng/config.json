@@ -1,0 +1,79 @@
+{
+    "label": "Paperless-ng",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "How do you want to call the admin user for Paperless-ng?",
+            "type": 2,
+            "defaultValue": "paperless",
+            "variable": "PAPERLESS_NG_ADMIN_USER"
+        },
+        {
+            "text": "Which email do you want to set for the admin user of Paperless-ng?",
+            "type": 2,
+            "validator": "email",
+            "variable": "PAPERLESS_NG_ADMIN_EMAIL"
+        },
+        {
+            "text": "On which port you want to expose your Paperless-ng instance?",
+            "type": 2,
+            "defaultValue": "8000",
+            "validator": "port",
+            "variable": "PAPERLESS_NG_PORT"
+        },
+        {
+            "text": "Which version of Paperless-ng do you want to use?",
+            "type": 2,
+            "defaultValue": "1.5.0",
+            "variable": "PAPERLESS_NG_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Paperless-ng data volume?",
+            "defaultValue": "./volumes/paperless-ng-data",
+            "variable": "VOLUME_PAPERLESSNG_DATA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Paperless-ng meda volume?",
+            "defaultValue": "./volumes/paperless-ng-media",
+            "variable": "VOLUME_PAPERLESSNG_MEDIA",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Paperless-ng export volume?",
+            "defaultValue": "./volumes/paperless-ng-export",
+            "variable": "VOLUME_PAPERLESSNG_EXPORT",
+            "advanced": true
+        },
+        {
+            "text": "Custom path for Paperless-ng consume volume?",
+            "defaultValue": "./volumes/paperless-ng-consume",
+            "variable": "VOLUME_PAPERLESSNG_CONSUME",
+            "advanced": true
+        }
+    ],
+    "secrets": [
+        {
+            "name": "Paperless-ng secret key",
+            "variable": "_PW_PAPERLESS_NG_SECRET_KEY",
+            "length": 50
+        }
+    ]
+}

@@ -32,9 +32,8 @@ func EvaluateConditionalSections(filePath string, selected *model.SelectedTempla
 func EvaluateConditionalSectionsInYamlToString(input string, selected *model.SelectedTemplates, varMap model.Vars) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
-	ccomcPath := getCComCompilerPath()
 	// #nosec G204
-	cmd := exec.Command(ccomcPath, "false", input, dataString, "#", "", "")
+	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", input)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		ErrorLogger.Println("Could not execute CCom: " + string(output) + ": " + err.Error())

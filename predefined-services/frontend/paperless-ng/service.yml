@@ -1,0 +1,12 @@
+image: jonaswinkler/paperless-ng:${{PAPERLESS_NG_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-paperless-ng
+restart: always
+networks:
+  - paperless-ng-redis
+  - paperless-ng-postgres
+ports:
+  - ${{PAPERLESS_NG_PORT}}:8000
+volumes:
+  - ${{VOLUME_PAPERLESSNG_CONSUME}}:/usr/src/paperless/consume
+env_file:
+  - environment.env

@@ -2,6 +2,9 @@ image: redis:${{REDIS_VERSION}}-alpine
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-redis
 restart: always
 networks:
+#? if services.frontend contains name == "paperless-ng" {
+#  - paperless-ng-redis
+#? }
 #? if has services.backend {
 #  - backend-database
 #? }
