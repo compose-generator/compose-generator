@@ -684,3 +684,31 @@ func TestGetLogfilesPath6(t *testing.T) {
 	// Assert
 	assert.Equal(t, expectedPath, result)
 }
+
+// -------------------------------------------------------------- getCComCompilerPath --------------------------------------------------------------
+
+func TestGetCComCompilerPath1(t *testing.T) {
+	// Test data
+	expectedPath := "/usr/lib/ccom/ccomc"
+	// Mock functions
+	isWindows = func() bool {
+		return false
+	}
+	// Execute test
+	actualPath := getCComCompilerPath()
+	// Assert
+	assert.Equal(t, expectedPath, actualPath)
+}
+
+func TestGetCComCompilerPath2(t *testing.T) {
+	// Test data
+	expectedPath := "ccomc"
+	// Mock functions
+	isWindows = func() bool {
+		return true
+	}
+	// Execute test
+	actualPath := getCComCompilerPath()
+	// Assert
+	assert.Equal(t, expectedPath, actualPath)
+}

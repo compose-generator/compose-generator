@@ -158,7 +158,7 @@ func getCComCompilerPath() string {
 	if isWindows() { // Windows
 		return "ccomc"
 	}
-	return "/usr/lib//ccom/ccomc" // Linux + Docker
+	return "/usr/lib/ccom/ccomc" // Linux + Docker
 }
 
 func getOuterVolumePathOnDockerizedEnvironment() string {
