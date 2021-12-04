@@ -70,6 +70,7 @@ var generateChooseFrontendsPass = genPass.GenerateChooseFrontends
 var generateChooseBackendsPass = genPass.GenerateChooseBackends
 var generateChooseDatabasesPass = genPass.GenerateChooseDatabases
 var generateChooseDbAdminsPass = genPass.GenerateChooseDbAdmins
+var generateAddWatchtowerPass = genPass.GenerateAddWatchtower
 var generatePass = genPass.Generate
 var generateResolveDependencyGroupsPass = genPass.GenerateResolveDependencyGroups
 var generateSecretsPass = genPass.GenerateSecrets

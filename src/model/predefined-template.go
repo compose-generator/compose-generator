@@ -52,6 +52,15 @@ func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
 	return templates
 }
 
+// GetAllLabels returns the labels of all selected services
+func (t SelectedTemplates) GetAllLabels() []string {
+	result := []string{}
+	for _, template := range t.GetAll() {
+		result = append(result, template.Label)
+	}
+	return result
+}
+
 // GetTotal returns the total number of selected templates
 func (t SelectedTemplates) GetTotal() int {
 	count := len(t.FrontendServices)

@@ -164,6 +164,7 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 	generateChooseBackendsPass(project, availableTemplates, selectedTemplates, config)
 	generateChooseDatabasesPass(project, availableTemplates, selectedTemplates, config)
 	generateChooseDbAdminsPass(project, availableTemplates, selectedTemplates, config)
+	generateAddWatchtowerPass(project, selectedTemplates)
 
 	// Execute passes
 	generatePass(project, selectedTemplates)
