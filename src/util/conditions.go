@@ -15,11 +15,7 @@ import (
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
 // EvaluateConditionalSections evaluates conditional sections in template data
-func EvaluateConditionalSections(
-	filePath string,
-	selected *model.SelectedTemplates,
-	varMap model.Vars,
-) {
+func EvaluateConditionalSections(filePath string, selected *model.SelectedTemplates, varMap model.Vars) {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
 	// #nosec G204
@@ -32,16 +28,13 @@ func EvaluateConditionalSections(
 	}
 }
 
-// EvaluateConditionalSectionsToString evaluates conditional sections in template data
-func EvaluateConditionalSectionsToString(
-	input string,
-	selected *model.SelectedTemplates,
-	varMap model.Vars,
-) string {
+// EvaluateConditionalSectionsInYamlToString evaluates conditional sections in template data
+func EvaluateConditionalSectionsInYamlToString(input string, selected *model.SelectedTemplates, varMap model.Vars) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
+	ccomcPath := getCComCompilerPath()
 	// #nosec G204
-	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", input)
+	cmd := exec.Command(ccomcPath, "false", input, dataString, "#", "", "")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		ErrorLogger.Println("Could not execute CCom: " + string(output) + ": " + err.Error())
@@ -51,11 +44,7 @@ func EvaluateConditionalSectionsToString(
 }
 
 // EvaluateCondition evaluates the given condition to a boolean result
-func EvaluateCondition(
-	condition string,
-	selected *model.SelectedTemplates,
-	varMap model.Vars,
-) bool {
+func EvaluateCondition(condition string, selected *model.SelectedTemplates, varMap model.Vars) bool {
 	// Cancel if condition is 'true' or 'false'
 	if condition == "true" || condition == "false" {
 		return condition == "true"
@@ -63,8 +52,9 @@ func EvaluateCondition(
 	// Prepare data input for CCom
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
+	ccomcPath := getCComCompilerPath()
 	// #nosec G204
-	cmd := exec.Command("ccom", "-m", "-s", "-d", dataString, condition)
+	cmd := exec.Command(ccomcPath, "true", condition, dataString, "", "", "")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		WarningLogger.Println("CCom returned with an error: " + string(output) + ": " + err.Error())
@@ -91,10 +81,7 @@ func EnsureDockerIsRunning() {
 
 // --------------------------------------------------------------- Private functions ---------------------------------------------------------------
 
-func prepareInputData(
-	selected *model.SelectedTemplates,
-	varMap model.Vars,
-) string {
+func prepareInputData(selected *model.SelectedTemplates, varMap model.Vars) string {
 	// Create data object
 	data := model.CComDataInput{
 		Services: *selected,

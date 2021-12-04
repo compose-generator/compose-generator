@@ -154,6 +154,13 @@ func getLogfilesPath() string {
 	return path[:strings.LastIndex(path, "/")] + "/log"
 }
 
+func getCComCompilerPath() string {
+	if isWindows() { // Windows
+		return "ccomc"
+	}
+	return "/usr/lib/ccom/ccomc" // Linux + Docker
+}
+
 func getOuterVolumePathOnDockerizedEnvironment() string {
 	// Obtain Docker client
 	client, err := newClientWithOpts(client.FromEnv)

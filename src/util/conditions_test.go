@@ -37,40 +37,40 @@ var varMap = map[string]string{
 	"BAR": "test1",
 }
 
-// ---------------------------------------------------------------- EvaluateConditionalSection ---------------------------------------------------------------
+// --------------------------------------------------------- EvaluateConditionalSectionsInYaml ------------------------------------------------------
 
-func TestEvaluateConditionalSectionToString_True1(t *testing.T) {
+func TestEvaluateConditionalSectionsInYamlToString_True1(t *testing.T) {
 	content := "property1: true\n#? if services.backend contains label == \"Wordpress\" {\n#property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
-	result := EvaluateConditionalSectionsToString(content, templateData, varMap)
+	result := EvaluateConditionalSectionsInYamlToString(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
-func TestEvaluateConditionalSectionToString_True2(t *testing.T) {
+func TestEvaluateConditionalSectionsInYamlToString_True2(t *testing.T) {
 	content := "property1: true\n#? if services.frontend contains name == \"vue\" | has templates.backend {\n#property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
-	result := EvaluateConditionalSectionsToString(content, templateData, varMap)
+	result := EvaluateConditionalSectionsInYamlToString(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
-func TestEvaluateConditionalSectionToString_True3(t *testing.T) {
+func TestEvaluateConditionalSectionsInYamlToString_True3(t *testing.T) {
 	content := "property1: true\n#? if var.BAR == \"test1\" {\n#property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty2: false\nproperty3: true"
-	result := EvaluateConditionalSectionsToString(content, templateData, varMap)
+	result := EvaluateConditionalSectionsInYamlToString(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
-func TestEvaluateConditionalSectionToString_False1(t *testing.T) {
+func TestEvaluateConditionalSectionsInYamlToString_False1(t *testing.T) {
 	content := "property1: true\n#? if var.BAR == \"invalid\" {\n# property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty3: true"
-	result := EvaluateConditionalSectionsToString(content, templateData, varMap)
+	result := EvaluateConditionalSectionsInYamlToString(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
-func TestEvaluateConditionalSectionToString_False2(t *testing.T) {
+func TestEvaluateConditionalSectionsInYamlToString_False2(t *testing.T) {
 	content := "property1: true\n#? if has services.database {\n# property2: false\n#? }\nproperty3: true"
 	expectation := "property1: true\nproperty3: true"
-	result := EvaluateConditionalSectionsToString(content, templateData, varMap)
+	result := EvaluateConditionalSectionsInYamlToString(content, templateData, varMap)
 	assert.Equal(t, expectation, result)
 }
 
