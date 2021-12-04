@@ -71,6 +71,11 @@
     ],
     "secrets": [
         {
+            "name": "Paperless-ng admin user password",
+            "variable": "_PW_PAPERLESS_NG_ADMIN",
+            "length": 30
+        },
+        {
             "name": "Paperless-ng secret key",
             "variable": "_PW_PAPERLESS_NG_SECRET_KEY",
             "length": 50

@@ -1,8 +1,5 @@
 ## Paperless-ng
-ToDo: Insert software description here.
+Paperless-ng is an open-source document and scan managment system. It can be used as a ftp scan upload target to sort in your paperwork fully-automated.
 
 ### Setup
-ToDo: Insert setup instructions here.
-
-Run the following command on your host system to create a superuser for Paperless-ng:
-`$ docker compose run --rm frontend-paperless-ng createsuperuser`
+Paperless-ng is considered as frontend service and can therefore be found in frontends collection, when generating the compose configuration with Compose Generator.
