@@ -40,8 +40,10 @@ func EvaluateConditionalSectionsToString(
 ) string {
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
-	// #nosec G204
+	//ccomcPath := getCComCompilerPath()
 	cmd := exec.Command("ccom", "-l", "yml", "-d", dataString, "-s", input)
+	// #nosec G204
+	//cmd := exec.Command(ccomcPath, "false", "input", dataString, "#", "", "")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		ErrorLogger.Println("Could not execute CCom: " + string(output) + ": " + err.Error())
@@ -63,8 +65,10 @@ func EvaluateCondition(
 	// Prepare data input for CCom
 	dataString := prepareInputData(selected, varMap)
 	// Execute CCom
+	ccomcPath := getCComCompilerPath()
+	//cmd := exec.Command("ccom", "-m", "-s", "-d", dataString, condition)
 	// #nosec G204
-	cmd := exec.Command("ccom", "-m", "-s", "-d", dataString, condition)
+	cmd := exec.Command(ccomcPath, "true", condition, dataString, "", "", "")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		WarningLogger.Println("CCom returned with an error: " + string(output) + ": " + err.Error())
