@@ -1,6 +1,6 @@
 {
     "label": "PostgreSQL",
-    "preselected": "services.frontend contains name == \"gitea\" | services.frontend contains name == \"sonarqube\" | services.frontend contains name == \"jira\" | services.frontend contains name == \"bitbucket\" | services.frontend contains name == \"accent\"",
+    "preselected": "services.frontend contains name == \"gitea\" | services.frontend contains name == \"sonarqube\" | services.frontend contains name == \"jira\" | services.frontend contains name == \"bitbucket\" | services.frontend contains name == \"accent\" | services.frontend contains name == \"paperless-ng\"",
     "proxied": false,
     "serviceInitCmd": [
         "cd ${{VOLUME_POSTGRES_INIT}}",

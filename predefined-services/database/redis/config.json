@@ -1,6 +1,6 @@
 {
     "label": "Redis",
-    "preselected": "false",
+    "preselected": "services.frontend contains name == \"paperless-ng\"",
     "proxied": false,
     "files": [
         {
