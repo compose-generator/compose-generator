@@ -27,7 +27,7 @@
         {
             "text": "Which version of Nextcloud do you want to use?",
             "type": 2,
-            "defaultValue": "22.2",
+            "defaultValue": "23.0",
             "variable": "NEXTCLOUD_VERSION"
         },
         {

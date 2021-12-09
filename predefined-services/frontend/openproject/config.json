@@ -27,7 +27,7 @@
         {
             "text": "Which version of OpenProject do you want to use?",
             "type": 2,
-            "defaultValue": "11.4",
+            "defaultValue": "12.0",
             "variable": "OPENPROJECT_VERSION"
         },
         {
