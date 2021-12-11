@@ -1,0 +1,49 @@
+{
+    "label": "Overleaf",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "How do you want to call your overleaf instance?",
+            "type": 2,
+            "defaultValue": "My Overleaf Instance",
+            "validator": "required",
+            "variable": "OVERLEAF_NAME"
+        },
+        {
+            "text": "On which port do you want to expose Overleaf?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "OVERLEAF_PORT"
+        },
+        {
+            "text": "Which version of Overleaf do you want to use?",
+            "type": 2,
+            "defaultValue": "3.0",
+            "variable": "OVERLEAF_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Overleaf data volume?",
+            "defaultValue": "./volumes/overleaf-data",
+            "variable": "VOLUME_OVERLEAF_DATA",
+            "advanced": true
+        }
+    ]
+}
