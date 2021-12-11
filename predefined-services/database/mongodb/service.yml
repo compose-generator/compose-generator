@@ -2,7 +2,7 @@ image: mongo:${{MONGODB_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-mongodb
 restart: always
 networks:
-#? if services.dbadmin contains name == "overleaf" {
+#? if services.frontend contains name == "overleaf" {
 #  - overleaf-mongodb
 #? }
 #? if has services.backend {

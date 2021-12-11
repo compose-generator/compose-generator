@@ -5,7 +5,7 @@ networks:
 #? if services.frontend contains name == "paperless-ng" {
 #  - paperless-ng-redis
 #? }
-#? if services.dbadmin contains name == "overleaf" {
+#? if services.frontend contains name == "overleaf" {
 #  - overleaf-redis
 #? }
 #? if has services.backend {
