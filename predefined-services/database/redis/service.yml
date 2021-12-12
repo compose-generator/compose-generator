@@ -20,4 +20,4 @@ volumes:
   - ${{VOLUME_REDIS_DATA}}:/data
 env_file:
   - environment.env
-command: redis-server --requirepass "$$REDIS_PASSWORD"
+command: redis-server --requirepass ${REDIS_PASSWORD}
