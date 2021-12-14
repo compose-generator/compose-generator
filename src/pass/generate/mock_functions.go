@@ -35,7 +35,6 @@ var pel = util.Pel
 var heading = util.Heading
 var textQuestion = util.TextQuestion
 var yesNoQuestion = util.YesNoQuestion
-var multiSelectMenuQuestion = util.MultiSelectMenuQuestion
 var multiSelectMenuQuestionIndex = util.MultiSelectMenuQuestionIndex
 var startProcess = util.StartProcess
 var stopProcess = util.StopProcess
