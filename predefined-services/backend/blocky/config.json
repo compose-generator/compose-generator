@@ -1,0 +1,37 @@
+{
+    "label": "Blocky",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which port do you want to expose for the Blocky web interface?",
+            "type": 2,
+            "defaultValue": "4000",
+            "validator": "port",
+            "variable": "BLOCKY_PORT"
+        },
+        {
+            "text": "Which version of Blocky do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "BLOCKY_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Blocky config volume?",
+            "defaultValue": "./volumes/blocky-config",
+            "variable": "VOLUME_BLOCKY_CONFIG",
+            "advanced": true
+        }
+    ]
+}

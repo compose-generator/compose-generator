@@ -1,6 +1,6 @@
 {
     "label": "MongoDB",
-    "preselected": "false",
+    "preselected": "services.frontend contains name == \"overleaf\"",
     "proxied": false,
     "serviceInitCmd": [
         "cd ${{VOLUME_MONGODB_INIT}}",

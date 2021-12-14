@@ -1,0 +1,79 @@
+{
+    "label": "Overleaf",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "How do you want to call your overleaf instance?",
+            "type": 2,
+            "defaultValue": "My Overleaf Instance",
+            "validator": "required",
+            "variable": "OVERLEAF_NAME"
+        },
+        {
+            "text": "Which email address do you want to set as admin email?",
+            "type": 2,
+            "validator": "email",
+            "variable": "OVERLEAF_ADMIN_EMAIL"
+        },
+        {
+            "text": "Which SMTP host do you want to use?",
+            "type": 2,
+            "validator": "required",
+            "variable": "OVERLEAF_SMTP_HOST"
+        },
+        {
+            "text": "Which SMTP port do you want to use?",
+            "type": 2,
+            "defaultValue": "587",
+            "validator": "port",
+            "variable": "OVERLEAF_SMTP_PORT"
+        },
+        {
+            "text": "Which SMTP user do you want to use?",
+            "type": 2,
+            "validator": "required",
+            "variable": "OVERLEAF_SMTP_USER"
+        },
+        {
+            "text": "Which SMTP password do you want to use?",
+            "type": 2,
+            "variable": "OVERLEAF_SMTP_PASSWORD"
+        },
+        {
+            "text": "On which port do you want to expose Overleaf?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "OVERLEAF_PORT"
+        },
+        {
+            "text": "Which version of Overleaf do you want to use?",
+            "type": 2,
+            "defaultValue": "3.0",
+            "variable": "OVERLEAF_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Overleaf data volume?",
+            "defaultValue": "./volumes/overleaf-data",
+            "variable": "VOLUME_OVERLEAF_DATA",
+            "advanced": true
+        }
+    ]
+}
