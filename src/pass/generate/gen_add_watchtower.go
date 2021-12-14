@@ -8,6 +8,7 @@ import (
 
 func GenerateAddWatchtower(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	// Ask the user if watchtower should be added to the project
+	infoLogger.Println("Adding Watchtower to the project ...")
 	addWatchtower := yesNoQuestion("Do you want to add Watchtower to check for new image versions?", false)
 	if addWatchtower {
 		// Ask which services should be equipped with image update detection
@@ -15,10 +16,14 @@ func GenerateAddWatchtower(project *model.CGProject, selectedTemplates *model.Se
 		selectedIndices := multiSelectMenuQuestionIndex("For which services do you want to add Watchtower?", selectedTemplates.GetAllLabels(), []string{})
 		for _, i := range selectedIndices {
 			template := templates[i]
-			// Add label to service
-			if service, err := project.Composition.GetService(template.Name); err != nil {
-				service.Labels["com.centurylinklabs.watchtower.enable"] = "true"
+			serviceName := template.Type + "-" + template.Name
+			// Retrieve service by name
+			service := project.GetServiceRef(serviceName)
+			// Add labels
+			if service.Labels == nil {
+				service.Labels = make(types.Labels)
 			}
+			service.Labels["com.centurylinklabs.watchtower.enable"] = "true"
 		}
 
 		// Add watchtower service
@@ -34,4 +39,5 @@ func GenerateAddWatchtower(project *model.CGProject, selectedTemplates *model.Se
 			Command: types.ShellCommand{"--interval", "30"},
 		})
 	}
+	infoLogger.Println("Adding Watchtower to the project .. (done)")
 }
