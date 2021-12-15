@@ -118,8 +118,83 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 func TestGenerateAddWatchTower2(t *testing.T) {
 	// Test data
 	project := &model.CGProject{}
+	selectedTemplates := &model.SelectedTemplates{
+		FrontendServices: []model.PredefinedTemplateConfig{
+			{
+				Label:       "Angular",
+				Name:        "angular",
+				Type:        "frontend",
+				AutoUpdated: false,
+			},
+			{
+				Label:       "Vue",
+				Name:        "vue",
+				Type:        "frontend",
+				AutoUpdated: false,
+			},
+		},
+		DbAdminServices: []model.PredefinedTemplateConfig{
+			{
+				Label:       "PhpMyAdmin",
+				Name:        "phpmyadmin",
+				Type:        "dbadmin",
+				AutoUpdated: true,
+			},
+		},
+	}
+	expectedProject := &model.CGProject{}
+	expectedSelectedTemplates := &model.SelectedTemplates{
+		FrontendServices: []model.PredefinedTemplateConfig{
+			{
+				Label:       "Angular",
+				Name:        "angular",
+				Type:        "frontend",
+				AutoUpdated: false,
+			},
+			{
+				Label:       "Vue",
+				Name:        "vue",
+				Type:        "frontend",
+				AutoUpdated: false,
+			},
+		},
+		DbAdminServices: []model.PredefinedTemplateConfig{
+			{
+				Label:       "PhpMyAdmin",
+				Name:        "phpmyadmin",
+				Type:        "dbadmin",
+				AutoUpdated: false,
+			},
+		},
+	}
+	// Mock functions
+	pelCallCount := 0
+	pel = func() {
+		pelCallCount++
+	}
+	yesNoQuestion = func(question string, defaultValue bool) bool {
+		assert.Equal(t, "Do you want to add Watchtower to check for new image versions?", question)
+		assert.False(t, defaultValue)
+		return false
+	}
+	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
+		assert.Fail(t, "Unexpected call of multiSelectMenuQuestionIndex")
+		return []int{}
+	}
+	// Execute test
+	GenerateAddWatchtower(project, selectedTemplates, &model.GenerateConfig{FromFile: true})
+	// Assert
+	assert.Equal(t, 1, pelCallCount)
+	assert.Equal(t, expectedProject, project)
+	assert.Equal(t, expectedSelectedTemplates, selectedTemplates)
+}
+
+func TestGenerateAddWatchTower3(t *testing.T) {
+	// Test data
+	project := &model.CGProject{}
 	selectedTemplates := &model.SelectedTemplates{}
 	expectedProject := &model.CGProject{}
+	expectedSelectedTemplates := &model.SelectedTemplates{}
 	// Mock functions
 	pelCallCount := 0
 	pel = func() {
@@ -139,4 +214,5 @@ func TestGenerateAddWatchTower2(t *testing.T) {
 	// Assert
 	assert.Equal(t, 1, pelCallCount)
 	assert.Equal(t, expectedProject, project)
+	assert.Equal(t, expectedSelectedTemplates, selectedTemplates)
 }

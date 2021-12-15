@@ -62,10 +62,60 @@ func TestGetAll(t *testing.T) {
 
 func TestGetAllRef(t *testing.T) {
 	// Test data
-	t.Fail()
+	selectedTemplates := SelectedTemplates{
+		FrontendServices: []PredefinedTemplateConfig{
+			{Name: "angular"},
+			{Name: "vue"},
+		},
+		BackendServices: []PredefinedTemplateConfig{
+			{Name: "django"},
+			{Name: "flask"},
+			{Name: "rocket"},
+		},
+		DatabaseServices: []PredefinedTemplateConfig{
+			{Name: "faunadb"},
+			{Name: "mongodb"},
+		},
+		DbAdminServices: []PredefinedTemplateConfig{
+			{Name: "pgadmin"},
+		},
+		ProxyServices: []PredefinedTemplateConfig{
+			{Name: "nginx"},
+		},
+		TlsHelperServices: []PredefinedTemplateConfig{
+			{Name: "letsencrypt"},
+		},
+	}
+	expectedSelectedTemplates := SelectedTemplates{
+		FrontendServices: []PredefinedTemplateConfig{
+			{Name: "Changed value"},
+			{Name: "vue"},
+		},
+		BackendServices: []PredefinedTemplateConfig{
+			{Name: "django"},
+			{Name: "flask"},
+			{Name: "Changed value 2"},
+		},
+		DatabaseServices: []PredefinedTemplateConfig{
+			{Name: "faunadb"},
+			{Name: "mongodb"},
+		},
+		DbAdminServices: []PredefinedTemplateConfig{
+			{Name: "pgadmin"},
+		},
+		ProxyServices: []PredefinedTemplateConfig{
+			{Name: "nginx"},
+		},
+		TlsHelperServices: []PredefinedTemplateConfig{
+			{Name: "letsencrypt"},
+		},
+	}
 	// Execute test
-
+	result := selectedTemplates.GetAllRef()
+	result[0].Name = "Changed value"
+	result[4].Name = "Changed value 2"
 	// Assert
+	assert.Equal(t, expectedSelectedTemplates, selectedTemplates)
 }
 
 // -------------------------------------------------------------------- GetAllLabels ---------------------------------------------------------------
