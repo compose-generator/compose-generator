@@ -58,6 +58,16 @@ func TestGetAll(t *testing.T) {
 	assert.EqualValues(t, expectedResult, result)
 }
 
+// --------------------------------------------------------------------- GetAllRef -----------------------------------------------------------------
+
+func TestGetAllRef(t *testing.T) {
+	// Test data
+	t.Fail()
+	// Execute test
+
+	// Assert
+}
+
 // -------------------------------------------------------------------- GetAllLabels ---------------------------------------------------------------
 
 func TestGetAllLabels(t *testing.T) {

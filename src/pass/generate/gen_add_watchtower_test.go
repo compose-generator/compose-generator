@@ -14,58 +14,36 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 	// Test data
 	project := &model.CGProject{
 		Composition: &types.Project{
-			Services: types.Services{
-				{
-					Name: "frontend-angular",
-				},
-				{
-					Name: "frontend-vue",
-				},
-				{
-					Name: "dbadmin-phpmyadmin",
-				},
-			},
+			Services: types.Services{},
 		},
 	}
 	selectedTemplates := &model.SelectedTemplates{
 		FrontendServices: []model.PredefinedTemplateConfig{
 			{
-				Label: "Angular",
-				Name:  "angular",
-				Type:  "frontend",
+				Label:       "Angular",
+				Name:        "angular",
+				Type:        "frontend",
+				AutoUpdated: false,
 			},
 			{
-				Label: "Vue",
-				Name:  "vue",
-				Type:  "frontend",
+				Label:       "Vue",
+				Name:        "vue",
+				Type:        "frontend",
+				AutoUpdated: false,
 			},
 		},
 		DbAdminServices: []model.PredefinedTemplateConfig{
 			{
-				Label: "PhpMyAdmin",
-				Name:  "phpmyadmin",
-				Type:  "dbadmin",
+				Label:       "PhpMyAdmin",
+				Name:        "phpmyadmin",
+				Type:        "dbadmin",
+				AutoUpdated: true,
 			},
 		},
 	}
 	expectedProject := &model.CGProject{
 		Composition: &types.Project{
 			Services: types.Services{
-				{
-					Name: "frontend-angular",
-					Labels: types.Labels{
-						"com.centurylinklabs.watchtower.enable": "true",
-					},
-				},
-				{
-					Name: "frontend-vue",
-				},
-				{
-					Name: "dbadmin-phpmyadmin",
-					Labels: types.Labels{
-						"com.centurylinklabs.watchtower.enable": "true",
-					},
-				},
 				{
 					Name:    "companion-watchtower",
 					Image:   "containrrr/watchtower:latest",
@@ -90,6 +68,30 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 			},
 		},
 	}
+	expectedSelectedTemplates := &model.SelectedTemplates{
+		FrontendServices: []model.PredefinedTemplateConfig{
+			{
+				Label:       "Angular",
+				Name:        "angular",
+				Type:        "frontend",
+				AutoUpdated: true,
+			},
+			{
+				Label:       "Vue",
+				Name:        "vue",
+				Type:        "frontend",
+				AutoUpdated: false,
+			},
+		},
+		DbAdminServices: []model.PredefinedTemplateConfig{
+			{
+				Label:       "PhpMyAdmin",
+				Name:        "phpmyadmin",
+				Type:        "dbadmin",
+				AutoUpdated: true,
+			},
+		},
+	}
 	// Mock functions
 	pelCallCount := 0
 	pel = func() {
@@ -106,10 +108,11 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 		return []int{0, 2}
 	}
 	// Execute test
-	GenerateAddWatchtower(project, selectedTemplates)
+	GenerateAddWatchtower(project, selectedTemplates, nil)
 	// Assert
 	assert.Equal(t, 1, pelCallCount)
 	assert.Equal(t, expectedProject, project)
+	assert.Equal(t, expectedSelectedTemplates, selectedTemplates)
 }
 
 func TestGenerateAddWatchTower2(t *testing.T) {
@@ -132,7 +135,7 @@ func TestGenerateAddWatchTower2(t *testing.T) {
 		return []int{}
 	}
 	// Execute test
-	GenerateAddWatchtower(project, selectedTemplates)
+	GenerateAddWatchtower(project, selectedTemplates, nil)
 	// Assert
 	assert.Equal(t, 1, pelCallCount)
 	assert.Equal(t, expectedProject, project)

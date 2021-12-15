@@ -85,7 +85,7 @@ func TestEnrichProjectWithServices1(t *testing.T) {
 		generateChooseTlsHelpersPassCallCount++
 	}
 	generateAddWatchtowerPassCallCount := 0
-	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates, config *model.GenerateConfig) {
 		generateAddWatchtowerPassCallCount++
 	}
 	generatePassCallCount := 0
@@ -214,7 +214,7 @@ func TestEnrichProjectWithServices2(t *testing.T) {
 		generateChooseTlsHelpersPassCallCount++
 	}
 	generateAddWatchtowerPassCallCount := 0
-	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates, config *model.GenerateConfig) {
 		generateAddWatchtowerPassCallCount++
 	}
 	generatePassCallCount := 0

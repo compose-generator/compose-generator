@@ -6,13 +6,20 @@ import (
 	"github.com/compose-spec/compose-go/types"
 )
 
-func GenerateAddWatchtower(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
+func GenerateAddWatchtower(
+	project *model.CGProject,
+	selectedTemplates *model.SelectedTemplates,
+	config *model.GenerateConfig,
+) {
 	// Ask the user if watchtower should be added to the project
-	infoLogger.Println("Adding Watchtower to the project ...")
 	pel()
 	templates := selectedTemplates.GetAllRef()
-	addWatchtower := yesNoQuestion("Do you want to add Watchtower to check for new image versions?", false)
+	addWatchtower := false
+	if config == nil || !config.FromFile {
+		addWatchtower = yesNoQuestion("Do you want to add Watchtower to check for new image versions?", false)
+	}
 	if addWatchtower {
+		infoLogger.Println("Adding Watchtower to the project ...")
 		// Ask which services should be equipped with image update detection
 		allLabels := []string{}
 		preselectedLabels := []string{}
@@ -52,11 +59,11 @@ func GenerateAddWatchtower(project *model.CGProject, selectedTemplates *model.Se
 			},
 			Command: types.ShellCommand{"--interval", "30"},
 		})
+		infoLogger.Println("Adding Watchtower to the project .. (done)")
 	} else {
 		// Remove all auto-updated flags
 		for _, template := range templates {
 			template.AutoUpdated = false
 		}
 	}
-	infoLogger.Println("Adding Watchtower to the project .. (done)")
 }
