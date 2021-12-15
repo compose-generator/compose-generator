@@ -67,13 +67,23 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 					},
 				},
 				{
-					Name: "companion-watchtower",
+					Name:    "companion-watchtower",
+					Image:   "containrrr/watchtower:latest",
+					Restart: types.RestartPolicyUnlessStopped,
 					Volumes: []types.ServiceVolumeConfig{
 						{
 							Type:   types.VolumeTypeBind,
 							Source: "/var/run/docker.sock",
 							Target: "/var/run/docker.sock",
 						},
+					},
+					DependsOn: types.DependsOnConfig{
+						model.TemplateTypeFrontend:  types.ServiceDependency{},
+						model.TemplateTypeBackend:   types.ServiceDependency{},
+						model.TemplateTypeDatabase:  types.ServiceDependency{},
+						model.TemplateTypeDbAdmin:   types.ServiceDependency{},
+						model.TemplateTypeProxy:     types.ServiceDependency{},
+						model.TemplateTypeTlsHelper: types.ServiceDependency{},
 					},
 					Command: types.ShellCommand{"--interval", "30"},
 				},

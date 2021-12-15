@@ -137,8 +137,9 @@ func Generate(c *cli.Context) error {
 
 // EnrichProjectWithServices enriches a project with a custom selection of predefined services
 func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateConfig) {
+	hasConfig := config != nil && config.FromFile
 	// Clear screen
-	if config == nil || !config.FromFile {
+	if !hasConfig {
 		clearScreen()
 	}
 
@@ -164,7 +165,9 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 	generateChooseBackendsPass(project, availableTemplates, selectedTemplates, config)
 	generateChooseDatabasesPass(project, availableTemplates, selectedTemplates, config)
 	generateChooseDbAdminsPass(project, availableTemplates, selectedTemplates, config)
-	generateAddWatchtowerPass(project, selectedTemplates)
+	if !hasConfig {
+		generateAddWatchtowerPass(project, selectedTemplates)
+	}
 
 	// Execute passes
 	generatePass(project, selectedTemplates)
