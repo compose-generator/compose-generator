@@ -94,6 +94,10 @@ func generateService(
 	for labelName := range proj.ProxyLabels[template.Name] {
 		service.Labels[labelName] = proj.ProxyLabels[template.Name][labelName]
 	}
+	// Add label for watchtower
+	if template.AutoUpdated {
+		service.Labels["com.centurylinklabs.watchtower.enable"] = "true"
+	}
 	// Add dependency groups depending on the template type
 	switch templateType {
 	case model.TemplateTypeFrontend:

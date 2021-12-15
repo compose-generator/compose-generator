@@ -2,6 +2,7 @@
     "label": "PhpMyAdmin",
     "preselected": "services.database contains name == \"mysql\" | services.database contains name == \"mariadb\"",
     "proxied": true,
+    "auto-updated": true,
     "files": [
         {
             "path": "service.yml",
