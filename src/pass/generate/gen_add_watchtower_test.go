@@ -81,6 +81,10 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 		},
 	}
 	// Mock functions
+	pelCallCount := 0
+	pel = func() {
+		pelCallCount++
+	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to add Watchtower to check for new image versions?", question)
 		assert.False(t, defaultValue)
@@ -94,6 +98,7 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 	// Execute test
 	GenerateAddWatchtower(project, selectedTemplates)
 	// Assert
+	assert.Equal(t, 1, pelCallCount)
 	assert.Equal(t, expectedProject, project)
 }
 
@@ -103,6 +108,10 @@ func TestGenerateAddWatchTower2(t *testing.T) {
 	selectedTemplates := &model.SelectedTemplates{}
 	expectedProject := &model.CGProject{}
 	// Mock functions
+	pelCallCount := 0
+	pel = func() {
+		pelCallCount++
+	}
 	yesNoQuestion = func(question string, defaultValue bool) bool {
 		assert.Equal(t, "Do you want to add Watchtower to check for new image versions?", question)
 		assert.False(t, defaultValue)
@@ -115,5 +124,6 @@ func TestGenerateAddWatchTower2(t *testing.T) {
 	// Execute test
 	GenerateAddWatchtower(project, selectedTemplates)
 	// Assert
+	assert.Equal(t, 1, pelCallCount)
 	assert.Equal(t, expectedProject, project)
 }

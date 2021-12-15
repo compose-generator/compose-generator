@@ -7,9 +7,7 @@ All rights reserved.
 
 package pass
 
-import (
-	"os"
-)
+import "os"
 
 const downloadUrl = "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
 

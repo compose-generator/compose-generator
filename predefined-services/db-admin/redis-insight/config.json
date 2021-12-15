@@ -2,6 +2,7 @@
     "label": "RedisInsight",
     "preselected": "services.database contains name == \"redis\"",
     "proxied": true,
+    "auto-updated": true,
     "files": [
         {
             "path": "service.yml",

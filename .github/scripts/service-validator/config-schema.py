@@ -10,6 +10,9 @@
     'proxied': {
         'type': 'boolean'
     },
+    'auto-updated': {
+        'type': 'boolean'
+    },
     'demoAppInitCmd': {
         'type': 'list'
     },

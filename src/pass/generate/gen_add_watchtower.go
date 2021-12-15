@@ -9,26 +9,32 @@ import (
 func GenerateAddWatchtower(project *model.CGProject, selectedTemplates *model.SelectedTemplates) {
 	// Ask the user if watchtower should be added to the project
 	infoLogger.Println("Adding Watchtower to the project ...")
+	pel()
+	templates := selectedTemplates.GetAllRef()
 	addWatchtower := yesNoQuestion("Do you want to add Watchtower to check for new image versions?", false)
 	if addWatchtower {
 		// Ask which services should be equipped with image update detection
-		templates := selectedTemplates.GetAll()
-		selectedIndices := multiSelectMenuQuestionIndex("For which services do you want to add Watchtower?", selectedTemplates.GetAllLabels(), []string{})
+		allLabels := []string{}
+		preselectedLabels := []string{}
+		for _, template := range templates {
+			allLabels = append(allLabels, template.Label)
+			if template.AutoUpdated {
+				preselectedLabels = append(preselectedLabels, template.Label)
+				template.AutoUpdated = false
+			}
+		}
+		// Ask the user which of the services should be auto-updated
+		selectedIndices := multiSelectMenuQuestionIndex("For which services do you want to add Watchtower?", allLabels, preselectedLabels)
 		for _, i := range selectedIndices {
 			template := templates[i]
-			serviceName := template.Type + "-" + template.Name
-			// Retrieve service by name
-			service := project.GetServiceRef(serviceName)
-			// Add labels
-			if service.Labels == nil {
-				service.Labels = make(types.Labels)
-			}
-			service.Labels["com.centurylinklabs.watchtower.enable"] = "true"
+			template.AutoUpdated = true
 		}
 
 		// Add watchtower service
 		project.Composition.Services = append(project.Composition.Services, types.ServiceConfig{
-			Name: "companion-watchtower",
+			Name:    "companion-watchtower",
+			Image:   "containrrr/watchtower:latest",
+			Restart: types.RestartPolicyUnlessStopped,
 			Volumes: []types.ServiceVolumeConfig{
 				{
 					Type:   types.VolumeTypeBind,
@@ -36,8 +42,21 @@ func GenerateAddWatchtower(project *model.CGProject, selectedTemplates *model.Se
 					Target: "/var/run/docker.sock",
 				},
 			},
+			DependsOn: types.DependsOnConfig{
+				model.TemplateTypeFrontend:  types.ServiceDependency{},
+				model.TemplateTypeBackend:   types.ServiceDependency{},
+				model.TemplateTypeDatabase:  types.ServiceDependency{},
+				model.TemplateTypeDbAdmin:   types.ServiceDependency{},
+				model.TemplateTypeProxy:     types.ServiceDependency{},
+				model.TemplateTypeTlsHelper: types.ServiceDependency{},
+			},
 			Command: types.ShellCommand{"--interval", "30"},
 		})
+	} else {
+		// Remove all auto-updated flags
+		for _, template := range templates {
+			template.AutoUpdated = false
+		}
 	}
 	infoLogger.Println("Adding Watchtower to the project .. (done)")
 }

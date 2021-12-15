@@ -52,6 +52,30 @@ func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
 	return templates
 }
 
+// GetAllRef returns the references to all templates of all types, mixed in a single slice
+func (t SelectedTemplates) GetAllRef() []*PredefinedTemplateConfig {
+	var templates []*PredefinedTemplateConfig
+	for i := 0; i < len(t.FrontendServices); i++ {
+		templates = append(templates, &t.FrontendServices[i])
+	}
+	for i := 0; i < len(t.BackendServices); i++ {
+		templates = append(templates, &t.BackendServices[i])
+	}
+	for i := 0; i < len(t.DatabaseServices); i++ {
+		templates = append(templates, &t.DatabaseServices[i])
+	}
+	for i := 0; i < len(t.DbAdminServices); i++ {
+		templates = append(templates, &t.DbAdminServices[i])
+	}
+	for i := 0; i < len(t.ProxyServices); i++ {
+		templates = append(templates, &t.ProxyServices[i])
+	}
+	for i := 0; i < len(t.TlsHelperServices); i++ {
+		templates = append(templates, &t.TlsHelperServices[i])
+	}
+	return templates
+}
+
 // GetAllLabels returns the labels of all selected services
 func (t SelectedTemplates) GetAllLabels() []string {
 	result := []string{}
@@ -114,6 +138,7 @@ type PredefinedTemplateConfig struct {
 	Type           string     `json:"-"`
 	Preselected    string     `json:"preselected,omitempty"`
 	Proxied        bool       `json:"proxied,omitempty"`
+	AutoUpdated    bool       `json:"auto-updated,omitempty"`
 	DemoAppInitCmd []string   `json:"demoAppInitCmd,omitempty"`
 	ServiceInitCmd []string   `json:"serviceInitCmd,omitempty"`
 	Files          []File     `json:"files,omitempty"`
