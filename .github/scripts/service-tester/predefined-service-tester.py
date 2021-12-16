@@ -18,7 +18,8 @@ def get_all_template_names():
     template_tuples = []
     template_types = ["backend", "database", "db-admin", "frontend"]
     skipped_names = ["rocket", "faunadb", "gitea", "spring-gradle",
-                     "gitlab", "adguard-home", "pi-hole", "vue", "live-poll"]
+                     "gitlab", "adguard-home", "pi-hole", "vue",
+                     "live-poll", "blocky"]
     for template_type in template_types:
         template_type_path = TEMPLATES_PATH + '/' + template_type
         services = [f for f in listdir(template_type_path) if isdir(
@@ -49,8 +50,11 @@ def test_combination(comb):
     remove(BIN_PATH + "/config.yml")
 
     # Execute Compose Generator with the config file
+    if system(f"cd {BIN_PATH} && docker compose build --quiet") != 0:
+        sys.exit("Docker failed when building the local service(s) for combination " + str(comb))
+
     if system(f"cd {BIN_PATH} && docker compose up -d --quiet-pull") != 0:
-        sys.exit("Docker failed when generating stack for combination " + str(comb))
+        sys.exit("Docker failed when pulling the remote service(s) for combination " + str(comb))
 
     if system(f"cd {BIN_PATH} && docker compose down") != 0:
         sys.exit("Error on 'docker compose down' for " + str(comb))

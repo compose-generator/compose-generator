@@ -2,6 +2,12 @@ image: redis:${{REDIS_VERSION}}-alpine
 container_name: ${{PROJECT_NAME_CONTAINER}}-db-redis
 restart: always
 networks:
+#? if services.frontend contains name == "paperless-ng" {
+#  - paperless-ng-redis
+#? }
+#? if services.frontend contains name == "overleaf" {
+#  - overleaf-redis
+#? }
 #? if has services.backend {
 #  - backend-database
 #? }
@@ -14,4 +20,4 @@ volumes:
   - ${{VOLUME_REDIS_DATA}}:/data
 env_file:
   - environment.env
-command: redis-server --requirepass "$REDIS_PASSWORD"
+command: redis-server --requirepass ${REDIS_PASSWORD}

@@ -578,6 +578,9 @@ func TestGetLogfilesPath2(t *testing.T) {
 		assert.Fail(t, "Unexpected call of isLinux")
 		return true
 	}
+	userCacheDir = func() (string, error) {
+		return "", nil
+	}
 	// Execute test
 	result := getLogfilesPath()
 	// Assert
@@ -585,8 +588,6 @@ func TestGetLogfilesPath2(t *testing.T) {
 }
 
 func TestGetLogfilesPath3(t *testing.T) {
-	// Test data
-	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
 	// Mock functions
 	isDevVersion = func() bool {
 		return false
@@ -597,9 +598,9 @@ func TestGetLogfilesPath3(t *testing.T) {
 	isLinux = func() bool {
 		return true
 	}
-	executable = func() (string, error) {
-		assert.Fail(t, "Unexpected call of executable")
-		return pathExecutable, nil
+	userCacheDir = func() (string, error) {
+		assert.Fail(t, "Unexpected call of userCacheDir")
+		return "", nil
 	}
 	// Execute test
 	result := getLogfilesPath()
@@ -609,7 +610,7 @@ func TestGetLogfilesPath3(t *testing.T) {
 
 func TestGetLogfilesPath4(t *testing.T) {
 	// Test data
-	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	pathUserCacheDir := "C:\\Users\\Marc\\AppData\\Local"
 	// Mock functions
 	isDevVersion = func() bool {
 		return false
@@ -620,16 +621,16 @@ func TestGetLogfilesPath4(t *testing.T) {
 	isLinux = func() bool {
 		return false
 	}
-	executable = func() (string, error) {
-		return pathExecutable, nil
-	}
 	logError = func(message string, exit bool) {
 		assert.Fail(t, "Unexpected call of logError")
+	}
+	userCacheDir = func() (string, error) {
+		return pathUserCacheDir, nil
 	}
 	// Execute test
 	result := getLogfilesPath()
 	// Assert
-	assert.Equal(t, "/usr/bin/compose-generator/test/path/log", result)
+	assert.Equal(t, "C:\\Users\\Marc\\AppData\\Local\\ComposeGenerator\\log", result)
 }
 
 func TestGetLogfilesPath5(t *testing.T) {
@@ -643,13 +644,13 @@ func TestGetLogfilesPath5(t *testing.T) {
 	isLinux = func() bool {
 		return false
 	}
-	executable = func() (string, error) {
+	userCacheDir = func() (string, error) {
 		return "", errors.New("Error message")
 	}
 	logErrorCallCount := 0
 	logError = func(message string, exit bool) {
 		logErrorCallCount++
-		assert.Equal(t, "Cannot retrieve path of executable", message)
+		assert.Equal(t, "Cannot find Windows cache dir", message)
 		assert.True(t, exit)
 	}
 	// Execute test
@@ -661,8 +662,8 @@ func TestGetLogfilesPath5(t *testing.T) {
 
 func TestGetLogfilesPath6(t *testing.T) {
 	// Test data
-	expectedPath := "/usr/bin/compose-generator/test/path/log"
-	pathExecutable := "/usr/bin/compose-generator/test/path/dir"
+	expectedPath := "C:\\Users\\Marc\\AppData\\Local\\ComposeGenerator\\log"
+	pathUserCacheDir := "C:\\Users\\Marc\\AppData\\Local"
 	// Mock functions
 	isDevVersion = func() bool {
 		return false
@@ -673,14 +674,42 @@ func TestGetLogfilesPath6(t *testing.T) {
 	isLinux = func() bool {
 		return false
 	}
-	executable = func() (string, error) {
-		return pathExecutable, nil
-	}
 	logError = func(message string, exit bool) {
 		assert.Fail(t, "Unexpected call of logError")
+	}
+	userCacheDir = func() (string, error) {
+		return pathUserCacheDir, nil
 	}
 	// Execute test
 	result := getLogfilesPath()
 	// Assert
 	assert.Equal(t, expectedPath, result)
+}
+
+// -------------------------------------------------------------- getCComCompilerPath --------------------------------------------------------------
+
+func TestGetCComCompilerPath1(t *testing.T) {
+	// Test data
+	expectedPath := "/usr/lib/ccom/ccomc"
+	// Mock functions
+	isWindows = func() bool {
+		return false
+	}
+	// Execute test
+	actualPath := getCComCompilerPath()
+	// Assert
+	assert.Equal(t, expectedPath, actualPath)
+}
+
+func TestGetCComCompilerPath2(t *testing.T) {
+	// Test data
+	expectedPath := "ccomc"
+	// Mock functions
+	isWindows = func() bool {
+		return true
+	}
+	// Execute test
+	actualPath := getCComCompilerPath()
+	// Assert
+	assert.Equal(t, expectedPath, actualPath)
 }

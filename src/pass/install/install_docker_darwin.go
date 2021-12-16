@@ -7,9 +7,7 @@ All rights reserved.
 
 package pass
 
-import (
-	"os"
-)
+import "os"
 
 const downloadUrl = "https://get.docker.com"
 

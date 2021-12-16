@@ -5,7 +5,7 @@ site_author: Marc Auberer
 copyright: Made with ❤️ by Compose Generator contributors, powered by <a href="https://www.chillibits.com" target="_blank">ChilliBits</a>.
 repo_name: compose-generator/compose-generator
 repo_url: https://github.com/compose-generator/compose-generator
-edit_uri: edit/release/v1.5.x/docs/docs/
+edit_uri: edit/release/v1.6.x/docs/docs/
 
 theme:
   name: material
@@ -84,7 +84,8 @@ markdown_extensions:
   - pymdownx.details
   - toc:
       permalink: true
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true 
   - pymdownx.superfences
   - attr_list
   - pymdownx.emoji:

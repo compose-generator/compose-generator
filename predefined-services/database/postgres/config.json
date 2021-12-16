@@ -1,6 +1,6 @@
 {
     "label": "PostgreSQL",
-    "preselected": "services.frontend contains name == \"gitea\" | services.frontend contains name == \"sonarqube\" | services.frontend contains name == \"jira\" | services.frontend contains name == \"bitbucket\" | services.frontend contains name == \"accent\"",
+    "preselected": "services.frontend contains name == \"gitea\" | services.frontend contains name == \"sonarqube\" | services.frontend contains name == \"jira\" | services.frontend contains name == \"bitbucket\" | services.frontend contains name == \"accent\" | services.frontend contains name == \"paperless-ng\"",
     "proxied": false,
     "serviceInitCmd": [
         "cd ${{VOLUME_POSTGRES_INIT}}",
@@ -56,7 +56,7 @@
         {
             "text": "Which Postgres version do you want to use?",
             "type": 2,
-            "defaultValue": "14.0",
+            "defaultValue": "14.1",
             "variable": "POSTGRES_VERSION",
             "advanced": true
         }

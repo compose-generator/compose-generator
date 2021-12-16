@@ -2,7 +2,6 @@
 FROM node:lts AS dev
 
 WORKDIR /code
-COPY yarn.lock /code/yarn.lock
 COPY package.json /code/package.json
 RUN yarn install --production
 

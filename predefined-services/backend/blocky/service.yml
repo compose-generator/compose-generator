@@ -1,0 +1,11 @@
+image: spx01/blocky:${{BLOCKY_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-blocky
+restart: always
+ports:
+  - 53:53/tcp
+  - 53:53/udp
+  - ${{BLOCKY_PORT}}:4000
+volumes:
+  - ${{VOLUME_BLOCKY_CONFIG}}/config.yml:/app/config.yml
+env_file:
+  - environment.env

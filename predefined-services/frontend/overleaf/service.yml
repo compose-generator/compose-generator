@@ -1,0 +1,12 @@
+image: sharelatex/sharelatex:${{OVERLEAF_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-overleaf
+restart: always
+networks:
+  - overleaf-mongodb
+  - overleaf-redis
+ports:
+  - ${{OVERLEAF_PORT}}:80
+volumes:
+  - ${{VOLUME_OVERLEAF_DATA}}:/var/lib/sharelatex
+env_file:
+  - environment.env
