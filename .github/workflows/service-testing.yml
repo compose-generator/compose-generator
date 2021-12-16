@@ -8,6 +8,7 @@ on:
     branches:
       - main
       - release/**
+  push:
 
 jobs:
   test:

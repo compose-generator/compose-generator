@@ -62,7 +62,9 @@ def test_combination(comb):
 
 def reset_environment():
     """Deletes all Docker related stuff. Should be executed after each test"""
-    system("docker system prune -af > /dev/null")
+    system("docker container prune -f > /dev/null")
+    system("docker network prune -f > /dev/null")
+    system("docker builder prune -af > /dev/null")
     system(f"sudo rm -rf {BIN_PATH}/*")
 
 
