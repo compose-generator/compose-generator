@@ -145,13 +145,13 @@ func getLogfilesPath() string {
 		return "/var/log/compose-generator"
 	}
 	// Windows
-	path, err := executable()
+	cacheDir, err := userCacheDir()
 	if err != nil {
-		logError("Cannot retrieve path of executable", true)
+		ErrorLogger.Println("Cannot find Windows cache dir: " + err.Error())
+		logError("Cannot find Windows cache dir", true)
 		return ""
 	}
-	path = filepath.ToSlash(path)
-	return path[:strings.LastIndex(path, "/")] + "/log"
+	return cacheDir + "\\ComposeGenerator\\log"
 }
 
 func getCComCompilerPath() string {

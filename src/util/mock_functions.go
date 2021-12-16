@@ -31,6 +31,7 @@ var white = color.White
 var commandExists = CommandExists
 var isDockerRunning = IsDockerRunning
 var getEnv = os.Getenv
+var userCacheDir = os.UserCacheDir
 var executable = osext.Executable
 var currentUser = user.Current
 var isDockerizedEnvironment = IsDockerizedEnvironment
