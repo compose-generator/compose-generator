@@ -67,7 +67,7 @@ def reset_environment():
     print(" done")
 
     print("Pruning images ...", end='')
-    system("docker image rm -f $(docker images -a | grep -v \"compose-generator-toolbox\" | awk 'NR>1 {print $3}')");
+    system("docker image rm -f $(docker images -a | grep -v \"compose-generator-toolbox\" | awk 'NR>1 {print $3}') > /dev/null");
     print(" done")
 
     print("Pruning networks ...", end='')
