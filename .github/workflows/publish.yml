@@ -21,7 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.17
+          go-version: 1.17.x
 
       - name: Cache Go modules
         uses: actions/cache@v2
@@ -60,7 +60,7 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
-          version: v1.1.0
+          version: v1.2.2
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -140,10 +140,12 @@ jobs:
       matrix:
         config:
           - {
-              arch: amd64, label: x64
+              arch: amd64,
+              label: x64
             }
           - {
-              arch: 386, label: x86
+              arch: 386,
+              label: x86
             }
     steps:
       - name: Checkout
