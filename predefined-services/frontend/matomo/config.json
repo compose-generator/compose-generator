@@ -27,7 +27,7 @@
         {
             "text": "Which version of Matomo do you want to use?",
             "type": 2,
-            "defaultValue": "4.5",
+            "defaultValue": "4.6",
             "variable": "MATOMO_VERSION"
         }
     ]
