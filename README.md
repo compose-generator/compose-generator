@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Compose Generator Logo" src="./media/logo-wide.png" height="280" />
+  <img alt="Compose Generator Logo" src="./media/logo-wide_700x359.png" height="280" />
   <h3 align="center">Compose Generator</h3>
   <p align="center">Easy to use cli tool to generate Docker Compose configurations blazingly fast.</p>
   <p align="center">
