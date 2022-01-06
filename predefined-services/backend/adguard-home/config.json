@@ -45,7 +45,7 @@
         {
             "text": "Which version of AdGuard Home do you want to use?",
             "type": 2,
-            "defaultValue": "0.106.3",
+            "defaultValue": "0.107.2",
             "variable": "ADGUARD_VERSION"
         }
     ],
