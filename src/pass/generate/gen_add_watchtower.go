@@ -11,6 +11,7 @@ import (
 	"github.com/compose-spec/compose-go/types"
 )
 
+// GenerateAddWatchtower lets the user choose if watchtower should be added to the stack and enable it for a subset of the selected services
 func GenerateAddWatchtower(
 	project *model.CGProject,
 	selectedTemplates *model.SelectedTemplates,
@@ -60,7 +61,7 @@ func GenerateAddWatchtower(
 				model.TemplateTypeDatabase:  types.ServiceDependency{},
 				model.TemplateTypeDbAdmin:   types.ServiceDependency{},
 				model.TemplateTypeProxy:     types.ServiceDependency{},
-				model.TemplateTypeTlsHelper: types.ServiceDependency{},
+				model.TemplateTypeTLSHelper: types.ServiceDependency{},
 			},
 			Command: types.ShellCommand{"--interval", "30"},
 		})

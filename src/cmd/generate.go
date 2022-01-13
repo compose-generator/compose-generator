@@ -154,11 +154,11 @@ func EnrichProjectWithServices(project *model.CGProject, config *model.GenerateC
 		DatabaseServices:  []model.PredefinedTemplateConfig{},
 		DbAdminServices:   []model.PredefinedTemplateConfig{},
 		ProxyServices:     []model.PredefinedTemplateConfig{},
-		TlsHelperServices: []model.PredefinedTemplateConfig{},
+		TLSHelperServices: []model.PredefinedTemplateConfig{},
 	}
 	if project.ProductionReady {
 		generateChooseProxiesPass(project, availableTemplates, selectedTemplates, config)
-		generateChooseTlsHelpersPass(project, availableTemplates, selectedTemplates, config)
+		generateChooseTLSHelpersPass(project, availableTemplates, selectedTemplates, config)
 	}
 	generateChooseFrontendsPass(project, availableTemplates, selectedTemplates, config)
 	generateChooseBackendsPass(project, availableTemplates, selectedTemplates, config)

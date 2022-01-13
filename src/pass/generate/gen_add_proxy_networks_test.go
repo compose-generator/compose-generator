@@ -63,10 +63,10 @@ func TestGenerateAddProxyNetworks1(t *testing.T) {
 				Type: model.TemplateTypeProxy,
 			},
 		},
-		TlsHelperServices: []model.PredefinedTemplateConfig{
+		TLSHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name: "letsencrypt",
-				Type: model.TemplateTypeTlsHelper,
+				Type: model.TemplateTypeTLSHelper,
 			},
 		},
 	}

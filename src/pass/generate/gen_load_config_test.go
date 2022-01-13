@@ -150,14 +150,14 @@ func TestLoadGenerateConfig3(t *testing.T) {
 		},
 	}
 	// Mock functions
-	isUrl = func(str string) bool {
+	isURL = func(str string) bool {
 		assert.Equal(t, configPath, str)
 		return true
 	}
-	loadConfigFromUrlCallCount := 0
-	loadConfigFromUrlMockable = func(config *model.GenerateConfig, configUrl string) {
-		loadConfigFromUrlCallCount++
-		assert.Equal(t, configPath, configUrl)
+	loadConfigFromURLCallCount := 0
+	loadConfigFromURLMockable = func(config *model.GenerateConfig, configURL string) {
+		loadConfigFromURLCallCount++
+		assert.Equal(t, configPath, configURL)
 	}
 	loadConfigFromFileMockable = func(config *model.GenerateConfig, configPath string) {
 		assert.Fail(t, "Unexpected call of loadConfigFromFile")
@@ -167,7 +167,7 @@ func TestLoadGenerateConfig3(t *testing.T) {
 	// Assert
 	assert.Equal(t, expectedConfig, config)
 	assert.Equal(t, expectedProject, project)
-	assert.Equal(t, 1, loadConfigFromUrlCallCount)
+	assert.Equal(t, 1, loadConfigFromURLCallCount)
 }
 
 func TestLoadGenerateConfig4(t *testing.T) {
@@ -216,12 +216,12 @@ func TestLoadGenerateConfig4(t *testing.T) {
 		},
 	}
 	// Mock functions
-	isUrl = func(str string) bool {
+	isURL = func(str string) bool {
 		assert.Equal(t, configPath, str)
 		return false
 	}
-	loadConfigFromUrlMockable = func(config *model.GenerateConfig, configUrl string) {
-		assert.Fail(t, "Unexpected call of loadConfigFromUrl")
+	loadConfigFromURLMockable = func(config *model.GenerateConfig, configURL string) {
+		assert.Fail(t, "Unexpected call of loadConfigFromURL")
 	}
 	loadConfigFromFileCallCount := 0
 	loadConfigFromFileMockable = func(config *model.GenerateConfig, configPath string) {
@@ -341,15 +341,15 @@ func TestLoadConfigFromFile4(t *testing.T) {
 	assert.Equal(t, 1, unmarshalYamlCallCount)
 }
 
-// ---------------------------------------------------------------- loadConfigFromUrl --------------------------------------------------------------
+// ---------------------------------------------------------------- loadConfigFromURL --------------------------------------------------------------
 
 func TestLoadConfigFromUrl1(t *testing.T) {
 	// Test data
 	config := &model.GenerateConfig{}
-	configUrl := "https://raw.githubusercontent.com/compose-generator/compose-generator/main/media/example-config.yml"
+	configURL := "https://raw.githubusercontent.com/compose-generator/compose-generator/main/media/example-config.yml"
 	// Mock functions
 	httpGet = func(url string) (resp *http.Response, err error) {
-		assert.Equal(t, configUrl, url)
+		assert.Equal(t, configURL, url)
 		return &http.Response{
 			Body: &http.NoBody,
 		}, nil
@@ -364,7 +364,7 @@ func TestLoadConfigFromUrl1(t *testing.T) {
 		return nil
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configURL)
 	// Assert
 	assert.Equal(t, 1, unmarshalYamlCallCount)
 }
@@ -372,10 +372,10 @@ func TestLoadConfigFromUrl1(t *testing.T) {
 func TestLoadConfigFromUrl2(t *testing.T) {
 	// Test data
 	config := &model.GenerateConfig{}
-	configUrl := "https://server.chillibits.com/files/config.yml"
+	configURL := "https://server.chillibits.com/files/config.yml"
 	// Mock functions
 	httpGet = func(url string) (resp *http.Response, err error) {
-		assert.Equal(t, configUrl, url)
+		assert.Equal(t, configURL, url)
 		return nil, errors.New("Error message")
 	}
 	readAllFromFile = func(r io.Reader) ([]byte, error) {
@@ -387,16 +387,16 @@ func TestLoadConfigFromUrl2(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configURL)
 }
 
 func TestLoadConfigFromUrl3(t *testing.T) {
 	// Test data
 	config := &model.GenerateConfig{}
-	configUrl := "https://server.chillibits.com/files/config.yml"
+	configURL := "https://server.chillibits.com/files/config.yml"
 	// Mock functions
 	httpGet = func(url string) (resp *http.Response, err error) {
-		assert.Equal(t, configUrl, url)
+		assert.Equal(t, configURL, url)
 		return &http.Response{
 			Body: &http.NoBody,
 		}, nil
@@ -413,16 +413,16 @@ func TestLoadConfigFromUrl3(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configURL)
 }
 
 func TestLoadConfigFromUrl4(t *testing.T) {
 	// Test data
 	config := &model.GenerateConfig{}
-	configUrl := "https://server.chillibits.com/files/config.yml"
+	configURL := "https://server.chillibits.com/files/config.yml"
 	// Mock functions
 	httpGet = func(url string) (resp *http.Response, err error) {
-		assert.Equal(t, configUrl, url)
+		assert.Equal(t, configURL, url)
 		return &http.Response{
 			Body: http.NoBody,
 		}, nil
@@ -439,5 +439,5 @@ func TestLoadConfigFromUrl4(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configURL)
 }
