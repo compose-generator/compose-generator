@@ -20,7 +20,8 @@
 - **Where to get help:** [Official Website](https://www.compose-generator.com), [GitHub](https://github.com/compose-generator/compose-generator)
 
 ## Supported tags and respective `Dockerfile` links
-- `1.6.0`, `1.6`, `1`, `latest`
+- `1.7.0`, `1.7`, `1`, `latest`
+- `1.6.0`, `1.6`
 - `1.5.0`, `1.5`
 - `1.4.0`, `1.4`
 - `1.3.0`, `1.3`
@@ -61,4 +62,4 @@ The community is thankful for every predefined template!
 ## Contribute otherwise to the project
 If you want to contribute to this project, please ensure you comply with the [contribution guidelines](https://github.com/compose-generator/compose-generator/blob/main/CONTRIBUTING.md).
 
-© Marc Auberer 2021
+© Marc Auberer 2021-2022

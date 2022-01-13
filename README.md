@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Compose Generator Logo" src="./media/logo-wide.png" height="280" />
+  <img alt="Compose Generator Logo" src="./media/logo-wide_700x359.png" height="280" />
   <h3 align="center">Compose Generator</h3>
   <p align="center">Easy to use cli tool to generate Docker Compose configurations blazingly fast.</p>
   <p align="center">
@@ -56,10 +56,10 @@ There are downloadable packages available for all supported platforms:
 | **Windows Portable (zip)**  | [download](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_windows_amd64.zip)   | [download](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_windows_386.zip) | -                                                                                                                       | -                                                                                                                       | -                                                                                                                       | -                                                                                                                       |
 
 ## Contribute by providing predefined templates
-If you miss a predefined template and you want to create one for the public, please read the [instructions to create a template](./predefined-services/README.md). Fork the repository, create the template and open a pr against the `release/v1.7.x` branch.
+If you miss a predefined template and you want to create one for the public, please read the [instructions to create a template](./predefined-services/README.md). Fork the repository, create the template and open a pr against the `release/v1.8.x` branch.
 The community is thankful for every predefined template!
 
 ## Contribute otherwise to the project
 If you want to contribute to this project, please ensure you comply with the [contribution guidelines](CONTRIBUTING.md).
 
-© Marc Auberer 2021
+© Marc Auberer 2021-2022

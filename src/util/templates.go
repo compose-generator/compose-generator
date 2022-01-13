@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Compose Generator Contributors
+Copyright © 2021-2022 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -102,17 +102,20 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
 
 		if question.Validator == "port" {
+			externallyUsedPorts := getUsedPortsOfRunningServices()
 			// If the port is already in use, find unused one
 			port, err := strconv.Atoi(defaultValue)
 			if err != nil {
 				ErrorLogger.Println("Could not convert port to integer: " + err.Error())
 				logError("Could not convert port to integer. Please check template", true)
 			}
-			for SliceContainsInt(project.Ports, port) {
+			// Check usages in current stack and in externally running containers
+			for SliceContainsInt(project.Ports, port) || SliceContainsInt(externallyUsedPorts, port) {
 				port++
 			}
 			defaultValue = strconv.Itoa(port)
 		}
+
 		// Only ask advanced questions when the project was created in advanced mode
 		if project.AdvancedConfig || !question.Advanced {
 			// Question can be answered

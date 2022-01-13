@@ -222,8 +222,6 @@ nfpms:
         type: symlink
       - src: bash_autocomplete.sh
         dst: /etc/bash_completion.d/compose-generator
-      - dst: /usr/lib/compose-generator
-        type: dir
       - dst: /usr/lib/compose-generator/templates
         type: dir
       - dst: /var/log/compose-generator

@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Compose Generator Contributors
+Copyright © 2021-2022 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -193,6 +193,31 @@ func getOuterVolumePathOnDockerizedEnvironment() string {
 	ErrorLogger.Println("Could not find volume on host")
 	logError("Could not find a volume that is mounted to /cg/out", true)
 	return ""
+}
+
+func getUsedPortsOfRunningServices() []int {
+	// Obtain Docker client
+	client, err := newClientWithOpts(client.FromEnv)
+	if err != nil {
+		ErrorLogger.Println("Docker client initialization failed: " + err.Error())
+		logError("Could not intanciate Docker client. Please check your Docker installation", true)
+		return []int{}
+	}
+	// Get runnings containers
+	containers, err := client.ContainerList(context.Background(), types.ContainerListOptions{})
+	if err != nil {
+		WarningLogger.Println("Could not obtain container list: " + err.Error())
+		logWarning("Could not obtain container list. Please check your Docker installation")
+		return []int{}
+	}
+	// Get ports from running services
+	ports := []int{}
+	for _, container := range containers {
+		for _, port := range container.Ports {
+			ports = append(ports, int(port.PublicPort))
+		}
+	}
+	return ports
 }
 
 // IsLinux checks if the os in Linux
