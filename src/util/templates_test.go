@@ -17,21 +17,6 @@ import (
 
 // -------------------------------------------------------- TemplateListToPreselectedLabelList -----------------------------------------------------
 
-// -------------------------------------------------------------- TemplateListToLabelList ----------------------------------------------------------
-
-func TestTemplateListToLabelList(t *testing.T) {
-	// Test data
-	templates := []model.PredefinedTemplateConfig{
-		{Label: "Angular"},
-		{Label: "Wordpress"},
-		{Label: "MySQL"},
-	}
-	// Execute test
-	result := TemplateListToLabelList(templates)
-	// Assert
-	assert.EqualValues(t, result, []string{"Angular", "Wordpress", "MySQL"})
-}
-
 // ---------------------------------------------------------------- EvaluateProxyLabels ------------------------------------------------------------
 
 func TestEvaluateProxyLabels1(t *testing.T) {
@@ -118,4 +103,67 @@ func TestEvaluateProxyLabels2(t *testing.T) {
 	EvaluateProxyLabels(project, template, selectedTemplates)
 	// Assert
 	assert.Equal(t, expectedProject, project)
+}
+
+// -------------------------------------------------------------- TemplateListToLabelList ----------------------------------------------------------
+
+func TestTemplateListToLabelList(t *testing.T) {
+	// Test data
+	templates := []model.PredefinedTemplateConfig{
+		{Label: "Angular"},
+		{Label: "Wordpress"},
+		{Label: "MySQL"},
+	}
+	// Execute test
+	result := TemplateListToLabelList(templates)
+	// Assert
+	assert.EqualValues(t, result, []string{"Angular", "Wordpress", "MySQL"})
+}
+
+// --------------------------------------------------------- TemplateListToPreselectedLabelList ----------------------------------------------------
+
+func TestTemplateListToPreselectedLabelList(t *testing.T) {
+	// Test data
+	templates := []model.PredefinedTemplateConfig{
+		{
+			Label:       "Angular",
+			Preselected: "services.database contains name == \"mysql\" | services.database contains name == \"mariadb\"",
+		},
+		{
+			Label:       "Wordpress",
+			Preselected: "true",
+		},
+		{
+			Label:       "MySQL",
+			Preselected: "false",
+		},
+	}
+	selected := &model.SelectedTemplates{
+		FrontendServices: []model.PredefinedTemplateConfig{
+			{
+				Name:  "mariadb",
+				Label: "MariaDB",
+			},
+		},
+	}
+	// Mock functions
+	evaluateConditionCallCount := 0
+	evaluateCondition = func(condition string, s *model.SelectedTemplates, varMap model.Vars) bool {
+		evaluateConditionCallCount++
+		assert.Equal(t, selected, s)
+		assert.Nil(t, varMap)
+		if evaluateConditionCallCount == 1 {
+			assert.Equal(t, "services.database contains name == \"mysql\" | services.database contains name == \"mariadb\"", condition)
+		} else if evaluateConditionCallCount == 2 {
+			assert.Equal(t, "true", condition)
+		} else if evaluateConditionCallCount == 3 {
+			assert.Equal(t, "false", condition)
+			return false
+		}
+		return true
+	}
+	// Execute test
+	result := TemplateListToPreselectedLabelList(templates, selected)
+	// Assert
+	assert.EqualValues(t, result, []string{"Angular", "Wordpress"})
 }
