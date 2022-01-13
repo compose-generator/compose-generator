@@ -25,7 +25,7 @@ func GenerateChooseTLSHelpers(
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
-		for _, template := range available.TlsHelperService {
+		for _, template := range available.TLSHelperService {
 			for _, selectedConfig := range selectedServiceConfigs {
 				if template.Name == selectedConfig.Name {
 					// Add vars to project
@@ -53,13 +53,13 @@ func GenerateChooseTLSHelpers(
 	} else {
 		// Generate from user input
 		infoLogger.Println("Generating tls helpers from user input ...")
-		items := templateListToLabelList(available.TlsHelperService)
-		itemsPreselected := templateListToPreselectedLabelList(available.TlsHelperService, selected)
+		items := templateListToLabelList(available.TLSHelperService)
+		itemsPreselected := templateListToPreselectedLabelList(available.TLSHelperService, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which TLS helper services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
 			// Get selected template config
-			selectedConfig := available.TlsHelperService[index]
+			selectedConfig := available.TLSHelperService[index]
 			// Ask questions to the user
 			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user

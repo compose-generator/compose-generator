@@ -87,10 +87,10 @@ func prepareInputData(selected *model.SelectedTemplates, varMap model.Vars) stri
 		Var:      varMap,
 	}
 	// Marshal to json
-	dataJson, err := json.Marshal(data)
+	dataJSON, err := json.Marshal(data)
 	if err != nil {
 		ErrorLogger.Println("Could not evaluate conditional sections in template: " + err.Error())
 		logError("Could not evaluate conditional sections in template. Input could be corrupted", true)
 	}
-	return string(dataJson)
+	return string(dataJSON)
 }

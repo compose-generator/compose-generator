@@ -32,7 +32,7 @@ func CheckForServiceTemplateUpdate() {
 		}
 	}
 
-	fileUrl := "https://github.com/compose-generator/compose-generator/releases/download/" + Version + "/predefined-services.tar.gz"
+	fileURL := "https://github.com/compose-generator/compose-generator/releases/download/" + Version + "/predefined-services.tar.gz"
 	outputPath := GetPredefinedServicesPath() + "/predefined-services.tar.gz"
 	shouldUpdate := false
 
@@ -45,7 +45,7 @@ func CheckForServiceTemplateUpdate() {
 		lastModifiedLocal := file.ModTime().Unix()
 
 		// Issue HEAD request for services archive
-		res, err := http.Head(fileUrl)
+		res, err := http.Head(fileURL)
 		if err != nil {
 			WarningLogger.Println("Could not check for template updates: " + err.Error())
 			logWarning("Could not check for template updates")
@@ -76,7 +76,7 @@ func CheckForServiceTemplateUpdate() {
 				processMessage = "Downloading predefined services update ..."
 			}
 			spinner = StartProcess(processMessage)
-			if err := DownloadFile(fileUrl, outputPath); err != nil {
+			if err := DownloadFile(fileURL, outputPath); err != nil {
 				ErrorLogger.Println("Failed to download predefined services update: " + err.Error())
 				logError("Failed to download predefined services update. Please check your internet connection", true)
 			}

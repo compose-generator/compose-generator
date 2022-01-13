@@ -26,7 +26,7 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 		DatabaseServices: []model.PredefinedTemplateConfig{},
 		DbAdminServices:  []model.PredefinedTemplateConfig{},
 		ProxyService:     []model.PredefinedTemplateConfig{},
-		TlsHelperService: []model.PredefinedTemplateConfig{},
+		TLSHelperService: []model.PredefinedTemplateConfig{},
 	}
 
 	// Find available templates
@@ -68,7 +68,7 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 			case model.TemplateTypeProxy:
 				availableTemplates.ProxyService = append(availableTemplates.ProxyService, config)
 			case model.TemplateTypeTLSHelper:
-				availableTemplates.TlsHelperService = append(availableTemplates.TlsHelperService, config)
+				availableTemplates.TLSHelperService = append(availableTemplates.TLSHelperService, config)
 			}
 		}
 	}

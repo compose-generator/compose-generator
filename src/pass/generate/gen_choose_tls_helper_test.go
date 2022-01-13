@@ -19,7 +19,7 @@ func TestGenerateChooseTLSHelpers1(t *testing.T) {
 		FromFile: true,
 	}
 	available := &model.AvailableTemplates{
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TLSHelperService: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -92,7 +92,7 @@ func TestGenerateChooseTLSHelpers2(t *testing.T) {
 		FromFile: false,
 	}
 	available := &model.AvailableTemplates{
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TLSHelperService: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -152,10 +152,10 @@ func TestGenerateChooseTLSHelpers2(t *testing.T) {
 		pelCallCount++
 	}
 	askTemplateQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
-		assert.Equal(t, available.TlsHelperService[0], *template)
+		assert.Equal(t, available.TLSHelperService[0], *template)
 	}
 	askForCustomVolumePaths = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
-		assert.Equal(t, available.TlsHelperService[0], *template)
+		assert.Equal(t, available.TLSHelperService[0], *template)
 	}
 	// Execute test
 	GenerateChooseTLSHelpers(project, available, selected, config)

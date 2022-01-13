@@ -127,7 +127,7 @@ type AvailableTemplates struct {
 	DatabaseServices []PredefinedTemplateConfig
 	DbAdminServices  []PredefinedTemplateConfig
 	ProxyService     []PredefinedTemplateConfig
-	TlsHelperService []PredefinedTemplateConfig
+	TLSHelperService []PredefinedTemplateConfig
 }
 
 // PredefinedTemplateConfig represents the JSON structure of predefined template configuration file
