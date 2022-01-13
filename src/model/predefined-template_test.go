@@ -35,7 +35,7 @@ func TestGetAll(t *testing.T) {
 		ProxyServices: []PredefinedTemplateConfig{
 			{Name: "nginx"},
 		},
-		TlsHelperServices: []PredefinedTemplateConfig{
+		TLSHelperServices: []PredefinedTemplateConfig{
 			{Name: "letsencrypt"},
 		},
 	}
@@ -82,7 +82,7 @@ func TestGetAllRef(t *testing.T) {
 		ProxyServices: []PredefinedTemplateConfig{
 			{Name: "nginx"},
 		},
-		TlsHelperServices: []PredefinedTemplateConfig{
+		TLSHelperServices: []PredefinedTemplateConfig{
 			{Name: "letsencrypt"},
 		},
 	}
@@ -106,7 +106,7 @@ func TestGetAllRef(t *testing.T) {
 		ProxyServices: []PredefinedTemplateConfig{
 			{Name: "nginx"},
 		},
-		TlsHelperServices: []PredefinedTemplateConfig{
+		TLSHelperServices: []PredefinedTemplateConfig{
 			{Name: "letsencrypt"},
 		},
 	}
@@ -169,7 +169,7 @@ func TestGetAllLabels(t *testing.T) {
 				Label: "Traefik",
 			},
 		},
-		TlsHelperServices: []PredefinedTemplateConfig{},
+		TLSHelperServices: []PredefinedTemplateConfig{},
 	}
 	expectedResult := []string{"Drupal", "Mediawiki", "Fiber", "Nexus", "ScyllaDB", "SingleStore", "Elasticsearch HQ", "Redis Insight", "Traefik"}
 	// Execute test

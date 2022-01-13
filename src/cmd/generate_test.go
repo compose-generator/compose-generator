@@ -80,9 +80,9 @@ func TestEnrichProjectWithServices1(t *testing.T) {
 	generateChooseProxiesPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
 		generateChooseProxiesPassCallCount++
 	}
-	generateChooseTlsHelpersPassCallCount := 0
-	generateChooseTlsHelpersPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
-		generateChooseTlsHelpersPassCallCount++
+	generateChooseTLSHelpersPassCallCount := 0
+	generateChooseTLSHelpersPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
+		generateChooseTLSHelpersPassCallCount++
 	}
 	generateAddWatchtowerPassCallCount := 0
 	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates, config *model.GenerateConfig) {
@@ -133,7 +133,7 @@ func TestEnrichProjectWithServices1(t *testing.T) {
 	assert.Equal(t, 1, generateChooseDatabasesPassCallCount)
 	assert.Equal(t, 1, generateChooseDbAdminsPassCallCount)
 	assert.Equal(t, 1, generateChooseProxiesPassCallCount)
-	assert.Equal(t, 1, generateChooseTlsHelpersPassCallCount)
+	assert.Equal(t, 1, generateChooseTLSHelpersPassCallCount)
 	assert.Equal(t, 1, generateAddWatchtowerPassCallCount)
 	assert.Equal(t, 1, generatePassCallCount)
 	assert.Equal(t, 1, generateResolveDependencyGroupsPassCallCount)
@@ -209,9 +209,9 @@ func TestEnrichProjectWithServices2(t *testing.T) {
 	generateChooseProxiesPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
 		generateChooseProxiesPassCallCount++
 	}
-	generateChooseTlsHelpersPassCallCount := 0
-	generateChooseTlsHelpersPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
-		generateChooseTlsHelpersPassCallCount++
+	generateChooseTLSHelpersPassCallCount := 0
+	generateChooseTLSHelpersPass = func(project *model.CGProject, available *model.AvailableTemplates, selected *model.SelectedTemplates, config *model.GenerateConfig) {
+		generateChooseTLSHelpersPassCallCount++
 	}
 	generateAddWatchtowerPassCallCount := 0
 	generateAddWatchtowerPass = func(project *model.CGProject, selectedTemplates *model.SelectedTemplates, config *model.GenerateConfig) {
@@ -262,7 +262,7 @@ func TestEnrichProjectWithServices2(t *testing.T) {
 	assert.Equal(t, 1, generateChooseDatabasesPassCallCount)
 	assert.Equal(t, 1, generateChooseDbAdminsPassCallCount)
 	assert.Equal(t, 1, generateChooseProxiesPassCallCount)
-	assert.Equal(t, 1, generateChooseTlsHelpersPassCallCount)
+	assert.Equal(t, 1, generateChooseTLSHelpersPassCallCount)
 	assert.Equal(t, 1, generateAddWatchtowerPassCallCount)
 	assert.Equal(t, 1, generatePassCallCount)
 	assert.Equal(t, 1, generateResolveDependencyGroupsPassCallCount)

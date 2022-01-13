@@ -11,8 +11,8 @@ import (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// GenerateChooseTlsHelpers lets the user choose predefined tls helper service templates
-func GenerateChooseTlsHelpers(
+// GenerateChooseTLSHelpers lets the user choose predefined tls helper service templates
+func GenerateChooseTLSHelpers(
 	project *model.CGProject,
 	available *model.AvailableTemplates,
 	selected *model.SelectedTemplates,
@@ -21,7 +21,7 @@ func GenerateChooseTlsHelpers(
 	if config != nil && config.FromFile {
 		// Generate from config file
 		infoLogger.Println("Generating TLS helpers from config file ...")
-		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeTlsHelper)
+		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeTLSHelper)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
@@ -44,7 +44,7 @@ func GenerateChooseTlsHelpers(
 						}
 					}
 					// Add template to selected templates
-					selected.TlsHelperServices = append(selected.TlsHelperServices, template)
+					selected.TLSHelperServices = append(selected.TLSHelperServices, template)
 					break
 				}
 			}
@@ -65,7 +65,7 @@ func GenerateChooseTlsHelpers(
 			// Ask volume questions to the user
 			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
-			selected.TlsHelperServices = append(selected.TlsHelperServices, selectedConfig)
+			selected.TLSHelperServices = append(selected.TLSHelperServices, selectedConfig)
 		}
 		infoLogger.Println("Generating tls helpers from user input (done)")
 	}

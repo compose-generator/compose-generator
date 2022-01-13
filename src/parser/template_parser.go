@@ -67,7 +67,7 @@ func GetAvailablePredefinedTemplates() *model.AvailableTemplates {
 				availableTemplates.DbAdminServices = append(availableTemplates.DbAdminServices, config)
 			case model.TemplateTypeProxy:
 				availableTemplates.ProxyService = append(availableTemplates.ProxyService, config)
-			case model.TemplateTypeTlsHelper:
+			case model.TemplateTypeTLSHelper:
 				availableTemplates.TlsHelperService = append(availableTemplates.TlsHelperService, config)
 			}
 		}

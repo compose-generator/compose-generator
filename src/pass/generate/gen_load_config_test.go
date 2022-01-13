@@ -154,9 +154,9 @@ func TestLoadGenerateConfig3(t *testing.T) {
 		assert.Equal(t, configPath, str)
 		return true
 	}
-	loadConfigFromUrlCallCount := 0
-	loadConfigFromUrlMockable = func(config *model.GenerateConfig, configUrl string) {
-		loadConfigFromUrlCallCount++
+	loadConfigFromURLCallCount := 0
+	loadConfigFromURLMockable = func(config *model.GenerateConfig, configUrl string) {
+		loadConfigFromURLCallCount++
 		assert.Equal(t, configPath, configUrl)
 	}
 	loadConfigFromFileMockable = func(config *model.GenerateConfig, configPath string) {
@@ -167,7 +167,7 @@ func TestLoadGenerateConfig3(t *testing.T) {
 	// Assert
 	assert.Equal(t, expectedConfig, config)
 	assert.Equal(t, expectedProject, project)
-	assert.Equal(t, 1, loadConfigFromUrlCallCount)
+	assert.Equal(t, 1, loadConfigFromURLCallCount)
 }
 
 func TestLoadGenerateConfig4(t *testing.T) {
@@ -220,8 +220,8 @@ func TestLoadGenerateConfig4(t *testing.T) {
 		assert.Equal(t, configPath, str)
 		return false
 	}
-	loadConfigFromUrlMockable = func(config *model.GenerateConfig, configUrl string) {
-		assert.Fail(t, "Unexpected call of loadConfigFromUrl")
+	loadConfigFromURLMockable = func(config *model.GenerateConfig, configUrl string) {
+		assert.Fail(t, "Unexpected call of loadConfigFromURL")
 	}
 	loadConfigFromFileCallCount := 0
 	loadConfigFromFileMockable = func(config *model.GenerateConfig, configPath string) {
@@ -341,7 +341,7 @@ func TestLoadConfigFromFile4(t *testing.T) {
 	assert.Equal(t, 1, unmarshalYamlCallCount)
 }
 
-// ---------------------------------------------------------------- loadConfigFromUrl --------------------------------------------------------------
+// ---------------------------------------------------------------- loadConfigFromURL --------------------------------------------------------------
 
 func TestLoadConfigFromUrl1(t *testing.T) {
 	// Test data
@@ -364,7 +364,7 @@ func TestLoadConfigFromUrl1(t *testing.T) {
 		return nil
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configUrl)
 	// Assert
 	assert.Equal(t, 1, unmarshalYamlCallCount)
 }
@@ -387,7 +387,7 @@ func TestLoadConfigFromUrl2(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configUrl)
 }
 
 func TestLoadConfigFromUrl3(t *testing.T) {
@@ -413,7 +413,7 @@ func TestLoadConfigFromUrl3(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configUrl)
 }
 
 func TestLoadConfigFromUrl4(t *testing.T) {
@@ -439,5 +439,5 @@ func TestLoadConfigFromUrl4(t *testing.T) {
 		assert.True(t, exit)
 	}
 	// Execute test
-	loadConfigFromUrl(config, configUrl)
+	loadConfigFromURL(config, configUrl)
 }

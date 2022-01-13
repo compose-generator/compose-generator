@@ -65,7 +65,7 @@ var getCustomTemplatesPath = util.GetCustomTemplatesPath
 
 // Passes
 var generateChooseProxiesPass = genPass.GenerateChooseProxies
-var generateChooseTlsHelpersPass = genPass.GenerateChooseTlsHelpers
+var generateChooseTLSHelpersPass = genPass.GenerateChooseTLSHelpers
 var generateChooseFrontendsPass = genPass.GenerateChooseFrontends
 var generateChooseBackendsPass = genPass.GenerateChooseBackends
 var generateChooseDatabasesPass = genPass.GenerateChooseDatabases

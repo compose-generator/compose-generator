@@ -5,14 +5,14 @@ All rights reserved.
 
 package model
 
-// TemplateTypeFrontend, TemplateTypeBackend, TemplateTypeDatabase, TemplateTypeProxy and TemplateTypeTlsHelper represent the different template types
+// TemplateTypeFrontend, TemplateTypeBackend, TemplateTypeDatabase, TemplateTypeProxy and TemplateTypeTLSHelper represent the different template types
 const (
 	TemplateTypeFrontend  = "frontend"
 	TemplateTypeBackend   = "backend"
 	TemplateTypeDatabase  = "database"
 	TemplateTypeDbAdmin   = "db-admin"
 	TemplateTypeProxy     = "proxy"
-	TemplateTypeTlsHelper = "tls-helper"
+	TemplateTypeTLSHelper = "tls-helper"
 )
 
 // FileTypeService, FileTypeEnv, FileTypeDocs and FileTypeConfig represent the different type options for template files
@@ -37,7 +37,7 @@ type SelectedTemplates struct {
 	DatabaseServices  []PredefinedTemplateConfig `json:"database,omitempty"`
 	DbAdminServices   []PredefinedTemplateConfig `json:"dbadmin,omitempty"`
 	ProxyServices     []PredefinedTemplateConfig `json:"proxy,omitempty"`
-	TlsHelperServices []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
+	TLSHelperServices []PredefinedTemplateConfig `json:"tlshelper,omitempty"`
 }
 
 // GetAll returns all templates of all types, mixed in a single slice
@@ -48,7 +48,7 @@ func (t SelectedTemplates) GetAll() []PredefinedTemplateConfig {
 	templates = append(templates, t.DatabaseServices...)
 	templates = append(templates, t.DbAdminServices...)
 	templates = append(templates, t.ProxyServices...)
-	templates = append(templates, t.TlsHelperServices...)
+	templates = append(templates, t.TLSHelperServices...)
 	return templates
 }
 
@@ -70,8 +70,8 @@ func (t SelectedTemplates) GetAllRef() []*PredefinedTemplateConfig {
 	for i := 0; i < len(t.ProxyServices); i++ {
 		templates = append(templates, &t.ProxyServices[i])
 	}
-	for i := 0; i < len(t.TlsHelperServices); i++ {
-		templates = append(templates, &t.TlsHelperServices[i])
+	for i := 0; i < len(t.TLSHelperServices); i++ {
+		templates = append(templates, &t.TLSHelperServices[i])
 	}
 	return templates
 }
@@ -92,7 +92,7 @@ func (t SelectedTemplates) GetTotal() int {
 	count += len(t.DatabaseServices)
 	count += len(t.DbAdminServices)
 	count += len(t.ProxyServices)
-	count += len(t.TlsHelperServices)
+	count += len(t.TLSHelperServices)
 	return count
 }
 
@@ -102,7 +102,7 @@ func (t SelectedTemplates) GetAllProxyQuestions() []Question {
 	for _, template := range t.ProxyServices {
 		questions = append(questions, template.ProxyQuestions...)
 	}
-	for _, template := range t.TlsHelperServices {
+	for _, template := range t.TLSHelperServices {
 		questions = append(questions, template.ProxyQuestions...)
 	}
 	return questions
@@ -114,7 +114,7 @@ func (t SelectedTemplates) GetAllProxyLabels() []Label {
 	for _, template := range t.ProxyServices {
 		labels = append(labels, template.ProxyLabels...)
 	}
-	for _, template := range t.TlsHelperServices {
+	for _, template := range t.TLSHelperServices {
 		labels = append(labels, template.ProxyLabels...)
 	}
 	return labels

@@ -32,7 +32,7 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 				{
 					Name: "backend-live-poll-api",
 					DependsOn: spec.DependsOnConfig{
-						model.TemplateTypeTlsHelper: spec.ServiceDependency{
+						model.TemplateTypeTLSHelper: spec.ServiceDependency{
 							Condition: spec.ServiceConditionStarted,
 						},
 					},
@@ -103,7 +103,7 @@ func TestGenerateResolveDependencyGroups(t *testing.T) {
 				Label: "JWilder Nginx",
 			},
 		},
-		TlsHelperServices: []model.PredefinedTemplateConfig{
+		TLSHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "letsencrypt",
 				Label: "Let's Encrypt",

@@ -7,7 +7,7 @@ package cmd
 
 import "github.com/urfave/cli/v2"
 
-// TemplateLoadCliFlags are the cli flags for the template load command
+// TemplateDeleteCliFlags are the cli flags for the template load command
 var TemplateDeleteCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "force",

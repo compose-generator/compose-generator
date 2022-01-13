@@ -53,8 +53,8 @@ func Generate(project *model.CGProject, selectedTemplates *model.SelectedTemplat
 			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeProxy, template.Name)
 		}
 		// Generate tls helpers
-		for _, template := range selectedTemplates.TlsHelperServices {
-			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeTlsHelper, template.Name)
+		for _, template := range selectedTemplates.TLSHelperServices {
+			generateServiceMockable(project, selectedTemplates, template, model.TemplateTypeTLSHelper, template.Name)
 		}
 		stopProcess(spinner)
 	} else {

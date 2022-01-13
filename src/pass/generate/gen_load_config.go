@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-var loadConfigFromUrlMockable = loadConfigFromUrl
+var loadConfigFromURLMockable = loadConfigFromURL
 var loadConfigFromFileMockable = loadConfigFromFile
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
@@ -38,7 +38,7 @@ func LoadGenerateConfig(project *model.CGProject, config *model.GenerateConfig, 
 	} else {
 		// Check if the input is an url
 		if isUrl(configInput) {
-			loadConfigFromUrlMockable(config, configInput)
+			loadConfigFromURLMockable(config, configInput)
 		} else {
 			loadConfigFromFileMockable(config, configInput)
 		}
@@ -85,7 +85,7 @@ func loadConfigFromFile(config *model.GenerateConfig, configPath string) {
 	}
 }
 
-func loadConfigFromUrl(config *model.GenerateConfig, configUrl string) {
+func loadConfigFromURL(config *model.GenerateConfig, configUrl string) {
 	// Make web request
 	// #nosec G107
 	response, err := httpGet(configUrl)

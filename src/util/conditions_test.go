@@ -27,7 +27,7 @@ var templateData2 = &model.SelectedTemplates{
 	DbAdminServices: []model.PredefinedTemplateConfig{
 		{Label: "PhpMyAdmin", Name: "phpmyadmin"},
 	},
-	TlsHelperServices: []model.PredefinedTemplateConfig{
+	TLSHelperServices: []model.PredefinedTemplateConfig{
 		{Label: "Lets Encrypt Companion", Name: "letsencrypt"},
 	},
 }
