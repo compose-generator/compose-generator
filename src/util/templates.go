@@ -102,17 +102,22 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 		defaultValue := ReplaceVarsInString(question.DefaultValue, project.Vars)
 
 		if question.Validator == "port" {
+			externallyUsedPorts := getUsedPortsOfRunningServices()
 			// If the port is already in use, find unused one
 			port, err := strconv.Atoi(defaultValue)
 			if err != nil {
 				ErrorLogger.Println("Could not convert port to integer: " + err.Error())
 				logError("Could not convert port to integer. Please check template", true)
 			}
-			for SliceContainsInt(project.Ports, port) {
+			for SliceContainsInt(project.Ports, port) { // Check usages in current stack
+				port++
+			}
+			for SliceContainsInt(externallyUsedPorts, port) { // Check usages in externally running services
 				port++
 			}
 			defaultValue = strconv.Itoa(port)
 		}
+
 		// Only ask advanced questions when the project was created in advanced mode
 		if project.AdvancedConfig || !question.Advanced {
 			// Question can be answered
