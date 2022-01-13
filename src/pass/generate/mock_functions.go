@@ -81,7 +81,7 @@ var templateListToLabelList = util.TemplateListToLabelList
 var templateListToPreselectedLabelList = util.TemplateListToPreselectedLabelList
 var generatePassword = password.Generate
 var sliceContainsString = util.SliceContainsString
-var isURL = util.isURL
+var isURL = util.IsURL
 var getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
 	return config.GetServiceConfigurationsByType(templateType)
 }
