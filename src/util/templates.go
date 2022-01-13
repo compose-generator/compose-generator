@@ -109,10 +109,8 @@ func AskTemplateQuestions(project *model.CGProject, template *model.PredefinedTe
 				ErrorLogger.Println("Could not convert port to integer: " + err.Error())
 				logError("Could not convert port to integer. Please check template", true)
 			}
-			for SliceContainsInt(project.Ports, port) { // Check usages in current stack
-				port++
-			}
-			for SliceContainsInt(externallyUsedPorts, port) { // Check usages in externally running services
+			// Check usages in current stack and in externally running containers
+			for SliceContainsInt(project.Ports, port) || SliceContainsInt(externallyUsedPorts, port) {
 				port++
 			}
 			defaultValue = strconv.Itoa(port)
