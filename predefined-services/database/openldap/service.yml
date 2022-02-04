@@ -1,0 +1,15 @@
+image: osixia/openldap:${{OPENLDAP_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-database-openldap
+restart: always
+networks:
+#? if services.backend contains name == "gerrit" {
+#  - gerrit-ldap
+#? }
+ports:
+  - 389:389
+  - 636:636
+volumes:
+  - ${{VOLUME_OPENLDAP_DATA}}:/var/lib/ldap
+  - ${{VOLUME_OPENLDAP_ETC}}:/etc/ldap/slapd.d
+env_file:
+  - environment.env

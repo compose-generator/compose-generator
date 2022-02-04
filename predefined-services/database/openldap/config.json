@@ -1,0 +1,45 @@
+{
+    "label": "OpenLDAP",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "environment.env",
+            "type": "env"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which version of OpenLDAP do you want to use?",
+            "type": 2,
+            "defaultValue": "1.5.0",
+            "variable": "OPENLDAP_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for OpenLDAP data directory?",
+            "defaultValue": "./openldap-data",
+            "variable": "VOLUME_OPENLDAP_DATA"
+        },
+        {
+            "text": "Custom path for OpenLDAP etc directory?",
+            "defaultValue": "./openldap-etc",
+            "variable": "VOLUME_OPENLDAP_ETC"
+        }
+    ],
+    "secrets": [
+        {
+            "name": "LDAP password for user 'admin'",
+            "variable": "_PW_LDAP_ADMIN",
+            "length": 50
+        }
+    ]
+}
