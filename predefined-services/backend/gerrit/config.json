@@ -9,14 +9,64 @@
         {
             "path": "README.md",
             "type": "docs"
+        },
+        {
+            "path": "${{VOLUME_GERRIT_ETC}}/gerrit.config",
+            "type": "config"
+        },
+        {
+            "path": "${{VOLUME_GERRIT_ETC}}/secure.config",
+            "type": "config"
         }
     ],
     "questions": [
         {
+            "text": "On which port do you want to expose the Gerrit web UI?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "GERRIT_PORT"
+        },
+        {
+            "text": "Which port do you want to use for Git?",
+            "type": 2,
+            "defaultValue": "29418",
+            "validator": "port",
+            "variable": "GERRIT_SSH_PORT",
+            "advanced": true
+        },
+        {
             "text": "Which version of Gerrit do you want to use?",
             "type": 2,
-            "defaultValue": "3.3.0",
+            "defaultValue": "3.4.3",
             "variable": "GERRIT_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Gerrit Git directory?",
+            "defaultValue": "./gerrit-git",
+            "variable": "VOLUME_GERRIT_GIT"
+        },
+        {
+            "text": "Custom path for Gerrit index directory?",
+            "defaultValue": "./gerrit-index",
+            "variable": "VOLUME_GERRIT_INDEX"
+        },
+        {
+            "text": "Custom path for Gerrit cache directory?",
+            "defaultValue": "./gerrit-cache",
+            "variable": "VOLUME_GERRIT_CACHE"
+        },
+        {
+            "text": "Custom path for Gerrit database directory?",
+            "defaultValue": "./gerrit-db",
+            "variable": "VOLUME_GERRIT_DB"
+        },
+        {
+            "text": "Custom path for Gerrit etc directory?",
+            "defaultValue": "./gerrit-etc",
+            "variable": "VOLUME_GERRIT_ETC"
         }
     ]
 }

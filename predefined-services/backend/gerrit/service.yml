@@ -5,10 +5,10 @@ networks:
 # ToDo: Insert or remove section
 ports:
   - ${{GERRIT_PORT}}:8080
-  - ${{GERRIT_GIT_PORT}}:29418
+  - ${{GERRIT_SSH_PORT}}:29418
 volumes:
   - ${{VOLUME_GERRIT_GIT}}:/var/gerrit/git
   - ${{VOLUME_GERRIT_INDEX}}:/var/gerrit/index
   - ${{VOLUME_GERRIT_CACHE}}:/var/gerrit/cache
-env_file:
-# ToDo: Insert or delete section
+  - ${{VOLUME_GERRIT_ETC}}:/var/gerrit/etc
+  - ${{VOLUME_GERRIT_DB}}:/var/gerrit/db
