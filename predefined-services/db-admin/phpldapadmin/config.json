@@ -1,0 +1,23 @@
+{
+    "label": "PhpLDAPAdmin",
+    "preselected": "services.database contains name == \"openldap\"",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which version of PhpLDAPAdmin do you want to use?",
+            "type": 2,
+            "defaultValue": "latest",
+            "variable": "PHPLDAPADMIN_VERSION"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+image: osixia/phpldapadmin:${{PHPLDAPADMIN_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-db-admin-phpldapadmin
+networks:
+  - openldap-phpldapadmin
+ports:
+  - 443:443
+environment:
+  - PHPLDAPADMIN_LDAP_HOSTS=ldap
