@@ -1,0 +1,22 @@
+{
+    "label": "Gerrit",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which version of Gerrit do you want to use?",
+            "type": 2,
+            "defaultValue": "3.3.0",
+            "variable": "GERRIT_VERSION"
+        }
+    ]
+}
