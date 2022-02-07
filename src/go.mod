@@ -7,7 +7,7 @@ require (
 	github.com/briandowns/spinner v1.13.0
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8
-	github.com/compose-spec/compose-go v1.0.8
+	github.com/compose-spec/compose-go v1.0.9
 	github.com/docker/docker v20.10.12+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/go-playground/validator/v10 v10.10.0
@@ -22,7 +22,6 @@ require (
 
 require (
 	github.com/Microsoft/go-winio v0.5.1 // indirect
-	github.com/compose-spec/godotenv v1.1.1 // indirect
 	github.com/containerd/containerd v1.5.9 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
