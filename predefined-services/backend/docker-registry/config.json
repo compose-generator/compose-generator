@@ -21,7 +21,7 @@
             "variable": "REGISTRY_PORT"
         },
         {
-            "text": "Which Django version do you want to use?",
+            "text": "Which Docker Registry version do you want to use?",
             "type": 2,
             "defaultValue": "2.7.1",
             "variable": "REGISTRY_VERSION"

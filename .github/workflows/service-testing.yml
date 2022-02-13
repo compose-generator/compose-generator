@@ -33,7 +33,7 @@ jobs:
     - name: Install CCom
       run: |
         curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
-        sudo add-apt-repository "deb https://admin.repo.chillibits.com/repository/ubuntu-$(lsb_release -cs) $(lsb_release -cs) main"
+        sudo add-apt-repository "deb https://repo.chillibits.com/ubuntu-$(lsb_release -cs) $(lsb_release -cs) main"
         sudo apt-get update
         sudo apt-get install ccom
 
