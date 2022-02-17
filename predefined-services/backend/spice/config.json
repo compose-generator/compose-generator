@@ -38,7 +38,7 @@
         {
             "text": "Which version of Spice do you want to use?",
             "type": 2,
-            "defaultValue": "0.6.3",
+            "defaultValue": "0.6.4",
             "variable": "SPICE_VERSION"
         }
     ],
