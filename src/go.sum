@@ -159,8 +159,8 @@ github.com/cncf/xds/go v0.0.0-20211130200136-a8f946100490/go.mod h1:eXthEFrGJvWH
 github.com/cockroachdb/datadriven v0.0.0-20190809214429-80d97fb3cbaa/go.mod h1:zn76sxSg3SzpJ0PPJaLDCu+Bu0Lg3sKTORVIj19EIF8=
 github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8 h1:wXkQsocCLPwqw27YQhonsK2+fu1fDLCfZHsx5nPnsys=
 github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8/go.mod h1:dtCz9JfVc0yS+V6wn1afxvk2LqEDkTnIDpmJvMYySQQ=
-github.com/compose-spec/compose-go v1.0.9 h1:mLEdaXkxgO7rUJEa+WoFjwl08LuoW7PeYwey74Z3jao=
-github.com/compose-spec/compose-go v1.0.9/go.mod h1:rHEHEY6CRqTAsRy+qvxWSr5GmqzgLWspRD0zloT9GOk=
+github.com/compose-spec/compose-go v1.1.0 h1:n/0O7Fl90doi5AG9bfF0SOSLXtveXxLkGXblSrxVC5Q=
+github.com/compose-spec/compose-go v1.1.0/go.mod h1:pAy7Mikpeft4pxkFU565/DRHEbDfR84G6AQuiL+Hdg8=
 github.com/containerd/aufs v0.0.0-20200908144142-dab0cbea06f4/go.mod h1:nukgQABAEopAHvB6j7cnP5zJ+/3aVcE7hCYqvIwAHyE=
 github.com/containerd/aufs v0.0.0-20201003224125-76a6863f2989/go.mod h1:AkGGQs9NM2vtYHaUen+NljV0/baGCAPELGm2q9ZXpWU=
 github.com/containerd/aufs v0.0.0-20210316121734-20793ff83c97/go.mod h1:kL5kd6KM5TzQjR79jljyi4olc1Vrx6XBlcyj3gNv2PU=

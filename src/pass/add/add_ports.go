@@ -46,7 +46,7 @@ func AddPorts(service *spec.ServiceConfig, _ *model.CGProject) {
 				Mode:      "ingress",
 				Protocol:  "tcp",
 				Target:    uint32(portInnerInt),
-				Published: uint32(portOuterInt),
+				Published: strconv.FormatUint(portOuterInt, 10),
 			})
 			infoLogger.Println("Adding port mapping " + portOuter + ":" + portInner + " to new service")
 		}
