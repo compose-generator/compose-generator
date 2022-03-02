@@ -25,13 +25,13 @@ func TestAddPorts1(t *testing.T) {
 				Mode:      "ingress",
 				Protocol:  "tcp",
 				Target:    80,
-				Published: 9090,
+				Published: "9090",
 			},
 			{
 				Mode:      "ingress",
 				Protocol:  "tcp",
 				Target:    81,
-				Published: 8081,
+				Published: "8081",
 			},
 		},
 	}
