@@ -7,7 +7,7 @@ require (
 	github.com/briandowns/spinner v1.13.0
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8
-	github.com/compose-spec/compose-go v1.0.9
+	github.com/compose-spec/compose-go v1.1.0
 	github.com/docker/docker v20.10.12+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/go-playground/validator/v10 v10.10.0
