@@ -82,9 +82,9 @@ def reset_environment():
 
 
 # Initially reset the testing environment
-print("Do initial cleanup ...", end='')
+print("Do initial cleanup ...")
 reset_environment()
-print(" done")
+print("done.")
 
 # Find all possible template combinations
 print("Collecting template names ...", end='')
