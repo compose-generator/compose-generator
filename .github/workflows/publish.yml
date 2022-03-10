@@ -108,6 +108,7 @@ jobs:
 
       - name: Deploy to Raspbian
         run: |
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/raspbian-bullseye/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/raspbian-buster/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/raspbian-stretch/"
       
