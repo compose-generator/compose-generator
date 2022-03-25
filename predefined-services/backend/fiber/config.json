@@ -32,7 +32,7 @@
         {
             "text": "Which Go version do you want to use?",
             "type": 2,
-            "defaultValue": "1.17",
+            "defaultValue": "1.18",
             "variable": "FIBER_GO_VERSION"
         },
         {

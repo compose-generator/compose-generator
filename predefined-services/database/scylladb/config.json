@@ -34,7 +34,7 @@
         {
             "text": "Which ScyllaDB version do you want to use?",
             "type": 2,
-            "defaultValue": "4.5.3",
+            "defaultValue": "4.6.0",
             "variable": "SCYLLADB_VERSION",
             "advanced": true
         },
