@@ -1,4 +1,4 @@
-# github.com/AlecAivazis/survey/v2 v2.2.13
+# github.com/AlecAivazis/survey/v2 v2.3.4
 ## explicit; go 1.13
 github.com/AlecAivazis/survey/v2
 github.com/AlecAivazis/survey/v2/core
@@ -29,8 +29,8 @@ github.com/compose-spec/compose-go/loader
 github.com/compose-spec/compose-go/schema
 github.com/compose-spec/compose-go/template
 github.com/compose-spec/compose-go/types
-# github.com/containerd/containerd v1.6.1
-## explicit; go 1.16
+# github.com/containerd/containerd v1.6.2
+## explicit; go 1.17
 github.com/containerd/containerd/errdefs
 github.com/containerd/containerd/log
 github.com/containerd/containerd/platforms
@@ -44,7 +44,7 @@ github.com/davecgh/go-spew/spew
 ## explicit; go 1.15
 github.com/distribution/distribution/v3/digestset
 github.com/distribution/distribution/v3/reference
-# github.com/docker/distribution v2.8.0+incompatible
+# github.com/docker/distribution v2.8.1+incompatible
 ## explicit
 github.com/docker/distribution/digestset
 github.com/docker/distribution/reference
@@ -147,6 +147,8 @@ github.com/mgutz/ansi
 github.com/mitchellh/mapstructure
 # github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6
 ## explicit; go 1.13
+# github.com/morikuni/aec v1.0.0
+## explicit
 # github.com/opencontainers/go-digest v1.0.0
 ## explicit; go 1.13
 github.com/opencontainers/go-digest
