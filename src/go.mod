@@ -1,12 +1,12 @@
 module compose-generator
 
-go 1.17
+go 1.18
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.2.13
-	github.com/briandowns/spinner v1.13.0
+	github.com/AlecAivazis/survey/v2 v2.3.4
+	github.com/briandowns/spinner v1.18.1
 	github.com/cli/safeexec v1.0.0
-	github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8
+	github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258
 	github.com/compose-spec/compose-go v1.1.0
 	github.com/docker/docker v20.10.14+incompatible
 	github.com/fatih/color v1.13.0
@@ -22,11 +22,11 @@ require (
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/containerd/containerd v1.6.1 // indirect
+	github.com/containerd/containerd v1.6.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/distribution/v3 v3.0.0-20210316161203-a01c71e2477e // indirect
-	github.com/docker/distribution v2.8.0+incompatible // indirect
+	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
@@ -45,6 +45,7 @@ require (
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
+	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2-0.20211117181255-693428a734f5 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect

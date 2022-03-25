@@ -32,7 +32,7 @@
         },
         {
             "text": "Which version of of Traefik Proxy do you want to use?",
-            "defaultValue": "2.6.0",
+            "defaultValue": "2.6.2",
             "type": 2,
             "variable": "TRAEFIK_PROXY_VERSION",
             "advanced": true

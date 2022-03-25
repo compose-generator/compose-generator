@@ -46,7 +46,7 @@
         {
             "text": "Which Flask version do you want to use?",
             "type": 2,
-            "defaultValue": "2.0.2",
+            "defaultValue": "2.0.3",
             "variable": "FLASK_VERSION"
         }
     ],

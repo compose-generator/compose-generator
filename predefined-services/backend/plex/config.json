@@ -23,7 +23,7 @@
         {
             "text": "Which version of Plex do you want to use?",
             "type": 2,
-            "defaultValue": "1.25.4",
+            "defaultValue": "1.25.8",
             "variable": "PLEX_VERSION"
         }
     ],
