@@ -6,7 +6,7 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.2.13
 	github.com/briandowns/spinner v1.13.0
 	github.com/cli/safeexec v1.0.0
-	github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8
+	github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258
 	github.com/compose-spec/compose-go v1.1.0
 	github.com/docker/docker v20.10.14+incompatible
 	github.com/fatih/color v1.13.0

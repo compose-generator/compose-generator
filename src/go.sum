@@ -184,8 +184,8 @@ github.com/cockroachdb/datadriven v0.0.0-20190809214429-80d97fb3cbaa/go.mod h1:z
 github.com/cockroachdb/datadriven v0.0.0-20200714090401-bf6692d28da5/go.mod h1:h6jFvWxBdQXxjopDMZyH2UVceIRfR84bdzbkoKrsWNo=
 github.com/cockroachdb/errors v1.2.4/go.mod h1:rQD95gz6FARkaKkQXUksEje/d9a6wBJoCr5oaCLELYA=
 github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f/go.mod h1:i/u985jwjWRlyHXQbwatDASoW0RMlZ/3i9yJHE2xLkI=
-github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8 h1:wXkQsocCLPwqw27YQhonsK2+fu1fDLCfZHsx5nPnsys=
-github.com/compose-generator/diu v0.0.0-20211016203144-1bbae0eb7ff8/go.mod h1:dtCz9JfVc0yS+V6wn1afxvk2LqEDkTnIDpmJvMYySQQ=
+github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258 h1:fzx+fBSQoZTPTCs10BPFuoBhm+jzBsWXilBWuHXtwsQ=
+github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258/go.mod h1:yoEPMdNoNju+iuyEzAbJBzjCy43yIGQdhMy/xMrcNYk=
 github.com/compose-spec/compose-go v1.1.0 h1:n/0O7Fl90doi5AG9bfF0SOSLXtveXxLkGXblSrxVC5Q=
 github.com/compose-spec/compose-go v1.1.0/go.mod h1:pAy7Mikpeft4pxkFU565/DRHEbDfR84G6AQuiL+Hdg8=
 github.com/containerd/aufs v0.0.0-20200908144142-dab0cbea06f4/go.mod h1:nukgQABAEopAHvB6j7cnP5zJ+/3aVcE7hCYqvIwAHyE=
