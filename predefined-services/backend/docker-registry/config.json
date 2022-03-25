@@ -23,7 +23,7 @@
         {
             "text": "Which Docker Registry version do you want to use?",
             "type": 2,
-            "defaultValue": "2.7.1",
+            "defaultValue": "2.8.1",
             "variable": "REGISTRY_VERSION"
         }
     ],
