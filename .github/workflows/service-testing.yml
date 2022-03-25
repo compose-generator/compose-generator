@@ -16,6 +16,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Upgrade apt packages
+      run: sudo apt-get update && sudo apt-get upgrade -y
+
     - name: Install Go
       uses: actions/setup-go@v2
       with:
