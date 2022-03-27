@@ -33,7 +33,7 @@ title: Install on Linux
     To install Compose Generator on Raspbian, execute the following commands in your terminal:
     ```sh
     sudo apt-get install ca-certificates
-    curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo apt-key add -
+    curl -fsSL https://server.chillibits.com/files/repo/gpg | sudo tee /etc/apt/trusted.gpg.d/chillibits.asc
 	sudo echo "deb [arch=armhf] https://repo.chillibits.com/$(lsb_release -is | awk '{print tolower($0)}')-$(lsb_release -cs) $(lsb_release -cs) main" > /etc/apt/sources.list.d/chillibits.list
 	sudo apt-get update
 	sudo apt-get install compose-generator
