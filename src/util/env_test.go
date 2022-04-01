@@ -610,7 +610,7 @@ func TestGetLogfilesPath3(t *testing.T) {
 
 func TestGetLogfilesPath4(t *testing.T) {
 	// Test data
-	pathUserCacheDir := "C:\\Users\\Marc\\AppData\\Local"
+	pathUserCacheDir := "C:/Users/Marc/AppData/Local"
 	// Mock functions
 	isDevVersion = func() bool {
 		return false
@@ -630,7 +630,7 @@ func TestGetLogfilesPath4(t *testing.T) {
 	// Execute test
 	result := getLogfilesPath()
 	// Assert
-	assert.Equal(t, "C:\\Users\\Marc\\AppData\\Local\\ComposeGenerator\\log", result)
+	assert.Equal(t, "C:/Users/Marc/AppData/Local/ComposeGenerator/log", result)
 }
 
 func TestGetLogfilesPath5(t *testing.T) {
@@ -662,8 +662,7 @@ func TestGetLogfilesPath5(t *testing.T) {
 
 func TestGetLogfilesPath6(t *testing.T) {
 	// Test data
-	expectedPath := "C:\\Users\\Marc\\AppData\\Local\\ComposeGenerator\\log"
-	pathUserCacheDir := "C:\\Users\\Marc\\AppData\\Local"
+	pathUserCacheDir := "C:/Users/Marc/AppData/Local"
 	// Mock functions
 	isDevVersion = func() bool {
 		return false
@@ -683,7 +682,7 @@ func TestGetLogfilesPath6(t *testing.T) {
 	// Execute test
 	result := getLogfilesPath()
 	// Assert
-	assert.Equal(t, expectedPath, result)
+	assert.Equal(t, "C:/Users/Marc/AppData/Local/ComposeGenerator/log", result)
 }
 
 // -------------------------------------------------------------- getCComCompilerPath --------------------------------------------------------------
