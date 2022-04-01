@@ -151,7 +151,8 @@ func getLogfilesPath() string {
 		logError("Cannot find Windows cache dir", true)
 		return ""
 	}
-	return cacheDir + "\\ComposeGenerator\\log"
+	cacheDir = filepath.ToSlash(cacheDir)
+	return cacheDir + "/ComposeGenerator/log"
 }
 
 func getCComCompilerPath() string {
