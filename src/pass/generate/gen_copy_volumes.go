@@ -33,9 +33,8 @@ func GenerateCopyVolumes(project *model.CGProject, selected *model.SelectedTempl
 	// Change volume paths in composition to the new ones
 	for serviceIndex, service := range project.Composition.Services {
 		for volumeIndex, volume := range service.Volumes {
-			srcPath := filepath.ToSlash(volume.Source)
-			if strings.Contains(srcPath, getPredefinedServicesPath()) {
-				dstPath := srcPath[len(getPredefinedServicesPath()):]
+			if strings.Contains(volume.Source, getPredefinedServicesPath()) {
+				dstPath := volume.Source[len(getPredefinedServicesPath()):]
 				dstPath = project.Composition.WorkingDir + strings.Join(strings.Split(dstPath, "/")[3:], "/")
 				project.Composition.Services[serviceIndex].Volumes[volumeIndex].Source = dstPath
 			}
