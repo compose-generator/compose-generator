@@ -18,5 +18,13 @@
             "defaultValue": "v0.26.1",
             "variable": "MEILISEARCH_VERSION"
         }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Meilisearch data volume?",
+            "defaultValue": "./volumes/meilisearch-data",
+            "variable": "VOLUME_MEILISEARCH_DATA",
+            "advanced": true
+        }
     ]
 }
