@@ -52,5 +52,9 @@
     'cap_add': {
         'type': 'list',
         'nullable': True
+    },
+    'working_dir': {
+        'type': 'string',
+        'nullable': True
     }
 }
