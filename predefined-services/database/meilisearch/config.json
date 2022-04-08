@@ -1,0 +1,22 @@
+{
+    "label": "Meilisearch",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which version of Meilisearch do you want to use?",
+            "type": 2,
+            "defaultValue": "v0.26.1",
+            "variable": "MEILISEARCH_VERSION"
+        }
+    ]
+}
