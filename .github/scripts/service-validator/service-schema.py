@@ -54,7 +54,6 @@
         'nullable': True
     },
     'working_dir': {
-        'type': 'string',
-        'nullable': True
+        'type': 'string'
     }
 }

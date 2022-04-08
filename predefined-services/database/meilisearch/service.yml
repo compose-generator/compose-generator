@@ -10,4 +10,4 @@ ports:
 volumes:
   - ${{VOLUME_MEILISEARCH_DATA}}:/data
 working_dir: /data
-command: ["/meilisearch"]
+command: "/meilisearch"
