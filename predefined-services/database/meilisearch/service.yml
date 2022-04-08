@@ -1,0 +1,13 @@
+image: getmeili/meilisearch:${{MEILISEARCH_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-database-meilisearch
+restart: always
+networks:
+#? if has services.backend {
+#  - backend-database
+#? }
+ports:
+  - 7700:7700
+volumes:
+  - ${{VOLUME_MEILISEARCH_DATA}}:/data
+working_dir: /data
+command: "/meilisearch"
