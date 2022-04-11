@@ -94,7 +94,7 @@ jobs:
         uses: battila7/get-version-action@v2
 
       - name: Download dist output
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist-output
 
