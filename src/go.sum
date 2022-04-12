@@ -43,8 +43,8 @@ github.com/cncf/xds/go v0.0.0-20210922020428-25de7278fc84/go.mod h1:eXthEFrGJvWH
 github.com/cncf/xds/go v0.0.0-20211011173535-cb28da3451f1/go.mod h1:eXthEFrGJvWHgFFCl3hGmgk+/aYT6PnTQLykKQRLhEs=
 github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258 h1:fzx+fBSQoZTPTCs10BPFuoBhm+jzBsWXilBWuHXtwsQ=
 github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258/go.mod h1:yoEPMdNoNju+iuyEzAbJBzjCy43yIGQdhMy/xMrcNYk=
-github.com/compose-spec/compose-go v1.1.0 h1:n/0O7Fl90doi5AG9bfF0SOSLXtveXxLkGXblSrxVC5Q=
-github.com/compose-spec/compose-go v1.1.0/go.mod h1:pAy7Mikpeft4pxkFU565/DRHEbDfR84G6AQuiL+Hdg8=
+github.com/compose-spec/compose-go v1.2.2 h1:y1dwl3KUTBnWPVur6EZno9zUIum6Q87/F5keljnGQB4=
+github.com/compose-spec/compose-go v1.2.2/go.mod h1:pAy7Mikpeft4pxkFU565/DRHEbDfR84G6AQuiL+Hdg8=
 github.com/containerd/containerd v1.6.2 h1:pcaPUGbYW8kBw6OgIZwIVIeEhdWVrBzsoCfVJ5BjrLU=
 github.com/containerd/containerd v1.6.2/go.mod h1:sidY30/InSE1j2vdD1ihtKoJz+lWdaXMdiAeIupaf+s=
 github.com/cpuguy83/go-md2man/v2 v2.0.1 h1:r/myEWzV9lfsM1tFLgDyu0atFtJ1fXn261LKYj/3DxU=
