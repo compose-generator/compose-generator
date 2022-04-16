@@ -30,7 +30,7 @@
         {
             "text": "Which FaunaDB version do you want to use?",
             "type": 2,
-            "defaultValue": "4.10.0",
+            "defaultValue": "4.11.0",
             "variable": "FAUNADB_VERSION",
             "advanced": true
         }

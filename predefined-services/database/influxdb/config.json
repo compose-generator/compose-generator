@@ -48,7 +48,7 @@
         {
             "text": "Which InfluxDB version do you want to use?",
             "type": 2,
-            "defaultValue": "2.1",
+            "defaultValue": "2.2",
             "variable": "INFLUXDB_VERSION",
             "advanced": true
         }
