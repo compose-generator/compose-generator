@@ -44,7 +44,7 @@
         {
             "text": "Which Ruby version do you want to use (must specified in format x.y.z)?",
             "type": 2,
-            "defaultValue": "3.1.1",
+            "defaultValue": "3.1.2",
             "variable": "RAILS_RUBY_VERSION"
         },
         {

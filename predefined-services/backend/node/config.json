@@ -32,7 +32,7 @@
         {
             "text": "Which version of Node do you want to use?",
             "type": 2,
-            "defaultValue": "17.8",
+            "defaultValue": "17.9",
             "variable": "NODE_VERSION"
         }
     ],
