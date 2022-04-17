@@ -5,6 +5,9 @@ networks:
 #? if services.backend contains name == "gerrit" {
 #  - gerrit-ldap
 #? }
+#? if services.dbadmin contains name == "phpldapadmin" {
+#  - openldap-phpldapadmin
+#? }
 ports:
   - 389:389
   - 636:636
@@ -13,3 +16,5 @@ volumes:
   - ${{VOLUME_OPENLDAP_ETC}}:/etc/ldap/slapd.d
 env_file:
   - environment.env
+domainname: ${{OPENLDAP_HOST}}
+hostname: ${{OPENLDAP_HOST}}

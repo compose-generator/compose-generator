@@ -17,6 +17,12 @@
     ],
     "questions": [
         {
+            "text": "On which hostname do you want to expose OpenLDAP (format: x.example.org)?",
+            "type": 2,
+            "defaultValue": "database-openldap",
+            "variable": "OPENLDAP_HOST"
+        },
+        {
             "text": "Which version of OpenLDAP do you want to use?",
             "type": 2,
             "defaultValue": "1.5.0",

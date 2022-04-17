@@ -4,5 +4,7 @@ networks:
   - openldap-phpldapadmin
 ports:
   - 443:443
+  - 80:80
 environment:
-  - PHPLDAPADMIN_LDAP_HOSTS=ldap
+  PHPLDAPADMIN_LDAP_HOSTS: §{{OPENLDAP_HOST}}
+  PHPLDAPADMIN_HTTPS: false
