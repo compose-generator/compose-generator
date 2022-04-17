@@ -1,0 +1,30 @@
+{
+    "label": "Hoppscotch",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Hoppscotch instance?",
+            "type": 2,
+            "defaultValue": "3000",
+            "validator": "port",
+            "variable": "HOPPSCOTCH_PORT"
+        },
+        {
+            "text": "Which version of Hoppscotch do you want to use?",
+            "type": 2,
+            "defaultValue": "v2.2.1",
+            "variable": "HOPPSCOTCH_VERSION"
+        }
+    ]
+}

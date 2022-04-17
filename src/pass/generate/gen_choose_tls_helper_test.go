@@ -12,14 +12,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGenerateChooseTlsHelpers1(t *testing.T) {
+func TestGenerateChooseTLSHelpers1(t *testing.T) {
 	// Test data
 	project := &model.CGProject{}
 	config := &model.GenerateConfig{
 		FromFile: true,
 	}
 	available := &model.AvailableTemplates{
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TLSHelperService: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -46,7 +46,7 @@ func TestGenerateChooseTlsHelpers1(t *testing.T) {
 		},
 	}
 	expectedSelected := &model.SelectedTemplates{
-		TlsHelperServices: []model.PredefinedTemplateConfig{
+		TLSHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -67,7 +67,7 @@ func TestGenerateChooseTlsHelpers1(t *testing.T) {
 	}
 	// Mock functions
 	getServiceConfigurationsByType = func(config *model.GenerateConfig, templateType string) []model.ServiceConfig {
-		assert.Equal(t, model.TemplateTypeTlsHelper, templateType)
+		assert.Equal(t, model.TemplateTypeTLSHelper, templateType)
 		return []model.ServiceConfig{
 			{
 				Name: "test-tlshelper",
@@ -79,20 +79,20 @@ func TestGenerateChooseTlsHelpers1(t *testing.T) {
 		}
 	}
 	// Execute test
-	GenerateChooseTlsHelpers(project, available, selected, config)
+	GenerateChooseTLSHelpers(project, available, selected, config)
 	// Assert
 	assert.Equal(t, expectedSelected, selected)
 	assert.Equal(t, expectedProject, project)
 }
 
-func TestGenerateChooseTlsHelpers2(t *testing.T) {
+func TestGenerateChooseTLSHelpers2(t *testing.T) {
 	// Test data
 	project := &model.CGProject{}
 	config := &model.GenerateConfig{
 		FromFile: false,
 	}
 	available := &model.AvailableTemplates{
-		TlsHelperService: []model.PredefinedTemplateConfig{
+		TLSHelperService: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -114,7 +114,7 @@ func TestGenerateChooseTlsHelpers2(t *testing.T) {
 	selected := &model.SelectedTemplates{}
 	expectedProject := &model.CGProject{}
 	expectedSelected := &model.SelectedTemplates{
-		TlsHelperServices: []model.PredefinedTemplateConfig{
+		TLSHelperServices: []model.PredefinedTemplateConfig{
 			{
 				Name:  "test-tlshelper",
 				Label: "Test TlsHelper",
@@ -135,11 +135,11 @@ func TestGenerateChooseTlsHelpers2(t *testing.T) {
 	}
 	// Mock functions
 	templateListToLabelList = func(templates []model.PredefinedTemplateConfig) []string {
-		assert.Equal(t, expectedSelected.TlsHelperServices, templates)
+		assert.Equal(t, expectedSelected.TLSHelperServices, templates)
 		return []string{"Test TlsHelper"}
 	}
 	templateListToPreselectedLabelList = func(templates []model.PredefinedTemplateConfig, selected *model.SelectedTemplates) []string {
-		assert.Equal(t, expectedSelected.TlsHelperServices, templates)
+		assert.Equal(t, expectedSelected.TLSHelperServices, templates)
 		return []string{}
 	}
 	multiSelectMenuQuestionIndex = func(label string, items, defaultItems []string) []int {
@@ -152,13 +152,13 @@ func TestGenerateChooseTlsHelpers2(t *testing.T) {
 		pelCallCount++
 	}
 	askTemplateQuestions = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
-		assert.Equal(t, available.TlsHelperService[0], *template)
+		assert.Equal(t, available.TLSHelperService[0], *template)
 	}
 	askForCustomVolumePaths = func(project *model.CGProject, template *model.PredefinedTemplateConfig) {
-		assert.Equal(t, available.TlsHelperService[0], *template)
+		assert.Equal(t, available.TLSHelperService[0], *template)
 	}
 	// Execute test
-	GenerateChooseTlsHelpers(project, available, selected, config)
+	GenerateChooseTLSHelpers(project, available, selected, config)
 	// Assert
 	assert.Equal(t, 1, pelCallCount)
 	assert.Equal(t, expectedSelected, selected)

@@ -73,12 +73,12 @@ func TestPel2(t *testing.T) {
 	assert.Equal(t, 1, printlnCallCount)
 }
 
-// ----------------------------------------------- IsUrl -----------------------------------------------
+// ----------------------------------------------- IsURL -----------------------------------------------
 
-func TestIsUrl(t *testing.T) {
-	assert.True(t, IsUrl("https://google.com"))
-	assert.True(t, IsUrl("http://w.com/cn"))
-	assert.True(t, IsUrl("http://192.158.0.1:90"))
-	assert.False(t, IsUrl("http://w"))
-	assert.False(t, IsUrl("fsw"))
+func TestIsURL(t *testing.T) {
+	assert.True(t, IsURL("https://google.com"))
+	assert.True(t, IsURL("http://w.com/cn"))
+	assert.True(t, IsURL("http://192.158.0.1:90"))
+	assert.False(t, IsURL("http://w"))
+	assert.False(t, IsURL("fsw"))
 }

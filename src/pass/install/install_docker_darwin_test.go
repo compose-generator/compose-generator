@@ -40,7 +40,7 @@ func TestInstallDocker1(t *testing.T) {
 		}
 	}
 	downloadFile = func(url string, filepath string) error {
-		assert.Equal(t, downloadUrl, url)
+		assert.Equal(t, downloadURL, url)
 		assert.Equal(t, filePath, filepath)
 		return nil
 	}
@@ -72,7 +72,7 @@ func TestInstallDocker2(t *testing.T) {
 		assert.True(t, exit)
 	}
 	downloadFile = func(url string, filepath string) error {
-		assert.Equal(t, downloadUrl, url)
+		assert.Equal(t, downloadURL, url)
 		assert.Equal(t, filePath, filepath)
 		return errors.New("Error message")
 	}

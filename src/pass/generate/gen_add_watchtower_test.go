@@ -66,7 +66,7 @@ func TestGenerateAddWatchTower1(t *testing.T) {
 						model.TemplateTypeDatabase:  types.ServiceDependency{},
 						model.TemplateTypeDbAdmin:   types.ServiceDependency{},
 						model.TemplateTypeProxy:     types.ServiceDependency{},
-						model.TemplateTypeTlsHelper: types.ServiceDependency{},
+						model.TemplateTypeTLSHelper: types.ServiceDependency{},
 					},
 					Command: types.ShellCommand{"--interval", "30"},
 				},

@@ -1,0 +1,5 @@
+image: hoppscotch/hoppscotch:${{HOPPSCOTCH_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-hoppscotch
+restart: always
+ports:
+  - ${{HOPPSCOTCH_PORT}}:3000

@@ -43,7 +43,7 @@
         {
             "text": "Which version of Rust do you want to use?",
             "type": 2,
-            "defaultValue": "1.57",
+            "defaultValue": "1.60",
             "variable": "ROCKET_RUST_VERSION"
         }
     ],

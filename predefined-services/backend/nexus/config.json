@@ -23,7 +23,7 @@
         {
             "text": "Which version of Nexus do you want to use?",
             "type": 2,
-            "defaultValue": "3.37.3",
+            "defaultValue": "3.38.1",
             "variable": "NEXUS_VERSION"
         }
     ],

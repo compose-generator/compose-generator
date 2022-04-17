@@ -56,7 +56,7 @@
         {
             "text": "Which version of Ghost do you want to use?",
             "type": 2,
-            "defaultValue": "4.32",
+            "defaultValue": "4.41",
             "variable": "GHOST_VERSION"
         }
     ],

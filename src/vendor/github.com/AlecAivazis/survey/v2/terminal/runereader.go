@@ -8,9 +8,8 @@ import (
 )
 
 type RuneReader struct {
-	stdio  Stdio
-	cursor *Cursor
-	state  runeReaderState
+	stdio Stdio
+	state runeReaderState
 }
 
 func NewRuneReader(stdio Stdio) *RuneReader {
@@ -20,18 +19,25 @@ func NewRuneReader(stdio Stdio) *RuneReader {
 	}
 }
 
-func (rr *RuneReader) printChar(char rune, mask rune) {
+func (rr *RuneReader) printChar(char rune, mask rune) error {
 	// if we don't need to mask the input
 	if mask == 0 {
 		// just print the character the user pressed
-		fmt.Fprintf(rr.stdio.Out, "%c", char)
-	} else {
-		// otherwise print the mask we were given
-		fmt.Fprintf(rr.stdio.Out, "%c", mask)
+		_, err := fmt.Fprintf(rr.stdio.Out, "%c", char)
+		return err
 	}
+	// otherwise print the mask we were given
+	_, err := fmt.Fprintf(rr.stdio.Out, "%c", mask)
+	return err
 }
 
-func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
+type OnRuneFn func(rune, []rune) ([]rune, bool, error)
+
+func (rr *RuneReader) ReadLine(mask rune, onRunes ...OnRuneFn) ([]rune, error) {
+	return rr.ReadLineWithDefault(mask, []rune{}, onRunes...)
+}
+
+func (rr *RuneReader) ReadLineWithDefault(mask rune, d []rune, onRunes ...OnRuneFn) ([]rune, error) {
 	line := []rune{}
 	// we only care about horizontal displacements from the origin so start counting at 0
 	index := 0
@@ -39,6 +45,15 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 	cursor := &Cursor{
 		In:  rr.stdio.In,
 		Out: rr.stdio.Out,
+	}
+
+	onRune := func(r rune, line []rune) ([]rune, bool, error) {
+		return line, false, nil
+	}
+
+	// if the user pressed a key the caller was interested in capturing
+	if len(onRunes) > 0 {
+		onRune = onRunes[0]
 	}
 
 	// we get the terminal width and height (if resized after this point the property might become invalid)
@@ -63,11 +78,26 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 		}
 	}
 
+	if len(d) > 0 {
+		index = len(d)
+		if _, err := fmt.Fprint(rr.stdio.Out, string(d)); err != nil {
+			return d, err
+		}
+		line = d
+		for range d {
+			increment()
+		}
+	}
+
 	for {
 		// wait for some input
 		r, _, err := rr.ReadRune()
 		if err != nil {
 			return line, err
+		}
+
+		if l, stop, err := onRune(r, line); stop || err != nil {
+			return l, err
 		}
 
 		// if the user pressed enter or some other newline/termination like ctrl+d
@@ -93,7 +123,9 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 		// if the user interrupts (ie with ctrl+c)
 		if r == KeyInterrupt {
 			// go to the beginning of the next line
-			fmt.Fprint(rr.stdio.Out, "\r\n")
+			if _, err := fmt.Fprint(rr.stdio.Out, "\r\n"); err != nil {
+				return line, err
+			}
 
 			// we're done processing the input, and treat interrupt like an error
 			return line, InterruptErr
@@ -140,8 +172,9 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 						//Erase symbols which are left over from older print
 						EraseLine(rr.stdio.Out, ERASE_LINE_END)
 						// print characters to the new line appropriately
-						rr.printChar(char, mask)
-
+						if err := rr.printChar(char, mask); err != nil {
+							return line, err
+						}
 					}
 					// erase what's left over from last print
 					if cursorCurrent.Y < terminalSize.Y {
@@ -163,7 +196,7 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 				decrement()
 			} else {
 				// otherwise the user pressed backspace while at the beginning of the line
-				soundBell(rr.stdio.Out)
+				_ = soundBell(rr.stdio.Out)
 			}
 
 			// we're done processing this key
@@ -188,7 +221,7 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 			} else {
 				// otherwise we are at the beginning of where we started reading lines
 				// sound the bell
-				soundBell(rr.stdio.Out)
+				_ = soundBell(rr.stdio.Out)
 			}
 
 			// we're done processing this key press
@@ -211,7 +244,7 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 			} else {
 				// otherwise we are at the end of the word and can't go past
 				// sound the bell
-				soundBell(rr.stdio.Out)
+				_ = soundBell(rr.stdio.Out)
 			}
 
 			// we're done processing this key press
@@ -260,7 +293,9 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 				for _, char := range line[index:] {
 					EraseLine(rr.stdio.Out, ERASE_LINE_END)
 					// print out the character
-					rr.printChar(char, mask)
+					if err := rr.printChar(char, mask); err != nil {
+						return line, err
+					}
 				}
 				// erase what's left on last line
 				if cursorCurrent.Y < terminalSize.Y {
@@ -292,7 +327,9 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 			index++
 			increment()
 			// print out the character
-			rr.printChar(r, mask)
+			if err := rr.printChar(r, mask); err != nil {
+				return line, err
+			}
 		} else {
 			// we are in the middle of the word so we need to insert the character the user pressed
 			line = append(line[:index], append([]rune{r}, line[index:]...)...)
@@ -306,13 +343,17 @@ func (rr *RuneReader) ReadLine(mask rune) ([]rune, error) {
 			for _, char := range line[index:] {
 				EraseLine(rr.stdio.Out, ERASE_LINE_END)
 				// print out the character
-				rr.printChar(char, mask)
+				if err := rr.printChar(char, mask); err != nil {
+					return line, err
+				}
 				increment()
 			}
 			// if we are at the last line, we want to visually insert a new line and append to it.
 			if cursorCurrent.CursorIsAtLineEnd(terminalSize) && cursorCurrent.Y == terminalSize.Y {
 				// add a new line to the terminal
-				fmt.Fprintln(rr.stdio.Out)
+				if _, err := fmt.Fprintln(rr.stdio.Out); err != nil {
+					return line, err
+				}
 				// restore the position of the cursor horizontally
 				cursor.Restore()
 				// restore the position of the cursor vertically

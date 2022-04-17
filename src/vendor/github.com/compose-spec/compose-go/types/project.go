@@ -29,7 +29,7 @@ import (
 
 // Project is the result of loading a set of compose files
 type Project struct {
-	Name         string            `yaml:"-" json:"-"`
+	Name         string            `yaml:"name,omitempty" json:"name,omitempty"`
 	WorkingDir   string            `yaml:"-" json:"-"`
 	Services     Services          `json:"services"`
 	Networks     Networks          `yaml:",omitempty" json:"networks,omitempty"`
@@ -245,6 +245,11 @@ func (p *Project) WithoutUnnecessaryResources() {
 		}
 		for _, v := range s.Secrets {
 			requiredSecrets[v.Source] = struct{}{}
+		}
+		if s.Build != nil {
+			for _, v := range s.Build.Secrets {
+				requiredSecrets[v.Source] = struct{}{}
+			}
 		}
 		for _, v := range s.Configs {
 			requiredConfigs[v.Source] = struct{}{}

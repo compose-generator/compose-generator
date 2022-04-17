@@ -11,8 +11,8 @@ import (
 
 // ---------------------------------------------------------------- Public functions ---------------------------------------------------------------
 
-// GenerateChooseTlsHelpers lets the user choose predefined tls helper service templates
-func GenerateChooseTlsHelpers(
+// GenerateChooseTLSHelpers lets the user choose predefined tls helper service templates
+func GenerateChooseTLSHelpers(
 	project *model.CGProject,
 	available *model.AvailableTemplates,
 	selected *model.SelectedTemplates,
@@ -21,11 +21,11 @@ func GenerateChooseTlsHelpers(
 	if config != nil && config.FromFile {
 		// Generate from config file
 		infoLogger.Println("Generating TLS helpers from config file ...")
-		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeTlsHelper)
+		selectedServiceConfigs := getServiceConfigurationsByType(config, model.TemplateTypeTLSHelper)
 		if project.Vars == nil {
 			project.Vars = make(map[string]string)
 		}
-		for _, template := range available.TlsHelperService {
+		for _, template := range available.TLSHelperService {
 			for _, selectedConfig := range selectedServiceConfigs {
 				if template.Name == selectedConfig.Name {
 					// Add vars to project
@@ -44,7 +44,7 @@ func GenerateChooseTlsHelpers(
 						}
 					}
 					// Add template to selected templates
-					selected.TlsHelperServices = append(selected.TlsHelperServices, template)
+					selected.TLSHelperServices = append(selected.TLSHelperServices, template)
 					break
 				}
 			}
@@ -53,19 +53,19 @@ func GenerateChooseTlsHelpers(
 	} else {
 		// Generate from user input
 		infoLogger.Println("Generating tls helpers from user input ...")
-		items := templateListToLabelList(available.TlsHelperService)
-		itemsPreselected := templateListToPreselectedLabelList(available.TlsHelperService, selected)
+		items := templateListToLabelList(available.TLSHelperService)
+		itemsPreselected := templateListToPreselectedLabelList(available.TLSHelperService, selected)
 		templateSelections := multiSelectMenuQuestionIndex("Which TLS helper services do you need?", items, itemsPreselected)
 		for _, index := range templateSelections {
 			pel()
 			// Get selected template config
-			selectedConfig := available.TlsHelperService[index]
+			selectedConfig := available.TLSHelperService[index]
 			// Ask questions to the user
 			askTemplateQuestions(project, &selectedConfig)
 			// Ask volume questions to the user
 			askForCustomVolumePaths(project, &selectedConfig)
 			// Save template to the selected templates
-			selected.TlsHelperServices = append(selected.TlsHelperServices, selectedConfig)
+			selected.TLSHelperServices = append(selected.TLSHelperServices, selectedConfig)
 		}
 		infoLogger.Println("Generating tls helpers from user input (done)")
 	}

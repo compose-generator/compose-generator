@@ -88,8 +88,8 @@ func Success(text string) {
 	}
 }
 
-// IsUrl checks if the input is a valid url: true = valid, false = invalid
-func IsUrl(str string) bool {
+// IsURL checks if the input is a valid url: true = valid, false = invalid
+func IsURL(str string) bool {
 	url, err := url.ParseRequestURI(str)
 	if err != nil {
 		return false

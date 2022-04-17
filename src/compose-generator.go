@@ -36,7 +36,7 @@ func main() {
 		UseShortOptionHandling: true,
 		EnableBashCompletion:   true,
 		Usage:                  "Generate and manage docker compose configuration files for your projects.",
-		Copyright:              "© 2021 Compose Generator Contributors",
+		Copyright:              "© 2021-2022 Compose Generator Contributors",
 		Flags:                  cmd.GenerateCliFlags,
 		Action:                 cmd.Generate,
 		Commands:               cmd.CliCommands,

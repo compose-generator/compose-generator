@@ -18,14 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.17.x
+        go-version: 1.18.x
 
     - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      uses: actions/checkout@v3
 
     - name: Install CCom
       run: |
@@ -42,7 +40,7 @@ jobs:
       run: bash <(curl -s https://codecov.io/bash)
 
     - name: Install GoSec
-      run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.9.1/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.9.1
+      run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.11.0/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.11.0
 
     - name: Run security scan
       working-directory: src

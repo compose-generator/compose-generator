@@ -32,6 +32,7 @@ func DownloadFile(url string, filepath string) error {
 	}
 
 	// Create the file
+	// #nosec G304
 	out, err := os.Create(filepath)
 	defer func() {
 		if err := out.Close(); err != nil {

@@ -29,7 +29,7 @@ func GenerateAddProxyNetworks(project *model.CGProject, selectedTemplates *model
 		}
 		// Couple every proxied frontend, backend, database and dbadmin service with the proxy in a network
 		for _, template := range selectedTemplates.GetAll() {
-			if template.Type != model.TemplateTypeProxy && template.Type != model.TemplateTypeTlsHelper && template.Proxied {
+			if template.Type != model.TemplateTypeProxy && template.Type != model.TemplateTypeTLSHelper && template.Proxied {
 				networkName := "proxy-" + template.Name
 				// Get reference to current service
 				service := project.GetServiceRef(template.Type + "-" + template.Name)

@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"os/user"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 
@@ -133,7 +134,12 @@ func loadComposeFile(project *model.CGProject, opt LoadOptions) {
 	project.Composition.WorkingDir = opt.WorkingDir
 	for _, service := range project.Composition.Services {
 		for _, port := range service.Ports {
-			project.Ports = append(project.Ports, int(port.Published))
+			portInt, err := strconv.Atoi(port.Published)
+			if err != nil {
+				errorLogger.Println("Conversion of port from string to int failed: " + err.Error())
+				logError("Conversion of port from string to int failed", true)
+			}
+			project.Ports = append(project.Ports, portInt)
 		}
 	}
 	infoLogger.Println("Loading Compose file (done)")
@@ -165,7 +171,7 @@ func loadComposeFileSingleService(
 		errorLogger.Println("Unable to unmarshal the evaluated version of '" + templateTypeName + "-" + serviceName + "': " + err.Error())
 		logError("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", true)
 	}
-	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil, true)
+	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil, true, true)
 	if err != nil {
 		errorLogger.Println("Unable to load '" + templateTypeName + "-" + serviceName + "': " + err.Error())
 		logError("Unable to load '"+templateTypeName+"-"+serviceName+"'", true)
