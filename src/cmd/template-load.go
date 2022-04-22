@@ -23,13 +23,13 @@ var TemplateLoadCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "force",
 		Aliases: []string{"f"},
-		Usage:   "No safety checks",
+		Usage:   "Skip safety checks",
 		Value:   false,
 	},
 	&cli.BoolFlag{
 		Name:    "show",
 		Aliases: []string{"s"},
-		Usage:   "Do not load a template. Instead only list all templates and terminate",
+		Usage:   "Instead only list all templates and terminate instead of loading one",
 		Value:   false,
 	},
 }

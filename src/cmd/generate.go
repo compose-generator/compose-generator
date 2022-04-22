@@ -21,7 +21,7 @@ var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "advanced",
 		Aliases: []string{"a"},
-		Usage:   "Generate compose file in advanced mode",
+		Usage:   "Generate Compose file in advanced mode",
 		Value:   false,
 	},
 	&cli.PathFlag{
@@ -32,7 +32,7 @@ var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "detached",
 		Aliases: []string{"d"},
-		Usage:   "Run docker compose detached after creating the compose file",
+		Usage:   "Run Docker Compose detached after creating the Compose file",
 		Value:   false,
 	},
 	&cli.BoolFlag{
@@ -44,13 +44,13 @@ var GenerateCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "with-instructions",
 		Aliases: []string{"i"},
-		Usage:   "Generates a README.md file with instructions to use the template",
+		Usage:   "Generate a README.md file with instructions to use the template",
 		Value:   false,
 	},
 	&cli.BoolFlag{
 		Name:    "run",
 		Aliases: []string{"r"},
-		Usage:   "Run docker compose after creating the compose file",
+		Usage:   "Run Docker Compose after creating the compose file",
 		Value:   false,
 	},
 }
