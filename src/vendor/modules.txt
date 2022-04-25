@@ -214,7 +214,7 @@ github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.2.0
 ## explicit
 github.com/subosito/gotenv
-# github.com/urfave/cli/v2 v2.4.3
+# github.com/urfave/cli/v2 v2.4.8
 ## explicit; go 1.18
 github.com/urfave/cli/v2
 # github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f
