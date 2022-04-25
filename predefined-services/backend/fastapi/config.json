@@ -1,0 +1,51 @@
+{
+    "label": "FastAPI",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "${{FASTAPI_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        },
+        {
+            "path": "${{FASTAPI_SOURCE_DIRECTORY}}/requirements.txt",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your FastAPI?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "FASTAPI_PORT"
+        },
+        {
+            "text": "Which Python version do you want to use?",
+            "type": 2,
+            "defaultValue": "3.10",
+            "variable": "FASTAPI_PYTHON_VERSION"
+        },
+        {
+            "text": "Which FastAPI version do you want to use?",
+            "type": 2,
+            "defaultValue": "0.75.2",
+            "variable": "FASTAPI_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend-fastapi",
+            "variable": "FASTAPI_SOURCE_DIRECTORY"
+        }
+    ]
+}
