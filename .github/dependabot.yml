@@ -10,7 +10,7 @@ updates:
     open-pull-requests-limit: 15
     target-branch: release/v1.9.x
     reviewers:
-      - marcauberer
+      - compose-generator/core-team
     assignees:
       - marcauberer
 
@@ -24,7 +24,7 @@ updates:
     open-pull-requests-limit: 15
     target-branch: release/v1.9.x
     reviewers:
-      - marcauberer
+      - compose-generator/core-team
     assignees:
       - marcauberer
 
@@ -38,7 +38,7 @@ updates:
     open-pull-requests-limit: 15
     target-branch: release/v1.9.x
     reviewers:
-      - marcauberer
+      - compose-generator/core-team
     assignees:
       - marcauberer
 
@@ -52,6 +52,6 @@ updates:
     open-pull-requests-limit: 15
     target-branch: release/v1.9.x
     reviewers:
-      - marcauberer
+      - compose-generator/core-team
     assignees:
       - marcauberer

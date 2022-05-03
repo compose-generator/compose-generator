@@ -69,7 +69,7 @@ var CliCommands = []*cli.Command{
 	},
 	{
 		Name:    "predefined-template",
-		Aliases: []string{"p", "pd"},
+		Aliases: []string{"p", "pd", "pt"},
 		Usage:   "Manage predefined service templates [DEV]",
 		Hidden:  !isDevVersion(),
 		Subcommands: []*cli.Command{
