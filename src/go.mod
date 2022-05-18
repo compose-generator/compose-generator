@@ -7,7 +7,7 @@ require (
 	github.com/briandowns/spinner v1.18.1
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258
-	github.com/compose-spec/compose-go v1.2.4
+	github.com/compose-spec/compose-go v1.2.5
 	github.com/docker/docker v20.10.16+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/go-playground/validator/v10 v10.11.0
@@ -41,7 +41,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
-	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
