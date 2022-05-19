@@ -7,6 +7,9 @@ github.com/AlecAivazis/survey/v2/terminal
 ## explicit; go 1.13
 github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
+# github.com/antzucaro/matchr v0.0.0-20210222213004-b04723ef80f0
+## explicit; go 1.13
+github.com/antzucaro/matchr
 # github.com/briandowns/spinner v1.18.1
 ## explicit; go 1.14
 github.com/briandowns/spinner
@@ -201,7 +204,7 @@ github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.2.0
 ## explicit
 github.com/subosito/gotenv
-# github.com/urfave/cli/v2 v2.6.0
+# github.com/urfave/cli/v2 v2.7.0
 ## explicit; go 1.18
 github.com/urfave/cli/v2
 # github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f
