@@ -7,7 +7,7 @@ require (
 	github.com/briandowns/spinner v1.18.1
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258
-	github.com/compose-spec/compose-go v1.2.6
+	github.com/compose-spec/compose-go v1.2.7
 	github.com/docker/docker v20.10.16+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/go-playground/validator/v10 v10.11.0
@@ -33,7 +33,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/imdario/mergo v0.3.12 // indirect
+	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
