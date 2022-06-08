@@ -193,6 +193,28 @@ prompt := &survey.MultiSelect{..., PageSize: 10}
 survey.AskOne(prompt, &days, survey.WithPageSize(10))
 ```
 
+#### Select options description
+
+The optional description text can be used to add extra information to each option listed in the select prompt:
+
+```golang
+color := ""
+prompt := &survey.Select{
+    Message: "Choose a color:",
+    Options: []string{"red", "blue", "green"},
+    Description: func(value string, index int) string {
+        if value == "red" {
+            return "My favorite color"
+        }
+        return ""
+    },
+}
+survey.AskOne(prompt, &color)
+
+// Assuming that the user chose "red - My favorite color":
+fmt.Println(color) //=> "red"
+```
+
 ### MultiSelect
 
 ![Example](img/multi-select-all-none.gif)
