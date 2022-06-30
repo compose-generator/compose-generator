@@ -16,13 +16,13 @@ require (
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
-	github.com/urfave/cli/v2 v2.8.1
+	github.com/urfave/cli/v2 v2.10.3
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/distribution/v3 v3.0.0-20210316161203-a01c71e2477e // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
