@@ -27,7 +27,7 @@
         {
             "text": "Which Redis version do you want to use?",
             "type": 2,
-            "defaultValue": "6.2",
+            "defaultValue": "7.0",
             "variable": "REDIS_VERSION",
             "advanced": true
         }
