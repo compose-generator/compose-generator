@@ -41,7 +41,7 @@
         {
             "text": "Which MariaDB version do you want to use?",
             "type": 2,
-            "defaultValue": "10.9",
+            "defaultValue": "10.8",
             "variable": "MARIADB_VERSION",
             "advanced": true
         }
