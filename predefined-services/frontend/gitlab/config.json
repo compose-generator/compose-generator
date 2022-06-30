@@ -37,7 +37,7 @@
         {
             "text": "Which version of GitLab do you want to use?",
             "type": 2,
-            "defaultValue": "14.9.3",
+            "defaultValue": "15.1.0",
             "variable": "GITLAB_VERSION",
             "advanced": true
         }

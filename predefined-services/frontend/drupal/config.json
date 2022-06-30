@@ -23,7 +23,7 @@
         {
             "text": "Which version of Drupal do you want to use?",
             "type": 2,
-            "defaultValue": "9.3",
+            "defaultValue": "9.4",
             "variable": "DRUPAL_VERSION"
         }
     ],
