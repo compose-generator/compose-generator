@@ -21,7 +21,7 @@
         },
         {
             "text": "Which version of of JWilder Nginx Proxy do you want to use?",
-            "defaultValue": "0.8.0",
+            "defaultValue": "1.0.1",
             "type": 2,
             "variable": "JWILDER_PROXY_VERSION",
             "advanced": true
