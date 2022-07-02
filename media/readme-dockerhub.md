@@ -20,7 +20,8 @@
 - **Where to get help:** [Official Website](https://www.compose-generator.com), [GitHub](https://github.com/compose-generator/compose-generator)
 
 ## Supported tags and respective `Dockerfile` links
-- `1.9.0`, `1.9`, `1`, `latest`
+- `1.10.0`, `1.10`, `1`, `latest`
+- `1.9.0`, `1.9`
 - `1.8.0`, `1.8`
 - `1.7.0`, `1.7`
 - `1.6.0`, `1.6`
