@@ -8,7 +8,7 @@ predefined-services/*.tar.gz
 # Ignore custom templates
 templates
 
-# Ignore compose-generator output
+# Ignore Compose Generator output
 ./docker-compose.yml
 ./environment.env
 

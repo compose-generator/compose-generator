@@ -25,7 +25,7 @@ var TemplateSaveCliFlags = []cli.Flag{
 	&cli.BoolFlag{
 		Name:    "force",
 		Aliases: []string{"f"},
-		Usage:   "No safety checks",
+		Usage:   "Skip safety checks",
 		Value:   false,
 	},
 }

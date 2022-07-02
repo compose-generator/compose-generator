@@ -17,7 +17,7 @@ After installing Compose Generator, you should be able to run Compose Generator.
 [Download 64bit](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_x64_setup.msi){ .md-button .md-button--primary .md-button--small }
 [Download 32bit](https://github.com/compose-generator/compose-generator/releases/latest/download/compose-generator_x86_setup.msi){ .md-button .md-button--primary .md-button--small }
 
-Note: It is possible, that you see an error notification by your anti-virus software, that Compose Generator is a potentally dangerous application. This can happen if the latest version was released very recently and too few people downloaded it already. If you want to validate the file signature, you can visit [this GitHub repo](https://github.com/microsoft/winget-pkgs/tree/master/manifests/c/ChilliBits/ComposeGenerator), select your version and open the file `ChilliBits.ComposeGenerator.installer.yaml`. There you can find the SHA256 signatures for the `x64` and `x86` exe installers.
+Note: It is possible, that you see an error notification by your anti-virus software, that Compose Generator is a potentially dangerous application. This can happen if the latest version was released very recently and too few people downloaded it already. If you want to validate the file signature, you can visit [this GitHub repo](https://github.com/microsoft/winget-pkgs/tree/master/manifests/c/ChilliBits/ComposeGenerator), select your version and open the file `ChilliBits.ComposeGenerator.installer.yaml`. There you can find the SHA256 signatures for the `x64` and `x86` exe installers.
 
 ### Use
 ```sh
