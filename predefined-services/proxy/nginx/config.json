@@ -1,6 +1,6 @@
 {
     "label": "JWilder Nginx Proxy",
-    "preselected": "true",
+    "preselected": "false",
     "proxied": true,
     "files": [
         {
