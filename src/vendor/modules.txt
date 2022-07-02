@@ -29,7 +29,7 @@ github.com/compose-spec/compose-go/loader
 github.com/compose-spec/compose-go/schema
 github.com/compose-spec/compose-go/template
 github.com/compose-spec/compose-go/types
-# github.com/cpuguy83/go-md2man/v2 v2.0.1
+# github.com/cpuguy83/go-md2man/v2 v2.0.2
 ## explicit; go 1.11
 github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/davecgh/go-spew v1.1.1
@@ -201,7 +201,7 @@ github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.3.0
 ## explicit; go 1.18
 github.com/subosito/gotenv
-# github.com/urfave/cli/v2 v2.8.1
+# github.com/urfave/cli/v2 v2.10.3
 ## explicit; go 1.18
 github.com/urfave/cli/v2
 # github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f
