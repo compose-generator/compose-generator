@@ -1,6 +1,6 @@
 {
     "label": "Traefik Proxy",
-    "preselected": "false",
+    "preselected": "true",
     "proxied": true,
     "files": [
         {
