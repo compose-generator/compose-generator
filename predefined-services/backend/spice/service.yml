@@ -1,0 +1,5 @@
+build: ${{SPICE_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-spice
+restart: always
+ports:
+  - ${{SPICE_PORT}}:80

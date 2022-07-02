@@ -1,0 +1,52 @@
+{
+    "label": "Spice",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        },
+        {
+            "path": "${{SPICE_SOURCE_DIRECTORY}}/Dockerfile",
+            "type": "config"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port you want to expose your Spice application?",
+            "type": 2,
+            "defaultValue": "80",
+            "validator": "port",
+            "variable": "SPICE_PORT"
+        },
+        {
+            "text": "How do you want to call your app?",
+            "type": 2,
+            "defaultValue": "example-app",
+            "variable": "SPICE_APP_NAME"
+        },
+        {
+            "text": "Which is your main source file?",
+            "type": 2,
+            "defaultValue": "app.spice",
+            "variable": "SPICE_MAIN_SOURCE_FILE"
+        },
+        {
+            "text": "Which version of Spice do you want to use?",
+            "type": 2,
+            "defaultValue": "0.7.1",
+            "variable": "SPICE_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for source directory?",
+            "defaultValue": "./backend-spice",
+            "variable": "SPICE_SOURCE_DIRECTORY"
+        }
+    ]
+}
