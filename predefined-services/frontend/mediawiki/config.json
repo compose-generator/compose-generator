@@ -23,7 +23,7 @@
         {
             "text": "Which version of Mediawiki do you want to use?",
             "type": 2,
-            "defaultValue": "1.37",
+            "defaultValue": "1.38",
             "variable": "MEDIAWIKI_VERSION"
         }
     ],

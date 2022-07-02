@@ -1,5 +1,5 @@
 # Builder
-FROM maven:3.8-jdk-11 AS builder
+FROM maven:3.8-openjdk-18 AS builder
 WORKDIR /server
 COPY pom.xml /server/pom.xml
 RUN mvn dependency:go-offline -q
@@ -11,8 +11,8 @@ WORKDIR /server/target/dependency
 RUN jar -xf ../*.jar
 
 
-# Minimalistic images
-FROM openjdk:11-jre-slim
+# Minimalistic image
+FROM openjdk:18-alpine
 EXPOSE 8080
 ARG DEPENDENCY=/server/target/dependency
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
