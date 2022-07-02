@@ -7,12 +7,25 @@ services:
       dockerfile: Dockerfile
       args:
         foo: bar
+      ssh:
+        - default
       target: foo
       network: foo
       cache_from:
         - foo
         - bar
       labels: [FOO=BAR]
+      secrets:
+        - secret1
+        - source: secret2
+          target: my_secret
+          uid: '103'
+          gid: '103'
+          mode: 0440
+      tags:
+        - foo:v1.0.0
+        - docker.io/username/foo:my-other-tag
+        - ${COMPOSE_PROJECT_NAME}:1.0.0
 
 
     cap_add:
@@ -393,6 +406,7 @@ configs:
     external: true
   config4:
     name: foo
+    file: ~/config_data
     x-bar: baz
     x-foo: bar
 
@@ -408,6 +422,7 @@ secrets:
     external: true
   secret4:
     name: bar
+    environment: BAR
     x-bar: baz
     x-foo: bar
 x-bar: baz

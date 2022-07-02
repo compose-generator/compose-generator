@@ -54,7 +54,7 @@
         {
             "text": "Which version of BitBucket do you want to use?",
             "type": 2,
-            "defaultValue": "7.21",
+            "defaultValue": "8.2",
             "variable": "BITBUCKET_VERSION"
         }
     ],

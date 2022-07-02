@@ -1,0 +1,30 @@
+{
+    "label": "Meilisearch",
+    "preselected": "false",
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "Which version of Meilisearch do you want to use?",
+            "type": 2,
+            "defaultValue": "v0.27.2",
+            "variable": "MEILISEARCH_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for Meilisearch data volume?",
+            "defaultValue": "./volumes/meilisearch-data",
+            "variable": "VOLUME_MEILISEARCH_DATA",
+            "advanced": true
+        }
+    ]
+}

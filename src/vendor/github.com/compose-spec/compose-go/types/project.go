@@ -142,18 +142,19 @@ func (p Project) WithServices(names []string, fn ServiceFunc) error {
 	return p.withServices(names, fn, map[string]bool{})
 }
 
-func (p Project) withServices(names []string, fn ServiceFunc, done map[string]bool) error {
+func (p Project) withServices(names []string, fn ServiceFunc, seen map[string]bool) error {
 	services, err := p.GetServices(names...)
 	if err != nil {
 		return err
 	}
 	for _, service := range services {
-		if done[service.Name] {
+		if seen[service.Name] {
 			continue
 		}
+		seen[service.Name] = true
 		dependencies := service.GetDependencies()
 		if len(dependencies) > 0 {
-			err := p.withServices(dependencies, fn, done)
+			err := p.withServices(dependencies, fn, seen)
 			if err != nil {
 				return err
 			}
@@ -161,7 +162,6 @@ func (p Project) withServices(names []string, fn ServiceFunc, done map[string]bo
 		if err := fn(service); err != nil {
 			return err
 		}
-		done[service.Name] = true
 	}
 	return nil
 }
@@ -245,6 +245,11 @@ func (p *Project) WithoutUnnecessaryResources() {
 		}
 		for _, v := range s.Secrets {
 			requiredSecrets[v.Source] = struct{}{}
+		}
+		if s.Build != nil {
+			for _, v := range s.Build.Secrets {
+				requiredSecrets[v.Source] = struct{}{}
+			}
 		}
 		for _, v := range s.Configs {
 			requiredConfigs[v.Source] = struct{}{}

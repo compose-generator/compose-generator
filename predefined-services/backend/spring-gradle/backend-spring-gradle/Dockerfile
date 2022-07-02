@@ -1,5 +1,5 @@
 # Builder
-FROM gradle:7.2-jdk17 AS builder
+FROM gradle:7.4-jdk18 AS builder
 WORKDIR /server
 COPY *.gradle *.kts ./
 RUN gradle build -q || return 0

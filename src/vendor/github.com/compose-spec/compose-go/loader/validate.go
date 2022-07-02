@@ -55,9 +55,11 @@ func checkConsistency(project *types.Project) error {
 				}
 			}
 		}
-		for _, secret := range s.Secrets {
-			if _, ok := project.Secrets[secret.Source]; !ok {
-				return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("service %q refers to undefined secret %s", s.Name, secret.Source))
+		if s.Build != nil {
+			for _, secret := range s.Build.Secrets {
+				if _, ok := project.Secrets[secret.Source]; !ok {
+					return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("service %q refers to undefined build secret %s", s.Name, secret.Source))
+				}
 			}
 		}
 		for _, config := range s.Configs {
@@ -66,5 +68,15 @@ func checkConsistency(project *types.Project) error {
 			}
 		}
 	}
+
+	for name, secret := range project.Secrets {
+		if secret.External.External {
+			continue
+		}
+		if secret.File == "" && secret.Environment == "" {
+			return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("secret %q must declare either `file` or `environment`", name))
+		}
+	}
+
 	return nil
 }

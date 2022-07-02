@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: 1.18.x
 
@@ -40,7 +40,7 @@ jobs:
       run: bash <(curl -s https://codecov.io/bash)
 
     - name: Install GoSec
-      run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.11.0/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.11.0
+      run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.12.0/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.0
 
     - name: Run security scan
       working-directory: src
