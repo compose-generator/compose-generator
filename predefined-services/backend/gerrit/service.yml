@@ -1,0 +1,14 @@
+image: gerritcodereview/gerrit:${{GERRIT_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-gerrit
+restart: always
+networks:
+# ToDo: Insert or remove section
+ports:
+  - ${{GERRIT_PORT}}:8080
+  - ${{GERRIT_SSH_PORT}}:29418
+volumes:
+  - ${{VOLUME_GERRIT_GIT}}:/var/gerrit/git
+  - ${{VOLUME_GERRIT_INDEX}}:/var/gerrit/index
+  - ${{VOLUME_GERRIT_CACHE}}:/var/gerrit/cache
+  - ${{VOLUME_GERRIT_ETC}}:/var/gerrit/etc
+  - ${{VOLUME_GERRIT_DB}}:/var/gerrit/db
