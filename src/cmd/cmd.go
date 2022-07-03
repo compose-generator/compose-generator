@@ -14,28 +14,28 @@ var CliCommands = []*cli.Command{
 	{
 		Name:    "generate",
 		Aliases: []string{"g", "gen"},
-		Usage:   "Generates a docker compose configuration",
+		Usage:   "Generate a Docker Compose configuration",
 		Flags:   GenerateCliFlags,
 		Action:  Generate,
 	},
 	{
 		Name:    "add",
 		Aliases: []string{"a"},
-		Usage:   "Adds a service to an existing compose file",
+		Usage:   "Add a service to an existing Compose file",
 		Flags:   AddCliFlags,
 		Action:  Add,
 	},
 	{
 		Name:    "remove",
 		Aliases: []string{"r", "rm"},
-		Usage:   "Removes a service from an existing compose file",
+		Usage:   "Remove a service from an existing Compose file",
 		Flags:   RemoveCliFlags,
 		Action:  Remove,
 	},
 	{
 		Name:    "template",
 		Aliases: []string{"t"},
-		Usage:   "Manages snapshots of your compose configuration for later use",
+		Usage:   "Manage snapshots of your Compose configuration for later use",
 		Subcommands: []*cli.Command{
 			{
 				Name:    "save",
@@ -63,20 +63,20 @@ var CliCommands = []*cli.Command{
 	{
 		Name:    "install",
 		Aliases: []string{"i", "in"},
-		Usage:   "Installs Docker and Docker Compose with a single command",
+		Usage:   "Install Docker and Docker Compose with a single command",
 		Hidden:  isDockerizedEnvironment(),
 		Action:  Install,
 	},
 	{
 		Name:    "predefined-template",
-		Aliases: []string{"p", "pd"},
-		Usage:   "Manages predefined service templates (this command does only exist in dev environments)",
+		Aliases: []string{"p", "pd", "pt"},
+		Usage:   "Manage predefined service templates [DEV]",
 		Hidden:  !isDevVersion(),
 		Subcommands: []*cli.Command{
 			{
 				Name:    "new",
 				Aliases: []string{"n"},
-				Usage:   "Creates a blank predefined service template",
+				Usage:   "Create a blank predefined service template",
 				Flags:   PredefinedTemplateNewCliFlags,
 				Action:  NewPredefinedTemplate,
 			},

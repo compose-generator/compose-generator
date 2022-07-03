@@ -1,0 +1,33 @@
+name: Predefined service suggestion
+description: Suggest a predefined service template
+title: "[PST] <title>"
+labels: [predefined-service, needs-triage]
+assignees: [marcauberer]
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an suggestion for this?
+    description: Please search to see if an issue already exists with the same template suggestion.
+    options:
+    - label: I have searched the existing issues
+      required: true
+    - label: I have checked if the software supports the usage via Docker
+      required: true
+- type: input
+  attributes:
+    label: Software name
+    description: Which software do you miss in Compose Generator?
+  validations:
+    required: true
+- type: input
+  attributes:
+    label: Setup instructions (url)
+    description: Where can we find instructions on how to get the software running with Docker?
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Additional notes
+    description: Fill in additional notes if you want.
+  validations:
+    required: false
