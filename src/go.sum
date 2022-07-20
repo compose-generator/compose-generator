@@ -75,8 +75,8 @@ github.com/cncf/udpa/go v0.0.0-20200629203442-efcf912fb354/go.mod h1:WmhPx2Nbnht
 github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
 github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258 h1:fzx+fBSQoZTPTCs10BPFuoBhm+jzBsWXilBWuHXtwsQ=
 github.com/compose-generator/diu v0.0.0-20220316043855-b1b094e33258/go.mod h1:yoEPMdNoNju+iuyEzAbJBzjCy43yIGQdhMy/xMrcNYk=
-github.com/compose-spec/compose-go v1.2.8 h1:ImPy82xn+rJKL5xmgEyesZEfqJmrzJ1WuZSHEhxMEFI=
-github.com/compose-spec/compose-go v1.2.8/go.mod h1:813WrDd7NtOl9ZVqswlJ5iCQy3lxI3KYxKkY8EeHQ7w=
+github.com/compose-spec/compose-go v1.2.9 h1:+7q2X8gCd16qUX+FU5EPtepK9lWZSGfc8Xe2cGmZqDc=
+github.com/compose-spec/compose-go v1.2.9/go.mod h1:rGaQw1U8uhZhmANQHIocMnQ+qu6ER2+1OwhWjRqQEPI=
 github.com/cpuguy83/go-md2man/v2 v2.0.2 h1:p1EgwI/C7NhT0JmVkwCD2ZBK8j4aeHQX2pMHHBfMQ6w=
 github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
