@@ -17,13 +17,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/compose-spec/compose-go/template"
 )
 
 const doubleQuoteSpecialChars = "\\\n\r\"!$`"
@@ -42,7 +43,7 @@ func Parse(r io.Reader) (map[string]string, error) {
 
 // ParseWithLookup reads an env file from io.Reader, returning a map of keys and values.
 func ParseWithLookup(r io.Reader, lookupFn LookupFn) (map[string]string, error) {
-	data, err := ioutil.ReadAll(r)
+	data, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
 	}
@@ -182,7 +183,7 @@ func Marshal(envMap map[string]string) (string, error) {
 		if d, err := strconv.Atoi(v); err == nil {
 			lines = append(lines, fmt.Sprintf(`%s=%d`, k, d))
 		} else {
-			lines = append(lines, fmt.Sprintf(`%s="%s"`, k, doubleQuoteEscape(v)))
+			lines = append(lines, fmt.Sprintf(`%s="%s"`, k, doubleQuoteEscape(v))) //nolint // Cannot use %q here
 		}
 	}
 	sort.Strings(lines)
@@ -233,25 +234,22 @@ var exportRegex = regexp.MustCompile(`^\s*(?:export\s+)?(.*?)\s*$`)
 func parseLine(line string, envMap map[string]string) (key string, value string, err error) {
 	return parseLineWithLookup(line, envMap, nil)
 }
-func parseLineWithLookup(line string, envMap map[string]string, lookupFn LookupFn) (key string, value string, err error) {
-	if len(line) == 0 {
-		err = errors.New("zero length string")
-		return
+func parseLineWithLookup(line string, envMap map[string]string, lookupFn LookupFn) (string, string, error) {
+	if line == "" {
+		return "", "", errors.New("zero length string")
 	}
 
 	// ditch the comments (but keep quoted hashes)
-	if strings.Contains(line, "#") {
+	if strings.HasPrefix(strings.TrimSpace(line), "#") || strings.Contains(line, " #") {
 		segmentsBetweenHashes := strings.Split(line, "#")
 		quotesAreOpen := false
 		var segmentsToKeep []string
 		for _, segment := range segmentsBetweenHashes {
 			if strings.Count(segment, "\"") == 1 || strings.Count(segment, "'") == 1 {
 				if quotesAreOpen {
-					quotesAreOpen = false
 					segmentsToKeep = append(segmentsToKeep, segment)
-				} else {
-					quotesAreOpen = true
 				}
+				quotesAreOpen = !quotesAreOpen
 			}
 
 			if len(segmentsToKeep) == 0 || quotesAreOpen {
@@ -271,14 +269,14 @@ func parseLineWithLookup(line string, envMap map[string]string, lookupFn LookupF
 	}
 
 	if len(splitString) != 2 {
-		err = errors.New("can't separate key from value")
-		return
+		return "", "", errors.New("can't separate key from value")
 	}
-	key = exportRegex.ReplaceAllString(splitString[0], "$1")
+	key := exportRegex.ReplaceAllString(splitString[0], "$1")
 
 	// Parse the value
-	value = parseValue(splitString[1], envMap, lookupFn)
-	return
+	value := parseValue(splitString[1], envMap, lookupFn)
+
+	return key, value, nil
 }
 
 var (
@@ -322,42 +320,24 @@ func parseValue(value string, envMap map[string]string, lookupFn LookupFn) strin
 		}
 
 		if singleQuotes == nil {
-			value = expandVariables(value, envMap, lookupFn)
+			value, _ = expandVariables(value, envMap, lookupFn)
 		}
 	}
 
 	return value
 }
 
-var expandVarRegex = regexp.MustCompile(`(\\)?(\$)(\()?\{?([A-Z0-9_]+)?\}?`)
-
-func expandVariables(v string, envMap map[string]string, lookupFn LookupFn) string {
-	return expandVarRegex.ReplaceAllStringFunc(v, func(s string) string {
-		submatch := expandVarRegex.FindStringSubmatch(s)
-
-		if submatch == nil {
-			return s
+func expandVariables(value string, envMap map[string]string, lookupFn LookupFn) (string, error) {
+	retVal, err := template.Substitute(value, func(k string) (string, bool) {
+		if v, ok := envMap[k]; ok {
+			return v, ok
 		}
-		if submatch[1] == "\\" || submatch[2] == "(" {
-			return submatch[0][1:]
-		} else if submatch[4] != "" {
-			// first check if we have defined this already earlier
-			if envMap[submatch[4]] != "" {
-				return envMap[submatch[4]]
-			}
-			if lookupFn == nil {
-				return ""
-			}
-			// if we have not defined it, check the lookup function provided
-			// by the user
-			s2, ok := lookupFn(submatch[4])
-			if ok {
-				return s2
-			}
-			return ""
-		}
-		return s
+		return lookupFn(k)
 	})
+	if err != nil {
+		return value, err
+	}
+	return retVal, nil
 }
 
 func doubleQuoteEscape(line string) string {
@@ -369,7 +349,7 @@ func doubleQuoteEscape(line string) string {
 		if c == '\r' {
 			toReplace = `\r`
 		}
-		line = strings.Replace(line, string(c), toReplace, -1)
+		line = strings.ReplaceAll(line, string(c), toReplace)
 	}
 	return line
 }
