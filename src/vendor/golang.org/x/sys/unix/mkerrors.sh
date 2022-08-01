@@ -204,7 +204,10 @@ struct ltchars {
 #include <sys/timerfd.h>
 #include <sys/uio.h>
 #include <sys/xattr.h>
+<<<<<<< HEAD
 #include <netinet/udp.h>
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 #include <linux/audit.h>
 #include <linux/bpf.h>
 #include <linux/can.h>

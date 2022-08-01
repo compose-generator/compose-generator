@@ -309,6 +309,7 @@ type __Siginfo struct {
 	Addr   *byte
 	Value  [4]byte
 	_      [32]byte
+<<<<<<< HEAD
 }
 
 type __PtraceSiginfo struct {
@@ -321,6 +322,8 @@ type __PtraceSiginfo struct {
 	Addr   uintptr
 	Value  [4]byte
 	_      [32]byte
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 }
 
 type Sigset_t struct {

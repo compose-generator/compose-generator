@@ -269,6 +269,7 @@ func PtraceDetach(pid int) (err error) {
 }
 
 func PtraceGetFpRegs(pid int, fpregsout *FpReg) (err error) {
+<<<<<<< HEAD
 	return ptracePtr(PT_GETFPREGS, pid, unsafe.Pointer(fpregsout), 0)
 }
 
@@ -291,14 +292,26 @@ func PtraceIO(req int, pid int, offs uintptr, out []byte, countin int) (count in
 
 	err = ptracePtr(PT_IO, pid, unsafe.Pointer(&ioDesc), 0)
 	return int(ioDesc.Len), err
+=======
+	return ptrace(PT_GETFPREGS, pid, uintptr(unsafe.Pointer(fpregsout)), 0)
+}
+
+func PtraceGetRegs(pid int, regsout *Reg) (err error) {
+	return ptrace(PT_GETREGS, pid, uintptr(unsafe.Pointer(regsout)), 0)
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 }
 
 func PtraceLwpEvents(pid int, enable int) (err error) {
 	return ptrace(PT_LWP_EVENTS, pid, 0, enable)
 }
 
+<<<<<<< HEAD
 func PtraceLwpInfo(pid int, info *PtraceLwpInfoStruct) (err error) {
 	return ptracePtr(PT_LWPINFO, pid, unsafe.Pointer(info), int(unsafe.Sizeof(*info)))
+=======
+func PtraceLwpInfo(pid int, info uintptr) (err error) {
+	return ptrace(PT_LWPINFO, pid, info, int(unsafe.Sizeof(PtraceLwpInfoStruct{})))
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 }
 
 func PtracePeekData(pid int, addr uintptr, out []byte) (count int, err error) {
@@ -318,11 +331,16 @@ func PtracePokeText(pid int, addr uintptr, data []byte) (count int, err error) {
 }
 
 func PtraceSetRegs(pid int, regs *Reg) (err error) {
+<<<<<<< HEAD
 	return ptracePtr(PT_SETREGS, pid, unsafe.Pointer(regs), 0)
+=======
+	return ptrace(PT_SETREGS, pid, uintptr(unsafe.Pointer(regs)), 0)
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 }
 
 func PtraceSingleStep(pid int) (err error) {
 	return ptrace(PT_STEP, pid, 1, 0)
+<<<<<<< HEAD
 }
 
 func Dup3(oldfd, newfd, flags int) error {
@@ -335,6 +353,8 @@ func Dup3(oldfd, newfd, flags int) error {
 	}
 	_, err := fcntl(oldfd, how, newfd)
 	return err
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 }
 
 /*

@@ -526,7 +526,10 @@ const (
 	XCASE                            = 0x4
 	XTABS                            = 0x1800
 	ZA_MAGIC                         = 0x54366345
+<<<<<<< HEAD
 	ZT_MAGIC                         = 0x5a544e01
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	_HIDIOCGRAWNAME                  = 0x80804804
 	_HIDIOCGRAWPHYS                  = 0x80404805
 	_HIDIOCGRAWUNIQ                  = 0x80404808

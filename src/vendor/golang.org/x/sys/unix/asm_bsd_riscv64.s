@@ -3,6 +3,11 @@
 // license that can be found in the LICENSE file.
 
 //go:build (darwin || freebsd || netbsd || openbsd) && gc
+<<<<<<< HEAD
+=======
+// +build darwin freebsd netbsd openbsd
+// +build gc
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 
 #include "textflag.h"
 

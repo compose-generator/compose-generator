@@ -1545,7 +1545,11 @@ func sendmsgN(fd int, iov []Iovec, oob []byte, ptr unsafe.Pointer, salen _Sockle
 	var dummy byte
 	var empty bool
 	if len(oob) > 0 {
+<<<<<<< HEAD
 		empty = emptyIovecs(iov)
+=======
+		empty := emptyIovecs(iov)
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 		if empty {
 			var sockType int
 			sockType, err = GetsockoptInt(fd, SOL_SOCKET, SO_TYPE)
@@ -1557,7 +1561,10 @@ func sendmsgN(fd int, iov []Iovec, oob []byte, ptr unsafe.Pointer, salen _Sockle
 				var iova [1]Iovec
 				iova[0].Base = &dummy
 				iova[0].SetLen(1)
+<<<<<<< HEAD
 				iov = iova[:]
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 			}
 		}
 		msg.Control = &oob[0]

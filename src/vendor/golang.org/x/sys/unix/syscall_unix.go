@@ -366,9 +366,19 @@ func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from
 	return
 }
 
+<<<<<<< HEAD
 // RecvmsgBuffers receives a message from a socket using the recvmsg system
 // call. This function is equivalent to Recvmsg, but non-control data read is
 // scattered into the buffers slices.
+=======
+// RecvmsgBuffers receives a message from a socket using the recvmsg
+// system call. The flags are passed to recvmsg. Any non-control data
+// read is scattered into the buffers slices. The results are:
+//   - n is the number of non-control data read into bufs
+//   - oobn is the number of control data read into oob; this may be interpreted using [ParseSocketControlMessage]
+//   - recvflags is flags returned by recvmsg
+//   - from is the address of the sender
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 func RecvmsgBuffers(fd int, buffers [][]byte, oob []byte, flags int) (n, oobn int, recvflags int, from Sockaddr, err error) {
 	iov := make([]Iovec, len(buffers))
 	for i := range buffers {
@@ -387,9 +397,12 @@ func RecvmsgBuffers(fd int, buffers [][]byte, oob []byte, flags int) (n, oobn in
 	return
 }
 
+<<<<<<< HEAD
 // Sendmsg sends a message on a socket to an address using the sendmsg system
 // call. This function is equivalent to SendmsgN, but does not return the
 // number of bytes actually sent.
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 func Sendmsg(fd int, p, oob []byte, to Sockaddr, flags int) (err error) {
 	_, err = SendmsgN(fd, p, oob, to, flags)
 	return
@@ -437,8 +450,14 @@ func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) 
 }
 
 // SendmsgBuffers sends a message on a socket to an address using the sendmsg
+<<<<<<< HEAD
 // system call. This function is equivalent to SendmsgN, but the non-control
 // data is gathered from buffers.
+=======
+// system call. The flags are passed to sendmsg. Any non-control data written
+// is gathered from buffers. The function returns the number of bytes written
+// to the socket.
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 func SendmsgBuffers(fd int, buffers [][]byte, oob []byte, to Sockaddr, flags int) (n int, err error) {
 	iov := make([]Iovec, len(buffers))
 	for i := range buffers {
@@ -588,7 +607,11 @@ func Lutimes(path string, tv []Timeval) error {
 	return UtimesNanoAt(AT_FDCWD, path, ts, AT_SYMLINK_NOFOLLOW)
 }
 
+<<<<<<< HEAD
 // emptyIovecs reports whether there are no bytes in the slice of Iovec.
+=======
+// emptyIovec reports whether there are no bytes in the slice of Iovec.
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 func emptyIovecs(iov []Iovec) bool {
 	for i := range iov {
 		if iov[i].Len > 0 {
@@ -597,6 +620,7 @@ func emptyIovecs(iov []Iovec) bool {
 	}
 	return true
 }
+<<<<<<< HEAD
 
 // Setrlimit sets a resource limit.
 func Setrlimit(resource int, rlim *Rlimit) error {
@@ -604,3 +628,5 @@ func Setrlimit(resource int, rlim *Rlimit) error {
 	// it will affect starting a new process.
 	return syscall.Setrlimit(resource, (*syscall.Rlimit)(rlim))
 }
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))

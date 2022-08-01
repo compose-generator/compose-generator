@@ -484,9 +484,13 @@ const (
 	BPF_F_ALLOW_MULTI                           = 0x2
 	BPF_F_ALLOW_OVERRIDE                        = 0x1
 	BPF_F_ANY_ALIGNMENT                         = 0x2
+<<<<<<< HEAD
 	BPF_F_BEFORE                                = 0x8
 	BPF_F_ID                                    = 0x20
 	BPF_F_NETFILTER_IP_DEFRAG                   = 0x1
+=======
+	BPF_F_KPROBE_MULTI_RETURN                   = 0x1
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	BPF_F_QUERY_EFFECTIVE                       = 0x1
 	BPF_F_REPLACE                               = 0x4
 	BPF_F_SLEEPABLE                             = 0x10
@@ -495,7 +499,10 @@ const (
 	BPF_F_TEST_RUN_ON_CPU                       = 0x1
 	BPF_F_TEST_STATE_FREQ                       = 0x8
 	BPF_F_TEST_XDP_LIVE_FRAMES                  = 0x2
+<<<<<<< HEAD
 	BPF_F_XDP_DEV_BOUND_ONLY                    = 0x40
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	BPF_F_XDP_HAS_FRAGS                         = 0x20
 	BPF_H                                       = 0x8
 	BPF_IMM                                     = 0x0
@@ -832,9 +839,15 @@ const (
 	DM_UUID_FLAG                                = 0x4000
 	DM_UUID_LEN                                 = 0x81
 	DM_VERSION                                  = 0xc138fd00
+<<<<<<< HEAD
 	DM_VERSION_EXTRA                            = "-ioctl (2023-03-01)"
 	DM_VERSION_MAJOR                            = 0x4
 	DM_VERSION_MINOR                            = 0x30
+=======
+	DM_VERSION_EXTRA                            = "-ioctl (2022-02-22)"
+	DM_VERSION_MAJOR                            = 0x4
+	DM_VERSION_MINOR                            = 0x2e
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	DM_VERSION_PATCHLEVEL                       = 0x0
 	DT_BLK                                      = 0x6
 	DT_CHR                                      = 0x2
@@ -3125,7 +3138,11 @@ const (
 	TASKSTATS_GENL_NAME                         = "TASKSTATS"
 	TASKSTATS_GENL_VERSION                      = 0x1
 	TASKSTATS_TYPE_MAX                          = 0x6
+<<<<<<< HEAD
 	TASKSTATS_VERSION                           = 0xe
+=======
+	TASKSTATS_VERSION                           = 0xd
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	TCIFLUSH                                    = 0x0
 	TCIOFF                                      = 0x2
 	TCIOFLUSH                                   = 0x2

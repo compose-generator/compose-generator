@@ -351,8 +351,11 @@ type Taskstats struct {
 	Ac_exe_inode              uint64
 	Wpcopy_count              uint64
 	Wpcopy_delay_total        uint64
+<<<<<<< HEAD
 	Irq_count                 uint64
 	Irq_delay_total           uint64
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 }
 
 type cpuMask uint64

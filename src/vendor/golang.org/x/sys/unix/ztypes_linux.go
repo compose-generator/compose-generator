@@ -1199,10 +1199,14 @@ const (
 	PERF_BR_COND_RET                      = 0xa
 	PERF_BR_ERET                          = 0xb
 	PERF_BR_IRQ                           = 0xc
+<<<<<<< HEAD
 	PERF_BR_SERROR                        = 0xd
 	PERF_BR_NO_TX                         = 0xe
 	PERF_BR_EXTEND_ABI                    = 0xf
 	PERF_BR_MAX                           = 0x10
+=======
+	PERF_BR_MAX                           = 0xd
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	PERF_SAMPLE_REGS_ABI_NONE             = 0x0
 	PERF_SAMPLE_REGS_ABI_32               = 0x1
 	PERF_SAMPLE_REGS_ABI_64               = 0x2
@@ -3138,6 +3142,7 @@ const (
 	DEVLINK_CMD_TRAP_POLICER_NEW                       = 0x47
 	DEVLINK_CMD_TRAP_POLICER_DEL                       = 0x48
 	DEVLINK_CMD_HEALTH_REPORTER_TEST                   = 0x49
+<<<<<<< HEAD
 	DEVLINK_CMD_RATE_GET                               = 0x4a
 	DEVLINK_CMD_RATE_SET                               = 0x4b
 	DEVLINK_CMD_RATE_NEW                               = 0x4c
@@ -3148,6 +3153,9 @@ const (
 	DEVLINK_CMD_LINECARD_DEL                           = 0x51
 	DEVLINK_CMD_SELFTESTS_GET                          = 0x52
 	DEVLINK_CMD_MAX                                    = 0x53
+=======
+	DEVLINK_CMD_MAX                                    = 0x51
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	DEVLINK_PORT_TYPE_NOTSET                           = 0x0
 	DEVLINK_PORT_TYPE_AUTO                             = 0x1
 	DEVLINK_PORT_TYPE_ETH                              = 0x2
@@ -3376,6 +3384,7 @@ const (
 	DEVLINK_ATTR_RATE_NODE_NAME                        = 0xa8
 	DEVLINK_ATTR_RATE_PARENT_NODE_NAME                 = 0xa9
 	DEVLINK_ATTR_REGION_MAX_SNAPSHOTS                  = 0xaa
+<<<<<<< HEAD
 	DEVLINK_ATTR_LINECARD_INDEX                        = 0xab
 	DEVLINK_ATTR_LINECARD_STATE                        = 0xac
 	DEVLINK_ATTR_LINECARD_TYPE                         = 0xad
@@ -3383,6 +3392,9 @@ const (
 	DEVLINK_ATTR_NESTED_DEVLINK                        = 0xaf
 	DEVLINK_ATTR_SELFTESTS                             = 0xb0
 	DEVLINK_ATTR_MAX                                   = 0xb3
+=======
+	DEVLINK_ATTR_MAX                                   = 0xae
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	DEVLINK_DPIPE_FIELD_MAPPING_TYPE_NONE              = 0x0
 	DEVLINK_DPIPE_FIELD_MAPPING_TYPE_IFINDEX           = 0x1
 	DEVLINK_DPIPE_MATCH_TYPE_FIELD_EXACT               = 0x0
@@ -3835,7 +3847,11 @@ const (
 	ETHTOOL_A_RINGS_TCP_DATA_SPLIT            = 0xb
 	ETHTOOL_A_RINGS_CQE_SIZE                  = 0xc
 	ETHTOOL_A_RINGS_TX_PUSH                   = 0xd
+<<<<<<< HEAD
 	ETHTOOL_A_RINGS_MAX                       = 0x10
+=======
+	ETHTOOL_A_RINGS_MAX                       = 0xd
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	ETHTOOL_A_CHANNELS_UNSPEC                 = 0x0
 	ETHTOOL_A_CHANNELS_HEADER                 = 0x1
 	ETHTOOL_A_CHANNELS_RX_MAX                 = 0x2
@@ -4530,7 +4546,11 @@ const (
 	NL80211_ATTR_MAC_HINT                                   = 0xc8
 	NL80211_ATTR_MAC_MASK                                   = 0xd7
 	NL80211_ATTR_MAX_AP_ASSOC_STA                           = 0xca
+<<<<<<< HEAD
 	NL80211_ATTR_MAX                                        = 0x146
+=======
+	NL80211_ATTR_MAX                                        = 0x137
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	NL80211_ATTR_MAX_CRIT_PROT_DURATION                     = 0xb4
 	NL80211_ATTR_MAX_CSA_COUNTERS                           = 0xce
 	NL80211_ATTR_MAX_MATCH_SETS                             = 0x85
@@ -4774,8 +4794,11 @@ const (
 	NL80211_BAND_IFTYPE_ATTR_HE_CAP_PPE                     = 0x5
 	NL80211_BAND_IFTYPE_ATTR_IFTYPES                        = 0x1
 	NL80211_BAND_IFTYPE_ATTR_MAX                            = 0xb
+<<<<<<< HEAD
 	NL80211_BAND_IFTYPE_ATTR_VENDOR_ELEMS                   = 0x7
 	NL80211_BAND_LC                                         = 0x5
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	NL80211_BAND_S1GHZ                                      = 0x4
 	NL80211_BITRATE_ATTR_2GHZ_SHORTPREAMBLE                 = 0x2
 	NL80211_BITRATE_ATTR_MAX                                = 0x2
@@ -5534,7 +5557,11 @@ const (
 	NL80211_RATE_INFO_HE_RU_ALLOC_52                        = 0x1
 	NL80211_RATE_INFO_HE_RU_ALLOC_996                       = 0x5
 	NL80211_RATE_INFO_HE_RU_ALLOC                           = 0x11
+<<<<<<< HEAD
 	NL80211_RATE_INFO_MAX                                   = 0x1d
+=======
+	NL80211_RATE_INFO_MAX                                   = 0x16
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	NL80211_RATE_INFO_MCS                                   = 0x2
 	NL80211_RATE_INFO_SHORT_GI                              = 0x4
 	NL80211_RATE_INFO_VHT_MCS                               = 0x6
@@ -5874,6 +5901,7 @@ const (
 	AUDIT_NLGRP_NONE    = 0x0
 	AUDIT_NLGRP_READLOG = 0x1
 )
+<<<<<<< HEAD
 
 const (
 	TUN_F_CSUM    = 0x1
@@ -5926,3 +5954,5 @@ type CachestatRange struct {
 	Off uint64
 	Len uint64
 }
+=======
+>>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
