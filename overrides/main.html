@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block announce %}
+<style>
+  @keyframes pulse {
+    0%, 40%, 80%, 100% {
+      transform: scale(1);
+    }
+    20%, 60% {
+      transform: scale(0.9);
+    }
+  }
+
+  .twitter {
+    color: #1DA1F2;
+    animation: pulse 1000ms infinite;
+  }
+
+  .twitter-link {
+    color: white !important;
+  }
+</style>
+<a href="https://twitter.com/composegen" target="_blank" class="twitter-link">
+  For updates follow <strong>@composegen</strong> on <span class="twemoji twitter"> {% include ".icons/fontawesome/brands/twitter.svg" %} </span> <strong>Twitter</strong>
+</a>
+{% endblock %}
+
+{% block extrahead %}
+{% set title = config.site_name %}
+{% if page and page.title and not page.is_homepage %}
+{% set title = config.site_name ~ " - " ~ page.title | striptags %}
+{% endif %}
+{% set image = config.site_url ~ 'static/card.png' %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ config.site_description }}">
+<meta property="og:url" content="{{ page.canonical_url }}">
+<meta property="og:image" content="{{ image }}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@composegen">
+<meta name="twitter:creator" content="@composegen">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ config.site_description }}">
+<meta name="twitter:image" content="{{ image }}">
+<meta name="theme-color" content="#4CAE4F">
+{% endblock %}

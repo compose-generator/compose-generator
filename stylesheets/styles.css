@@ -1,0 +1,6 @@
+.md-button--small {
+    font-size: small;
+    padding: .5em 1em !important;
+    margin: .5em 0;
+    height: 40px;
+}
