@@ -197,4 +197,3 @@ jobs:
           identifier: ChilliBits.ComposeGenerator
           release-tag: ${{ github.ref }}
           token: ${{ secrets.GITHUB_PAT }}
-          
