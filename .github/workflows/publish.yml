@@ -140,10 +140,14 @@ jobs:
     strategy:
       matrix:
         config:
-          - arch: amd64,
-            label: x64
-          - arch: 386,
-            label: x86
+          - {
+              arch: amd64,
+              label: x64
+            }
+          - {
+              arch: 386,
+              label: x86
+            }
     steps:
       - name: Checkout
         uses: actions/checkout@v3
