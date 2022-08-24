@@ -7,7 +7,7 @@ github.com/AlecAivazis/survey/v2/terminal
 ## explicit; go 1.13
 github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
-# github.com/briandowns/spinner v1.18.1
+# github.com/briandowns/spinner v1.19.0
 ## explicit; go 1.14
 github.com/briandowns/spinner
 # github.com/cli/safeexec v1.0.0
@@ -19,8 +19,8 @@ github.com/compose-generator/diu
 github.com/compose-generator/diu/cli
 github.com/compose-generator/diu/model
 github.com/compose-generator/diu/parser
-# github.com/compose-spec/compose-go v1.2.8
-## explicit; go 1.18
+# github.com/compose-spec/compose-go v1.5.0
+## explicit; go 1.17
 github.com/compose-spec/compose-go/consts
 github.com/compose-spec/compose-go/dotenv
 github.com/compose-spec/compose-go/errdefs
@@ -35,8 +35,8 @@ github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/distribution/distribution/v3 v3.0.0-20210316161203-a01c71e2477e
-## explicit; go 1.15
+# github.com/distribution/distribution/v3 v3.0.0-20220725133111-4bf3547399eb
+## explicit; go 1.18
 github.com/distribution/distribution/v3/digestset
 github.com/distribution/distribution/v3/reference
 # github.com/docker/distribution v2.8.1+incompatible
@@ -139,7 +139,7 @@ github.com/mitchellh/mapstructure
 # github.com/opencontainers/go-digest v1.0.0
 ## explicit; go 1.13
 github.com/opencontainers/go-digest
-# github.com/opencontainers/image-spec v1.0.2-0.20211117181255-693428a734f5
+# github.com/opencontainers/image-spec v1.0.2
 ## explicit
 github.com/opencontainers/image-spec/specs-go
 github.com/opencontainers/image-spec/specs-go/v1
@@ -167,7 +167,7 @@ github.com/russross/blackfriday/v2
 # github.com/sethvargo/go-password v0.2.0
 ## explicit; go 1.14
 github.com/sethvargo/go-password/password
-# github.com/sirupsen/logrus v1.8.1
+# github.com/sirupsen/logrus v1.9.0
 ## explicit; go 1.13
 github.com/sirupsen/logrus
 # github.com/spf13/afero v1.8.2
@@ -201,7 +201,7 @@ github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.3.0
 ## explicit; go 1.18
 github.com/subosito/gotenv
-# github.com/urfave/cli/v2 v2.10.3
+# github.com/urfave/cli/v2 v2.11.2
 ## explicit; go 1.18
 github.com/urfave/cli/v2
 # github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f
@@ -223,10 +223,10 @@ golang.org/x/crypto/sha3
 ## explicit; go 1.17
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+# golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 ## explicit
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a
+# golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
