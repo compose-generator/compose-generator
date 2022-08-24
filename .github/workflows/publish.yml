@@ -200,4 +200,4 @@ jobs:
         with:
           identifier: ChilliBits.ComposeGenerator
           release-tag: ${{ github.ref }}
-          token: ${{ secrets.GITHUB_PAT }}
+          token: ${{ secrets.CR_PAT }}
