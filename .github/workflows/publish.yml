@@ -194,4 +194,10 @@ jobs:
           file: ${{ steps.build_msi.outputs.msi }}
           asset_name: compose-generator_${{ matrix.config.label }}_setup.msi
           tag: ${{ github.ref }}
-          
+
+      - name: Release to WinGet
+        uses: vedantmgoyal2009/winget-releaser@latest
+        with:
+          identifier: ChilliBits.ComposeGenerator
+          release-tag: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_PAT }}
