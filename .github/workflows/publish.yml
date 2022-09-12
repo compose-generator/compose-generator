@@ -197,6 +197,12 @@ jobs:
           asset_name: compose-generator_${{ matrix.config.label }}_setup.msi
           tag: ${{ github.ref }}
 
+  deploy-win-installers:
+    name: Deploy installers
+    needs: build-win-installers
+    runs-on: windows-latest
+
+    steps:
       - name: Release to WinGet
         uses: vedantmgoyal2009/winget-releaser@latest
         with:
