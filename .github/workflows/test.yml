@@ -20,7 +20,7 @@ jobs:
     - name: Install Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.x
+        go-version: 1.19.x
 
     - name: Checkout code
       uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
       run: bash <(curl -s https://codecov.io/bash)
 
     - name: Install GoSec
-      run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.12.0/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.0
+      run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.13.1/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.13.1
 
     - name: Run security scan
       working-directory: src
