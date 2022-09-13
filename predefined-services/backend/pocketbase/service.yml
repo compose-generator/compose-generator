@@ -1,0 +1,12 @@
+build: ${{POCKETBASE_SOURCE_DIRECTORY}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-pocketbase
+restart: always
+networks:
+#? if has services.frontend {
+#  - frontend-backend
+#? }
+#? if has services.database {
+#  - backend-database
+#? }
+ports:
+  - ${{POCKETBASE_PORT}}:80
