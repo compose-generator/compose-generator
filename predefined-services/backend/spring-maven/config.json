@@ -36,7 +36,7 @@
         {
             "text": "Spring version",
             "type": 2,
-            "defaultValue": "2.7.1",
+            "defaultValue": "2.7.3",
             "variable": "SPRING_MAVEN_VERSION"
         },
         {

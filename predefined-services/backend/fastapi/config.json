@@ -37,7 +37,7 @@
         {
             "text": "Which FastAPI version do you want to use?",
             "type": 2,
-            "defaultValue": "0.78.0",
+            "defaultValue": "0.83.0",
             "variable": "FASTAPI_VERSION"
         }
     ],
