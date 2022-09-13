@@ -64,7 +64,7 @@
         {
             "text": "Which version of Overleaf do you want to use?",
             "type": 2,
-            "defaultValue": "3.1",
+            "defaultValue": "3.2",
             "variable": "OVERLEAF_VERSION"
         }
     ],
