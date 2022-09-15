@@ -7,7 +7,7 @@ require (
 	github.com/briandowns/spinner v1.19.0
 	github.com/cli/safeexec v1.0.0
 	github.com/compose-generator/diu v0.0.0-20220630071352-df649455a580
-	github.com/compose-spec/compose-go v1.5.0
+	github.com/compose-spec/compose-go v1.5.1
 	github.com/docker/docker v20.10.18+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/go-playground/validator/v10 v10.11.0
@@ -27,7 +27,7 @@ require (
 	github.com/distribution/distribution/v3 v3.0.0-20220725133111-4bf3547399eb // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
-	github.com/docker/go-units v0.4.0 // indirect
+	github.com/docker/go-units v0.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
