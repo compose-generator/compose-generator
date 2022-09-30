@@ -9,7 +9,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Publish to WinGet
-        uses: vedantmgoyal2009/winget-releaser@latest
+        uses: vedantmgoyal2009/winget-releaser@v1
         with:
           identifier: ChilliBits.ComposeGenerator
+          version: ${{ github.event.release.tag_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
