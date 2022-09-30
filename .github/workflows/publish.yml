@@ -204,8 +204,9 @@ jobs:
 
     steps:
       - name: Release to WinGet
-        uses: vedantmgoyal2009/winget-releaser@latest
+        uses: vedantmgoyal2009/winget-releaser@v1
         with:
           identifier: ChilliBits.ComposeGenerator
-          release-tag: ${{ github.ref }}
+          version: ${{ github.ref_name }}
+          release-tag: ${{ github.ref_name }}
           token: ${{ secrets.CR_PAT }}
