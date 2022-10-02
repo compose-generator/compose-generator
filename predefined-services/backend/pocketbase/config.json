@@ -2,11 +2,6 @@
     "label": "PocketBase",
     "preselected": "false",
     "proxied": true,
-    "demoAppInitCmd": [
-        "cd ${{POCKETBASE_SOURCE_DIRECTORY}}",
-        "go mod init ${{POCKETBASE_APP_NAME}}",
-        "go mod tidy"
-    ],
     "files": [
         {
             "path": "service.yml",
@@ -15,19 +10,9 @@
         {
             "path": "README.md",
             "type": "docs"
-        },
-        {
-            "path": "${{POCKETBASE_SOURCE_DIRECTORY}}/Dockerfile",
-            "type": "config"
         }
     ],
     "questions": [
-        {
-            "text": "Which Go version do you want to use?",
-            "type": 2,
-            "defaultValue": "1.19",
-            "variable": "POCKETBASE_GO_VERSION"
-        },
         {
             "text": "On which port do you want to expose your PocketBase app?",
             "type": 2,
@@ -35,10 +20,10 @@
             "variable": "POCKETBASE_PORT"
         },
         {
-            "text": "How do you want to call your PocketBase app?",
+            "text": "Which version of PocketBase do you want to use?",
             "type": 2,
-            "defaultValue": "pocketbase-example",
-            "variable": "POCKETBASE_APP_NAME"
+            "defaultValue": "0.7",
+            "variable": "POCKETBASE_VERSION"
         }
     ],
     "volumes": [
@@ -46,6 +31,16 @@
             "text": "Custom path for backend source directory?",
             "defaultValue": "./backend-pocketbase",
             "variable": "POCKETBASE_SOURCE_DIRECTORY"
+        },
+        {
+            "text": "Custom path for PocketBase data volume?",
+            "defaultValue": "./volumes/pocketbase-data",
+            "variable": "VOLUME_POCKETBASE_DATA"
+        },
+        {
+            "text": "Custom path for PocketBase public volume?",
+            "defaultValue": "./volumes/pocketbase-public",
+            "variable": "VOLUME_POCKETBASE_PUBLIC"
         }
     ]
 }

@@ -9,4 +9,6 @@ PocketBase is an open source backend, based on the Go programming language. It c
 PocketBase offers several sdk clients to interact with the backend.
 
 ### Setup
-ToDo: Insert setup instructions here.
+PocketBase is considered as backend service and can therefore be found in backends collection, when generating the compose configuration with Compose Generator.
+
+After starting the generated Docker Compose configuration, the Admin UI Dashboard is exposed at the path `<scheme>://<host>:<port>/_/`.
