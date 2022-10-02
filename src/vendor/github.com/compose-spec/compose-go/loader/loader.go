@@ -17,11 +17,10 @@
 package loader
 
 import (
-	"bytes"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"os"
-	paths "path"
+	"path"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -525,12 +524,12 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 			// Resolve the path to the imported file, and load it.
 			baseFilePath := absPath(workingDir, *file)
 
-			b, err := os.ReadFile(baseFilePath)
+			bytes, err := ioutil.ReadFile(baseFilePath)
 			if err != nil {
 				return nil, err
 			}
 
-			baseFile, err := parseConfig(b, opts)
+			baseFile, err := parseConfig(bytes, opts)
 			if err != nil {
 				return nil, err
 			}
@@ -624,25 +623,14 @@ func resolveEnvironment(serviceConfig *types.ServiceConfig, workingDir string, l
 	environment := types.MappingWithEquals{}
 
 	if len(serviceConfig.EnvFile) > 0 {
-		if serviceConfig.Environment == nil {
-			serviceConfig.Environment = types.MappingWithEquals{}
-		}
 		for _, envFile := range serviceConfig.EnvFile {
 			filePath := absPath(workingDir, envFile)
 			file, err := os.Open(filePath)
 			if err != nil {
 				return err
 			}
-
-			b, err := io.ReadAll(file)
-			if err != nil {
-				return err
-			}
-
-			// Do not defer to avoid it inside a loop
-			file.Close() //nolint:errcheck
-
-			fileVars, err := dotenv.ParseWithLookup(bytes.NewBuffer(b), dotenv.LookupFn(lookupEnv))
+			defer file.Close()
+			fileVars, err := dotenv.ParseWithLookup(file, dotenv.LookupFn(lookupEnv))
 			if err != nil {
 				return err
 			}
@@ -668,7 +656,7 @@ func resolveVolumePath(volume types.ServiceVolumeConfig, workingDir string, look
 	// Note that this is not required for Docker for Windows when specifying
 	// a local Windows path, because Docker for Windows translates the Windows
 	// path into a valid path within the VM.
-	if !paths.IsAbs(filePath) && !isAbs(filePath) {
+	if !path.IsAbs(filePath) && !isAbs(filePath) {
 		filePath = absPath(workingDir, filePath)
 	}
 	volume.Source = filePath
@@ -822,8 +810,10 @@ func loadFileObjectConfig(name string, objType string, obj types.FileObjectConfi
 			logrus.Warnf("%[1]s %[2]s: %[1]s.external.name is deprecated in favor of %[1]s.name", objType, name)
 			obj.Name = obj.External.Name
 			obj.External.Name = ""
-		} else if obj.Name == "" {
-			obj.Name = name
+		} else {
+			if obj.Name == "" {
+				obj.Name = name
+			}
 		}
 		// if not "external: true"
 	case obj.Driver != "":
@@ -955,7 +945,7 @@ func cleanTarget(target string) string {
 	if target == "" {
 		return ""
 	}
-	return paths.Clean(target)
+	return path.Clean(target)
 }
 
 var transformBuildConfig TransformerFunc = func(data interface{}) (interface{}, error) {
