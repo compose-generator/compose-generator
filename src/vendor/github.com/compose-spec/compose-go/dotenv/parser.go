@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"regexp"
-	"strconv"
 	"strings"
 	"unicode"
 )
@@ -14,11 +12,8 @@ const (
 	charComment       = '#'
 	prefixSingleQuote = '\''
 	prefixDoubleQuote = '"'
-)
 
-var (
-	escapeSeqRegex = regexp.MustCompile(`(\\(?:[abcfnrtv$"\\]|0\d{0,3}))`)
-	exportRegex    = regexp.MustCompile(`^export\s+`)
+	exportPrefix = "export"
 )
 
 func parseBytes(src []byte, out map[string]string, lookupFn LookupFn) error {
@@ -42,6 +37,7 @@ func parseBytes(src []byte, out map[string]string, lookupFn LookupFn) error {
 		}
 
 		if inherited {
+
 			value, ok := lookupFn(key)
 			if ok {
 				out[key] = value
@@ -53,6 +49,9 @@ func parseBytes(src []byte, out map[string]string, lookupFn LookupFn) error {
 		value, left, err := extractVarValue(left, out, lookupFn)
 		if err != nil {
 			return err
+		}
+		if lookUpValue, ok := lookupFn(key); ok {
+			value = lookUpValue
 		}
 
 		out[key] = value
@@ -86,11 +85,9 @@ func getStatementStart(src []byte) []byte {
 }
 
 // locateKeyName locates and parses key name and returns rest of slice
-func locateKeyName(src []byte) (string, []byte, bool, error) {
-	var key string
-	var inherited bool
+func locateKeyName(src []byte) (key string, cutset []byte, inherited bool, err error) {
 	// trim "export" and space at beginning
-	src = bytes.TrimLeftFunc(exportRegex.ReplaceAll(src, nil), isSpace)
+	src = bytes.TrimLeftFunc(bytes.TrimPrefix(src, []byte(exportPrefix)), isSpace)
 
 	// locate key name end and validate it in single loop
 	offset := 0
@@ -127,22 +124,27 @@ loop:
 
 	// trim whitespace
 	key = strings.TrimRightFunc(key, unicode.IsSpace)
-	cutset := bytes.TrimLeftFunc(src[offset:], isSpace)
+	cutset = bytes.TrimLeftFunc(src[offset:], isSpace)
 	return key, cutset, inherited, nil
 }
 
 // extractVarValue extracts variable value and returns rest of slice
-func extractVarValue(src []byte, envMap map[string]string, lookupFn LookupFn) (string, []byte, error) {
+func extractVarValue(src []byte, envMap map[string]string, lookupFn LookupFn) (value string, rest []byte, err error) {
 	quote, isQuoted := hasQuotePrefix(src)
 	if !isQuoted {
 		// unquoted value - read until new line
-		value, rest, _ := bytes.Cut(src, []byte("\n"))
+		end := bytes.IndexFunc(src, isNewLine)
+		var rest []byte
+		if end < 0 {
+			value := strings.Split(string(src), "#")[0] // Remove inline comments on unquoted lines
+			value = strings.TrimRightFunc(value, unicode.IsSpace)
+			return expandVariables(value, envMap, lookupFn), nil, nil
+		}
 
-		// Remove inline comments on unquoted lines
-		value, _, _ = bytes.Cut(value, []byte(" #"))
-		value = bytes.TrimRightFunc(value, unicode.IsSpace)
-		retVal, err := expandVariables(string(value), envMap, lookupFn)
-		return retVal, rest, err
+		value := strings.Split(string(src[0:end]), "#")[0]
+		value = strings.TrimRightFunc(value, unicode.IsSpace)
+		rest = src[end:]
+		return expandVariables(value, envMap, lookupFn), rest, nil
 	}
 
 	// lookup quoted string terminator
@@ -157,15 +159,12 @@ func extractVarValue(src []byte, envMap map[string]string, lookupFn LookupFn) (s
 		}
 
 		// trim quotes
-		value := string(src[1:i])
+		trimFunc := isCharFunc(rune(quote))
+		value = string(bytes.TrimLeftFunc(bytes.TrimRightFunc(src[0:i], trimFunc), trimFunc))
 		if quote == prefixDoubleQuote {
-			// expand standard shell escape sequences & then interpolate
-			// variables on the result
-			retVal, err := expandVariables(expandEscapes(value), envMap, lookupFn)
-			if err != nil {
-				return "", nil, err
-			}
-			value = retVal
+			// unescape newlines for double quote (this is compat feature)
+			// and expand environment variables
+			value = expandVariables(expandEscapes(value), envMap, lookupFn)
 		}
 
 		return value, src[i+1:], nil
@@ -181,35 +180,18 @@ func extractVarValue(src []byte, envMap map[string]string, lookupFn LookupFn) (s
 }
 
 func expandEscapes(str string) string {
-	out := escapeSeqRegex.ReplaceAllStringFunc(str, func(match string) string {
-		if match == `\$` {
-			// `\$` is not a Go escape sequence, the expansion parser uses
-			// the special `$$` syntax
-			// both `FOO=\$bar` and `FOO=$$bar` are valid in an env file and
-			// will result in FOO w/ literal value of "$bar" (no interpolation)
-			return "$$"
-		}
-
-		if strings.HasPrefix(match, `\0`) {
-			// octal escape sequences in Go are not prefixed with `\0`, so
-			// rewrite the prefix, e.g. `\0123` -> `\123` -> literal value "S"
-			match = strings.Replace(match, `\0`, `\`, 1)
-		}
-
-		// use Go to unquote (unescape) the literal
-		// see https://go.dev/ref/spec#Rune_literals
-		//
-		// NOTE: Go supports ADDITIONAL escapes like `\x` & `\u` & `\U`!
-		// These are NOT supported, which is why we use a regex to find
-		// only matches we support and then use `UnquoteChar` instead of a
-		// `Unquote` on the entire value
-		v, _, _, err := strconv.UnquoteChar(match, '"')
-		if err != nil {
+	out := escapeRegex.ReplaceAllStringFunc(str, func(match string) string {
+		c := strings.TrimPrefix(match, `\`)
+		switch c {
+		case "n":
+			return "\n"
+		case "r":
+			return "\r"
+		default:
 			return match
 		}
-		return string(v)
 	})
-	return out
+	return unescapeCharsRegex.ReplaceAllString(out, "$1")
 }
 
 func indexOfNonSpaceChar(src []byte) int {
@@ -219,14 +201,14 @@ func indexOfNonSpaceChar(src []byte) int {
 }
 
 // hasQuotePrefix reports whether charset starts with single or double quote and returns quote character
-func hasQuotePrefix(src []byte) (byte, bool) {
+func hasQuotePrefix(src []byte) (quote byte, isQuoted bool) {
 	if len(src) == 0 {
 		return 0, false
 	}
 
-	switch quote := src[0]; quote {
+	switch prefix := src[0]; prefix {
 	case prefixDoubleQuote, prefixSingleQuote:
-		return quote, true // isQuoted
+		return prefix, true
 	default:
 		return 0, false
 	}
@@ -247,4 +229,9 @@ func isSpace(r rune) bool {
 		return true
 	}
 	return false
+}
+
+// isNewLine reports whether the rune is a new line character
+func isNewLine(r rune) bool {
+	return r == '\n'
 }
