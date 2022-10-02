@@ -1,0 +1,46 @@
+{
+    "label": "PocketBase",
+    "preselected": "false",
+    "proxied": true,
+    "files": [
+        {
+            "path": "service.yml",
+            "type": "service"
+        },
+        {
+            "path": "README.md",
+            "type": "docs"
+        }
+    ],
+    "questions": [
+        {
+            "text": "On which port do you want to expose your PocketBase app?",
+            "type": 2,
+            "defaultValue": "80",
+            "variable": "POCKETBASE_PORT"
+        },
+        {
+            "text": "Which version of PocketBase do you want to use?",
+            "type": 2,
+            "defaultValue": "0.7",
+            "variable": "POCKETBASE_VERSION"
+        }
+    ],
+    "volumes": [
+        {
+            "text": "Custom path for backend source directory?",
+            "defaultValue": "./backend-pocketbase",
+            "variable": "POCKETBASE_SOURCE_DIRECTORY"
+        },
+        {
+            "text": "Custom path for PocketBase data volume?",
+            "defaultValue": "./volumes/pocketbase-data",
+            "variable": "VOLUME_POCKETBASE_DATA"
+        },
+        {
+            "text": "Custom path for PocketBase public volume?",
+            "defaultValue": "./volumes/pocketbase-public",
+            "variable": "VOLUME_POCKETBASE_PUBLIC"
+        }
+    ]
+}
