@@ -19,7 +19,7 @@ github.com/compose-generator/diu
 github.com/compose-generator/diu/cli
 github.com/compose-generator/diu/model
 github.com/compose-generator/diu/parser
-# github.com/compose-spec/compose-go v1.6.0
+# github.com/compose-spec/compose-go v1.2.8
 ## explicit; go 1.18
 github.com/compose-spec/compose-go/consts
 github.com/compose-spec/compose-go/dotenv
@@ -43,7 +43,7 @@ github.com/distribution/distribution/v3/reference
 ## explicit
 github.com/docker/distribution/digestset
 github.com/docker/distribution/reference
-# github.com/docker/docker v20.10.18+incompatible
+# github.com/docker/docker v20.10.19+incompatible
 ## explicit
 github.com/docker/docker/api
 github.com/docker/docker/api/types
@@ -201,7 +201,7 @@ github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.4.1
 ## explicit; go 1.18
 github.com/subosito/gotenv
-# github.com/urfave/cli/v2 v2.17.1
+# github.com/urfave/cli/v2 v2.19.2
 ## explicit; go 1.18
 github.com/urfave/cli/v2
 # github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f
