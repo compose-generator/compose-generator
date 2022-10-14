@@ -44,10 +44,14 @@ github.com/distribution/distribution/v3/reference
 github.com/docker/distribution/digestset
 github.com/docker/distribution/reference
 <<<<<<< HEAD
+<<<<<<< HEAD
 # github.com/docker/docker v20.10.24+incompatible
 =======
 # github.com/docker/docker v20.10.18+incompatible
 >>>>>>> e656c81 (Bump github.com/docker/docker in /src (#373))
+=======
+# github.com/docker/docker v20.10.19+incompatible
+>>>>>>> 16f5bed (Bump github.com/docker/docker in /src (#389))
 ## explicit
 github.com/docker/docker/api
 github.com/docker/docker/api/types
