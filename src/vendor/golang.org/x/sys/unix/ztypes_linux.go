@@ -1546,10 +1546,13 @@ const (
 	IFLA_GRO_MAX_SIZE                          = 0x3a
 	IFLA_TSO_MAX_SIZE                          = 0x3b
 	IFLA_TSO_MAX_SEGS                          = 0x3c
+<<<<<<< HEAD
 	IFLA_ALLMULTI                              = 0x3d
 	IFLA_DEVLINK_PORT                          = 0x3e
 	IFLA_GSO_IPV4_MAX_SIZE                     = 0x3f
 	IFLA_GRO_IPV4_MAX_SIZE                     = 0x40
+=======
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 	IFLA_PROTO_DOWN_REASON_UNSPEC              = 0x0
 	IFLA_PROTO_DOWN_REASON_MASK                = 0x1
 	IFLA_PROTO_DOWN_REASON_VALUE               = 0x2

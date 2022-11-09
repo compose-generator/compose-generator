@@ -1546,10 +1546,14 @@ func sendmsgN(fd int, iov []Iovec, oob []byte, ptr unsafe.Pointer, salen _Sockle
 	var empty bool
 	if len(oob) > 0 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		empty = emptyIovecs(iov)
 =======
 		empty := emptyIovecs(iov)
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+		empty = emptyIovecs(iov)
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 		if empty {
 			var sockType int
 			sockType, err = GetsockoptInt(fd, SOL_SOCKET, SO_TYPE)

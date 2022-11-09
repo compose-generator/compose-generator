@@ -295,10 +295,14 @@ type PtraceLwpInfoStruct struct {
 	Sigmask      Sigset_t
 	Siglist      Sigset_t
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Siginfo      __PtraceSiginfo
 =======
 	Siginfo      __Siginfo
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	Siginfo      __PtraceSiginfo
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 	Tdname       [20]int8
 	Child_pid    int32
 	Syscall_code uint32
@@ -318,6 +322,9 @@ type __Siginfo struct {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 type __PtraceSiginfo struct {
 	Signo  int32
 	Errno  int32
@@ -330,8 +337,11 @@ type __PtraceSiginfo struct {
 	_      [40]byte
 }
 
+<<<<<<< HEAD
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 type Sigset_t struct {
 	Val [4]uint32
 }
@@ -358,11 +368,16 @@ type FpExtendedPrecision struct{}
 type PtraceIoDesc struct {
 	Op   int32
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Offs uintptr
 =======
 	Offs *byte
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 	Addr *byte
+=======
+	Offs uintptr
+	Addr uintptr
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 	Len  uint64
 }
 

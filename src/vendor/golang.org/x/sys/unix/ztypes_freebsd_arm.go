@@ -326,6 +326,18 @@ type __PtraceSiginfo struct {
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 }
 
+type __PtraceSiginfo struct {
+	Signo  int32
+	Errno  int32
+	Code   int32
+	Pid    int32
+	Uid    uint32
+	Status int32
+	Addr   uintptr
+	Value  [4]byte
+	_      [32]byte
+}
+
 type Sigset_t struct {
 	Val [4]uint32
 }
@@ -352,7 +364,11 @@ type FpExtendedPrecision struct {
 type PtraceIoDesc struct {
 	Op   int32
 	Offs uintptr
+<<<<<<< HEAD
 	Addr *byte
+=======
+	Addr uintptr
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 	Len  uint32
 }
 

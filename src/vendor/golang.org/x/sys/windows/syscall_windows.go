@@ -1820,6 +1820,7 @@ type PSAPI_WORKING_SET_EX_INFORMATION struct {
 	// A PSAPI_WORKING_SET_EX_BLOCK union that indicates the attributes of the page at VirtualAddress.
 	VirtualAttributes PSAPI_WORKING_SET_EX_BLOCK
 }
+<<<<<<< HEAD
 
 // CreatePseudoConsole creates a windows pseudo console.
 func CreatePseudoConsole(size Coord, in Handle, out Handle, flags uint32, pconsole *Handle) error {
@@ -1834,3 +1835,5 @@ func ResizePseudoConsole(pconsole Handle, size Coord) error {
 	// accept arguments that can be casted to uintptr, and Coord can't.
 	return resizePseudoConsole(pconsole, *((*uint32)(unsafe.Pointer(&size))))
 }
+=======
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))

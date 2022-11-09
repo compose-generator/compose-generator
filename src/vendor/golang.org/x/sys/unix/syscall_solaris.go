@@ -997,6 +997,7 @@ func (e *EventPort) Get(s []PortEvent, min int, timeout *Timespec) (int, error) 
 		valid = i + 1
 	}
 	return valid, err
+<<<<<<< HEAD
 }
 
 //sys	putmsg(fd int, clptr *strbuf, dataptr *strbuf, flags int) (err error)
@@ -1101,4 +1102,6 @@ func (s *Strioctl) SetInt(i int) {
 
 func IoctlSetStrioctlRetInt(fd int, req int, s *Strioctl) (int, error) {
 	return ioctlPtrRet(fd, req, unsafe.Pointer(s))
+=======
+>>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 }
