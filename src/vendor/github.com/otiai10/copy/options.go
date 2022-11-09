@@ -1,6 +1,9 @@
 package copy
 
-import "os"
+import (
+	"io"
+	"os"
+)
 
 // Options specifies optional actions on copying.
 type Options struct {
@@ -14,9 +17,22 @@ type Options struct {
 	// Skip can specify which files should be skipped
 	Skip func(src string) (bool, error)
 
+	// Specials includes special files to be copied. default false.
+	Specials bool
+
 	// AddPermission to every entities,
 	// NO MORE THAN 0777
+	// @OBSOLETE
+	// Use `PermissionControl = AddPermission(perm)` instead
 	AddPermission os.FileMode
+
+	// PermissionControl can preserve or even add permission to
+	// every entries, for example
+	//
+	//		opt.PermissionControl = AddPermission(0222)
+	//
+	// See permission_control.go for more detail.
+	PermissionControl PermissionControlFunc
 
 	// Sync file after copy.
 	// Useful in case when file must be on the disk
@@ -35,6 +51,11 @@ type Options struct {
 	// If zero, the internal default buffer of 32KB is used.
 	// See https://golang.org/pkg/io/#CopyBuffer for more information.
 	CopyBufferSize uint
+
+	// If you want to add some limitation on reading src file,
+	// you can wrap the src and provide new reader,
+	// such as `RateLimitReader` in the test case.
+	WrapReader func(src *os.File) io.Reader
 
 	intent struct {
 		src  string
@@ -77,13 +98,39 @@ func getDefaultOptions(src, dest string) Options {
 		Skip: func(string) (bool, error) {
 			return false, nil // Don't skip
 		},
-		AddPermission:  0,     // Add nothing
-		Sync:           false, // Do not sync
-		PreserveTimes:  false, // Do not preserve the modification time
-		CopyBufferSize: 0,     // Do not specify, use default bufsize (32*1024)
+		AddPermission:     0,                  // Add nothing
+		PermissionControl: PerservePermission, // Just preserve permission
+		Sync:              false,              // Do not sync
+		Specials:          false,              // Do not copy special files
+		PreserveTimes:     false,              // Do not preserve the modification time
+		CopyBufferSize:    0,                  // Do not specify, use default bufsize (32*1024)
+		WrapReader:        nil,                // Do not wrap src files, use them as they are.
 		intent: struct {
 			src  string
 			dest string
 		}{src, dest},
 	}
+}
+
+// assureOptions struct, should be called only once.
+// All optional values MUST NOT BE nil/zero after assured.
+func assureOptions(src, dest string, opts ...Options) Options {
+	defopt := getDefaultOptions(src, dest)
+	if len(opts) == 0 {
+		return defopt
+	}
+	if opts[0].OnSymlink == nil {
+		opts[0].OnSymlink = defopt.OnSymlink
+	}
+	if opts[0].Skip == nil {
+		opts[0].Skip = defopt.Skip
+	}
+	if opts[0].AddPermission > 0 {
+		opts[0].PermissionControl = AddPermission(opts[0].AddPermission)
+	} else if opts[0].PermissionControl == nil {
+		opts[0].PermissionControl = PerservePermission
+	}
+	opts[0].intent.src = defopt.intent.src
+	opts[0].intent.dest = defopt.intent.dest
+	return opts[0]
 }
