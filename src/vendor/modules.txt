@@ -10,7 +10,7 @@ github.com/Microsoft/go-winio/pkg/guid
 # github.com/briandowns/spinner v1.19.0
 ## explicit; go 1.14
 github.com/briandowns/spinner
-# github.com/cli/safeexec v1.0.0
+# github.com/cli/safeexec v1.0.1
 ## explicit; go 1.15
 github.com/cli/safeexec
 # github.com/compose-generator/diu v0.0.0-20220630071352-df649455a580
