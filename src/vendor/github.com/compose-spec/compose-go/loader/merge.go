@@ -43,6 +43,15 @@ var serviceSpecials = &specials{
 }
 
 func (s *specials) Transformer(t reflect.Type) func(dst, src reflect.Value) error {
+	// TODO this is a workaround waiting for imdario/mergo#131
+	if t.Kind() == reflect.Pointer && t.Elem().Kind() == reflect.Bool {
+		return func(dst, src reflect.Value) error {
+			if dst.CanSet() && !src.IsNil() {
+				dst.Set(src)
+			}
+			return nil
+		}
+	}
 	if fn, ok := s.m[t]; ok {
 		return fn
 	}
@@ -113,11 +122,17 @@ func mergeServices(base, override []types.ServiceConfig) ([]types.ServiceConfig,
 }
 
 func _merge(baseService *types.ServiceConfig, overrideService *types.ServiceConfig) (*types.ServiceConfig, error) {
-	if err := mergo.Merge(baseService, overrideService, mergo.WithAppendSlice, mergo.WithOverride, mergo.WithTransformers(serviceSpecials)); err != nil {
+	if err := mergo.Merge(baseService, overrideService,
+		mergo.WithAppendSlice,
+		mergo.WithOverride,
+		mergo.WithTransformers(serviceSpecials)); err != nil {
 		return nil, err
 	}
 	if overrideService.Command != nil {
 		baseService.Command = overrideService.Command
+	}
+	if overrideService.HealthCheck != nil {
+		baseService.HealthCheck.Test = overrideService.HealthCheck.Test
 	}
 	if overrideService.Entrypoint != nil {
 		baseService.Entrypoint = overrideService.Entrypoint
@@ -127,7 +142,24 @@ func _merge(baseService *types.ServiceConfig, overrideService *types.ServiceConf
 	} else {
 		baseService.Environment = overrideService.Environment
 	}
+	baseService.Expose = unique(baseService.Expose)
 	return baseService, nil
+}
+
+func unique(slice []string) []string {
+	if slice == nil {
+		return nil
+	}
+	uniqMap := make(map[string]struct{})
+	for _, v := range slice {
+		uniqMap[v] = struct{}{}
+	}
+
+	uniqSlice := make([]string, 0, len(uniqMap))
+	for v := range uniqMap {
+		uniqSlice = append(uniqSlice, v)
+	}
+	return uniqSlice
 }
 
 func toServiceSecretConfigsMap(s interface{}) (map[interface{}]interface{}, error) {

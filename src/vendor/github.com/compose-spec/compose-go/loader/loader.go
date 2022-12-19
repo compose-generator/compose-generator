@@ -17,10 +17,11 @@
 package loader
 
 import (
+	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
-	"path"
+	paths "path"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -166,6 +167,13 @@ func Load(configDetails types.ConfigDetails, options ...func(*Options)) (*types.
 	for i, file := range configDetails.ConfigFiles {
 		configDict := file.Config
 		if configDict == nil {
+			if len(file.Content) == 0 {
+				content, err := os.ReadFile(file.Filename)
+				if err != nil {
+					return nil, err
+				}
+				file.Content = content
+			}
 			dict, err := parseConfig(file.Content, opts)
 			if err != nil {
 				return nil, err
@@ -524,12 +532,12 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 			// Resolve the path to the imported file, and load it.
 			baseFilePath := absPath(workingDir, *file)
 
-			bytes, err := ioutil.ReadFile(baseFilePath)
+			b, err := os.ReadFile(baseFilePath)
 			if err != nil {
 				return nil, err
 			}
 
-			baseFile, err := parseConfig(bytes, opts)
+			baseFile, err := parseConfig(b, opts)
 			if err != nil {
 				return nil, err
 			}
@@ -555,7 +563,7 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 				if vol.Type != types.VolumeTypeBind {
 					continue
 				}
-				baseService.Volumes[i].Source = absPath(baseFileParent, vol.Source)
+				baseService.Volumes[i].Source = resolveMaybeUnixPath(vol.Source, baseFileParent, lookupEnv)
 			}
 		}
 
@@ -623,14 +631,25 @@ func resolveEnvironment(serviceConfig *types.ServiceConfig, workingDir string, l
 	environment := types.MappingWithEquals{}
 
 	if len(serviceConfig.EnvFile) > 0 {
+		if serviceConfig.Environment == nil {
+			serviceConfig.Environment = types.MappingWithEquals{}
+		}
 		for _, envFile := range serviceConfig.EnvFile {
 			filePath := absPath(workingDir, envFile)
 			file, err := os.Open(filePath)
 			if err != nil {
 				return err
 			}
-			defer file.Close()
-			fileVars, err := dotenv.ParseWithLookup(file, dotenv.LookupFn(lookupEnv))
+
+			b, err := io.ReadAll(file)
+			if err != nil {
+				return err
+			}
+
+			// Do not defer to avoid it inside a loop
+			file.Close() //nolint:errcheck
+
+			fileVars, err := dotenv.ParseWithLookup(bytes.NewBuffer(b), dotenv.LookupFn(lookupEnv))
 			if err != nil {
 				return err
 			}
@@ -648,19 +667,30 @@ func resolveEnvironment(serviceConfig *types.ServiceConfig, workingDir string, l
 	return nil
 }
 
-func resolveVolumePath(volume types.ServiceVolumeConfig, workingDir string, lookupEnv template.Mapping) types.ServiceVolumeConfig {
-	filePath := expandUser(volume.Source, lookupEnv)
+func resolveMaybeUnixPath(path string, workingDir string, lookupEnv template.Mapping) string {
+	filePath := expandUser(path, lookupEnv)
 	// Check if source is an absolute path (either Unix or Windows), to
 	// handle a Windows client with a Unix daemon or vice-versa.
 	//
 	// Note that this is not required for Docker for Windows when specifying
 	// a local Windows path, because Docker for Windows translates the Windows
 	// path into a valid path within the VM.
-	if !path.IsAbs(filePath) && !isAbs(filePath) {
+	if !paths.IsAbs(filePath) && !isAbs(filePath) {
 		filePath = absPath(workingDir, filePath)
 	}
-	volume.Source = filePath
+	return filePath
+}
+
+func resolveVolumePath(volume types.ServiceVolumeConfig, workingDir string, lookupEnv template.Mapping) types.ServiceVolumeConfig {
+	volume.Source = resolveMaybeUnixPath(volume.Source, workingDir, lookupEnv)
 	return volume
+}
+
+func resolveSecretsPath(secret types.SecretConfig, workingDir string, lookupEnv template.Mapping) types.SecretConfig {
+	if ! secret.External.External && secret.File != "" {
+		secret.File = resolveMaybeUnixPath(secret.File, workingDir, lookupEnv)
+	}
+	return secret
 }
 
 // TODO: make this more robust
@@ -770,11 +800,14 @@ func LoadSecrets(source map[string]interface{}, details types.ConfigDetails, res
 		return secrets, err
 	}
 	for name, secret := range secrets {
-		obj, err := loadFileObjectConfig(name, "secret", types.FileObjectConfig(secret), details, resolvePaths)
+		obj, err := loadFileObjectConfig(name, "secret", types.FileObjectConfig(secret), details, false)
 		if err != nil {
 			return nil, err
 		}
 		secretConfig := types.SecretConfig(obj)
+		if resolvePaths {
+			secretConfig = resolveSecretsPath(secretConfig, details.WorkingDir, details.LookupEnv)
+		}
 		secrets[name] = secretConfig
 	}
 	return secrets, nil
@@ -810,10 +843,8 @@ func loadFileObjectConfig(name string, objType string, obj types.FileObjectConfi
 			logrus.Warnf("%[1]s %[2]s: %[1]s.external.name is deprecated in favor of %[1]s.name", objType, name)
 			obj.Name = obj.External.Name
 			obj.External.Name = ""
-		} else {
-			if obj.Name == "" {
-				obj.Name = name
-			}
+		} else if obj.Name == "" {
+			obj.Name = name
 		}
 		// if not "external: true"
 	case obj.Driver != "":
@@ -945,7 +976,7 @@ func cleanTarget(target string) string {
 	if target == "" {
 		return ""
 	}
-	return path.Clean(target)
+	return paths.Clean(target)
 }
 
 var transformBuildConfig TransformerFunc = func(data interface{}) (interface{}, error) {
