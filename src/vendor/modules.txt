@@ -7,7 +7,7 @@ github.com/AlecAivazis/survey/v2/terminal
 ## explicit; go 1.13
 github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
-# github.com/briandowns/spinner v1.19.0
+# github.com/briandowns/spinner v1.20.0
 ## explicit; go 1.14
 github.com/briandowns/spinner
 # github.com/cli/safeexec v1.0.1
@@ -269,8 +269,13 @@ golang.org/x/sys/cpu
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+<<<<<<< HEAD
 # golang.org/x/term v0.15.0
 ## explicit; go 1.18
+=======
+# golang.org/x/term v0.1.0
+## explicit; go 1.17
+>>>>>>> 4da55db (Bump github.com/briandowns/spinner from 1.19.0 to 1.20.0 in /src (#414))
 golang.org/x/term
 <<<<<<< HEAD
 # golang.org/x/text v0.14.0
