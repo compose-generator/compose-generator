@@ -5,6 +5,10 @@
 
 TEXT libc_fdopendir_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_fdopendir(SB)
+<<<<<<< HEAD
+=======
+
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 GLOBL	·libc_fdopendir_trampoline_addr(SB), RODATA, $8
 DATA	·libc_fdopendir_trampoline_addr(SB)/8, $libc_fdopendir_trampoline<>(SB)
 
@@ -150,11 +154,19 @@ DATA	·libc_munlockall_trampoline_addr(SB)/8, $libc_munlockall_trampoline<>(SB)
 
 TEXT libc_closedir_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_closedir(SB)
+<<<<<<< HEAD
+=======
+
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 GLOBL	·libc_closedir_trampoline_addr(SB), RODATA, $8
 DATA	·libc_closedir_trampoline_addr(SB)/8, $libc_closedir_trampoline<>(SB)
 
 TEXT libc_readdir_r_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_readdir_r(SB)
+<<<<<<< HEAD
+=======
+
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 GLOBL	·libc_readdir_r_trampoline_addr(SB), RODATA, $8
 DATA	·libc_readdir_r_trampoline_addr(SB)/8, $libc_readdir_r_trampoline<>(SB)
 

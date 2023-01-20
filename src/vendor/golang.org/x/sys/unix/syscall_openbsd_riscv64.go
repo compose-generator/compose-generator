@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 
 //go:build riscv64 && openbsd
+<<<<<<< HEAD
+=======
+// +build riscv64,openbsd
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 
 package unix
 

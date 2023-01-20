@@ -95,7 +95,11 @@ func accept4(s int, rsa *RawSockaddrAny, addrlen *_Socklen, flags int) (fd int, 
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procaccept4)), 4, uintptr(s), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen)), uintptr(flags), 0, 0)
 	fd = int(r0)
 	if e1 != 0 {
+<<<<<<< HEAD
 		err = errnoErr(e1)
+=======
+		err = e1
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 	}
 	return
 }

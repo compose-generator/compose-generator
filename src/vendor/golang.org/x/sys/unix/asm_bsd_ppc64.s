@@ -3,6 +3,11 @@
 // license that can be found in the LICENSE file.
 
 //go:build (darwin || freebsd || netbsd || openbsd) && gc
+<<<<<<< HEAD
+=======
+// +build darwin freebsd netbsd openbsd
+// +build gc
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 
 #include "textflag.h"
 

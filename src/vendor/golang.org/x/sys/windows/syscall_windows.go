@@ -441,10 +441,13 @@ func NewCallbackCDecl(fn interface{}) uintptr {
 //sys	DwmGetWindowAttribute(hwnd HWND, attribute uint32, value unsafe.Pointer, size uint32) (ret error) = dwmapi.DwmGetWindowAttribute
 //sys	DwmSetWindowAttribute(hwnd HWND, attribute uint32, value unsafe.Pointer, size uint32) (ret error) = dwmapi.DwmSetWindowAttribute
 
+<<<<<<< HEAD
 // Windows Multimedia API
 //sys TimeBeginPeriod (period uint32) (err error) [failretval != 0] = winmm.timeBeginPeriod
 //sys TimeEndPeriod (period uint32) (err error) [failretval != 0] = winmm.timeEndPeriod
 
+=======
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 // syscall interface implementation for other packages
 
 // GetCurrentProcess returns the handle for the current process.

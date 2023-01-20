@@ -1566,9 +1566,13 @@ func sendmsgN(fd int, iov []Iovec, oob []byte, ptr unsafe.Pointer, salen _Sockle
 				iova[0].Base = &dummy
 				iova[0].SetLen(1)
 <<<<<<< HEAD
+<<<<<<< HEAD
 				iov = iova[:]
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+				iov = iova[:]
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 			}
 		}
 		msg.Control = &oob[0]
@@ -2432,6 +2436,7 @@ func PthreadSigmask(how int, set, oldset *Sigset_t) error {
 	return rtSigprocmask(how, set, oldset, _C__NSIG/8)
 }
 
+<<<<<<< HEAD
 //sysnb	getresuid(ruid *_C_int, euid *_C_int, suid *_C_int)
 //sysnb	getresgid(rgid *_C_int, egid *_C_int, sgid *_C_int)
 
@@ -2504,3 +2509,101 @@ func SchedGetAttr(pid int, flags uint) (*SchedAttr, error) {
 }
 
 //sys	Cachestat(fd uint, crange *CachestatRange, cstat *Cachestat_t, flags uint) (err error)
+=======
+/*
+ * Unimplemented
+ */
+// AfsSyscall
+// ArchPrctl
+// Brk
+// ClockNanosleep
+// ClockSettime
+// Clone
+// EpollCtlOld
+// EpollPwait
+// EpollWaitOld
+// Execve
+// Fork
+// Futex
+// GetKernelSyms
+// GetMempolicy
+// GetRobustList
+// GetThreadArea
+// Getpmsg
+// IoCancel
+// IoDestroy
+// IoGetevents
+// IoSetup
+// IoSubmit
+// IoprioGet
+// IoprioSet
+// KexecLoad
+// LookupDcookie
+// Mbind
+// MigratePages
+// Mincore
+// ModifyLdt
+// Mount
+// MovePages
+// MqGetsetattr
+// MqNotify
+// MqOpen
+// MqTimedreceive
+// MqTimedsend
+// MqUnlink
+// Mremap
+// Msgctl
+// Msgget
+// Msgrcv
+// Msgsnd
+// Nfsservctl
+// Personality
+// Pselect6
+// Ptrace
+// Putpmsg
+// Quotactl
+// Readahead
+// Readv
+// RemapFilePages
+// RestartSyscall
+// RtSigaction
+// RtSigpending
+// RtSigqueueinfo
+// RtSigreturn
+// RtSigsuspend
+// RtSigtimedwait
+// SchedGetPriorityMax
+// SchedGetPriorityMin
+// SchedGetparam
+// SchedGetscheduler
+// SchedRrGetInterval
+// SchedSetparam
+// SchedYield
+// Security
+// Semctl
+// Semget
+// Semop
+// Semtimedop
+// SetMempolicy
+// SetRobustList
+// SetThreadArea
+// SetTidAddress
+// Sigaltstack
+// Swapoff
+// Swapon
+// Sysfs
+// TimerCreate
+// TimerDelete
+// TimerGetoverrun
+// TimerGettime
+// TimerSettime
+// Tkill (obsolete)
+// Tuxcall
+// Umount2
+// Uselib
+// Utimensat
+// Vfork
+// Vhangup
+// Vserver
+// _Sysctl
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))

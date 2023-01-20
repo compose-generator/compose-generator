@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 
 //go:build aix || darwin || dragonfly || freebsd || linux || netbsd || openbsd || solaris || zos
+<<<<<<< HEAD
+=======
+// +build aix darwin dragonfly freebsd linux netbsd openbsd solaris zos
+>>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 
 package unix
 
