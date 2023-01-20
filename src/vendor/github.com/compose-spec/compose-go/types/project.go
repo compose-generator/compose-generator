@@ -23,7 +23,7 @@ import (
 	"sort"
 
 	"github.com/distribution/distribution/v3/reference"
-	"github.com/opencontainers/go-digest"
+	godigest "github.com/opencontainers/go-digest"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -258,25 +258,33 @@ func (p *Project) WithoutUnnecessaryResources() {
 
 	networks := Networks{}
 	for k := range requiredNetworks {
-		networks[k] = p.Networks[k]
+		if value, ok := p.Networks[k]; ok {
+			networks[k] = value
+		}
 	}
 	p.Networks = networks
 
 	volumes := Volumes{}
 	for k := range requiredVolumes {
-		volumes[k] = p.Volumes[k]
+		if value, ok := p.Volumes[k]; ok {
+			volumes[k] = value
+		}
 	}
 	p.Volumes = volumes
 
 	secrets := Secrets{}
 	for k := range requiredSecrets {
-		secrets[k] = p.Secrets[k]
+		if value, ok := p.Secrets[k]; ok {
+			secrets[k] = value
+		}
 	}
 	p.Secrets = secrets
 
 	configs := Configs{}
 	for k := range requiredConfigs {
-		configs[k] = p.Configs[k]
+		if value, ok := p.Configs[k]; ok {
+			configs[k] = value
+		}
 	}
 	p.Configs = configs
 }
@@ -311,7 +319,7 @@ func (p *Project) ForServices(names []string) error {
 }
 
 // ResolveImages updates services images to include digest computed by a resolver function
-func (p *Project) ResolveImages(resolver func(named reference.Named) (digest.Digest, error)) error {
+func (p *Project) ResolveImages(resolver func(named reference.Named) (godigest.Digest, error)) error {
 	eg := errgroup.Group{}
 	for i, s := range p.Services {
 		idx := i
