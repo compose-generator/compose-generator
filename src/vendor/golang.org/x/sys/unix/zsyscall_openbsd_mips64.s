@@ -158,6 +158,7 @@ TEXT libc_getcwd_trampoline<>(SB),NOSPLIT,$0-0
 GLOBL	·libc_getcwd_trampoline_addr(SB), RODATA, $8
 DATA	·libc_getcwd_trampoline_addr(SB)/8, $libc_getcwd_trampoline<>(SB)
 
+<<<<<<< HEAD
 TEXT libc_getresuid_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_getresuid(SB)
 GLOBL	·libc_getresuid_trampoline_addr(SB), RODATA, $8
@@ -168,6 +169,8 @@ TEXT libc_getresgid_trampoline<>(SB),NOSPLIT,$0-0
 GLOBL	·libc_getresgid_trampoline_addr(SB), RODATA, $8
 DATA	·libc_getresgid_trampoline_addr(SB)/8, $libc_getresgid_trampoline<>(SB)
 
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 TEXT libc_ioctl_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_ioctl(SB)
 GLOBL	·libc_ioctl_trampoline_addr(SB), RODATA, $8
@@ -178,11 +181,14 @@ TEXT libc_sysctl_trampoline<>(SB),NOSPLIT,$0-0
 GLOBL	·libc_sysctl_trampoline_addr(SB), RODATA, $8
 DATA	·libc_sysctl_trampoline_addr(SB)/8, $libc_sysctl_trampoline<>(SB)
 
+<<<<<<< HEAD
 TEXT libc_fcntl_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_fcntl(SB)
 GLOBL	·libc_fcntl_trampoline_addr(SB), RODATA, $8
 DATA	·libc_fcntl_trampoline_addr(SB)/8, $libc_fcntl_trampoline<>(SB)
 
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 TEXT libc_ppoll_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_ppoll(SB)
 GLOBL	·libc_ppoll_trampoline_addr(SB), RODATA, $8
@@ -588,6 +594,14 @@ TEXT libc_setresuid_trampoline<>(SB),NOSPLIT,$0-0
 GLOBL	·libc_setresuid_trampoline_addr(SB), RODATA, $8
 DATA	·libc_setresuid_trampoline_addr(SB)/8, $libc_setresuid_trampoline<>(SB)
 
+<<<<<<< HEAD
+=======
+TEXT libc_setrlimit_trampoline<>(SB),NOSPLIT,$0-0
+	JMP	libc_setrlimit(SB)
+GLOBL	·libc_setrlimit_trampoline_addr(SB), RODATA, $8
+DATA	·libc_setrlimit_trampoline_addr(SB)/8, $libc_setrlimit_trampoline<>(SB)
+
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 TEXT libc_setrtable_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_setrtable(SB)
 GLOBL	·libc_setrtable_trampoline_addr(SB), RODATA, $8
@@ -673,15 +687,19 @@ TEXT libc_munmap_trampoline<>(SB),NOSPLIT,$0-0
 GLOBL	·libc_munmap_trampoline_addr(SB), RODATA, $8
 DATA	·libc_munmap_trampoline_addr(SB)/8, $libc_munmap_trampoline<>(SB)
 
+<<<<<<< HEAD
 TEXT libc_getfsstat_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_getfsstat(SB)
 GLOBL	·libc_getfsstat_trampoline_addr(SB), RODATA, $8
 DATA	·libc_getfsstat_trampoline_addr(SB)/8, $libc_getfsstat_trampoline<>(SB)
 
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 TEXT libc_utimensat_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_utimensat(SB)
 GLOBL	·libc_utimensat_trampoline_addr(SB), RODATA, $8
 DATA	·libc_utimensat_trampoline_addr(SB)/8, $libc_utimensat_trampoline<>(SB)
+<<<<<<< HEAD
 
 TEXT libc_pledge_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_pledge(SB)
@@ -692,3 +710,5 @@ TEXT libc_unveil_trampoline<>(SB),NOSPLIT,$0-0
 	JMP	libc_unveil(SB)
 GLOBL	·libc_unveil_trampoline_addr(SB), RODATA, $8
 DATA	·libc_unveil_trampoline_addr(SB)/8, $libc_unveil_trampoline<>(SB)
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))

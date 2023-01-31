@@ -2036,7 +2036,11 @@ func appendBytes(vecs []Iovec, bs [][]byte) []Iovec {
 // offs2lohi splits offs into its low and high order bits.
 func offs2lohi(offs int64) (lo, hi uintptr) {
 	const longBits = SizeofLong * 8
+<<<<<<< HEAD
 	return uintptr(offs), uintptr(uint64(offs) >> (longBits - 1) >> 1) // two shifts to avoid false positive in vet
+=======
+	return uintptr(offs), uintptr(uint64(offs) >> longBits)
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 }
 
 func Readv(fd int, iovs [][]byte) (n int, err error) {

@@ -101,15 +101,15 @@ github.com/fatih/color
 # github.com/fsnotify/fsnotify v1.6.0
 ## explicit; go 1.16
 github.com/fsnotify/fsnotify
-# github.com/go-playground/locales v0.14.0
-## explicit; go 1.13
+# github.com/go-playground/locales v0.14.1
+## explicit; go 1.17
 github.com/go-playground/locales
 github.com/go-playground/locales/currency
-# github.com/go-playground/universal-translator v0.18.0
-## explicit; go 1.13
+# github.com/go-playground/universal-translator v0.18.1
+## explicit; go 1.18
 github.com/go-playground/universal-translator
-# github.com/go-playground/validator/v10 v10.11.1
-## explicit; go 1.13
+# github.com/go-playground/validator/v10 v10.11.2
+## explicit; go 1.18
 github.com/go-playground/validator/v10
 # github.com/gogo/protobuf v1.3.2
 ## explicit; go 1.15
@@ -240,6 +240,7 @@ github.com/xeipuuv/gojsonschema
 ## explicit
 github.com/xrash/smetrics
 <<<<<<< HEAD
+<<<<<<< HEAD
 # golang.org/x/crypto v0.17.0
 ## explicit; go 1.18
 golang.org/x/crypto/sha3
@@ -254,12 +255,19 @@ golang.org/x/crypto/sha3
 =======
 # golang.org/x/net v0.4.0
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+# golang.org/x/crypto v0.5.0
+## explicit; go 1.17
+golang.org/x/crypto/sha3
+# golang.org/x/net v0.5.0
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 ## explicit; go 1.17
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
 # golang.org/x/sync v0.1.0
 ## explicit
 golang.org/x/sync/errgroup
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -273,12 +281,16 @@ golang.org/x/sync/errgroup
 =======
 # golang.org/x/sys v0.3.0
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+# golang.org/x/sys v0.4.0
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 ## explicit; go 1.17
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 golang.org/x/sys/cpu
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 # golang.org/x/term v0.15.0
@@ -288,9 +300,13 @@ golang.org/x/sys/windows
 =======
 # golang.org/x/term v0.3.0
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+# golang.org/x/term v0.4.0
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 ## explicit; go 1.17
 >>>>>>> 4da55db (Bump github.com/briandowns/spinner from 1.19.0 to 1.20.0 in /src (#414))
 golang.org/x/term
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 # golang.org/x/text v0.14.0
@@ -300,6 +316,9 @@ golang.org/x/term
 =======
 # golang.org/x/text v0.5.0
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+# golang.org/x/text v0.6.0
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 ## explicit; go 1.17
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 golang.org/x/text/internal/language

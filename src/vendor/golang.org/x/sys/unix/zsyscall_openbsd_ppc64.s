@@ -274,14 +274,20 @@ GLOBL	·libc_chroot_trampoline_addr(SB), RODATA, $8
 DATA	·libc_chroot_trampoline_addr(SB)/8, $libc_chroot_trampoline<>(SB)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 TEXT libc_clock_gettime_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_clock_gettime(SB)
 	RET
 GLOBL	·libc_clock_gettime_trampoline_addr(SB), RODATA, $8
 DATA	·libc_clock_gettime_trampoline_addr(SB)/8, $libc_clock_gettime_trampoline<>(SB)
 
+<<<<<<< HEAD
 =======
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 TEXT libc_close_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_close(SB)
 	RET

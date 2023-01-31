@@ -2,7 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+<<<<<<< HEAD
 //go:build gccgo && !aix && !hurd
+=======
+// +build gccgo,!hurd
+// +build !aix,!hurd
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 
 #include <errno.h>
 #include <stdint.h>

@@ -177,6 +177,7 @@ openbsd_mips64)
 	mkasm="go run mkasm.go"
 	mkerrors="$mkerrors -m64"
 	mksyscall="go run mksyscall.go -openbsd -libc"
+<<<<<<< HEAD
 	mksysctl="go run mksysctl_openbsd.go"
 	# Let the type of C char be signed for making the bare syscall
 	# API consistent across platforms.
@@ -195,6 +196,8 @@ openbsd_riscv64)
 	mkasm="go run mkasm.go"
 	mkerrors="$mkerrors -m64"
 	mksyscall="go run mksyscall.go -openbsd -libc"
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 	mksysctl="go run mksysctl_openbsd.go"
 	# Let the type of C char be signed for making the bare syscall
 	# API consistent across platforms.

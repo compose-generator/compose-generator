@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 
 //go:build gccgo && !aix && !hurd
+<<<<<<< HEAD
+=======
+// +build gccgo,!aix,!hurd
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 
 package unix
 

@@ -367,6 +367,7 @@ func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // RecvmsgBuffers receives a message from a socket using the recvmsg system
 // call. This function is equivalent to Recvmsg, but non-control data read is
 // scattered into the buffers slices.
@@ -379,6 +380,11 @@ func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from
 //   - recvflags is flags returned by recvmsg
 //   - from is the address of the sender
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+// RecvmsgBuffers receives a message from a socket using the recvmsg system
+// call. This function is equivalent to Recvmsg, but non-control data read is
+// scattered into the buffers slices.
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 func RecvmsgBuffers(fd int, buffers [][]byte, oob []byte, flags int) (n, oobn int, recvflags int, from Sockaddr, err error) {
 	iov := make([]Iovec, len(buffers))
 	for i := range buffers {
@@ -398,11 +404,17 @@ func RecvmsgBuffers(fd int, buffers [][]byte, oob []byte, flags int) (n, oobn in
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Sendmsg sends a message on a socket to an address using the sendmsg system
 // call. This function is equivalent to SendmsgN, but does not return the
 // number of bytes actually sent.
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+// Sendmsg sends a message on a socket to an address using the sendmsg system
+// call. This function is equivalent to SendmsgN, but does not return the
+// number of bytes actually sent.
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 func Sendmsg(fd int, p, oob []byte, to Sockaddr, flags int) (err error) {
 	_, err = SendmsgN(fd, p, oob, to, flags)
 	return
@@ -451,6 +463,7 @@ func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) 
 
 // SendmsgBuffers sends a message on a socket to an address using the sendmsg
 <<<<<<< HEAD
+<<<<<<< HEAD
 // system call. This function is equivalent to SendmsgN, but the non-control
 // data is gathered from buffers.
 =======
@@ -458,6 +471,10 @@ func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) 
 // is gathered from buffers. The function returns the number of bytes written
 // to the socket.
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+// system call. This function is equivalent to SendmsgN, but the non-control
+// data is gathered from buffers.
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 func SendmsgBuffers(fd int, buffers [][]byte, oob []byte, to Sockaddr, flags int) (n int, err error) {
 	iov := make([]Iovec, len(buffers))
 	for i := range buffers {

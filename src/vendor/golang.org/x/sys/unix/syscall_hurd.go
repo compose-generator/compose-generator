@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 
 //go:build hurd
+<<<<<<< HEAD
+=======
+// +build hurd
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
 
 package unix
 
@@ -19,6 +23,7 @@ func ioctl(fd int, req uint, arg uintptr) (err error) {
 	}
 	return
 }
+<<<<<<< HEAD
 
 func ioctlPtr(fd int, req uint, arg unsafe.Pointer) (err error) {
 	r0, er := C.ioctl(C.int(fd), C.ulong(req), C.uintptr_t(uintptr(arg)))
@@ -27,3 +32,5 @@ func ioctlPtr(fd int, req uint, arg unsafe.Pointer) (err error) {
 	}
 	return
 }
+=======
+>>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
