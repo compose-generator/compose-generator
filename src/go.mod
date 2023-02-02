@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.6
-	github.com/briandowns/spinner v1.20.0
+	github.com/briandowns/spinner v1.21.0
 	github.com/cli/safeexec v1.0.1
 	github.com/compose-generator/diu v0.0.0-20220630071352-df649455a580
 	github.com/compose-spec/compose-go v1.2.8
