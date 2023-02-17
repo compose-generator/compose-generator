@@ -38,6 +38,20 @@ func checkConsistency(project *types.Project) error {
 			}
 		}
 
+		if s.HealthCheck != nil && len(s.HealthCheck.Test) > 0 {
+			switch s.HealthCheck.Test[0] {
+			case "CMD", "CMD-SHELL", "NONE":
+			default:
+				return errors.New(`healthcheck.test must start either by "CMD", "CMD-SHELL" or "NONE"`)
+			}
+		}
+
+		for dependedService := range s.DependsOn {
+			if _, err := project.GetService(dependedService); err != nil {
+				return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("service %q depends on undefined service %s", s.Name, dependedService))
+			}
+		}
+
 		if strings.HasPrefix(s.NetworkMode, types.ServicePrefix) {
 			serviceName := s.NetworkMode[len(types.ServicePrefix):]
 			if _, err := project.GetServices(serviceName); err != nil {
@@ -46,12 +60,9 @@ func checkConsistency(project *types.Project) error {
 		}
 
 		for _, volume := range s.Volumes {
-			switch volume.Type {
-			case types.VolumeTypeVolume:
-				if volume.Source != "" { // non anonymous volumes
-					if _, ok := project.Volumes[volume.Source]; !ok {
-						return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("service %q refers to undefined volume %s", s.Name, volume.Source))
-					}
+			if volume.Type == types.VolumeTypeVolume && volume.Source != "" { // non anonymous volumes
+				if _, ok := project.Volumes[volume.Source]; !ok {
+					return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("service %q refers to undefined volume %s", s.Name, volume.Source))
 				}
 			}
 		}
@@ -65,6 +76,12 @@ func checkConsistency(project *types.Project) error {
 		for _, config := range s.Configs {
 			if _, ok := project.Configs[config.Source]; !ok {
 				return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("service %q refers to undefined config %s", s.Name, config.Source))
+			}
+		}
+
+		for _, secret := range s.Secrets {
+			if _, ok := project.Secrets[secret.Source]; !ok {
+				return errors.Wrap(errdefs.ErrInvalid, fmt.Sprintf("service %q refers to undefined secret %s", s.Name, secret.Source))
 			}
 		}
 	}
