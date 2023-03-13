@@ -9,7 +9,7 @@ require (
 	github.com/compose-generator/diu v0.0.0-20220630071352-df649455a580
 	github.com/compose-spec/compose-go v1.2.8
 	github.com/docker/docker v23.0.1+incompatible
-	github.com/fatih/color v1.14.1
+	github.com/fatih/color v1.15.0
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/otiai10/copy v1.9.0
@@ -63,7 +63,7 @@ require (
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/term v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
