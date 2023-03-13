@@ -19,8 +19,8 @@ github.com/compose-generator/diu
 github.com/compose-generator/diu/cli
 github.com/compose-generator/diu/model
 github.com/compose-generator/diu/parser
-# github.com/compose-spec/compose-go v1.2.8
-## explicit; go 1.18
+# github.com/compose-spec/compose-go v1.12.0
+## explicit; go 1.19
 github.com/compose-spec/compose-go/consts
 github.com/compose-spec/compose-go/dotenv
 github.com/compose-spec/compose-go/errdefs
@@ -35,9 +35,8 @@ github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/distribution/distribution/v3 v3.0.0-20220725133111-4bf3547399eb
+# github.com/distribution/distribution/v3 v3.0.0-20230214150026-36d8c594d7aa
 ## explicit; go 1.18
-github.com/distribution/distribution/v3/digestset
 github.com/distribution/distribution/v3/reference
 # github.com/docker/distribution v2.8.1+incompatible
 ## explicit
