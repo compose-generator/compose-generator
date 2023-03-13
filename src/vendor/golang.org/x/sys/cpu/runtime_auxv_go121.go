@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 
 //go:build go1.21
+<<<<<<< HEAD
+=======
+// +build go1.21
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 
 package cpu
 

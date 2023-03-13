@@ -39,7 +39,11 @@ func readHWCAP() error {
 		return nil
 	}
 
+<<<<<<< HEAD
 	buf, err := os.ReadFile(procAuxv)
+=======
+	buf, err := ioutil.ReadFile(procAuxv)
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	if err != nil {
 		// e.g. on android /proc/self/auxv is not accessible, so silently
 		// ignore the error and leave Initialized = false. On some

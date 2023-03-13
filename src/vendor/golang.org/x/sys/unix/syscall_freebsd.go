@@ -270,6 +270,7 @@ func PtraceDetach(pid int) (err error) {
 
 func PtraceGetFpRegs(pid int, fpregsout *FpReg) (err error) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	return ptracePtr(PT_GETFPREGS, pid, unsafe.Pointer(fpregsout), 0)
 }
 
@@ -299,6 +300,30 @@ func PtraceIO(req int, pid int, offs uintptr, out []byte, countin int) (count in
 func PtraceGetRegs(pid int, regsout *Reg) (err error) {
 	return ptrace(PT_GETREGS, pid, uintptr(unsafe.Pointer(regsout)), 0)
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	return ptracePtr(PT_GETFPREGS, pid, unsafe.Pointer(fpregsout), 0)
+}
+
+func PtraceGetRegs(pid int, regsout *Reg) (err error) {
+	return ptracePtr(PT_GETREGS, pid, unsafe.Pointer(regsout), 0)
+}
+
+func PtraceIO(req int, pid int, offs uintptr, out []byte, countin int) (count int, err error) {
+	ioDesc := PtraceIoDesc{
+		Op:   int32(req),
+		Offs: offs,
+	}
+	if countin > 0 {
+		_ = out[:countin] // check bounds
+		ioDesc.Addr = &out[0]
+	} else if out != nil {
+		ioDesc.Addr = (*byte)(unsafe.Pointer(&_zero))
+	}
+	ioDesc.SetLen(countin)
+
+	err = ptracePtr(PT_IO, pid, unsafe.Pointer(&ioDesc), 0)
+	return int(ioDesc.Len), err
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 }
 
 func PtraceLwpEvents(pid int, enable int) (err error) {
@@ -306,12 +331,17 @@ func PtraceLwpEvents(pid int, enable int) (err error) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 func PtraceLwpInfo(pid int, info *PtraceLwpInfoStruct) (err error) {
 	return ptracePtr(PT_LWPINFO, pid, unsafe.Pointer(info), int(unsafe.Sizeof(*info)))
 =======
 func PtraceLwpInfo(pid int, info uintptr) (err error) {
 	return ptrace(PT_LWPINFO, pid, info, int(unsafe.Sizeof(PtraceLwpInfoStruct{})))
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+func PtraceLwpInfo(pid int, info *PtraceLwpInfoStruct) (err error) {
+	return ptracePtr(PT_LWPINFO, pid, unsafe.Pointer(info), int(unsafe.Sizeof(*info)))
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 }
 
 func PtracePeekData(pid int, addr uintptr, out []byte) (count int, err error) {
@@ -332,10 +362,14 @@ func PtracePokeText(pid int, addr uintptr, data []byte) (count int, err error) {
 
 func PtraceSetRegs(pid int, regs *Reg) (err error) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	return ptracePtr(PT_SETREGS, pid, unsafe.Pointer(regs), 0)
 =======
 	return ptrace(PT_SETREGS, pid, uintptr(unsafe.Pointer(regs)), 0)
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	return ptracePtr(PT_SETREGS, pid, unsafe.Pointer(regs), 0)
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 }
 
 func PtraceSingleStep(pid int) (err error) {
@@ -355,6 +389,18 @@ func Dup3(oldfd, newfd, flags int) error {
 	return err
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+}
+
+func Dup3(oldfd, newfd, flags int) error {
+	if oldfd == newfd || flags&^O_CLOEXEC != 0 {
+		return EINVAL
+	}
+	how := F_DUP2FD
+	if flags&O_CLOEXEC != 0 {
+		how = F_DUP2FD_CLOEXEC
+	}
+	_, err := fcntl(oldfd, how, newfd)
+	return err
 }
 
 /*

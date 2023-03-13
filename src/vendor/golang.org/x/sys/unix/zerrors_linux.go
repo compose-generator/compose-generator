@@ -786,8 +786,11 @@ const (
 	DEVLINK_GENL_MCGRP_CONFIG_NAME              = "config"
 	DEVLINK_GENL_NAME                           = "devlink"
 	DEVLINK_GENL_VERSION                        = 0x1
+<<<<<<< HEAD
 	DEVLINK_PORT_FN_CAP_IPSEC_CRYPTO            = 0x4
 	DEVLINK_PORT_FN_CAP_IPSEC_PACKET            = 0x8
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	DEVLINK_PORT_FN_CAP_MIGRATABLE              = 0x2
 	DEVLINK_PORT_FN_CAP_ROCE                    = 0x1
 	DEVLINK_SB_THRESHOLD_TO_ALPHA_MAX           = 0x14
@@ -840,6 +843,7 @@ const (
 	DM_UUID_LEN                                 = 0x81
 	DM_VERSION                                  = 0xc138fd00
 <<<<<<< HEAD
+<<<<<<< HEAD
 	DM_VERSION_EXTRA                            = "-ioctl (2023-03-01)"
 	DM_VERSION_MAJOR                            = 0x4
 	DM_VERSION_MINOR                            = 0x30
@@ -848,6 +852,11 @@ const (
 	DM_VERSION_MAJOR                            = 0x4
 	DM_VERSION_MINOR                            = 0x2e
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	DM_VERSION_EXTRA                            = "-ioctl (2022-07-28)"
+	DM_VERSION_MAJOR                            = 0x4
+	DM_VERSION_MINOR                            = 0x2f
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	DM_VERSION_PATCHLEVEL                       = 0x0
 	DT_BLK                                      = 0x6
 	DT_CHR                                      = 0x2

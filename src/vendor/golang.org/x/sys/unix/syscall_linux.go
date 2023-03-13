@@ -1720,6 +1720,7 @@ func PtracePokeUser(pid int, addr uintptr, data []byte) (count int, err error) {
 const elfNT_PRSTATUS = 1
 
 func PtraceGetRegs(pid int, regsout *PtraceRegs) (err error) {
+<<<<<<< HEAD
 	var iov Iovec
 	iov.Base = (*byte)(unsafe.Pointer(regsout))
 	iov.SetLen(int(unsafe.Sizeof(*regsout)))
@@ -1731,6 +1732,13 @@ func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
 	iov.Base = (*byte)(unsafe.Pointer(regs))
 	iov.SetLen(int(unsafe.Sizeof(*regs)))
 	return ptracePtr(PTRACE_SETREGSET, pid, uintptr(elfNT_PRSTATUS), unsafe.Pointer(&iov))
+=======
+	return ptracePtr(PTRACE_GETREGS, pid, 0, unsafe.Pointer(regsout))
+}
+
+func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
+	return ptracePtr(PTRACE_SETREGS, pid, 0, unsafe.Pointer(regs))
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 }
 
 func PtraceSetOptions(pid int, options int) (err error) {
@@ -2037,10 +2045,14 @@ func appendBytes(vecs []Iovec, bs [][]byte) []Iovec {
 func offs2lohi(offs int64) (lo, hi uintptr) {
 	const longBits = SizeofLong * 8
 <<<<<<< HEAD
+<<<<<<< HEAD
 	return uintptr(offs), uintptr(uint64(offs) >> (longBits - 1) >> 1) // two shifts to avoid false positive in vet
 =======
 	return uintptr(offs), uintptr(uint64(offs) >> longBits)
 >>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
+=======
+	return uintptr(offs), uintptr(uint64(offs) >> (longBits - 1) >> 1) // two shifts to avoid false positive in vet
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 }
 
 func Readv(fd int, iovs [][]byte) (n int, err error) {

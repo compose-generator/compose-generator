@@ -24,6 +24,9 @@ func ioctl(fd int, req uint, arg uintptr) (err error) {
 	return
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 
 func ioctlPtr(fd int, req uint, arg unsafe.Pointer) (err error) {
 	r0, er := C.ioctl(C.int(fd), C.ulong(req), C.uintptr_t(uintptr(arg)))
@@ -32,5 +35,8 @@ func ioctlPtr(fd int, req uint, arg unsafe.Pointer) (err error) {
 	}
 	return
 }
+<<<<<<< HEAD
 =======
 >>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))

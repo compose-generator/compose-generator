@@ -59,6 +59,7 @@ func sendfile(outfd int, infd int, offset *int64, count int) (written int, err e
 
 func Syscall9(num, a1, a2, a3, a4, a5, a6, a7, a8, a9 uintptr) (r1, r2 uintptr, err syscall.Errno)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 func PtraceIO(req int, pid int, addr uintptr, out []byte, countin int) (count int, err error) {
@@ -67,3 +68,5 @@ func PtraceIO(req int, pid int, addr uintptr, out []byte, countin int) (count in
 	return int(ioDesc.Len), err
 }
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))

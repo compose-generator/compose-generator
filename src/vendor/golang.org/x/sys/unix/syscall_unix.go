@@ -625,10 +625,14 @@ func Lutimes(path string, tv []Timeval) error {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // emptyIovecs reports whether there are no bytes in the slice of Iovec.
 =======
 // emptyIovec reports whether there are no bytes in the slice of Iovec.
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+// emptyIovecs reports whether there are no bytes in the slice of Iovec.
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 func emptyIovecs(iov []Iovec) bool {
 	for i := range iov {
 		if iov[i].Len > 0 {

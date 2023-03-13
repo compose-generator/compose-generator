@@ -3,11 +3,16 @@
 // license that can be found in the LICENSE file.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //go:build gccgo && !aix && !hurd
 =======
 // +build gccgo,!hurd
 // +build !aix,!hurd
 >>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
+=======
+//go:build gccgo && !aix && !hurd
+// +build gccgo,!aix,!hurd
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 
 #include <errno.h>
 #include <stdint.h>

@@ -1200,13 +1200,19 @@ const (
 	PERF_BR_ERET                          = 0xb
 	PERF_BR_IRQ                           = 0xc
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	PERF_BR_SERROR                        = 0xd
 	PERF_BR_NO_TX                         = 0xe
 	PERF_BR_EXTEND_ABI                    = 0xf
 	PERF_BR_MAX                           = 0x10
+<<<<<<< HEAD
 =======
 	PERF_BR_MAX                           = 0xd
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	PERF_SAMPLE_REGS_ABI_NONE             = 0x0
 	PERF_SAMPLE_REGS_ABI_32               = 0x1
 	PERF_SAMPLE_REGS_ABI_64               = 0x2
@@ -1983,7 +1989,11 @@ const (
 	NFT_MSG_GETFLOWTABLE              = 0x17
 	NFT_MSG_DELFLOWTABLE              = 0x18
 	NFT_MSG_GETRULE_RESET             = 0x19
+<<<<<<< HEAD
 	NFT_MSG_MAX                       = 0x22
+=======
+	NFT_MSG_MAX                       = 0x1a
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	NFTA_LIST_UNSPEC                  = 0x0
 	NFTA_LIST_ELEM                    = 0x1
 	NFTA_HOOK_UNSPEC                  = 0x0
@@ -3146,6 +3156,9 @@ const (
 	DEVLINK_CMD_TRAP_POLICER_DEL                       = 0x48
 	DEVLINK_CMD_HEALTH_REPORTER_TEST                   = 0x49
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	DEVLINK_CMD_RATE_GET                               = 0x4a
 	DEVLINK_CMD_RATE_SET                               = 0x4b
 	DEVLINK_CMD_RATE_NEW                               = 0x4c
@@ -3156,9 +3169,12 @@ const (
 	DEVLINK_CMD_LINECARD_DEL                           = 0x51
 	DEVLINK_CMD_SELFTESTS_GET                          = 0x52
 	DEVLINK_CMD_MAX                                    = 0x53
+<<<<<<< HEAD
 =======
 	DEVLINK_CMD_MAX                                    = 0x51
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	DEVLINK_PORT_TYPE_NOTSET                           = 0x0
 	DEVLINK_PORT_TYPE_AUTO                             = 0x1
 	DEVLINK_PORT_TYPE_ETH                              = 0x2
@@ -3388,6 +3404,9 @@ const (
 	DEVLINK_ATTR_RATE_PARENT_NODE_NAME                 = 0xa9
 	DEVLINK_ATTR_REGION_MAX_SNAPSHOTS                  = 0xaa
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	DEVLINK_ATTR_LINECARD_INDEX                        = 0xab
 	DEVLINK_ATTR_LINECARD_STATE                        = 0xac
 	DEVLINK_ATTR_LINECARD_TYPE                         = 0xad
@@ -3395,9 +3414,12 @@ const (
 	DEVLINK_ATTR_NESTED_DEVLINK                        = 0xaf
 	DEVLINK_ATTR_SELFTESTS                             = 0xb0
 	DEVLINK_ATTR_MAX                                   = 0xb3
+<<<<<<< HEAD
 =======
 	DEVLINK_ATTR_MAX                                   = 0xae
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	DEVLINK_DPIPE_FIELD_MAPPING_TYPE_NONE              = 0x0
 	DEVLINK_DPIPE_FIELD_MAPPING_TYPE_IFINDEX           = 0x1
 	DEVLINK_DPIPE_MATCH_TYPE_FIELD_EXACT               = 0x0
@@ -3706,7 +3728,11 @@ const (
 	ETHTOOL_MSG_PSE_GET                       = 0x24
 	ETHTOOL_MSG_PSE_SET                       = 0x25
 	ETHTOOL_MSG_RSS_GET                       = 0x26
+<<<<<<< HEAD
 	ETHTOOL_MSG_USER_MAX                      = 0x2b
+=======
+	ETHTOOL_MSG_USER_MAX                      = 0x26
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	ETHTOOL_MSG_KERNEL_NONE                   = 0x0
 	ETHTOOL_MSG_STRSET_GET_REPLY              = 0x1
 	ETHTOOL_MSG_LINKINFO_GET_REPLY            = 0x2
@@ -3746,7 +3772,11 @@ const (
 	ETHTOOL_MSG_MODULE_NTF                    = 0x24
 	ETHTOOL_MSG_PSE_GET_REPLY                 = 0x25
 	ETHTOOL_MSG_RSS_GET_REPLY                 = 0x26
+<<<<<<< HEAD
 	ETHTOOL_MSG_KERNEL_MAX                    = 0x2b
+=======
+	ETHTOOL_MSG_KERNEL_MAX                    = 0x26
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	ETHTOOL_A_HEADER_UNSPEC                   = 0x0
 	ETHTOOL_A_HEADER_DEV_INDEX                = 0x1
 	ETHTOOL_A_HEADER_DEV_NAME                 = 0x2
@@ -4550,10 +4580,14 @@ const (
 	NL80211_ATTR_MAC_MASK                                   = 0xd7
 	NL80211_ATTR_MAX_AP_ASSOC_STA                           = 0xca
 <<<<<<< HEAD
+<<<<<<< HEAD
 	NL80211_ATTR_MAX                                        = 0x146
 =======
 	NL80211_ATTR_MAX                                        = 0x137
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	NL80211_ATTR_MAX                                        = 0x141
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	NL80211_ATTR_MAX_CRIT_PROT_DURATION                     = 0xb4
 	NL80211_ATTR_MAX_CSA_COUNTERS                           = 0xce
 	NL80211_ATTR_MAX_MATCH_SETS                             = 0x85
@@ -4798,10 +4832,15 @@ const (
 	NL80211_BAND_IFTYPE_ATTR_IFTYPES                        = 0x1
 	NL80211_BAND_IFTYPE_ATTR_MAX                            = 0xb
 <<<<<<< HEAD
+<<<<<<< HEAD
 	NL80211_BAND_IFTYPE_ATTR_VENDOR_ELEMS                   = 0x7
 	NL80211_BAND_LC                                         = 0x5
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	NL80211_BAND_IFTYPE_ATTR_VENDOR_ELEMS                   = 0x7
+	NL80211_BAND_LC                                         = 0x5
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	NL80211_BAND_S1GHZ                                      = 0x4
 	NL80211_BITRATE_ATTR_2GHZ_SHORTPREAMBLE                 = 0x2
 	NL80211_BITRATE_ATTR_MAX                                = 0x2
@@ -4926,7 +4965,11 @@ const (
 	NL80211_CMD_LEAVE_IBSS                                  = 0x2c
 	NL80211_CMD_LEAVE_MESH                                  = 0x45
 	NL80211_CMD_LEAVE_OCB                                   = 0x6d
+<<<<<<< HEAD
 	NL80211_CMD_MAX                                         = 0x9a
+=======
+	NL80211_CMD_MAX                                         = 0x98
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 	NL80211_CMD_MICHAEL_MIC_FAILURE                         = 0x29
 	NL80211_CMD_MODIFY_LINK_STA                             = 0x97
 	NL80211_CMD_NAN_MATCH                                   = 0x78
@@ -5905,6 +5948,9 @@ const (
 	AUDIT_NLGRP_READLOG = 0x1
 )
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 
 const (
 	TUN_F_CSUM    = 0x1
@@ -5912,8 +5958,11 @@ const (
 	TUN_F_TSO6    = 0x4
 	TUN_F_TSO_ECN = 0x8
 	TUN_F_UFO     = 0x10
+<<<<<<< HEAD
 	TUN_F_USO4    = 0x20
 	TUN_F_USO6    = 0x40
+=======
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 )
 
 const (
@@ -5923,6 +5972,7 @@ const (
 )
 
 const (
+<<<<<<< HEAD
 	VIRTIO_NET_HDR_GSO_NONE   = 0x0
 	VIRTIO_NET_HDR_GSO_TCPV4  = 0x1
 	VIRTIO_NET_HDR_GSO_UDP    = 0x3
@@ -5959,3 +6009,11 @@ type CachestatRange struct {
 }
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	VIRTIO_NET_HDR_GSO_NONE  = 0x0
+	VIRTIO_NET_HDR_GSO_TCPV4 = 0x1
+	VIRTIO_NET_HDR_GSO_UDP   = 0x3
+	VIRTIO_NET_HDR_GSO_TCPV6 = 0x4
+	VIRTIO_NET_HDR_GSO_ECN   = 0x80
+)
+>>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
