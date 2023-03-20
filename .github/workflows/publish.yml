@@ -19,9 +19,9 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
-          go-version: 1.18.x
+          go-version: 1.19.x
 
       - name: Cache Go modules
         uses: actions/cache@v3
@@ -58,9 +58,9 @@ jobs:
           tar cfvz ./predefined-services.tar.gz *
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v3
+        uses: goreleaser/goreleaser-action@v4
         with:
-          version: v1.9.2
+          version: v1.11.2
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -100,6 +100,7 @@ jobs:
 
       - name: Deploy to Debian
         run: |
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-bookworm/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-bullseye/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-buster/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-stretch/"
@@ -120,6 +121,7 @@ jobs:
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-bionic/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-xenial/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-trusty/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-jammy/"
 
       - name: Deploy to CentOS repo
         run: |
@@ -194,4 +196,17 @@ jobs:
           file: ${{ steps.build_msi.outputs.msi }}
           asset_name: compose-generator_${{ matrix.config.label }}_setup.msi
           tag: ${{ github.ref }}
-          
+
+  deploy-win-installers:
+    name: Deploy installers
+    needs: build-win-installers
+    runs-on: windows-latest
+
+    steps:
+      - name: Release to WinGet
+        uses: vedantmgoyal2009/winget-releaser@v2
+        with:
+          identifier: ChilliBits.ComposeGenerator
+          version: ${{ github.ref_name }}
+          release-tag: ${{ github.ref_name }}
+          token: ${{ secrets.CR_PAT }}
