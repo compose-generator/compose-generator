@@ -52,6 +52,7 @@ github.com/docker/distribution/reference
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # github.com/docker/docker v20.10.24+incompatible
 =======
 # github.com/docker/docker v20.10.18+incompatible
@@ -80,6 +81,9 @@ github.com/docker/distribution/reference
 =======
 # github.com/docker/docker v23.0.2+incompatible
 >>>>>>> 149d866 (Bump github.com/docker/docker in /src (#450))
+=======
+# github.com/docker/docker v23.0.3+incompatible
+>>>>>>> 810b63e (Bump github.com/docker/docker in /src (#454))
 ## explicit
 github.com/docker/docker/api
 github.com/docker/docker/api/types
