@@ -12,7 +12,7 @@ require (
 	github.com/fatih/color v1.15.0
 	github.com/go-playground/validator/v10 v10.12.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
-	github.com/otiai10/copy v1.10.0
+	github.com/otiai10/copy v1.11.0
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.2
