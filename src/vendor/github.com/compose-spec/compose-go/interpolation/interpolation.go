@@ -72,7 +72,7 @@ func recursiveInterpolate(value interface{}, path Path, opts Options) (interface
 	switch value := value.(type) {
 	case string:
 		newValue, err := opts.Substitute(value, template.Mapping(opts.LookupValue))
-		if err != nil || newValue == value {
+		if err != nil {
 			return value, newPathError(path, err)
 		}
 		caster, ok := opts.getCasterForPath(path)
@@ -115,7 +115,7 @@ func newPathError(path Path, err error) error {
 		return nil
 	case *template.InvalidTemplateError:
 		return errors.Errorf(
-			"invalid interpolation format for %s: %#v. You may need to escape any $ with another $",
+			"invalid interpolation format for %s.\nYou may need to escape any $ with another $.\n%s",
 			path, err.Template)
 	default:
 		return errors.Wrapf(err, "error while interpolating %s", path)
