@@ -18,9 +18,8 @@ package loader
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-	"path"
+	paths "path"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -29,7 +28,6 @@ import (
 	"time"
 
 	"github.com/compose-spec/compose-go/consts"
-	"github.com/compose-spec/compose-go/dotenv"
 	interp "github.com/compose-spec/compose-go/interpolation"
 	"github.com/compose-spec/compose-go/schema"
 	"github.com/compose-spec/compose-go/template"
@@ -39,7 +37,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // Options supported by Load
@@ -66,10 +64,12 @@ type Options struct {
 	projectName string
 	// Indicates when the projectName was imperatively set or guessed from path
 	projectNameImperativelySet bool
+	// Profiles set profiles to enable
+	Profiles []string
 }
 
 func (o *Options) SetProjectName(name string, imperativelySet bool) {
-	o.projectName = NormalizeProjectName(name)
+	o.projectName = name
 	o.projectNameImperativelySet = imperativelySet
 }
 
@@ -124,22 +124,53 @@ func WithSkipValidation(opts *Options) {
 	opts.SkipValidation = true
 }
 
+// WithProfiles sets profiles to be activated
+func WithProfiles(profiles []string) func(*Options) {
+	return func(opts *Options) {
+		opts.Profiles = profiles
+	}
+}
+
 // ParseYAML reads the bytes from a file, parses the bytes into a mapping
 // structure, and returns it.
 func ParseYAML(source []byte) (map[string]interface{}, error) {
+	m, _, err := parseYAML(source)
+	return m, err
+}
+
+// PostProcessor is used to tweak compose model based on metadata extracted during yaml Unmarshal phase
+// that hardly can be implemented using go-yaml and mapstructure
+type PostProcessor interface {
+	yaml.Unmarshaler
+
+	// Apply changes to compose model based on recorder metadata
+	Apply(config *types.Config) error
+}
+
+func parseYAML(source []byte) (map[string]interface{}, PostProcessor, error) {
 	var cfg interface{}
-	if err := yaml.Unmarshal(source, &cfg); err != nil {
-		return nil, err
+	processor := ResetProcessor{target: &cfg}
+
+	if err := yaml.Unmarshal(source, &processor); err != nil {
+		return nil, nil, err
+	}
+	stringMap, ok := cfg.(map[string]interface{})
+	if ok {
+		converted, err := convertToStringKeysRecursive(stringMap, "")
+		if err != nil {
+			return nil, nil, err
+		}
+		return converted.(map[string]interface{}), &processor, nil
 	}
 	cfgMap, ok := cfg.(map[interface{}]interface{})
 	if !ok {
-		return nil, errors.Errorf("Top-level object must be a mapping")
+		return nil, nil, errors.Errorf("Top-level object must be a mapping")
 	}
 	converted, err := convertToStringKeysRecursive(cfgMap, "")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return converted.(map[string]interface{}), nil
+	return converted.(map[string]interface{}), &processor, nil
 }
 
 // Load reads a ConfigDetails and returns a fully loaded configuration
@@ -160,24 +191,36 @@ func Load(configDetails types.ConfigDetails, options ...func(*Options)) (*types.
 		op(opts)
 	}
 
-	projectName := projectName(configDetails, opts)
+	projectName, err := projectName(configDetails, opts)
+	if err != nil {
+		return nil, err
+	}
 
-	var configs []*types.Config
+	var model *types.Config
 	for i, file := range configDetails.ConfigFiles {
+		var postProcessor PostProcessor
 		configDict := file.Config
 		if configDict == nil {
-			dict, err := parseConfig(file.Content, opts)
+			if len(file.Content) == 0 {
+				content, err := os.ReadFile(file.Filename)
+				if err != nil {
+					return nil, err
+				}
+				file.Content = content
+			}
+			dict, p, err := parseConfig(file.Content, opts)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("parsing %s: %w", file.Filename, err)
 			}
 			configDict = dict
 			file.Config = dict
 			configDetails.ConfigFiles[i] = file
+			postProcessor = p
 		}
 
 		if !opts.SkipValidation {
 			if err := schema.Validate(configDict); err != nil {
-				return nil, err
+				return nil, fmt.Errorf("validating %s: %w", file.Filename, err)
 			}
 		}
 
@@ -187,18 +230,22 @@ func Load(configDetails types.ConfigDetails, options ...func(*Options)) (*types.
 		if err != nil {
 			return nil, err
 		}
-		if opts.discardEnvFiles {
-			for i := range cfg.Services {
-				cfg.Services[i].EnvFile = nil
+
+		if i == 0 {
+			model = cfg
+			continue
+		}
+		merged, err := merge([]*types.Config{model, cfg})
+		if err != nil {
+			return nil, err
+		}
+		if postProcessor != nil {
+			err = postProcessor.Apply(merged)
+			if err != nil {
+				return nil, err
 			}
 		}
-
-		configs = append(configs, cfg)
-	}
-
-	model, err := merge(configs)
-	if err != nil {
-		return nil, err
+		model = merged
 	}
 
 	for _, s := range model.Services {
@@ -222,7 +269,7 @@ func Load(configDetails types.ConfigDetails, options ...func(*Options)) (*types.
 	}
 
 	if !opts.SkipNormalization {
-		err = normalize(project, opts.ResolvePaths)
+		err = Normalize(project, opts.ResolvePaths)
 		if err != nil {
 			return nil, err
 		}
@@ -235,31 +282,86 @@ func Load(configDetails types.ConfigDetails, options ...func(*Options)) (*types.
 		}
 	}
 
-	return project, nil
+	if profiles, ok := project.Environment[consts.ComposeProfiles]; ok && len(opts.Profiles) == 0 {
+		opts.Profiles = strings.Split(profiles, ",")
+	}
+	project.ApplyProfiles(opts.Profiles)
+
+	err = project.ResolveServicesEnvironment(opts.discardEnvFiles)
+
+	return project, err
 }
 
-func projectName(details types.ConfigDetails, opts *Options) string {
+func InvalidProjectNameErr(v string) error {
+	return fmt.Errorf(
+		"invalid project name %q: must consist only of lowercase alphanumeric characters, hyphens, and underscores as well as start with a letter or number",
+		v,
+	)
+}
+
+// projectName determines the canonical name to use for the project considering
+// the loader Options as well as `name` fields in Compose YAML fields (which
+// also support interpolation).
+//
+// TODO(milas): restructure loading so that we don't need to re-parse the YAML
+// here, as it's both wasteful and makes this code error-prone.
+func projectName(details types.ConfigDetails, opts *Options) (string, error) {
 	projectName, projectNameImperativelySet := opts.GetProjectName()
-	var pjNameFromConfigFile string
 
-	for _, configFile := range details.ConfigFiles {
-		yml, err := ParseYAML(configFile.Content)
-		if err != nil {
-			return ""
+	// if user did NOT provide a name explicitly, then see if one is defined
+	// in any of the config files
+	if !projectNameImperativelySet {
+		var pjNameFromConfigFile string
+		for _, configFile := range details.ConfigFiles {
+			yml, err := ParseYAML(configFile.Content)
+			if err != nil {
+				// HACK: the way that loading is currently structured, this is
+				// a duplicative parse just for the `name`. if it fails, we
+				// give up but don't return the error, knowing that it'll get
+				// caught downstream for us
+				return "", nil
+			}
+			if val, ok := yml["name"]; ok && val != "" {
+				sVal, ok := val.(string)
+				if !ok {
+					// HACK: see above - this is a temporary parsed version
+					// that hasn't been schema-validated, but we don't want
+					// to be the ones to actually report that, so give up,
+					// knowing that it'll get caught downstream for us
+					return "", nil
+				}
+				pjNameFromConfigFile = sVal
+			}
 		}
-		if val, ok := yml["name"]; ok && val != "" {
-			pjNameFromConfigFile = yml["name"].(string)
+		if !opts.SkipInterpolation {
+			interpolated, err := interp.Interpolate(
+				map[string]interface{}{"name": pjNameFromConfigFile},
+				*opts.Interpolate,
+			)
+			if err != nil {
+				return "", err
+			}
+			pjNameFromConfigFile = interpolated["name"].(string)
+		}
+		pjNameFromConfigFile = NormalizeProjectName(pjNameFromConfigFile)
+		if pjNameFromConfigFile != "" {
+			projectName = pjNameFromConfigFile
 		}
 	}
-	pjNameFromConfigFile = NormalizeProjectName(pjNameFromConfigFile)
-	if !projectNameImperativelySet && pjNameFromConfigFile != "" {
-		projectName = pjNameFromConfigFile
+
+	if projectName == "" {
+		return "", errors.New("project name must not be empty")
 	}
 
+	if NormalizeProjectName(projectName) != projectName {
+		return "", InvalidProjectNameErr(projectName)
+	}
+
+	// TODO(milas): this should probably ALWAYS set (overriding any existing)
 	if _, ok := details.Environment[consts.ComposeProjectName]; !ok && projectName != "" {
 		details.Environment[consts.ComposeProjectName] = projectName
 	}
-	return projectName
+	return projectName, nil
 }
 
 func NormalizeProjectName(s string) string {
@@ -269,16 +371,19 @@ func NormalizeProjectName(s string) string {
 	return strings.TrimLeft(s, "_-")
 }
 
-func parseConfig(b []byte, opts *Options) (map[string]interface{}, error) {
-	yml, err := ParseYAML(b)
+func parseConfig(b []byte, opts *Options) (map[string]interface{}, PostProcessor, error) {
+	yml, postProcessor, err := parseYAML(b)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if !opts.SkipInterpolation {
-		return interp.Interpolate(yml, *opts.Interpolate)
+		interpolated, err := interp.Interpolate(yml, *opts.Interpolate)
+		return interpolated, postProcessor, err
 	}
-	return yml, err
+	return yml, postProcessor, err
 }
+
+const extensions = "#extensions" // Using # prefix, we prevent risk to conflict with an actual yaml key
 
 func groupXFieldsIntoExtensions(dict map[string]interface{}) map[string]interface{} {
 	extras := map[string]interface{}{}
@@ -292,7 +397,7 @@ func groupXFieldsIntoExtensions(dict map[string]interface{}) map[string]interfac
 		}
 	}
 	if len(extras) > 0 {
-		dict["extensions"] = extras
+		dict[extensions] = extras
 	}
 	return dict
 }
@@ -331,7 +436,7 @@ func loadSections(filename string, config map[string]interface{}, configDetails 
 	if err != nil {
 		return nil, err
 	}
-	extensions := getSection(config, "extensions")
+	extensions := getSection(config, extensions)
 	if len(extensions) > 0 {
 		cfg.Extensions = extensions
 	}
@@ -365,6 +470,7 @@ func Transform(source interface{}, target interface{}, additionalTransformers ..
 			createTransformHook(additionalTransformers...),
 			mapstructure.StringToTimeDurationHookFunc()),
 		Result:   target,
+		TagName:  "yaml",
 		Metadata: &data,
 	}
 	decoder, err := mapstructure.NewDecoder(config)
@@ -426,6 +532,22 @@ func createTransformHook(additionalTransformers ...Transformer) mapstructure.Dec
 
 // keys need to be converted to strings for jsonschema
 func convertToStringKeysRecursive(value interface{}, keyPrefix string) (interface{}, error) {
+	if mapping, ok := value.(map[string]interface{}); ok {
+		for key, entry := range mapping {
+			var newKeyPrefix string
+			if keyPrefix == "" {
+				newKeyPrefix = key
+			} else {
+				newKeyPrefix = fmt.Sprintf("%s.%s", keyPrefix, key)
+			}
+			convertedEntry, err := convertToStringKeysRecursive(entry, newKeyPrefix)
+			if err != nil {
+				return nil, err
+			}
+			mapping[key] = convertedEntry
+		}
+		return mapping, nil
+	}
 	if mapping, ok := value.(map[interface{}]interface{}); ok {
 		dict := make(map[string]interface{})
 		for key, entry := range mapping {
@@ -477,7 +599,7 @@ func formatInvalidKeyError(keyPrefix string, key interface{}) error {
 func LoadServices(filename string, servicesDict map[string]interface{}, workingDir string, lookupEnv template.Mapping, opts *Options) ([]types.ServiceConfig, error) {
 	var services []types.ServiceConfig
 
-	x, ok := servicesDict["extensions"]
+	x, ok := servicesDict[extensions]
 	if ok {
 		// as a top-level attribute, "services" doesn't support extensions, and a service can be named `x-foo`
 		for k, v := range x.(map[string]interface{}) {
@@ -507,29 +629,34 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 		return nil, fmt.Errorf("cannot extend service %q in %s: service not found", name, filename)
 	}
 
+	if target == nil {
+		target = map[string]interface{}{}
+	}
+
 	serviceConfig, err := LoadService(name, target.(map[string]interface{}), workingDir, lookupEnv, opts.ResolvePaths, opts.ConvertWindowsPaths)
 	if err != nil {
 		return nil, err
 	}
 
 	if serviceConfig.Extends != nil && !opts.SkipExtends {
-		baseServiceName := *serviceConfig.Extends["service"]
+		baseServiceName := serviceConfig.Extends.Service
 		var baseService *types.ServiceConfig
-		if file := serviceConfig.Extends["file"]; file == nil {
+		file := serviceConfig.Extends.File
+		if file == "" {
 			baseService, err = loadServiceWithExtends(filename, baseServiceName, servicesDict, workingDir, lookupEnv, opts, ct)
 			if err != nil {
 				return nil, err
 			}
 		} else {
 			// Resolve the path to the imported file, and load it.
-			baseFilePath := absPath(workingDir, *file)
+			baseFilePath := absPath(workingDir, file)
 
-			bytes, err := ioutil.ReadFile(baseFilePath)
+			b, err := os.ReadFile(baseFilePath)
 			if err != nil {
 				return nil, err
 			}
 
-			baseFile, err := parseConfig(bytes, opts)
+			baseFile, _, err := parseConfig(b, opts)
 			if err != nil {
 				return nil, err
 			}
@@ -541,21 +668,23 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 			}
 
 			// Make paths relative to the importing Compose file. Note that we
-			// make the paths relative to `*file` rather than `baseFilePath` so
-			// that the resulting paths won't be absolute if `*file` isn't an
+			// make the paths relative to `file` rather than `baseFilePath` so
+			// that the resulting paths won't be absolute if `file` isn't an
 			// absolute path.
-			baseFileParent := filepath.Dir(*file)
+			baseFileParent := filepath.Dir(file)
 			if baseService.Build != nil {
-				// Note that the Dockerfile is always defined relative to the
-				// build context, so there's no need to update the Dockerfile field.
-				baseService.Build.Context = absPath(baseFileParent, baseService.Build.Context)
+				baseService.Build.Context = resolveBuildContextPath(baseFileParent, baseService.Build.Context)
 			}
 
 			for i, vol := range baseService.Volumes {
 				if vol.Type != types.VolumeTypeBind {
 					continue
 				}
-				baseService.Volumes[i].Source = absPath(baseFileParent, vol.Source)
+				baseService.Volumes[i].Source = resolveMaybeUnixPath(vol.Source, baseFileParent, lookupEnv)
+			}
+
+			for i, envFile := range baseService.EnvFile {
+				baseService.EnvFile[i] = resolveMaybeUnixPath(envFile, baseFileParent, lookupEnv)
 			}
 		}
 
@@ -563,9 +692,23 @@ func loadServiceWithExtends(filename, name string, servicesDict map[string]inter
 		if err != nil {
 			return nil, err
 		}
+		serviceConfig.Extends = nil
 	}
 
 	return serviceConfig, nil
+}
+
+func resolveBuildContextPath(baseFileParent string, context string) string {
+	// Checks if the context is an HTTP(S) URL or a remote git repository URL
+	for _, prefix := range []string{"https://", "http://", "git://", "github.com/", "git@"} {
+		if strings.HasPrefix(context, prefix) {
+			return context
+		}
+	}
+
+	// Note that the Dockerfile is always defined relative to the
+	// build context, so there's no need to update the Dockerfile field.
+	return absPath(baseFileParent, context)
 }
 
 // LoadService produces a single ServiceConfig from a compose file Dict
@@ -578,10 +721,6 @@ func LoadService(name string, serviceDict map[string]interface{}, workingDir str
 		return nil, err
 	}
 	serviceConfig.Name = name
-
-	if err := resolveEnvironment(serviceConfig, workingDir, lookupEnv); err != nil {
-		return nil, err
-	}
 
 	for i, volume := range serviceConfig.Volumes {
 		if volume.Type != types.VolumeTypeBind {
@@ -619,48 +758,30 @@ func convertVolumePath(volume types.ServiceVolumeConfig) types.ServiceVolumeConf
 	return volume
 }
 
-func resolveEnvironment(serviceConfig *types.ServiceConfig, workingDir string, lookupEnv template.Mapping) error {
-	environment := types.MappingWithEquals{}
-
-	if len(serviceConfig.EnvFile) > 0 {
-		for _, envFile := range serviceConfig.EnvFile {
-			filePath := absPath(workingDir, envFile)
-			file, err := os.Open(filePath)
-			if err != nil {
-				return err
-			}
-			defer file.Close()
-			fileVars, err := dotenv.ParseWithLookup(file, dotenv.LookupFn(lookupEnv))
-			if err != nil {
-				return err
-			}
-			env := types.MappingWithEquals{}
-			for k, v := range fileVars {
-				v := v
-				env[k] = &v
-			}
-			environment.OverrideBy(env.Resolve(lookupEnv).RemoveEmpty())
-		}
-	}
-
-	environment.OverrideBy(serviceConfig.Environment.Resolve(lookupEnv))
-	serviceConfig.Environment = environment
-	return nil
-}
-
-func resolveVolumePath(volume types.ServiceVolumeConfig, workingDir string, lookupEnv template.Mapping) types.ServiceVolumeConfig {
-	filePath := expandUser(volume.Source, lookupEnv)
+func resolveMaybeUnixPath(path string, workingDir string, lookupEnv template.Mapping) string {
+	filePath := expandUser(path, lookupEnv)
 	// Check if source is an absolute path (either Unix or Windows), to
 	// handle a Windows client with a Unix daemon or vice-versa.
 	//
 	// Note that this is not required for Docker for Windows when specifying
 	// a local Windows path, because Docker for Windows translates the Windows
 	// path into a valid path within the VM.
-	if !path.IsAbs(filePath) && !isAbs(filePath) {
+	if !paths.IsAbs(filePath) && !isAbs(filePath) {
 		filePath = absPath(workingDir, filePath)
 	}
-	volume.Source = filePath
+	return filePath
+}
+
+func resolveVolumePath(volume types.ServiceVolumeConfig, workingDir string, lookupEnv template.Mapping) types.ServiceVolumeConfig {
+	volume.Source = resolveMaybeUnixPath(volume.Source, workingDir, lookupEnv)
 	return volume
+}
+
+func resolveSecretsPath(secret types.SecretConfig, workingDir string, lookupEnv template.Mapping) types.SecretConfig {
+	if !secret.External.External && secret.File != "" {
+		secret.File = resolveMaybeUnixPath(secret.File, workingDir, lookupEnv)
+	}
+	return secret
 }
 
 // TODO: make this more robust
@@ -711,7 +832,7 @@ func LoadNetworks(source map[string]interface{}) (map[string]types.NetworkConfig
 			if network.Name != "" {
 				return nil, errors.Errorf("network %s: network.external.name and network.name conflict; only use network.name", name)
 			}
-			logrus.Warnf("network %s: network.external.name is deprecated in favor of network.name", name)
+			logrus.Warnf("network %s: network.external.name is deprecated. Please set network.name with external: true", name)
 			network.Name = network.External.Name
 			network.External.Name = ""
 		case network.Name == "":
@@ -770,11 +891,14 @@ func LoadSecrets(source map[string]interface{}, details types.ConfigDetails, res
 		return secrets, err
 	}
 	for name, secret := range secrets {
-		obj, err := loadFileObjectConfig(name, "secret", types.FileObjectConfig(secret), details, resolvePaths)
+		obj, err := loadFileObjectConfig(name, "secret", types.FileObjectConfig(secret), details, false)
 		if err != nil {
 			return nil, err
 		}
 		secretConfig := types.SecretConfig(obj)
+		if resolvePaths {
+			secretConfig = resolveSecretsPath(secretConfig, details.WorkingDir, details.LookupEnv)
+		}
 		secrets[name] = secretConfig
 	}
 	return secrets, nil
@@ -810,10 +934,8 @@ func loadFileObjectConfig(name string, objType string, obj types.FileObjectConfi
 			logrus.Warnf("%[1]s %[2]s: %[1]s.external.name is deprecated in favor of %[1]s.name", objType, name)
 			obj.Name = obj.External.Name
 			obj.External.Name = ""
-		} else {
-			if obj.Name == "" {
-				obj.Name = name
-			}
+		} else if obj.Name == "" {
+			obj.Name = name
 		}
 		// if not "external: true"
 	case obj.Driver != "":
@@ -945,7 +1067,7 @@ func cleanTarget(target string) string {
 	if target == "" {
 		return ""
 	}
-	return path.Clean(target)
+	return paths.Clean(target)
 }
 
 var transformBuildConfig TransformerFunc = func(data interface{}) (interface{}, error) {
@@ -978,14 +1100,15 @@ var transformDependsOnConfig TransformerFunc = func(data interface{}) (interface
 	}
 }
 
-var transformExtendsConfig TransformerFunc = func(data interface{}) (interface{}, error) {
-	switch data.(type) {
+var transformExtendsConfig TransformerFunc = func(value interface{}) (interface{}, error) {
+	switch value.(type) {
 	case string:
-		data = map[string]interface{}{
-			"service": data,
-		}
+		return map[string]interface{}{"service": value}, nil
+	case map[string]interface{}:
+		return value, nil
+	default:
+		return value, errors.Errorf("invalid type %T for extends", value)
 	}
-	return transformMappingOrListFunc("=", true)(data)
 }
 
 var transformServiceVolumeConfig TransformerFunc = func(data interface{}) (interface{}, error) {
