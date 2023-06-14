@@ -3,7 +3,7 @@ module compose-generator
 go 1.19
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.3.6
+	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/briandowns/spinner v1.23.0
 	github.com/cli/safeexec v1.0.1
 	github.com/compose-generator/diu v0.0.0-20220630071352-df649455a580
