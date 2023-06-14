@@ -1,4 +1,4 @@
-# github.com/AlecAivazis/survey/v2 v2.3.6
+# github.com/AlecAivazis/survey/v2 v2.3.7
 ## explicit; go 1.13
 github.com/AlecAivazis/survey/v2
 github.com/AlecAivazis/survey/v2/core
@@ -375,7 +375,12 @@ golang.org/x/term
 # golang.org/x/text v0.8.0
 >>>>>>> 2a7bc44 (Bump github.com/go-playground/validator/v10 in /src (#447))
 ## explicit; go 1.17
+<<<<<<< HEAD
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
+=======
+golang.org/x/text/cases
+golang.org/x/text/internal
+>>>>>>> fb2f353 (Bump github.com/AlecAivazis/survey/v2 from 2.3.6 to 2.3.7 in /src (#480))
 golang.org/x/text/internal/language
 golang.org/x/text/internal/language/compact
 golang.org/x/text/internal/tag
