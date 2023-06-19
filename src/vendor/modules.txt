@@ -149,7 +149,7 @@ github.com/opencontainers/go-digest
 ## explicit
 github.com/opencontainers/image-spec/specs-go
 github.com/opencontainers/image-spec/specs-go/v1
-# github.com/otiai10/copy v1.11.0
+# github.com/otiai10/copy v1.12.0
 ## explicit; go 1.18
 github.com/otiai10/copy
 # github.com/pelletier/go-toml/v2 v2.0.6
