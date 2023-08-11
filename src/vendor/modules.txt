@@ -19,8 +19,8 @@ github.com/compose-generator/diu
 github.com/compose-generator/diu/cli
 github.com/compose-generator/diu/model
 github.com/compose-generator/diu/parser
-# github.com/compose-spec/compose-go v1.2.8
-## explicit; go 1.18
+# github.com/compose-spec/compose-go v1.18.1
+## explicit; go 1.19
 github.com/compose-spec/compose-go/consts
 github.com/compose-spec/compose-go/dotenv
 github.com/compose-spec/compose-go/errdefs
@@ -28,16 +28,17 @@ github.com/compose-spec/compose-go/interpolation
 github.com/compose-spec/compose-go/loader
 github.com/compose-spec/compose-go/schema
 github.com/compose-spec/compose-go/template
+github.com/compose-spec/compose-go/tree
 github.com/compose-spec/compose-go/types
+github.com/compose-spec/compose-go/utils
 # github.com/cpuguy83/go-md2man/v2 v2.0.2
 ## explicit; go 1.11
 github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/distribution/distribution/v3 v3.0.0-20220725133111-4bf3547399eb
+# github.com/distribution/distribution/v3 v3.0.0-20230214150026-36d8c594d7aa
 ## explicit; go 1.18
-github.com/distribution/distribution/v3/digestset
 github.com/distribution/distribution/v3/reference
 # github.com/docker/distribution v2.8.1+incompatible
 ## explicit
@@ -108,7 +109,7 @@ github.com/hashicorp/hcl/hcl/token
 github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
-# github.com/imdario/mergo v0.3.13
+# github.com/imdario/mergo v0.3.16
 ## explicit; go 1.13
 github.com/imdario/mergo
 # github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
@@ -224,14 +225,18 @@ github.com/xrash/smetrics
 # golang.org/x/crypto v0.7.0
 ## explicit; go 1.17
 golang.org/x/crypto/sha3
+# golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
+## explicit; go 1.20
+golang.org/x/exp/constraints
+golang.org/x/exp/slices
 # golang.org/x/net v0.8.0
 ## explicit; go 1.17
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sync v0.1.0
-## explicit
+# golang.org/x/sync v0.3.0
+## explicit; go 1.17
 golang.org/x/sync/errgroup
 # golang.org/x/sys v0.6.0
 ## explicit; go 1.17
