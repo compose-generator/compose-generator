@@ -10,7 +10,7 @@ require (
 	github.com/compose-spec/compose-go v1.2.8
 	github.com/docker/docker v23.0.6+incompatible
 	github.com/fatih/color v1.15.0
-	github.com/go-playground/validator/v10 v10.14.1
+	github.com/go-playground/validator/v10 v10.15.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/otiai10/copy v1.12.0
 	github.com/sethvargo/go-password v0.2.0
