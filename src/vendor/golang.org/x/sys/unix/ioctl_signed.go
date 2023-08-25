@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 
 //go:build aix || solaris
+<<<<<<< HEAD
+=======
+// +build aix solaris
+>>>>>>> 48d11a8 (Update dependencies)
 
 package unix
 

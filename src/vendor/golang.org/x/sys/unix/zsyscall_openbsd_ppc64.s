@@ -721,6 +721,7 @@ GLOBL	·libc_setresuid_trampoline_addr(SB), RODATA, $8
 DATA	·libc_setresuid_trampoline_addr(SB)/8, $libc_setresuid_trampoline<>(SB)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 TEXT libc_setrlimit_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_setrlimit(SB)
@@ -729,6 +730,8 @@ GLOBL	·libc_setrlimit_trampoline_addr(SB), RODATA, $8
 DATA	·libc_setrlimit_trampoline_addr(SB)/8, $libc_setrlimit_trampoline<>(SB)
 
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+>>>>>>> 48d11a8 (Update dependencies)
 TEXT libc_setrtable_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_setrtable(SB)
 	RET

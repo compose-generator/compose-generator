@@ -31,9 +31,12 @@ package unix
 //sys	setfsgid(gid int) (prev int, err error)
 //sys	setfsuid(uid int) (prev int, err error)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 //sysnb	Setrlimit(resource int, rlim *Rlimit) (err error)
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
+=======
+>>>>>>> 48d11a8 (Update dependencies)
 //sys	Shutdown(fd int, how int) (err error)
 //sys	Splice(rfd int, roff *int64, wfd int, woff *int64, len int, flags int) (n int64, err error)
 //sys	Stat(path string, stat *Stat_t) (err error)

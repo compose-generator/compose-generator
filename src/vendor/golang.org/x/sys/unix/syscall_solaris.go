@@ -547,12 +547,17 @@ func Minor(dev uint64) uint32 {
  */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //sys	ioctlRet(fd int, req int, arg uintptr) (ret int, err error) = libc.ioctl
 //sys	ioctlPtrRet(fd int, req int, arg unsafe.Pointer) (ret int, err error) = libc.ioctl
 =======
 //sys	ioctlRet(fd int, req uint, arg uintptr) (ret int, err error) = libc.ioctl
 //sys	ioctlPtrRet(fd int, req uint, arg unsafe.Pointer) (ret int, err error) = libc.ioctl
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+//sys	ioctlRet(fd int, req int, arg uintptr) (ret int, err error) = libc.ioctl
+//sys	ioctlPtrRet(fd int, req int, arg unsafe.Pointer) (ret int, err error) = libc.ioctl
+>>>>>>> 48d11a8 (Update dependencies)
 
 func ioctl(fd int, req int, arg uintptr) (err error) {
 	_, err = ioctlRet(fd, req, arg)
@@ -560,14 +565,19 @@ func ioctl(fd int, req int, arg uintptr) (err error) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 func ioctlPtr(fd int, req int, arg unsafe.Pointer) (err error) {
 =======
 func ioctlPtr(fd int, req uint, arg unsafe.Pointer) (err error) {
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+func ioctlPtr(fd int, req int, arg unsafe.Pointer) (err error) {
+>>>>>>> 48d11a8 (Update dependencies)
 	_, err = ioctlPtrRet(fd, req, arg)
 	return err
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 func IoctlSetTermio(fd int, req int, value *Termio) error {
 	return ioctlPtr(fd, req, unsafe.Pointer(value))
@@ -581,6 +591,13 @@ func IoctlSetTermio(fd int, req uint, value *Termio) error {
 
 func IoctlGetTermio(fd int, req uint) (*Termio, error) {
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+func IoctlSetTermio(fd int, req int, value *Termio) error {
+	return ioctlPtr(fd, req, unsafe.Pointer(value))
+}
+
+func IoctlGetTermio(fd int, req int) (*Termio, error) {
+>>>>>>> 48d11a8 (Update dependencies)
 	var value Termio
 	err := ioctlPtr(fd, req, unsafe.Pointer(&value))
 	return &value, err
@@ -1172,11 +1189,11 @@ func Getmsg(fd int, cl []byte, data []byte) (retCl []byte, retData []byte, flags
 	return retCl, retData, flags, nil
 }
 
-func IoctlSetIntRetInt(fd int, req uint, arg int) (int, error) {
+func IoctlSetIntRetInt(fd int, req int, arg int) (int, error) {
 	return ioctlRet(fd, req, uintptr(arg))
 }
 
-func IoctlSetString(fd int, req uint, val string) error {
+func IoctlSetString(fd int, req int, val string) error {
 	bs := make([]byte, len(val)+1)
 	copy(bs[:len(bs)-1], val)
 	err := ioctlPtr(fd, req, unsafe.Pointer(&bs[0]))
@@ -1212,7 +1229,7 @@ func (l *Lifreq) GetLifruUint() uint {
 	return *(*uint)(unsafe.Pointer(&l.Lifru[0]))
 }
 
-func IoctlLifreq(fd int, req uint, l *Lifreq) error {
+func IoctlLifreq(fd int, req int, l *Lifreq) error {
 	return ioctlPtr(fd, req, unsafe.Pointer(l))
 }
 
@@ -1223,6 +1240,6 @@ func (s *Strioctl) SetInt(i int) {
 	s.Dp = (*int8)(unsafe.Pointer(&i))
 }
 
-func IoctlSetStrioctlRetInt(fd int, req uint, s *Strioctl) (int, error) {
+func IoctlSetStrioctlRetInt(fd int, req int, s *Strioctl) (int, error) {
 	return ioctlPtrRet(fd, req, unsafe.Pointer(s))
 }

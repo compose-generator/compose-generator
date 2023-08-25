@@ -3,9 +3,12 @@
 github.com/AlecAivazis/survey/v2
 github.com/AlecAivazis/survey/v2/core
 github.com/AlecAivazis/survey/v2/terminal
-# github.com/Microsoft/go-winio v0.5.2
-## explicit; go 1.13
+# github.com/Microsoft/go-winio v0.6.1
+## explicit; go 1.17
 github.com/Microsoft/go-winio
+github.com/Microsoft/go-winio/internal/fs
+github.com/Microsoft/go-winio/internal/socket
+github.com/Microsoft/go-winio/internal/stringbuffer
 github.com/Microsoft/go-winio/pkg/guid
 # github.com/briandowns/spinner v1.23.0
 ## explicit; go 1.17
@@ -13,14 +16,14 @@ github.com/briandowns/spinner
 # github.com/cli/safeexec v1.0.1
 ## explicit; go 1.15
 github.com/cli/safeexec
-# github.com/compose-generator/diu v0.0.0-20220630071352-df649455a580
+# github.com/compose-generator/diu v0.0.0-20221024073354-053efc03289e
 ## explicit; go 1.16
 github.com/compose-generator/diu
 github.com/compose-generator/diu/cli
 github.com/compose-generator/diu/model
 github.com/compose-generator/diu/parser
-# github.com/compose-spec/compose-go v1.2.8
-## explicit; go 1.18
+# github.com/compose-spec/compose-go v1.18.2
+## explicit; go 1.19
 github.com/compose-spec/compose-go/consts
 github.com/compose-spec/compose-go/dotenv
 github.com/compose-spec/compose-go/errdefs
@@ -28,21 +31,25 @@ github.com/compose-spec/compose-go/interpolation
 github.com/compose-spec/compose-go/loader
 github.com/compose-spec/compose-go/schema
 github.com/compose-spec/compose-go/template
+github.com/compose-spec/compose-go/tree
 github.com/compose-spec/compose-go/types
+github.com/compose-spec/compose-go/utils
 # github.com/cpuguy83/go-md2man/v2 v2.0.2
 ## explicit; go 1.11
 github.com/cpuguy83/go-md2man/v2/md2man
+# github.com/creack/pty v1.1.18
+## explicit; go 1.13
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/distribution/distribution/v3 v3.0.0-20220725133111-4bf3547399eb
+# github.com/distribution/distribution/v3 v3.0.0-20230214150026-36d8c594d7aa
 ## explicit; go 1.18
-github.com/distribution/distribution/v3/digestset
 github.com/distribution/distribution/v3/reference
-# github.com/docker/distribution v2.8.1+incompatible
+# github.com/docker/distribution v2.8.2+incompatible
 ## explicit
 github.com/docker/distribution/digestset
 github.com/docker/distribution/reference
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -96,6 +103,9 @@ github.com/docker/distribution/reference
 =======
 # github.com/docker/docker v23.0.6+incompatible
 >>>>>>> 985e475 (Bump github.com/docker/docker in /src (#464))
+=======
+# github.com/docker/docker v24.0.5+incompatible
+>>>>>>> 48d11a8 (Update dependencies)
 ## explicit
 github.com/docker/docker/api
 github.com/docker/docker/api/types
@@ -142,7 +152,7 @@ github.com/go-playground/locales/currency
 # github.com/go-playground/universal-translator v0.18.1
 ## explicit; go 1.18
 github.com/go-playground/universal-translator
-# github.com/go-playground/validator/v10 v10.15.0
+# github.com/go-playground/validator/v10 v10.15.1
 ## explicit; go 1.18
 github.com/go-playground/validator/v10
 # github.com/gogo/protobuf v1.3.2
@@ -160,7 +170,7 @@ github.com/hashicorp/hcl/hcl/token
 github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
-# github.com/imdario/mergo v0.3.13
+# github.com/imdario/mergo v0.3.16
 ## explicit; go 1.13
 github.com/imdario/mergo
 # github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
@@ -190,8 +200,8 @@ github.com/mgutz/ansi
 # github.com/mitchellh/mapstructure v1.5.0
 ## explicit; go 1.14
 github.com/mitchellh/mapstructure
-# github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae
-## explicit; go 1.13
+# github.com/moby/term v0.5.0
+## explicit; go 1.18
 # github.com/morikuni/aec v1.0.0
 ## explicit
 # github.com/opencontainers/go-digest v1.0.0
@@ -204,7 +214,7 @@ github.com/opencontainers/image-spec/specs-go/v1
 # github.com/otiai10/copy v1.12.0
 ## explicit; go 1.18
 github.com/otiai10/copy
-# github.com/pelletier/go-toml/v2 v2.0.6
+# github.com/pelletier/go-toml/v2 v2.0.8
 ## explicit; go 1.16
 github.com/pelletier/go-toml/v2
 github.com/pelletier/go-toml/v2/internal/characters
@@ -226,12 +236,12 @@ github.com/sethvargo/go-password/password
 # github.com/sirupsen/logrus v1.9.0
 ## explicit; go 1.13
 github.com/sirupsen/logrus
-# github.com/spf13/afero v1.9.3
+# github.com/spf13/afero v1.9.5
 ## explicit; go 1.16
 github.com/spf13/afero
 github.com/spf13/afero/internal/common
 github.com/spf13/afero/mem
-# github.com/spf13/cast v1.5.0
+# github.com/spf13/cast v1.5.1
 ## explicit; go 1.18
 github.com/spf13/cast
 # github.com/spf13/jwalterweatherman v1.1.0
@@ -240,7 +250,7 @@ github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/spf13/viper v1.15.0
+# github.com/spf13/viper v1.16.0
 ## explicit; go 1.17
 github.com/spf13/viper
 github.com/spf13/viper/internal/encoding
@@ -258,7 +268,7 @@ github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.4.2
 ## explicit; go 1.18
 github.com/subosito/gotenv
-# github.com/urfave/cli/v2 v2.25.6
+# github.com/urfave/cli/v2 v2.25.7
 ## explicit; go 1.18
 github.com/urfave/cli/v2
 # github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f
@@ -273,6 +283,7 @@ github.com/xeipuuv/gojsonschema
 # github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673
 ## explicit
 github.com/xrash/smetrics
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -302,14 +313,28 @@ golang.org/x/crypto/sha3
 golang.org/x/crypto/sha3
 # golang.org/x/net v0.8.0
 >>>>>>> 2a7bc44 (Bump github.com/go-playground/validator/v10 in /src (#447))
+=======
+# golang.org/x/crypto v0.9.0
+## explicit; go 1.17
+golang.org/x/crypto/sha3
+# golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
+## explicit; go 1.20
+golang.org/x/exp/constraints
+golang.org/x/exp/slices
+# golang.org/x/mod v0.11.0
+## explicit; go 1.17
+golang.org/x/mod/semver
+# golang.org/x/net v0.10.0
+>>>>>>> 48d11a8 (Update dependencies)
 ## explicit; go 1.17
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sync v0.1.0
-## explicit
+# golang.org/x/sync v0.3.0
+## explicit; go 1.17
 golang.org/x/sync/errgroup
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -331,9 +356,13 @@ golang.org/x/sync/errgroup
 =======
 # golang.org/x/sys v0.6.0
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+# golang.org/x/sys v0.8.0
+>>>>>>> 48d11a8 (Update dependencies)
 ## explicit; go 1.17
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
 golang.org/x/sys/cpu
+<<<<<<< HEAD
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
@@ -354,9 +383,18 @@ golang.org/x/sys/windows
 =======
 # golang.org/x/term v0.6.0
 >>>>>>> 2a7bc44 (Bump github.com/go-playground/validator/v10 in /src (#447))
+=======
+golang.org/x/sys/execabs
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/plan9
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# golang.org/x/term v0.8.0
+>>>>>>> 48d11a8 (Update dependencies)
 ## explicit; go 1.17
 >>>>>>> 4da55db (Bump github.com/briandowns/spinner from 1.19.0 to 1.20.0 in /src (#414))
 golang.org/x/term
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -374,6 +412,9 @@ golang.org/x/term
 =======
 # golang.org/x/text v0.8.0
 >>>>>>> 2a7bc44 (Bump github.com/go-playground/validator/v10 in /src (#447))
+=======
+# golang.org/x/text v0.9.0
+>>>>>>> 48d11a8 (Update dependencies)
 ## explicit; go 1.17
 <<<<<<< HEAD
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
@@ -389,6 +430,23 @@ golang.org/x/text/runes
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
+# golang.org/x/tools v0.6.0
+## explicit; go 1.18
+golang.org/x/tools/cmd/stringer
+golang.org/x/tools/go/gcexportdata
+golang.org/x/tools/go/internal/packagesdriver
+golang.org/x/tools/go/packages
+golang.org/x/tools/internal/event
+golang.org/x/tools/internal/event/core
+golang.org/x/tools/internal/event/keys
+golang.org/x/tools/internal/event/label
+golang.org/x/tools/internal/gcimporter
+golang.org/x/tools/internal/gocommand
+golang.org/x/tools/internal/packagesinternal
+golang.org/x/tools/internal/pkgbits
+golang.org/x/tools/internal/tokeninternal
+golang.org/x/tools/internal/typeparams
+golang.org/x/tools/internal/typesinternal
 # gopkg.in/ini.v1 v1.67.0
 ## explicit
 gopkg.in/ini.v1

@@ -642,6 +642,9 @@ func emptyIovecs(iov []Iovec) bool {
 	return true
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 48d11a8 (Update dependencies)
 
 // Setrlimit sets a resource limit.
 func Setrlimit(resource int, rlim *Rlimit) error {
@@ -649,5 +652,8 @@ func Setrlimit(resource int, rlim *Rlimit) error {
 	// it will affect starting a new process.
 	return syscall.Setrlimit(resource, (*syscall.Rlimit)(rlim))
 }
+<<<<<<< HEAD
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> 48d11a8 (Update dependencies)

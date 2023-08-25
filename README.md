@@ -62,4 +62,4 @@ The community is thankful for every predefined template!
 ## Contribute otherwise to the project
 If you want to contribute to this project, please ensure you comply with the [contribution guidelines](CONTRIBUTING.md).
 
-© Marc Auberer 2021-2022
+© Marc Auberer 2021-2023

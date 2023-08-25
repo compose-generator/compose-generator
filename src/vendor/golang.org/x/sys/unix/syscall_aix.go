@@ -456,12 +456,17 @@ func (w WaitStatus) CoreDump() bool { return w&0x80 == 0x80 }
 func (w WaitStatus) TrapCause() int { return -1 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //sys	ioctl(fd int, req int, arg uintptr) (err error)
 //sys	ioctlPtr(fd int, req int, arg unsafe.Pointer) (err error) = ioctl
 =======
 //sys	ioctl(fd int, req uint, arg uintptr) (err error)
 //sys	ioctlPtr(fd int, req uint, arg unsafe.Pointer) (err error) = ioctl
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+//sys	ioctl(fd int, req int, arg uintptr) (err error)
+//sys	ioctlPtr(fd int, req int, arg unsafe.Pointer) (err error) = ioctl
+>>>>>>> 48d11a8 (Update dependencies)
 
 // fcntl must never be called with cmd=F_DUP2FD because it doesn't work on AIX
 // There is no way to create a custom fcntl and to keep //sys fcntl easily,
