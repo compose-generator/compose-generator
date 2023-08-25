@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2022 Compose Generator Contributors
+Copyright © 2021-2023 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -12,22 +12,21 @@ import (
 	"strings"
 
 	spec "github.com/compose-spec/compose-go/types"
-	filtertypes "github.com/docker/docker/api/types/filters"
 	volumetypes "github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/client"
 )
 
 // CreateDockerVolume calls the Docker client to create a new volume
 var CreateDockerVolume = func(client *client.Client, volumeName string) error {
-	_, err := client.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
+	_, err := client.VolumeCreate(context.Background(), volumetypes.CreateOptions{
 		Name: volumeName,
 	})
 	return err
 }
 
 // ListDockerVolumes calls the Docker client to list all available volumes
-var ListDockerVolumes = func(client *client.Client) (volumetypes.VolumeListOKBody, error) {
-	return client.VolumeList(context.Background(), filtertypes.Args{})
+var ListDockerVolumes = func(client *client.Client) (volumetypes.ListResponse, error) {
+	return client.VolumeList(context.Background(), volumetypes.ListOptions{})
 }
 
 var askForExternalVolumeMockable = askForExternalVolume

@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2022 Compose Generator Contributors
+Copyright © 2021-2023 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -11,7 +11,6 @@ import (
 	"testing"
 
 	spec "github.com/compose-spec/compose-go/types"
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/client"
 	"github.com/stretchr/testify/assert"
@@ -188,9 +187,9 @@ func TestAskForExistingExternalVolume1(t *testing.T) {
 		assert.Fail(t, "Could not create Docker client for testing")
 	}
 	// Mock functions
-	ListDockerVolumes = func(client *client.Client) (volume.VolumeListOKBody, error) {
-		return volume.VolumeListOKBody{
-			Volumes: []*types.Volume{
+	ListDockerVolumes = func(client *client.Client) (volume.ListResponse, error) {
+		return volume.ListResponse{
+			Volumes: []*volume.Volume{
 				{
 					Name:   "External volume 1",
 					Driver: "local",
@@ -264,9 +263,9 @@ func TestAskForExistingExternalVolume2(t *testing.T) {
 		assert.Fail(t, "Could not create Docker client for testing")
 	}
 	// Mock functions
-	ListDockerVolumes = func(client *client.Client) (volume.VolumeListOKBody, error) {
-		return volume.VolumeListOKBody{
-			Volumes: []*types.Volume{
+	ListDockerVolumes = func(client *client.Client) (volume.ListResponse, error) {
+		return volume.ListResponse{
+			Volumes: []*volume.Volume{
 				{
 					Name:   "External volume 1",
 					Driver: "local",

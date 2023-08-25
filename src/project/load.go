@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2022 Compose Generator Contributors
+Copyright © 2021-2023 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -8,7 +8,7 @@ package project
 import (
 	"compose-generator/model"
 	"compose-generator/util"
-	"io/ioutil"
+	"os"
 	"os/user"
 	"path"
 	"strconv"
@@ -171,7 +171,7 @@ func loadComposeFileSingleService(
 		errorLogger.Println("Unable to unmarshal the evaluated version of '" + templateTypeName + "-" + serviceName + "': " + err.Error())
 		logError("Unable to unmarshal the evaluated version of '"+templateTypeName+"-"+serviceName+"'", true)
 	}
-	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict, opt.WorkingDir, nil, true, true)
+	service, err := loader.LoadService(templateTypeName+"-"+serviceName, serviceDict)
 	if err != nil {
 		errorLogger.Println("Unable to load '" + templateTypeName + "-" + serviceName + "': " + err.Error())
 		logError("Unable to load '"+templateTypeName+"-"+serviceName+"'", true)
@@ -184,7 +184,7 @@ func loadGitignoreFile(project *model.CGProject, opt LoadOptions) {
 	if project.WithGitignore {
 		infoLogger.Println("Loading Gitignore ...")
 		// Load patterns from .gitignore file
-		content, err := ioutil.ReadFile(opt.WorkingDir + ".gitignore")
+		content, err := os.ReadFile(opt.WorkingDir + ".gitignore")
 		if err != nil {
 			errorLogger.Println("Unable to parse .gitignore file: " + err.Error())
 			logError("Unable to parse .gitignore file", true)

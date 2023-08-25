@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2022 Compose Generator Contributors
+Copyright © 2021-2023 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -10,7 +10,7 @@ import (
 	addPass "compose-generator/pass/add"
 	"compose-generator/project"
 	"compose-generator/util"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
@@ -52,9 +52,9 @@ var getPredefinedServicesPath = util.GetPredefinedServicesPath
 var mkdirAll = os.MkdirAll
 var copyFile = copy.Copy
 var openFile = os.Open
-var readAllFromFile = ioutil.ReadAll
-var readFile = ioutil.ReadFile
-var writeFile = ioutil.WriteFile
+var readAllFromFile = io.ReadAll
+var readFile = os.ReadFile
+var writeFile = os.WriteFile
 var unmarshalYaml = yaml.Unmarshal
 var loadTemplateService = project.LoadTemplateService
 
