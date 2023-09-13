@@ -58,7 +58,7 @@ jobs:
           tar cfvz ./predefined-services.tar.gz *
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v5
         with:
           version: v1.20.0
           args: release --rm-dist
