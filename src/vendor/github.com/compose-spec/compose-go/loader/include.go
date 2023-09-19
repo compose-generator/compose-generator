@@ -73,7 +73,7 @@ func loadInclude(ctx context.Context, filename string, configDetails types.Confi
 		loadOptions.SkipNormalization = true
 		loadOptions.SkipConsistencyCheck = true
 
-		env, err := dotenv.GetEnvFromFile(configDetails.Environment, r.ProjectDirectory, r.EnvFile)
+		envFromFile, err := dotenv.GetEnvFromFile(configDetails.Environment, r.ProjectDirectory, r.EnvFile)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -81,7 +81,7 @@ func loadInclude(ctx context.Context, filename string, configDetails types.Confi
 		config := types.ConfigDetails{
 			WorkingDir:  r.ProjectDirectory,
 			ConfigFiles: types.ToConfigFiles(r.Path),
-			Environment: env,
+			Environment: configDetails.Environment.Clone().Merge(envFromFile),
 		}
 		loadOptions.Interpolate = &interp.Options{
 			Substitute:      options.Interpolate.Substitute,
@@ -109,6 +109,12 @@ func loadInclude(ctx context.Context, filename string, configDetails types.Confi
 func importResources(model *types.Config, imported *types.Project, path []string) error {
 	services := mapByName(model.Services)
 	for _, service := range imported.Services {
+		if _, ok := services[service.Name]; ok {
+			return fmt.Errorf("imported compose file %s defines conflicting service %s", path, service.Name)
+		}
+		model.Services = append(model.Services, service)
+	}
+	for _, service := range imported.DisabledServices {
 		if _, ok := services[service.Name]; ok {
 			return fmt.Errorf("imported compose file %s defines conflicting service %s", path, service.Name)
 		}
