@@ -1,7 +1,9 @@
 package validator
 
 import (
+	"fmt"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -293,10 +295,17 @@ func panicIf(err error) {
 	}
 }
 
-func isNestedStructOrStructPtr(v reflect.StructField) bool {
-	if v.Type == nil {
-		return false
+// Checks if field value matches regex. If fl.Field can be cast to Stringer, it uses the Stringer interfaces
+// String() return value. Otherwise, it uses fl.Field's String() value.
+func fieldMatchesRegexByStringerValOrString(regex *regexp.Regexp, fl FieldLevel) bool {
+	switch fl.Field().Kind() {
+	case reflect.String:
+		return regex.MatchString(fl.Field().String())
+	default:
+		if stringer, ok := fl.Field().Interface().(fmt.Stringer); ok {
+			return regex.MatchString(stringer.String())
+		} else {
+			return regex.MatchString(fl.Field().String())
+		}
 	}
-	kind := v.Type.Kind()
-	return kind == reflect.Struct || kind == reflect.Ptr && v.Type.Elem().Kind() == reflect.Struct
 }
