@@ -7,7 +7,7 @@ require (
 	github.com/briandowns/spinner v1.23.0
 	github.com/cli/safeexec v1.0.1
 	github.com/compose-generator/diu v0.0.0-20221024073354-053efc03289e
-	github.com/compose-spec/compose-go v1.18.2
+	github.com/compose-spec/compose-go v1.20.2
 	github.com/docker/docker v24.0.5+incompatible
 	github.com/fatih/color v1.15.0
 	github.com/go-playground/validator/v10 v10.17.0
@@ -25,7 +25,7 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/distribution/distribution/v3 v3.0.0-20230214150026-36d8c594d7aa // indirect
+	github.com/distribution/reference v0.5.0 // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
@@ -71,6 +71,7 @@ require (
 	golang.org/x/term v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
