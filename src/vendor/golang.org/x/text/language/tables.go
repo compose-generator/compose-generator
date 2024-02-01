@@ -40,12 +40,16 @@ const (
 	_Hans = 59
 	_Hant = 60
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	_Qaaa = 149
 	_Qaai = 157
 	_Qabx = 198
 	_Zinh = 255
 	_Zyyy = 260
 	_Zzzz = 261
+<<<<<<< HEAD
 =======
 	_Qaaa = 147
 	_Qaai = 155
@@ -54,6 +58,8 @@ const (
 	_Zyyy = 257
 	_Zzzz = 258
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 )
 
 var regionToGroups = []uint8{ // 359 elements
@@ -264,6 +270,9 @@ var matchScript = []scriptIntelligibility{ // 26 elements
 	3:  {wantLang: 0xa5, haveLang: 0x139, wantScript: 0xe, haveScript: 0x5b, distance: 0xa},
 	4:  {wantLang: 0x1d7, haveLang: 0x3e2, wantScript: 0x8, haveScript: 0x20, distance: 0xa},
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	5:  {wantLang: 0x210, haveLang: 0x139, wantScript: 0x2e, haveScript: 0x5b, distance: 0xa},
 	6:  {wantLang: 0x24a, haveLang: 0x139, wantScript: 0x4f, haveScript: 0x5b, distance: 0xa},
 	7:  {wantLang: 0x251, haveLang: 0x139, wantScript: 0x53, haveScript: 0x5b, distance: 0xa},
@@ -283,6 +292,7 @@ var matchScript = []scriptIntelligibility{ // 26 elements
 	21: {wantLang: 0x4b4, haveLang: 0x139, wantScript: 0x5, haveScript: 0x5b, distance: 0xa},
 	22: {wantLang: 0x4bc, haveLang: 0x3e2, wantScript: 0x5b, haveScript: 0x20, distance: 0xa},
 	23: {wantLang: 0x512, haveLang: 0x139, wantScript: 0x3e, haveScript: 0x5b, distance: 0xa},
+<<<<<<< HEAD
 =======
 	5:  {wantLang: 0x210, haveLang: 0x139, wantScript: 0x2e, haveScript: 0x5a, distance: 0xa},
 	6:  {wantLang: 0x24a, haveLang: 0x139, wantScript: 0x4e, haveScript: 0x5a, distance: 0xa},
@@ -304,6 +314,8 @@ var matchScript = []scriptIntelligibility{ // 26 elements
 	22: {wantLang: 0x4bc, haveLang: 0x3e2, wantScript: 0x5a, haveScript: 0x20, distance: 0xa},
 	23: {wantLang: 0x512, haveLang: 0x139, wantScript: 0x3e, haveScript: 0x5a, distance: 0xa},
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	24: {wantLang: 0x529, haveLang: 0x529, wantScript: 0x3b, haveScript: 0x3c, distance: 0xf},
 	25: {wantLang: 0x529, haveLang: 0x529, wantScript: 0x3c, haveScript: 0x3b, distance: 0x13},
 } // Size: 232 bytes

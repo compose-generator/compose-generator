@@ -3,9 +3,12 @@
 
 //go:build riscv64 && freebsd
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // +build riscv64,freebsd
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 package unix
 

@@ -647,6 +647,7 @@ func ioctlRet(fd int, req int, arg uintptr) (ret int, err error) {
 	ret = int(r0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+<<<<<<< HEAD
 	}
 	return
 }
@@ -658,6 +659,8 @@ func ioctlPtrRet(fd int, req int, arg unsafe.Pointer) (ret int, err error) {
 	ret = int(r0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	}
 	return
 }
@@ -668,7 +671,7 @@ func ioctlPtrRet(fd int, req int, arg unsafe.Pointer) (ret int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procioctl)), 3, uintptr(fd), uintptr(req), uintptr(arg), 0, 0, 0)
 	ret = int(r0)
 	if e1 != 0 {
-		err = e1
+		err = errnoErr(e1)
 	}
 	return
 }
@@ -765,6 +768,7 @@ func Chroot(path string) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procChroot)), 1, uintptr(unsafe.Pointer(_p0)), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+<<<<<<< HEAD
 	}
 	return
 }
@@ -775,6 +779,8 @@ func ClockGettime(clockid int32, time *Timespec) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procClockGettime)), 2, uintptr(clockid), uintptr(unsafe.Pointer(time)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	}
 	return
 }
@@ -784,7 +790,7 @@ func ClockGettime(clockid int32, time *Timespec) (err error) {
 func ClockGettime(clockid int32, time *Timespec) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procClockGettime)), 2, uintptr(clockid), uintptr(unsafe.Pointer(time)), 0, 0, 0, 0)
 	if e1 != 0 {
-		err = e1
+		err = errnoErr(e1)
 	}
 	return
 }
@@ -1088,6 +1094,7 @@ func Getrusage(who int, rusage *Rusage) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procGetrusage)), 2, uintptr(who), uintptr(unsafe.Pointer(rusage)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+<<<<<<< HEAD
 	}
 	return
 }
@@ -1099,6 +1106,8 @@ func Getsid(pid int) (sid int, err error) {
 	sid = int(r0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	}
 	return
 }
@@ -1109,7 +1118,7 @@ func Getsid(pid int) (sid int, err error) {
 	r0, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procGetsid)), 1, uintptr(pid), 0, 0, 0, 0, 0)
 	sid = int(r0)
 	if e1 != 0 {
-		err = e1
+		err = errnoErr(e1)
 	}
 	return
 }
@@ -1672,10 +1681,14 @@ func Setreuid(ruid int, euid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetreuid)), 2, uintptr(ruid), uintptr(euid), 0, 0, 0, 0)
 	if e1 != 0 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		err = errnoErr(e1)
 =======
 		err = e1
 >>>>>>> 48d11a8 (Update dependencies)
+=======
+		err = errnoErr(e1)
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	}
 	return
 }
@@ -2114,6 +2127,7 @@ func port_getn(port int, pe *portEvent, max uint32, nget *uint32, timeout *Times
 	n = int(r0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+<<<<<<< HEAD
 	}
 	return
 }
@@ -2134,6 +2148,8 @@ func getmsg(fd int, clptr *strbuf, dataptr *strbuf, flags *int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procgetmsg)), 4, uintptr(fd), uintptr(unsafe.Pointer(clptr)), uintptr(unsafe.Pointer(dataptr)), uintptr(unsafe.Pointer(flags)), 0, 0)
 	if e1 != 0 {
 		err = errnoErr(e1)
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	}
 	return
 }
@@ -2143,7 +2159,7 @@ func getmsg(fd int, clptr *strbuf, dataptr *strbuf, flags *int) (err error) {
 func putmsg(fd int, clptr *strbuf, dataptr *strbuf, flags int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procputmsg)), 4, uintptr(fd), uintptr(unsafe.Pointer(clptr)), uintptr(unsafe.Pointer(dataptr)), uintptr(flags), 0, 0)
 	if e1 != 0 {
-		err = e1
+		err = errnoErr(e1)
 	}
 	return
 }
@@ -2153,7 +2169,7 @@ func putmsg(fd int, clptr *strbuf, dataptr *strbuf, flags int) (err error) {
 func getmsg(fd int, clptr *strbuf, dataptr *strbuf, flags *int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procgetmsg)), 4, uintptr(fd), uintptr(unsafe.Pointer(clptr)), uintptr(unsafe.Pointer(dataptr)), uintptr(unsafe.Pointer(flags)), 0, 0)
 	if e1 != 0 {
-		err = e1
+		err = errnoErr(e1)
 	}
 	return
 }

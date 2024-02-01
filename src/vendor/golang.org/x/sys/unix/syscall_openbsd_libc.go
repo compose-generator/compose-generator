@@ -16,8 +16,11 @@
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 =======
 //go:build openbsd
+<<<<<<< HEAD
 // +build openbsd
 >>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 package unix
 

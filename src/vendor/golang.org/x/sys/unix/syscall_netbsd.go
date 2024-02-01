@@ -359,6 +359,9 @@ func Statvfs(path string, buf *Statvfs_t) (err error) {
 //sys	utimensat(dirfd int, path string, times *[2]Timespec, flags int) (err error)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 const (
 	mremapFixed     = MAP_FIXED
 	mremapDontunmap = 0
@@ -370,6 +373,7 @@ const (
 func mremap(oldaddr uintptr, oldlength uintptr, newlength uintptr, flags int, newaddr uintptr) (uintptr, error) {
 	return mremapNetBSD(oldaddr, oldlength, newaddr, newlength, flags)
 }
+<<<<<<< HEAD
 =======
 /*
  * Unimplemented
@@ -631,3 +635,5 @@ func mremap(oldaddr uintptr, oldlength uintptr, newlength uintptr, flags int, ne
 // vfork
 // writev
 >>>>>>> 48d11a8 (Update dependencies)
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))

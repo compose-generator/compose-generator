@@ -4,10 +4,13 @@
 
 //go:build (darwin || freebsd || netbsd || openbsd) && gc
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // +build darwin freebsd netbsd openbsd
 // +build gc
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 #include "textflag.h"
 

@@ -190,6 +190,9 @@ GLOBL	·libc_getcwd_trampoline_addr(SB), RODATA, $8
 DATA	·libc_getcwd_trampoline_addr(SB)/8, $libc_getcwd_trampoline<>(SB)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 TEXT libc_getresuid_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_getresuid(SB)
 	RET
@@ -202,8 +205,11 @@ TEXT libc_getresgid_trampoline<>(SB),NOSPLIT,$0-0
 GLOBL	·libc_getresgid_trampoline_addr(SB), RODATA, $8
 DATA	·libc_getresgid_trampoline_addr(SB)/8, $libc_getresgid_trampoline<>(SB)
 
+<<<<<<< HEAD
 =======
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 TEXT libc_ioctl_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_ioctl(SB)
 	RET
@@ -217,14 +223,20 @@ GLOBL	·libc_sysctl_trampoline_addr(SB), RODATA, $8
 DATA	·libc_sysctl_trampoline_addr(SB)/8, $libc_sysctl_trampoline<>(SB)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 TEXT libc_fcntl_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_fcntl(SB)
 	RET
 GLOBL	·libc_fcntl_trampoline_addr(SB), RODATA, $8
 DATA	·libc_fcntl_trampoline_addr(SB)/8, $libc_fcntl_trampoline<>(SB)
 
+<<<<<<< HEAD
 =======
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 TEXT libc_ppoll_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_ppoll(SB)
 	RET
@@ -835,20 +847,29 @@ GLOBL	·libc_munmap_trampoline_addr(SB), RODATA, $8
 DATA	·libc_munmap_trampoline_addr(SB)/8, $libc_munmap_trampoline<>(SB)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 TEXT libc_getfsstat_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_getfsstat(SB)
 	RET
 GLOBL	·libc_getfsstat_trampoline_addr(SB), RODATA, $8
 DATA	·libc_getfsstat_trampoline_addr(SB)/8, $libc_getfsstat_trampoline<>(SB)
 
+<<<<<<< HEAD
 =======
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 TEXT libc_utimensat_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_utimensat(SB)
 	RET
 GLOBL	·libc_utimensat_trampoline_addr(SB), RODATA, $8
 DATA	·libc_utimensat_trampoline_addr(SB)/8, $libc_utimensat_trampoline<>(SB)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 TEXT libc_pledge_trampoline<>(SB),NOSPLIT,$0-0
 	CALL	libc_pledge(SB)
@@ -861,5 +882,8 @@ TEXT libc_unveil_trampoline<>(SB),NOSPLIT,$0-0
 	RET
 GLOBL	·libc_unveil_trampoline_addr(SB), RODATA, $8
 DATA	·libc_unveil_trampoline_addr(SB)/8, $libc_unveil_trampoline<>(SB)
+<<<<<<< HEAD
 =======
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))

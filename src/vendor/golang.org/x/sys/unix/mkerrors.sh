@@ -255,6 +255,7 @@ struct ltchars {
 #include <linux/module.h>
 #include <linux/mount.h>
 #include <linux/netfilter/nfnetlink.h>
+#include <linux/netfilter/nf_tables.h>
 #include <linux/netlink.h>
 #include <linux/net_namespace.h>
 #include <linux/nfc.h>
@@ -290,24 +291,12 @@ struct ltchars {
 #include <asm/termbits.h>
 #endif
 
-#ifndef MSG_FASTOPEN
-#define MSG_FASTOPEN    0x20000000
-#endif
-
 #ifndef PTRACE_GETREGS
 #define PTRACE_GETREGS	0xc
 #endif
 
 #ifndef PTRACE_SETREGS
 #define PTRACE_SETREGS	0xd
-#endif
-
-#ifndef SOL_NETLINK
-#define SOL_NETLINK	270
-#endif
-
-#ifndef SOL_SMC
-#define SOL_SMC 286
 #endif
 
 #ifdef SOL_BLUETOOTH
@@ -326,10 +315,23 @@ struct ltchars {
 #undef TIPC_WAIT_FOREVER
 #define TIPC_WAIT_FOREVER 0xffffffff
 
-// Copied from linux/l2tp.h
-// Including linux/l2tp.h here causes conflicts between linux/in.h
-// and netinet/in.h included via net/route.h above.
-#define IPPROTO_L2TP		115
+// Copied from linux/netfilter/nf_nat.h
+// Including linux/netfilter/nf_nat.h here causes conflicts between linux/in.h
+// and netinet/in.h.
+#define NF_NAT_RANGE_MAP_IPS			(1 << 0)
+#define NF_NAT_RANGE_PROTO_SPECIFIED		(1 << 1)
+#define NF_NAT_RANGE_PROTO_RANDOM		(1 << 2)
+#define NF_NAT_RANGE_PERSISTENT			(1 << 3)
+#define NF_NAT_RANGE_PROTO_RANDOM_FULLY		(1 << 4)
+#define NF_NAT_RANGE_PROTO_OFFSET		(1 << 5)
+#define NF_NAT_RANGE_NETMAP			(1 << 6)
+#define NF_NAT_RANGE_PROTO_RANDOM_ALL		\
+	(NF_NAT_RANGE_PROTO_RANDOM | NF_NAT_RANGE_PROTO_RANDOM_FULLY)
+#define NF_NAT_RANGE_MASK					\
+	(NF_NAT_RANGE_MAP_IPS | NF_NAT_RANGE_PROTO_SPECIFIED |	\
+	 NF_NAT_RANGE_PROTO_RANDOM | NF_NAT_RANGE_PERSISTENT |	\
+	 NF_NAT_RANGE_PROTO_RANDOM_FULLY | NF_NAT_RANGE_PROTO_OFFSET | \
+	 NF_NAT_RANGE_NETMAP)
 
 // Copied from linux/hid.h.
 // Keep in sync with the size of the referenced fields.
@@ -527,11 +529,16 @@ ccflags="$@"
 		$2 ~ /^LO_(KEY|NAME)_SIZE$/ ||
 		$2 ~ /^LOOP_(CLR|CTL|GET|SET)_/ ||
 <<<<<<< HEAD
+<<<<<<< HEAD
 		$2 == "LOOP_CONFIGURE" ||
 		$2 ~ /^(AF|SOCK|SO|SOL|IPPROTO|IP|IPV6|TCP|MCAST|EVFILT|NOTE|SHUT|PROT|MAP|MREMAP|MFD|T?PACKET|MSG|SCM|MCL|DT|MADV|PR|LOCAL|TCPOPT|UDP)_/ ||
 =======
 		$2 ~ /^(AF|SOCK|SO|SOL|IPPROTO|IP|IPV6|TCP|MCAST|EVFILT|NOTE|SHUT|PROT|MAP|MFD|T?PACKET|MSG|SCM|MCL|DT|MADV|PR|LOCAL|TCPOPT|UDP)_/ ||
 >>>>>>> 48d11a8 (Update dependencies)
+=======
+		$2 == "LOOP_CONFIGURE" ||
+		$2 ~ /^(AF|SOCK|SO|SOL|IPPROTO|IP|IPV6|TCP|MCAST|EVFILT|NOTE|SHUT|PROT|MAP|MREMAP|MFD|T?PACKET|MSG|SCM|MCL|DT|MADV|PR|LOCAL|TCPOPT|UDP)_/ ||
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 		$2 ~ /^NFC_(GENL|PROTO|COMM|RF|SE|DIRECTION|LLCP|SOCKPROTO)_/ ||
 		$2 ~ /^NFC_.*_(MAX)?SIZE$/ ||
 		$2 ~ /^RAW_PAYLOAD_/ ||
@@ -614,6 +621,9 @@ ccflags="$@"
 		$2 ~ /^FSOPT_/ ||
 		$2 ~ /^WDIO[CFS]_/ ||
 		$2 ~ /^NFN/ ||
+		$2 !~ /^NFT_META_IIFTYPE/ &&
+		$2 ~ /^NFT_/ ||
+		$2 ~ /^NF_NAT_/ ||
 		$2 ~ /^XDP_/ ||
 		$2 ~ /^RWF_/ ||
 		$2 ~ /^(HDIO|WIN|SMART)_/ ||

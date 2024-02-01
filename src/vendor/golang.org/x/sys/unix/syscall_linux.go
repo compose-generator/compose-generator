@@ -1721,10 +1721,14 @@ const elfNT_PRSTATUS = 1
 
 func PtraceGetRegs(pid int, regsout *PtraceRegs) (err error) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	var iov Iovec
 	iov.Base = (*byte)(unsafe.Pointer(regsout))
 	iov.SetLen(int(unsafe.Sizeof(*regsout)))
 	return ptracePtr(PTRACE_GETREGSET, pid, uintptr(elfNT_PRSTATUS), unsafe.Pointer(&iov))
+<<<<<<< HEAD
 }
 
 func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
@@ -1739,6 +1743,15 @@ func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
 func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
 	return ptracePtr(PTRACE_SETREGS, pid, 0, unsafe.Pointer(regs))
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+}
+
+func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
+	var iov Iovec
+	iov.Base = (*byte)(unsafe.Pointer(regs))
+	iov.SetLen(int(unsafe.Sizeof(*regs)))
+	return ptracePtr(PTRACE_SETREGSET, pid, uintptr(elfNT_PRSTATUS), unsafe.Pointer(&iov))
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 }
 
 func PtraceSetOptions(pid int, options int) (err error) {
@@ -2453,6 +2466,9 @@ func PthreadSigmask(how int, set, oldset *Sigset_t) error {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 //sysnb	getresuid(ruid *_C_int, euid *_C_int, suid *_C_int)
 //sysnb	getresgid(rgid *_C_int, egid *_C_int, sgid *_C_int)
 
@@ -2525,6 +2541,7 @@ func SchedGetAttr(pid int, flags uint) (*SchedAttr, error) {
 }
 
 //sys	Cachestat(fd uint, crange *CachestatRange, cstat *Cachestat_t, flags uint) (err error)
+<<<<<<< HEAD
 =======
 /*
  * Unimplemented
@@ -2623,3 +2640,5 @@ func SchedGetAttr(pid int, flags uint) (*SchedAttr, error) {
 // Vserver
 // _Sysctl
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))

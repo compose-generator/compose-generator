@@ -40,10 +40,14 @@ func readHWCAP() error {
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	buf, err := os.ReadFile(procAuxv)
 =======
 	buf, err := ioutil.ReadFile(procAuxv)
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	buf, err := os.ReadFile(procAuxv)
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	if err != nil {
 		// e.g. on android /proc/self/auxv is not accessible, so silently
 		// ignore the error and leave Initialized = false. On some

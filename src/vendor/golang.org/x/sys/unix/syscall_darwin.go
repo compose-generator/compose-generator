@@ -645,6 +645,7 @@ func SysctlKinfoProcSlice(name string, args ...int) ([]KinfoProc, error) {
 //sys	mmap(addr uintptr, length uintptr, prot int, flag int, fd int, pos int64) (ret uintptr, err error)
 //sys	munmap(addr uintptr, length uintptr) (err error)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 //sys	readlen(fd int, buf *byte, nbuf int) (n int, err error) = SYS_READ
 //sys	writelen(fd int, buf *byte, nbuf int) (n int, err error) = SYS_WRITE
@@ -833,3 +834,5 @@ func SysctlKinfoProcSlice(name string, args ...int) ([]KinfoProc, error) {
 // __mac_get_mount
 // __mac_getfsstat
 >>>>>>> 48d11a8 (Update dependencies)
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))

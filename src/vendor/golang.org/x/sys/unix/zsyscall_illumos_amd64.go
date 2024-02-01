@@ -96,10 +96,14 @@ func accept4(s int, rsa *RawSockaddrAny, addrlen *_Socklen, flags int) (fd int, 
 	fd = int(r0)
 	if e1 != 0 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		err = errnoErr(e1)
 =======
 		err = e1
 >>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
+=======
+		err = errnoErr(e1)
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	}
 	return
 }

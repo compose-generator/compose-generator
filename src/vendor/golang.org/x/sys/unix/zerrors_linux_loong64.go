@@ -118,11 +118,17 @@ const (
 	IXOFF                            = 0x1000
 	IXON                             = 0x400
 <<<<<<< HEAD
+<<<<<<< HEAD
 	LASX_CTX_MAGIC                   = 0x41535801
 	LBT_CTX_MAGIC                    = 0x42540001
 	LSX_CTX_MAGIC                    = 0x53580001
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	LASX_CTX_MAGIC                   = 0x41535801
+	LBT_CTX_MAGIC                    = 0x42540001
+	LSX_CTX_MAGIC                    = 0x53580001
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	MAP_ANON                         = 0x20
 	MAP_ANONYMOUS                    = 0x20
 	MAP_DENYWRITE                    = 0x800

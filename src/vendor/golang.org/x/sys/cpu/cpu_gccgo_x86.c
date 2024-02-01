@@ -4,10 +4,13 @@
 
 //go:build (386 || amd64 || amd64p32) && gccgo
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // +build 386 amd64 amd64p32
 // +build gccgo
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 #include <cpuid.h>
 #include <stdint.h>

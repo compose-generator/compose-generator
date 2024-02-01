@@ -4,9 +4,12 @@
 
 //go:build !linux && !netbsd && !openbsd && arm64
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // +build !linux,!netbsd,!openbsd,arm64
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 package cpu
 

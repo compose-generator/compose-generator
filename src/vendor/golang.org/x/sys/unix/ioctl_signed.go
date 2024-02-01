@@ -4,9 +4,12 @@
 
 //go:build aix || solaris
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // +build aix solaris
 >>>>>>> 48d11a8 (Update dependencies)
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 package unix
 

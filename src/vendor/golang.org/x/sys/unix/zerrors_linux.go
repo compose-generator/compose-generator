@@ -485,12 +485,18 @@ const (
 	BPF_F_ALLOW_OVERRIDE                        = 0x1
 	BPF_F_ANY_ALIGNMENT                         = 0x2
 <<<<<<< HEAD
+<<<<<<< HEAD
 	BPF_F_BEFORE                                = 0x8
 	BPF_F_ID                                    = 0x20
 	BPF_F_NETFILTER_IP_DEFRAG                   = 0x1
 =======
 	BPF_F_KPROBE_MULTI_RETURN                   = 0x1
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	BPF_F_BEFORE                                = 0x8
+	BPF_F_ID                                    = 0x20
+	BPF_F_NETFILTER_IP_DEFRAG                   = 0x1
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	BPF_F_QUERY_EFFECTIVE                       = 0x1
 	BPF_F_REPLACE                               = 0x4
 	BPF_F_SLEEPABLE                             = 0x10
@@ -500,9 +506,13 @@ const (
 	BPF_F_TEST_STATE_FREQ                       = 0x8
 	BPF_F_TEST_XDP_LIVE_FRAMES                  = 0x2
 <<<<<<< HEAD
+<<<<<<< HEAD
 	BPF_F_XDP_DEV_BOUND_ONLY                    = 0x40
 =======
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	BPF_F_XDP_DEV_BOUND_ONLY                    = 0x40
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	BPF_F_XDP_HAS_FRAGS                         = 0x20
 	BPF_H                                       = 0x8
 	BPF_IMM                                     = 0x0
@@ -787,10 +797,15 @@ const (
 	DEVLINK_GENL_NAME                           = "devlink"
 	DEVLINK_GENL_VERSION                        = 0x1
 <<<<<<< HEAD
+<<<<<<< HEAD
 	DEVLINK_PORT_FN_CAP_IPSEC_CRYPTO            = 0x4
 	DEVLINK_PORT_FN_CAP_IPSEC_PACKET            = 0x8
 =======
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	DEVLINK_PORT_FN_CAP_IPSEC_CRYPTO            = 0x4
+	DEVLINK_PORT_FN_CAP_IPSEC_PACKET            = 0x8
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	DEVLINK_PORT_FN_CAP_MIGRATABLE              = 0x2
 	DEVLINK_PORT_FN_CAP_ROCE                    = 0x1
 	DEVLINK_SB_THRESHOLD_TO_ALPHA_MAX           = 0x14
@@ -844,6 +859,7 @@ const (
 	DM_VERSION                                  = 0xc138fd00
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	DM_VERSION_EXTRA                            = "-ioctl (2023-03-01)"
 	DM_VERSION_MAJOR                            = 0x4
 	DM_VERSION_MINOR                            = 0x30
@@ -857,6 +873,11 @@ const (
 	DM_VERSION_MAJOR                            = 0x4
 	DM_VERSION_MINOR                            = 0x2f
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	DM_VERSION_EXTRA                            = "-ioctl (2023-03-01)"
+	DM_VERSION_MAJOR                            = 0x4
+	DM_VERSION_MINOR                            = 0x30
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	DM_VERSION_PATCHLEVEL                       = 0x0
 	DT_BLK                                      = 0x6
 	DT_CHR                                      = 0x2
@@ -2149,6 +2170,60 @@ const (
 	NFNL_SUBSYS_QUEUE                           = 0x3
 	NFNL_SUBSYS_ULOG                            = 0x4
 	NFS_SUPER_MAGIC                             = 0x6969
+	NFT_CHAIN_FLAGS                             = 0x7
+	NFT_CHAIN_MAXNAMELEN                        = 0x100
+	NFT_CT_MAX                                  = 0x17
+	NFT_DATA_RESERVED_MASK                      = 0xffffff00
+	NFT_DATA_VALUE_MAXLEN                       = 0x40
+	NFT_EXTHDR_OP_MAX                           = 0x4
+	NFT_FIB_RESULT_MAX                          = 0x3
+	NFT_INNER_MASK                              = 0xf
+	NFT_LOGLEVEL_MAX                            = 0x8
+	NFT_NAME_MAXLEN                             = 0x100
+	NFT_NG_MAX                                  = 0x1
+	NFT_OBJECT_CONNLIMIT                        = 0x5
+	NFT_OBJECT_COUNTER                          = 0x1
+	NFT_OBJECT_CT_EXPECT                        = 0x9
+	NFT_OBJECT_CT_HELPER                        = 0x3
+	NFT_OBJECT_CT_TIMEOUT                       = 0x7
+	NFT_OBJECT_LIMIT                            = 0x4
+	NFT_OBJECT_MAX                              = 0xa
+	NFT_OBJECT_QUOTA                            = 0x2
+	NFT_OBJECT_SECMARK                          = 0x8
+	NFT_OBJECT_SYNPROXY                         = 0xa
+	NFT_OBJECT_TUNNEL                           = 0x6
+	NFT_OBJECT_UNSPEC                           = 0x0
+	NFT_OBJ_MAXNAMELEN                          = 0x100
+	NFT_OSF_MAXGENRELEN                         = 0x10
+	NFT_QUEUE_FLAG_BYPASS                       = 0x1
+	NFT_QUEUE_FLAG_CPU_FANOUT                   = 0x2
+	NFT_QUEUE_FLAG_MASK                         = 0x3
+	NFT_REG32_COUNT                             = 0x10
+	NFT_REG32_SIZE                              = 0x4
+	NFT_REG_MAX                                 = 0x4
+	NFT_REG_SIZE                                = 0x10
+	NFT_REJECT_ICMPX_MAX                        = 0x3
+	NFT_RT_MAX                                  = 0x4
+	NFT_SECMARK_CTX_MAXLEN                      = 0x100
+	NFT_SET_MAXNAMELEN                          = 0x100
+	NFT_SOCKET_MAX                              = 0x3
+	NFT_TABLE_F_MASK                            = 0x3
+	NFT_TABLE_MAXNAMELEN                        = 0x100
+	NFT_TRACETYPE_MAX                           = 0x3
+	NFT_TUNNEL_F_MASK                           = 0x7
+	NFT_TUNNEL_MAX                              = 0x1
+	NFT_TUNNEL_MODE_MAX                         = 0x2
+	NFT_USERDATA_MAXLEN                         = 0x100
+	NFT_XFRM_KEY_MAX                            = 0x6
+	NF_NAT_RANGE_MAP_IPS                        = 0x1
+	NF_NAT_RANGE_MASK                           = 0x7f
+	NF_NAT_RANGE_NETMAP                         = 0x40
+	NF_NAT_RANGE_PERSISTENT                     = 0x8
+	NF_NAT_RANGE_PROTO_OFFSET                   = 0x20
+	NF_NAT_RANGE_PROTO_RANDOM                   = 0x4
+	NF_NAT_RANGE_PROTO_RANDOM_ALL               = 0x14
+	NF_NAT_RANGE_PROTO_RANDOM_FULLY             = 0x10
+	NF_NAT_RANGE_PROTO_SPECIFIED                = 0x2
 	NILFS_SUPER_MAGIC                           = 0x3434
 	NL0                                         = 0x0
 	NL1                                         = 0x100
@@ -3148,10 +3223,14 @@ const (
 	TASKSTATS_GENL_VERSION                      = 0x1
 	TASKSTATS_TYPE_MAX                          = 0x6
 <<<<<<< HEAD
+<<<<<<< HEAD
 	TASKSTATS_VERSION                           = 0xe
 =======
 	TASKSTATS_VERSION                           = 0xd
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	TASKSTATS_VERSION                           = 0xe
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	TCIFLUSH                                    = 0x0
 	TCIOFF                                      = 0x2
 	TCIOFLUSH                                   = 0x2

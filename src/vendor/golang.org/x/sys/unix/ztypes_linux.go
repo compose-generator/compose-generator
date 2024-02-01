@@ -1553,12 +1553,18 @@ const (
 	IFLA_TSO_MAX_SIZE                          = 0x3b
 	IFLA_TSO_MAX_SEGS                          = 0x3c
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	IFLA_ALLMULTI                              = 0x3d
 	IFLA_DEVLINK_PORT                          = 0x3e
 	IFLA_GSO_IPV4_MAX_SIZE                     = 0x3f
 	IFLA_GRO_IPV4_MAX_SIZE                     = 0x40
+<<<<<<< HEAD
 =======
 >>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	IFLA_PROTO_DOWN_REASON_UNSPEC              = 0x0
 	IFLA_PROTO_DOWN_REASON_MASK                = 0x1
 	IFLA_PROTO_DOWN_REASON_VALUE               = 0x2
@@ -1990,10 +1996,14 @@ const (
 	NFT_MSG_DELFLOWTABLE              = 0x18
 	NFT_MSG_GETRULE_RESET             = 0x19
 <<<<<<< HEAD
+<<<<<<< HEAD
 	NFT_MSG_MAX                       = 0x22
 =======
 	NFT_MSG_MAX                       = 0x1a
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	NFT_MSG_MAX                       = 0x22
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	NFTA_LIST_UNSPEC                  = 0x0
 	NFTA_LIST_ELEM                    = 0x1
 	NFTA_HOOK_UNSPEC                  = 0x0
@@ -3729,10 +3739,14 @@ const (
 	ETHTOOL_MSG_PSE_SET                       = 0x25
 	ETHTOOL_MSG_RSS_GET                       = 0x26
 <<<<<<< HEAD
+<<<<<<< HEAD
 	ETHTOOL_MSG_USER_MAX                      = 0x2b
 =======
 	ETHTOOL_MSG_USER_MAX                      = 0x26
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	ETHTOOL_MSG_USER_MAX                      = 0x2b
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	ETHTOOL_MSG_KERNEL_NONE                   = 0x0
 	ETHTOOL_MSG_STRSET_GET_REPLY              = 0x1
 	ETHTOOL_MSG_LINKINFO_GET_REPLY            = 0x2
@@ -3773,10 +3787,14 @@ const (
 	ETHTOOL_MSG_PSE_GET_REPLY                 = 0x25
 	ETHTOOL_MSG_RSS_GET_REPLY                 = 0x26
 <<<<<<< HEAD
+<<<<<<< HEAD
 	ETHTOOL_MSG_KERNEL_MAX                    = 0x2b
 =======
 	ETHTOOL_MSG_KERNEL_MAX                    = 0x26
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	ETHTOOL_MSG_KERNEL_MAX                    = 0x2b
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	ETHTOOL_A_HEADER_UNSPEC                   = 0x0
 	ETHTOOL_A_HEADER_DEV_INDEX                = 0x1
 	ETHTOOL_A_HEADER_DEV_NAME                 = 0x2
@@ -3881,10 +3899,14 @@ const (
 	ETHTOOL_A_RINGS_CQE_SIZE                  = 0xc
 	ETHTOOL_A_RINGS_TX_PUSH                   = 0xd
 <<<<<<< HEAD
+<<<<<<< HEAD
 	ETHTOOL_A_RINGS_MAX                       = 0x10
 =======
 	ETHTOOL_A_RINGS_MAX                       = 0xd
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	ETHTOOL_A_RINGS_MAX                       = 0x10
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	ETHTOOL_A_CHANNELS_UNSPEC                 = 0x0
 	ETHTOOL_A_CHANNELS_HEADER                 = 0x1
 	ETHTOOL_A_CHANNELS_RX_MAX                 = 0x2
@@ -4581,6 +4603,7 @@ const (
 	NL80211_ATTR_MAX_AP_ASSOC_STA                           = 0xca
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	NL80211_ATTR_MAX                                        = 0x146
 =======
 	NL80211_ATTR_MAX                                        = 0x137
@@ -4588,6 +4611,9 @@ const (
 =======
 	NL80211_ATTR_MAX                                        = 0x141
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	NL80211_ATTR_MAX                                        = 0x146
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	NL80211_ATTR_MAX_CRIT_PROT_DURATION                     = 0xb4
 	NL80211_ATTR_MAX_CSA_COUNTERS                           = 0xce
 	NL80211_ATTR_MAX_MATCH_SETS                             = 0x85
@@ -4966,10 +4992,14 @@ const (
 	NL80211_CMD_LEAVE_MESH                                  = 0x45
 	NL80211_CMD_LEAVE_OCB                                   = 0x6d
 <<<<<<< HEAD
+<<<<<<< HEAD
 	NL80211_CMD_MAX                                         = 0x9a
 =======
 	NL80211_CMD_MAX                                         = 0x98
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	NL80211_CMD_MAX                                         = 0x9a
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	NL80211_CMD_MICHAEL_MIC_FAILURE                         = 0x29
 	NL80211_CMD_MODIFY_LINK_STA                             = 0x97
 	NL80211_CMD_NAN_MATCH                                   = 0x78
@@ -5604,10 +5634,14 @@ const (
 	NL80211_RATE_INFO_HE_RU_ALLOC_996                       = 0x5
 	NL80211_RATE_INFO_HE_RU_ALLOC                           = 0x11
 <<<<<<< HEAD
+<<<<<<< HEAD
 	NL80211_RATE_INFO_MAX                                   = 0x1d
 =======
 	NL80211_RATE_INFO_MAX                                   = 0x16
 >>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
+=======
+	NL80211_RATE_INFO_MAX                                   = 0x1d
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	NL80211_RATE_INFO_MCS                                   = 0x2
 	NL80211_RATE_INFO_SHORT_GI                              = 0x4
 	NL80211_RATE_INFO_VHT_MCS                               = 0x6
@@ -5959,10 +5993,15 @@ const (
 	TUN_F_TSO_ECN = 0x8
 	TUN_F_UFO     = 0x10
 <<<<<<< HEAD
+<<<<<<< HEAD
 	TUN_F_USO4    = 0x20
 	TUN_F_USO6    = 0x40
 =======
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+	TUN_F_USO4    = 0x20
+	TUN_F_USO6    = 0x40
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 )
 
 const (
@@ -5973,12 +6012,16 @@ const (
 
 const (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	VIRTIO_NET_HDR_GSO_NONE   = 0x0
 	VIRTIO_NET_HDR_GSO_TCPV4  = 0x1
 	VIRTIO_NET_HDR_GSO_UDP    = 0x3
 	VIRTIO_NET_HDR_GSO_TCPV6  = 0x4
 	VIRTIO_NET_HDR_GSO_UDP_L4 = 0x5
 	VIRTIO_NET_HDR_GSO_ECN    = 0x80
+<<<<<<< HEAD
 )
 
 type SchedAttr struct {
@@ -6017,3 +6060,33 @@ type CachestatRange struct {
 	VIRTIO_NET_HDR_GSO_ECN   = 0x80
 )
 >>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
+=======
+)
+
+type SchedAttr struct {
+	Size     uint32
+	Policy   uint32
+	Flags    uint64
+	Nice     int32
+	Priority uint32
+	Runtime  uint64
+	Deadline uint64
+	Period   uint64
+	Util_min uint32
+	Util_max uint32
+}
+
+const SizeofSchedAttr = 0x38
+
+type Cachestat_t struct {
+	Cache            uint64
+	Dirty            uint64
+	Writeback        uint64
+	Evicted          uint64
+	Recently_evicted uint64
+}
+type CachestatRange struct {
+	Off uint64
+	Len uint64
+}
+>>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
