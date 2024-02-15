@@ -1,4 +1,4 @@
-image: gitlab/gitlab-ce:${{GITLAB_VERSION}}-ce.0
+image: gitlab/gitlab-ce:${{GITLAB_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-gitlab
 restart: always
 volumes:

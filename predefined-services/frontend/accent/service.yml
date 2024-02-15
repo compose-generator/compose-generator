@@ -1,4 +1,4 @@
-image: mirego/accent:v${{ACCENT_VERSION}}
+image: mirego/accent:${{ACCENT_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-accent
 restart: always
 networks:

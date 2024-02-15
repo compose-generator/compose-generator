@@ -32,7 +32,7 @@
         {
             "text": "Which Go version do you want to use?",
             "type": 2,
-            "defaultValue": "1.18",
+            "defaultValue": "1.19",
             "variable": "GIN_GO_VERSION"
         },
         {
