@@ -15,7 +15,7 @@ require (
 	github.com/otiai10/copy v1.12.0
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/viper v1.16.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.25.7
 	gopkg.in/yaml.v2 v2.4.0
 )
