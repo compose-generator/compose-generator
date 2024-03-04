@@ -2,9 +2,12 @@
 
 //go:build go1.16 && !go1.21
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // +build go1.16,!go1.21
 >>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
+=======
+>>>>>>> 34b2023 (Bump github.com/go-playground/validator/v10 in /src (#538))
 
 package norm
 
