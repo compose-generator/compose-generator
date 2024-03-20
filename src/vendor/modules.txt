@@ -115,6 +115,7 @@ github.com/docker/distribution/reference
 github.com/distribution/reference
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # github.com/docker/docker v25.0.2+incompatible
 >>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 =======
@@ -123,6 +124,9 @@ github.com/distribution/reference
 =======
 # github.com/docker/docker v25.0.4+incompatible
 >>>>>>> c436d74 (Bump github.com/docker/docker in /src (#539))
+=======
+# github.com/docker/docker v25.0.5+incompatible
+>>>>>>> 4e6c355 (Bump github.com/docker/docker in /src (#540))
 ## explicit
 github.com/docker/docker/api
 github.com/docker/docker/api/types
