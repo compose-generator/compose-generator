@@ -8,7 +8,7 @@ require (
 	github.com/cli/safeexec v1.0.1
 	github.com/compose-generator/diu v0.0.0-20221024073354-053efc03289e
 	github.com/compose-spec/compose-go v1.18.2
-	github.com/docker/docker v25.0.4+incompatible
+	github.com/docker/docker v25.0.5+incompatible
 	github.com/fatih/color v1.15.0
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
