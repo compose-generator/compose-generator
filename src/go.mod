@@ -1,6 +1,7 @@
 module compose-generator
 
 go 1.21
+toolchain go1.22.2
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -13,7 +14,7 @@ require (
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/otiai10/copy v1.12.0
-	github.com/sethvargo/go-password v0.2.0
+	github.com/sethvargo/go-password v0.3.0
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.25.7
