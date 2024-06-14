@@ -1,138 +1,135 @@
 package types
 
 import (
-	"github.com/docker/docker/api/types/checkpoint"
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/events"
 	"github.com/docker/docker/api/types/image"
-	"github.com/docker/docker/api/types/swarm"
-	"github.com/docker/docker/api/types/system"
+	"github.com/docker/docker/api/types/network"
+	"github.com/docker/docker/api/types/registry"
+	"github.com/docker/docker/api/types/volume"
 )
 
-// CheckpointCreateOptions holds parameters to create a checkpoint from a container.
+// ImagesPruneReport contains the response for Engine API:
+// POST "/images/prune"
 //
-// Deprecated: use [checkpoint.CreateOptions].
-type CheckpointCreateOptions = checkpoint.CreateOptions
+// Deprecated: use [image.PruneReport].
+type ImagesPruneReport = image.PruneReport
 
-// CheckpointListOptions holds parameters to list checkpoints for a container
+// VolumesPruneReport contains the response for Engine API:
+// POST "/volumes/prune".
 //
-// Deprecated: use [checkpoint.ListOptions].
-type CheckpointListOptions = checkpoint.ListOptions
+// Deprecated: use [volume.PruneReport].
+type VolumesPruneReport = volume.PruneReport
 
-// CheckpointDeleteOptions holds parameters to delete a checkpoint from a container
+// NetworkCreateRequest is the request message sent to the server for network create call.
 //
-// Deprecated: use [checkpoint.DeleteOptions].
-type CheckpointDeleteOptions = checkpoint.DeleteOptions
+// Deprecated: use [network.CreateRequest].
+type NetworkCreateRequest = network.CreateRequest
 
-// Checkpoint represents the details of a checkpoint when listing endpoints.
+// NetworkCreate is the expected body of the "create network" http request message
 //
-// Deprecated: use [checkpoint.Summary].
-type Checkpoint = checkpoint.Summary
+// Deprecated: use [network.CreateOptions].
+type NetworkCreate = network.CreateOptions
 
-// Info contains response of Engine API:
-// GET "/info"
+// NetworkListOptions holds parameters to filter the list of networks with.
 //
-// Deprecated: use [system.Info].
-type Info = system.Info
+// Deprecated: use [network.ListOptions].
+type NetworkListOptions = network.ListOptions
 
-// Commit holds the Git-commit (SHA1) that a binary was built from, as reported
-// in the version-string of external tools, such as containerd, or runC.
+// NetworkCreateResponse is the response message sent by the server for network create call.
 //
-// Deprecated: use [system.Commit].
-type Commit = system.Commit
+// Deprecated: use [network.CreateResponse].
+type NetworkCreateResponse = network.CreateResponse
 
-// PluginsInfo is a temp struct holding Plugins name
-// registered with docker daemon. It is used by [system.Info] struct
+// NetworkInspectOptions holds parameters to inspect network.
 //
-// Deprecated: use [system.PluginsInfo].
-type PluginsInfo = system.PluginsInfo
+// Deprecated: use [network.InspectOptions].
+type NetworkInspectOptions = network.InspectOptions
 
-// NetworkAddressPool is a temp struct used by [system.Info] struct.
+// NetworkConnect represents the data to be used to connect a container to the network
 //
-// Deprecated: use [system.NetworkAddressPool].
-type NetworkAddressPool = system.NetworkAddressPool
+// Deprecated: use [network.ConnectOptions].
+type NetworkConnect = network.ConnectOptions
 
-// Runtime describes an OCI runtime.
+// NetworkDisconnect represents the data to be used to disconnect a container from the network
 //
-// Deprecated: use [system.Runtime].
-type Runtime = system.Runtime
+// Deprecated: use [network.DisconnectOptions].
+type NetworkDisconnect = network.DisconnectOptions
 
-// SecurityOpt contains the name and options of a security option.
+// EndpointResource contains network resources allocated and used for a container in a network.
 //
-// Deprecated: use [system.SecurityOpt].
-type SecurityOpt = system.SecurityOpt
+// Deprecated: use [network.EndpointResource].
+type EndpointResource = network.EndpointResource
 
-// KeyValue holds a key/value pair.
+// NetworkResource is the body of the "get network" http response message/
 //
-// Deprecated: use [system.KeyValue].
-type KeyValue = system.KeyValue
+// Deprecated: use [network.Inspect] or [network.Summary] (for list operations).
+type NetworkResource = network.Inspect
 
-// ImageDeleteResponseItem image delete response item.
+// NetworksPruneReport contains the response for Engine API:
+// POST "/networks/prune"
 //
-// Deprecated: use [image.DeleteResponse].
-type ImageDeleteResponseItem = image.DeleteResponse
+// Deprecated: use [network.PruneReport].
+type NetworksPruneReport = network.PruneReport
 
-// ImageSummary image summary.
+// ExecConfig is a small subset of the Config struct that holds the configuration
+// for the exec feature of docker.
 //
-// Deprecated: use [image.Summary].
-type ImageSummary = image.Summary
+// Deprecated: use [container.ExecOptions].
+type ExecConfig = container.ExecOptions
 
-// ImageMetadata contains engine-local data about the image.
+// ExecStartCheck is a temp struct used by execStart
+// Config fields is part of ExecConfig in runconfig package
 //
-// Deprecated: use [image.Metadata].
-type ImageMetadata = image.Metadata
+// Deprecated: use [container.ExecStartOptions] or [container.ExecAttachOptions].
+type ExecStartCheck = container.ExecStartOptions
 
-// ServiceCreateResponse contains the information returned to a client
-// on the creation of a new service.
+// ContainerExecInspect holds information returned by exec inspect.
 //
-// Deprecated: use [swarm.ServiceCreateResponse].
-type ServiceCreateResponse = swarm.ServiceCreateResponse
+// Deprecated: use [container.ExecInspect].
+type ContainerExecInspect = container.ExecInspect
 
-// ServiceUpdateResponse service update response.
+// ContainersPruneReport contains the response for Engine API:
+// POST "/containers/prune"
 //
-// Deprecated: use [swarm.ServiceUpdateResponse].
-type ServiceUpdateResponse = swarm.ServiceUpdateResponse
+// Deprecated: use [container.PruneReport].
+type ContainersPruneReport = container.PruneReport
 
-// ContainerStartOptions holds parameters to start containers.
+// ContainerPathStat is used to encode the header from
+// GET "/containers/{name:.*}/archive"
+// "Name" is the file or directory name.
 //
-// Deprecated: use [container.StartOptions].
-type ContainerStartOptions = container.StartOptions
+// Deprecated: use [container.PathStat].
+type ContainerPathStat = container.PathStat
 
-// ResizeOptions holds parameters to resize a TTY.
-// It can be used to resize container TTYs and
-// exec process TTYs too.
+// CopyToContainerOptions holds information
+// about files to copy into a container.
 //
-// Deprecated: use [container.ResizeOptions].
-type ResizeOptions = container.ResizeOptions
+// Deprecated: use [container.CopyToContainerOptions],
+type CopyToContainerOptions = container.CopyToContainerOptions
 
-// ContainerAttachOptions holds parameters to attach to a container.
+// ContainerStats contains response of Engine API:
+// GET "/stats"
 //
-// Deprecated: use [container.AttachOptions].
-type ContainerAttachOptions = container.AttachOptions
+// Deprecated: use [container.StatsResponse].
+type ContainerStats = container.StatsResponse
 
-// ContainerCommitOptions holds parameters to commit changes into a container.
+// EventsOptions holds parameters to filter events with.
 //
-// Deprecated: use [container.CommitOptions].
-type ContainerCommitOptions = container.CommitOptions
+// Deprecated: use [events.ListOptions].
+type EventsOptions = events.ListOptions
 
-// ContainerListOptions holds parameters to list containers with.
+// ImageSearchOptions holds parameters to search images with.
 //
-// Deprecated: use [container.ListOptions].
-type ContainerListOptions = container.ListOptions
+// Deprecated: use [registry.SearchOptions].
+type ImageSearchOptions = registry.SearchOptions
 
-// ContainerLogsOptions holds parameters to filter logs with.
+// ImageImportSource holds source information for ImageImport
 //
-// Deprecated: use [container.LogsOptions].
-type ContainerLogsOptions = container.LogsOptions
+// Deprecated: use [image.ImportSource].
+type ImageImportSource image.ImportSource
 
-// ContainerRemoveOptions holds parameters to remove containers.
+// ImageLoadResponse returns information to the client about a load process.
 //
-// Deprecated: use [container.RemoveOptions].
-type ContainerRemoveOptions = container.RemoveOptions
-
-// DecodeSecurityOptions decodes a security options string slice to a type safe
-// [system.SecurityOpt].
-//
-// Deprecated: use [system.DecodeSecurityOptions].
-func DecodeSecurityOptions(opts []string) ([]system.SecurityOpt, error) {
-	return system.DecodeSecurityOptions(opts)
-}
+// Deprecated: use [image.LoadResponse].
+type ImageLoadResponse = image.LoadResponse
