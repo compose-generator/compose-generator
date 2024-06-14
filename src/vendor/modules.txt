@@ -10,7 +10,7 @@ github.com/Microsoft/go-winio/internal/fs
 github.com/Microsoft/go-winio/internal/socket
 github.com/Microsoft/go-winio/internal/stringbuffer
 github.com/Microsoft/go-winio/pkg/guid
-# github.com/briandowns/spinner v1.23.0
+# github.com/briandowns/spinner v1.23.1
 ## explicit; go 1.17
 github.com/briandowns/spinner
 # github.com/cli/safeexec v1.0.1
