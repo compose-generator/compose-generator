@@ -56,7 +56,7 @@
         {
             "text": "Which Postgres version do you want to use?",
             "type": 2,
-            "defaultValue": "14.4",
+            "defaultValue": "14.5",
             "variable": "POSTGRES_VERSION",
             "advanced": true
         }

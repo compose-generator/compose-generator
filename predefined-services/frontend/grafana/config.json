@@ -23,7 +23,7 @@
         {
             "text": "Which version of Grafana do you want to use?",
             "type": 2,
-            "defaultValue": "9.0.2",
+            "defaultValue": "9.1.5",
             "variable": "GRAFANA_VERSION",
             "advanced": true
         }

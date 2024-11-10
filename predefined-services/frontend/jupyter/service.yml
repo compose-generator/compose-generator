@@ -1,4 +1,4 @@
-image: jupyter/${{JUPYTER_NOTEBOOK_TYPE}}:notebook-${{JUPYTER_VERSION}}
+image: jupyter/${{JUPYTER_NOTEBOOK_TYPE}}:${{JUPYTER_VERSION}}
 container_name: ${{PROJECT_NAME_CONTAINER}}-frontend-jupyter
 restart: always
 volumes:

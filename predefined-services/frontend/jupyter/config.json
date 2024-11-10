@@ -39,7 +39,7 @@
         {
             "text": "Which version of Jupyter do you want to use?",
             "type": 2,
-            "defaultValue": "6.4.12",
+            "defaultValue": "notebook-6.4.12",
             "variable": "JUPYTER_VERSION",
             "advanced": true
         }

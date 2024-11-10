@@ -15,7 +15,7 @@
         {
             "text": "Which version of Meilisearch do you want to use?",
             "type": 2,
-            "defaultValue": "v0.27.2",
+            "defaultValue": "v0.28.1",
             "variable": "MEILISEARCH_VERSION"
         }
     ],

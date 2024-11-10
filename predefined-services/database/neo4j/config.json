@@ -34,7 +34,7 @@
         {
             "text": "Which Neo4j version do you want to use?",
             "type": 2,
-            "defaultValue": "4.4.8",
+            "defaultValue": "4.4.9",
             "variable": "NEO4J_VERSION",
             "advanced": true
         }
