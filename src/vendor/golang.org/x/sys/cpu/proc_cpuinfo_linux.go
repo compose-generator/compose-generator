@@ -3,13 +3,6 @@
 // license that can be found in the LICENSE file.
 
 //go:build linux && arm64
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-// +build linux,arm64
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 package cpu
 

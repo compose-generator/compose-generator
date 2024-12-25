@@ -2,20 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-<<<<<<< HEAD
-<<<<<<< HEAD:src/vendor/golang.org/x/sys/unix/ioctl_unsigned.go
 //go:build darwin || dragonfly || freebsd || hurd || linux || netbsd || openbsd
-=======
-//go:build aix || darwin || dragonfly || freebsd || hurd || linux || netbsd || openbsd || solaris
-// +build aix darwin dragonfly freebsd hurd linux netbsd openbsd solaris
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424)):src/vendor/golang.org/x/sys/unix/ioctl.go
-=======
-//go:build darwin || dragonfly || freebsd || hurd || linux || netbsd || openbsd
-<<<<<<< HEAD
-// +build darwin dragonfly freebsd hurd linux netbsd openbsd
->>>>>>> 48d11a8 (Update dependencies)
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 package unix
 

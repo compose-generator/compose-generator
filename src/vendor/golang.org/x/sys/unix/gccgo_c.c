@@ -2,20 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 //go:build gccgo && !aix && !hurd
-=======
-// +build gccgo,!hurd
-// +build !aix,!hurd
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
-=======
-//go:build gccgo && !aix && !hurd
-<<<<<<< HEAD
-// +build gccgo,!aix,!hurd
->>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 #include <errno.h>
 #include <stdint.h>

@@ -79,16 +79,7 @@ func BytePtrToString(p *byte) string {
 		ptr = unsafe.Pointer(uintptr(ptr) + 1)
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	return string(unsafe.Slice(p, n))
-=======
-	s := unsafe.Slice((*byte)(unsafe.Pointer(p)), n)
-	return string(s)
->>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
-=======
-	return string(unsafe.Slice(p, n))
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 }
 
 // Single-word zero for use when we need a valid pointer to 0 bytes.

@@ -3,12 +3,9 @@
 github.com/AlecAivazis/survey/v2
 github.com/AlecAivazis/survey/v2/core
 github.com/AlecAivazis/survey/v2/terminal
-# github.com/Microsoft/go-winio v0.6.1
-## explicit; go 1.17
+# github.com/Microsoft/go-winio v0.5.2
+## explicit; go 1.13
 github.com/Microsoft/go-winio
-github.com/Microsoft/go-winio/internal/fs
-github.com/Microsoft/go-winio/internal/socket
-github.com/Microsoft/go-winio/internal/stringbuffer
 github.com/Microsoft/go-winio/pkg/guid
 # github.com/briandowns/spinner v1.23.1
 ## explicit; go 1.17
@@ -34,99 +31,21 @@ github.com/compose-spec/compose-go/template
 github.com/compose-spec/compose-go/tree
 github.com/compose-spec/compose-go/types
 github.com/compose-spec/compose-go/utils
-# github.com/containerd/log v0.1.0
-## explicit; go 1.20
 # github.com/cpuguy83/go-md2man/v2 v2.0.2
 ## explicit; go 1.11
 github.com/cpuguy83/go-md2man/v2/md2man
-# github.com/creack/pty v1.1.18
-## explicit; go 1.13
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
 # github.com/distribution/distribution/v3 v3.0.0-20230214150026-36d8c594d7aa
 ## explicit; go 1.18
 github.com/distribution/distribution/v3/reference
-<<<<<<< HEAD
-# github.com/docker/distribution v2.8.2+incompatible
-## explicit
-github.com/docker/distribution/digestset
-github.com/docker/distribution/reference
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-# github.com/docker/docker v20.10.24+incompatible
-=======
-# github.com/docker/docker v20.10.18+incompatible
->>>>>>> e656c81 (Bump github.com/docker/docker in /src (#373))
-=======
-# github.com/docker/docker v20.10.19+incompatible
->>>>>>> 16f5bed (Bump github.com/docker/docker in /src (#389))
-=======
-# github.com/docker/docker v20.10.20+incompatible
->>>>>>> ac6f0a2 (Bump github.com/docker/docker in /src (#391))
-=======
-# github.com/docker/docker v20.10.21+incompatible
->>>>>>> e1f23a3 (Bump github.com/docker/docker in /src (#394))
-=======
-# github.com/docker/docker v20.10.22+incompatible
->>>>>>> a854580 (Bump github.com/docker/docker in /src (#412))
-=======
-# github.com/docker/docker v20.10.23+incompatible
->>>>>>> f30f988 (Bump github.com/docker/docker in /src (#418))
-=======
-# github.com/docker/docker v23.0.0+incompatible
->>>>>>> e95adf5 (Bump github.com/docker/docker in /src (#426))
-=======
-# github.com/docker/docker v23.0.1+incompatible
->>>>>>> 516b40c (Bump github.com/docker/docker in /src (#428))
-=======
-# github.com/docker/docker v23.0.2+incompatible
->>>>>>> 149d866 (Bump github.com/docker/docker in /src (#450))
-=======
-# github.com/docker/docker v23.0.3+incompatible
->>>>>>> 810b63e (Bump github.com/docker/docker in /src (#454))
-=======
-# github.com/docker/docker v23.0.4+incompatible
->>>>>>> e637e2c (Bump github.com/docker/docker in /src (#456))
-=======
-# github.com/docker/docker v23.0.5+incompatible
->>>>>>> b2f3c02 (Bump github.com/docker/docker in /src (#460))
-=======
-# github.com/docker/docker v23.0.6+incompatible
->>>>>>> 985e475 (Bump github.com/docker/docker in /src (#464))
-=======
-# github.com/docker/docker v24.0.5+incompatible
->>>>>>> 48d11a8 (Update dependencies)
-=======
-# github.com/distribution/reference v0.5.0
+# github.com/distribution/reference v0.6.0
 ## explicit; go 1.20
 github.com/distribution/reference
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-# github.com/docker/docker v25.0.2+incompatible
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
-=======
-# github.com/docker/docker v25.0.3+incompatible
->>>>>>> 240d710 (Bump github.com/docker/docker in /src (#535))
-=======
-# github.com/docker/docker v25.0.4+incompatible
->>>>>>> c436d74 (Bump github.com/docker/docker in /src (#539))
-=======
+# github.com/docker/distribution v2.8.1+incompatible
+## explicit
 # github.com/docker/docker v25.0.5+incompatible
->>>>>>> 4e6c355 (Bump github.com/docker/docker in /src (#540))
 ## explicit
 github.com/docker/docker/api
 github.com/docker/docker/api/types
@@ -173,7 +92,7 @@ github.com/gabriel-vasile/mimetype
 github.com/gabriel-vasile/mimetype/internal/charset
 github.com/gabriel-vasile/mimetype/internal/json
 github.com/gabriel-vasile/mimetype/internal/magic
-# github.com/go-logr/logr v1.4.1
+# github.com/go-logr/logr v1.4.2
 ## explicit; go 1.18
 github.com/go-logr/logr
 github.com/go-logr/logr/funcr
@@ -236,8 +155,8 @@ github.com/mgutz/ansi
 # github.com/mitchellh/mapstructure v1.5.0
 ## explicit; go 1.14
 github.com/mitchellh/mapstructure
-# github.com/moby/term v0.5.0
-## explicit; go 1.18
+# github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae
+## explicit; go 1.13
 # github.com/morikuni/aec v1.0.0
 ## explicit
 # github.com/opencontainers/go-digest v1.0.0
@@ -269,7 +188,7 @@ github.com/russross/blackfriday/v2
 # github.com/sethvargo/go-password v0.2.0
 ## explicit; go 1.14
 github.com/sethvargo/go-password/password
-# github.com/sirupsen/logrus v1.9.3
+# github.com/sirupsen/logrus v1.9.0
 ## explicit; go 1.13
 github.com/sirupsen/logrus
 # github.com/spf13/afero v1.9.5
@@ -297,9 +216,10 @@ github.com/spf13/viper/internal/encoding/javaproperties
 github.com/spf13/viper/internal/encoding/json
 github.com/spf13/viper/internal/encoding/toml
 github.com/spf13/viper/internal/encoding/yaml
-# github.com/stretchr/testify v1.9.0
+# github.com/stretchr/testify v1.10.0
 ## explicit; go 1.17
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/assert/yaml
 github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.4.2
 ## explicit; go 1.18
@@ -319,46 +239,18 @@ github.com/xeipuuv/gojsonschema
 # github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673
 ## explicit
 github.com/xrash/smetrics
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-# golang.org/x/crypto v0.17.0
-## explicit; go 1.18
-golang.org/x/crypto/sha3
-# golang.org/x/net v0.10.0
-=======
-# golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
-## explicit; go 1.17
-golang.org/x/crypto/sha3
-<<<<<<< HEAD
-# golang.org/x/net v0.0.0-20221014081412-f15817d10f9b
->>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
-=======
-# golang.org/x/net v0.4.0
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
-=======
-# golang.org/x/crypto v0.5.0
-## explicit; go 1.17
-golang.org/x/crypto/sha3
-# golang.org/x/net v0.5.0
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
-=======
-# golang.org/x/crypto v0.7.0
-## explicit; go 1.17
-golang.org/x/crypto/sha3
-# golang.org/x/net v0.8.0
->>>>>>> 2a7bc44 (Bump github.com/go-playground/validator/v10 in /src (#447))
-=======
-# golang.org/x/crypto v0.9.0
-=======
-# go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.47.0
-## explicit; go 1.20
+# go.opentelemetry.io/auto/sdk v1.1.0
+## explicit; go 1.22.0
+go.opentelemetry.io/auto/sdk
+go.opentelemetry.io/auto/sdk/internal/telemetry
+# go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.58.0
+## explicit; go 1.22.0
 go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp/internal/request
+go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp/internal/semconv
 go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp/internal/semconvutil
-# go.opentelemetry.io/otel v1.22.0
-## explicit; go 1.20
+# go.opentelemetry.io/otel v1.33.0
+## explicit; go 1.22.0
 go.opentelemetry.io/otel
 go.opentelemetry.io/otel/attribute
 go.opentelemetry.io/otel/baggage
@@ -369,46 +261,26 @@ go.opentelemetry.io/otel/internal/baggage
 go.opentelemetry.io/otel/internal/global
 go.opentelemetry.io/otel/propagation
 go.opentelemetry.io/otel/semconv/v1.20.0
-# go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.22.0
-## explicit; go 1.20
-# go.opentelemetry.io/otel/metric v1.22.0
-## explicit; go 1.20
+go.opentelemetry.io/otel/semconv/v1.26.0
+# go.opentelemetry.io/otel/metric v1.33.0
+## explicit; go 1.22.0
 go.opentelemetry.io/otel/metric
 go.opentelemetry.io/otel/metric/embedded
-# go.opentelemetry.io/otel/sdk v1.22.0
-## explicit; go 1.20
-# go.opentelemetry.io/otel/trace v1.22.0
-## explicit; go 1.20
+go.opentelemetry.io/otel/metric/noop
+# go.opentelemetry.io/otel/trace v1.33.0
+## explicit; go 1.22.0
 go.opentelemetry.io/otel/trace
 go.opentelemetry.io/otel/trace/embedded
-<<<<<<< HEAD
-# golang.org/x/crypto v0.14.0
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
-## explicit; go 1.17
-=======
+go.opentelemetry.io/otel/trace/noop
 # golang.org/x/crypto v0.19.0
 ## explicit; go 1.18
->>>>>>> 34b2023 (Bump github.com/go-playground/validator/v10 in /src (#538))
 golang.org/x/crypto/sha3
 # golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
 ## explicit; go 1.20
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
-# golang.org/x/mod v0.11.0
-## explicit; go 1.17
-golang.org/x/mod/semver
-<<<<<<< HEAD
-<<<<<<< HEAD
-# golang.org/x/net v0.10.0
->>>>>>> 48d11a8 (Update dependencies)
-=======
-# golang.org/x/net v0.17.0
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
-## explicit; go 1.17
-=======
 # golang.org/x/net v0.21.0
 ## explicit; go 1.18
->>>>>>> 34b2023 (Bump github.com/go-playground/validator/v10 in /src (#538))
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/internal/socks
@@ -416,118 +288,19 @@ golang.org/x/net/proxy
 # golang.org/x/sync v0.3.0
 ## explicit; go 1.17
 golang.org/x/sync/errgroup
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-# golang.org/x/sys v0.15.0
-## explicit; go 1.18
-=======
-# golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8
-=======
-# golang.org/x/sys v0.0.0-20220908164124-27713097b956
->>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
-=======
-# golang.org/x/sys v0.3.0
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
-=======
-# golang.org/x/sys v0.4.0
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
-=======
-# golang.org/x/sys v0.6.0
->>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
-=======
-# golang.org/x/sys v0.8.0
->>>>>>> 48d11a8 (Update dependencies)
-## explicit; go 1.17
->>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
-=======
-# golang.org/x/sys v0.16.0
-=======
 # golang.org/x/sys v0.17.0
->>>>>>> 34b2023 (Bump github.com/go-playground/validator/v10 in /src (#538))
 ## explicit; go 1.18
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 golang.org/x/sys/cpu
-<<<<<<< HEAD
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-# golang.org/x/term v0.15.0
-## explicit; go 1.18
-=======
-# golang.org/x/term v0.1.0
-=======
-# golang.org/x/term v0.3.0
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
-=======
-# golang.org/x/term v0.4.0
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
-=======
-# golang.org/x/term v0.6.0
->>>>>>> 2a7bc44 (Bump github.com/go-playground/validator/v10 in /src (#447))
-=======
-golang.org/x/sys/execabs
-golang.org/x/sys/plan9
-golang.org/x/sys/unix
-golang.org/x/sys/windows
-<<<<<<< HEAD
-<<<<<<< HEAD
-# golang.org/x/term v0.8.0
->>>>>>> 48d11a8 (Update dependencies)
-=======
-# golang.org/x/term v0.13.0
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
-## explicit; go 1.17
->>>>>>> 4da55db (Bump github.com/briandowns/spinner from 1.19.0 to 1.20.0 in /src (#414))
-golang.org/x/term
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-# golang.org/x/text v0.14.0
-## explicit; go 1.18
-=======
-# golang.org/x/text v0.4.0
-=======
-# golang.org/x/text v0.5.0
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
-=======
-# golang.org/x/text v0.6.0
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
-=======
-# golang.org/x/text v0.8.0
->>>>>>> 2a7bc44 (Bump github.com/go-playground/validator/v10 in /src (#447))
-=======
-# golang.org/x/text v0.9.0
->>>>>>> 48d11a8 (Update dependencies)
-=======
-# golang.org/x/text v0.13.0
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
-## explicit; go 1.17
-<<<<<<< HEAD
->>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
-=======
-=======
 # golang.org/x/term v0.17.0
 ## explicit; go 1.18
 golang.org/x/term
 # golang.org/x/text v0.14.0
 ## explicit; go 1.18
->>>>>>> 34b2023 (Bump github.com/go-playground/validator/v10 in /src (#538))
 golang.org/x/text/cases
 golang.org/x/text/internal
->>>>>>> fb2f353 (Bump github.com/AlecAivazis/survey/v2 from 2.3.6 to 2.3.7 in /src (#480))
 golang.org/x/text/internal/language
 golang.org/x/text/internal/language/compact
 golang.org/x/text/internal/tag
@@ -536,23 +309,6 @@ golang.org/x/text/runes
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/tools v0.6.0
-## explicit; go 1.18
-golang.org/x/tools/cmd/stringer
-golang.org/x/tools/go/gcexportdata
-golang.org/x/tools/go/internal/packagesdriver
-golang.org/x/tools/go/packages
-golang.org/x/tools/internal/event
-golang.org/x/tools/internal/event/core
-golang.org/x/tools/internal/event/keys
-golang.org/x/tools/internal/event/label
-golang.org/x/tools/internal/gcimporter
-golang.org/x/tools/internal/gocommand
-golang.org/x/tools/internal/packagesinternal
-golang.org/x/tools/internal/pkgbits
-golang.org/x/tools/internal/tokeninternal
-golang.org/x/tools/internal/typeparams
-golang.org/x/tools/internal/typesinternal
 # gopkg.in/ini.v1 v1.67.0
 ## explicit
 gopkg.in/ini.v1

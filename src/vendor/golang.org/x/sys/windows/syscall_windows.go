@@ -441,19 +441,10 @@ func NewCallbackCDecl(fn interface{}) uintptr {
 //sys	DwmGetWindowAttribute(hwnd HWND, attribute uint32, value unsafe.Pointer, size uint32) (ret error) = dwmapi.DwmGetWindowAttribute
 //sys	DwmSetWindowAttribute(hwnd HWND, attribute uint32, value unsafe.Pointer, size uint32) (ret error) = dwmapi.DwmSetWindowAttribute
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 // Windows Multimedia API
 //sys TimeBeginPeriod (period uint32) (err error) [failretval != 0] = winmm.timeBeginPeriod
 //sys TimeEndPeriod (period uint32) (err error) [failretval != 0] = winmm.timeEndPeriod
 
-<<<<<<< HEAD
-=======
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 // syscall interface implementation for other packages
 
 // GetCurrentProcess returns the handle for the current process.
@@ -1829,10 +1820,6 @@ type PSAPI_WORKING_SET_EX_INFORMATION struct {
 	// A PSAPI_WORKING_SET_EX_BLOCK union that indicates the attributes of the page at VirtualAddress.
 	VirtualAttributes PSAPI_WORKING_SET_EX_BLOCK
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 
 // CreatePseudoConsole creates a windows pseudo console.
 func CreatePseudoConsole(size Coord, in Handle, out Handle, flags uint32, pconsole *Handle) error {
@@ -1847,8 +1834,3 @@ func ResizePseudoConsole(pconsole Handle, size Coord) error {
 	// accept arguments that can be casted to uintptr, and Coord can't.
 	return resizePseudoConsole(pconsole, *((*uint32)(unsafe.Pointer(&size))))
 }
-<<<<<<< HEAD
-=======
->>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))

@@ -3340,10 +3340,6 @@ const (
 	DWMWA_TEXT_COLOR                     = 36
 	DWMWA_VISIBLE_FRAME_BORDER_THICKNESS = 37
 )
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 
 type WSAQUERYSET struct {
 	Size                uint32
@@ -3384,8 +3380,3 @@ type BLOB struct {
 	Size     uint32
 	BlobData *byte
 }
-<<<<<<< HEAD
-=======
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
-=======
->>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))

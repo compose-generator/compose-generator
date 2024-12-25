@@ -204,14 +204,7 @@ struct ltchars {
 #include <sys/timerfd.h>
 #include <sys/uio.h>
 #include <sys/xattr.h>
-<<<<<<< HEAD
-<<<<<<< HEAD
 #include <netinet/udp.h>
-=======
->>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
-=======
-#include <netinet/udp.h>
->>>>>>> 48d11a8 (Update dependencies)
 #include <linux/audit.h>
 #include <linux/bpf.h>
 #include <linux/can.h>
@@ -528,17 +521,8 @@ ccflags="$@"
 		$2 ~ /^LOCK_(SH|EX|NB|UN)$/ ||
 		$2 ~ /^LO_(KEY|NAME)_SIZE$/ ||
 		$2 ~ /^LOOP_(CLR|CTL|GET|SET)_/ ||
-<<<<<<< HEAD
-<<<<<<< HEAD
 		$2 == "LOOP_CONFIGURE" ||
 		$2 ~ /^(AF|SOCK|SO|SOL|IPPROTO|IP|IPV6|TCP|MCAST|EVFILT|NOTE|SHUT|PROT|MAP|MREMAP|MFD|T?PACKET|MSG|SCM|MCL|DT|MADV|PR|LOCAL|TCPOPT|UDP)_/ ||
-=======
-		$2 ~ /^(AF|SOCK|SO|SOL|IPPROTO|IP|IPV6|TCP|MCAST|EVFILT|NOTE|SHUT|PROT|MAP|MFD|T?PACKET|MSG|SCM|MCL|DT|MADV|PR|LOCAL|TCPOPT|UDP)_/ ||
->>>>>>> 48d11a8 (Update dependencies)
-=======
-		$2 == "LOOP_CONFIGURE" ||
-		$2 ~ /^(AF|SOCK|SO|SOL|IPPROTO|IP|IPV6|TCP|MCAST|EVFILT|NOTE|SHUT|PROT|MAP|MREMAP|MFD|T?PACKET|MSG|SCM|MCL|DT|MADV|PR|LOCAL|TCPOPT|UDP)_/ ||
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 		$2 ~ /^NFC_(GENL|PROTO|COMM|RF|SE|DIRECTION|LLCP|SOCKPROTO)_/ ||
 		$2 ~ /^NFC_.*_(MAX)?SIZE$/ ||
 		$2 ~ /^RAW_PAYLOAD_/ ||

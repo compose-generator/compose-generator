@@ -60,19 +60,5 @@ func sendfile(outfd int, infd int, offset *int64, count int) (written int, err e
 func Syscall9(num, a1, a2, a3, a4, a5, a6, a7, a8, a9 uintptr) (r1, r2 uintptr, err syscall.Errno)
 
 func PtraceGetFsBase(pid int, fsbase *int64) (err error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
 	return ptracePtr(PT_GETFSBASE, pid, unsafe.Pointer(fsbase), 0)
-=======
-	return ptrace(PT_GETFSBASE, pid, uintptr(unsafe.Pointer(fsbase)), 0)
-}
-
-func PtraceIO(req int, pid int, addr uintptr, out []byte, countin int) (count int, err error) {
-	ioDesc := PtraceIoDesc{Op: int32(req), Offs: uintptr(unsafe.Pointer(addr)), Addr: uintptr(unsafe.Pointer(&out[0])), Len: uint32(countin)}
-	err = ptrace(PT_IO, pid, uintptr(unsafe.Pointer(&ioDesc)), 0)
-	return int(ioDesc.Len), err
->>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
-=======
-	return ptracePtr(PT_GETFSBASE, pid, unsafe.Pointer(fsbase), 0)
->>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 }

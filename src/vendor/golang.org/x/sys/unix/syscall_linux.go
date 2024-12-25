@@ -1545,15 +1545,7 @@ func sendmsgN(fd int, iov []Iovec, oob []byte, ptr unsafe.Pointer, salen _Sockle
 	var dummy byte
 	var empty bool
 	if len(oob) > 0 {
-<<<<<<< HEAD
-<<<<<<< HEAD
 		empty = emptyIovecs(iov)
-=======
-		empty := emptyIovecs(iov)
->>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
-=======
-		empty = emptyIovecs(iov)
->>>>>>> 69ead24 (Bump github.com/spf13/viper from 1.13.0 to 1.14.0 in /src (#397))
 		if empty {
 			var sockType int
 			sockType, err = GetsockoptInt(fd, SOL_SOCKET, SO_TYPE)
@@ -1565,14 +1557,7 @@ func sendmsgN(fd int, iov []Iovec, oob []byte, ptr unsafe.Pointer, salen _Sockle
 				var iova [1]Iovec
 				iova[0].Base = &dummy
 				iova[0].SetLen(1)
-<<<<<<< HEAD
-<<<<<<< HEAD
 				iov = iova[:]
-=======
->>>>>>> fd0a574 (Bump github.com/compose-spec/compose-go from 1.2.9 to 1.3.0 in /src (#362))
-=======
-				iov = iova[:]
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
 			}
 		}
 		msg.Control = &oob[0]
@@ -1720,15 +1705,10 @@ func PtracePokeUser(pid int, addr uintptr, data []byte) (count int, err error) {
 const elfNT_PRSTATUS = 1
 
 func PtraceGetRegs(pid int, regsout *PtraceRegs) (err error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 	var iov Iovec
 	iov.Base = (*byte)(unsafe.Pointer(regsout))
 	iov.SetLen(int(unsafe.Sizeof(*regsout)))
 	return ptracePtr(PTRACE_GETREGSET, pid, uintptr(elfNT_PRSTATUS), unsafe.Pointer(&iov))
-<<<<<<< HEAD
 }
 
 func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
@@ -1736,22 +1716,6 @@ func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
 	iov.Base = (*byte)(unsafe.Pointer(regs))
 	iov.SetLen(int(unsafe.Sizeof(*regs)))
 	return ptracePtr(PTRACE_SETREGSET, pid, uintptr(elfNT_PRSTATUS), unsafe.Pointer(&iov))
-=======
-	return ptracePtr(PTRACE_GETREGS, pid, 0, unsafe.Pointer(regsout))
-}
-
-func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
-	return ptracePtr(PTRACE_SETREGS, pid, 0, unsafe.Pointer(regs))
->>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
-=======
-}
-
-func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
-	var iov Iovec
-	iov.Base = (*byte)(unsafe.Pointer(regs))
-	iov.SetLen(int(unsafe.Sizeof(*regs)))
-	return ptracePtr(PTRACE_SETREGSET, pid, uintptr(elfNT_PRSTATUS), unsafe.Pointer(&iov))
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 }
 
 func PtraceSetOptions(pid int, options int) (err error) {
@@ -2057,15 +2021,7 @@ func appendBytes(vecs []Iovec, bs [][]byte) []Iovec {
 // offs2lohi splits offs into its low and high order bits.
 func offs2lohi(offs int64) (lo, hi uintptr) {
 	const longBits = SizeofLong * 8
-<<<<<<< HEAD
-<<<<<<< HEAD
 	return uintptr(offs), uintptr(uint64(offs) >> (longBits - 1) >> 1) // two shifts to avoid false positive in vet
-=======
-	return uintptr(offs), uintptr(uint64(offs) >> longBits)
->>>>>>> 8493e81 (Bump github.com/go-playground/validator/v10 in /src (#424))
-=======
-	return uintptr(offs), uintptr(uint64(offs) >> (longBits - 1) >> 1) // two shifts to avoid false positive in vet
->>>>>>> b37f0a1 (Bump github.com/fatih/color from 1.14.1 to 1.15.0 in /src (#444))
 }
 
 func Readv(fd int, iovs [][]byte) (n int, err error) {
@@ -2465,10 +2421,6 @@ func PthreadSigmask(how int, set, oldset *Sigset_t) error {
 	return rtSigprocmask(how, set, oldset, _C__NSIG/8)
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
 //sysnb	getresuid(ruid *_C_int, euid *_C_int, suid *_C_int)
 //sysnb	getresgid(rgid *_C_int, egid *_C_int, sgid *_C_int)
 
@@ -2541,104 +2493,3 @@ func SchedGetAttr(pid int, flags uint) (*SchedAttr, error) {
 }
 
 //sys	Cachestat(fd uint, crange *CachestatRange, cstat *Cachestat_t, flags uint) (err error)
-<<<<<<< HEAD
-=======
-/*
- * Unimplemented
- */
-// AfsSyscall
-// ArchPrctl
-// Brk
-// ClockNanosleep
-// ClockSettime
-// Clone
-// EpollCtlOld
-// EpollPwait
-// EpollWaitOld
-// Execve
-// Fork
-// Futex
-// GetKernelSyms
-// GetMempolicy
-// GetRobustList
-// GetThreadArea
-// Getpmsg
-// IoCancel
-// IoDestroy
-// IoGetevents
-// IoSetup
-// IoSubmit
-// IoprioGet
-// IoprioSet
-// KexecLoad
-// LookupDcookie
-// Mbind
-// MigratePages
-// Mincore
-// ModifyLdt
-// Mount
-// MovePages
-// MqGetsetattr
-// MqNotify
-// MqOpen
-// MqTimedreceive
-// MqTimedsend
-// MqUnlink
-// Mremap
-// Msgctl
-// Msgget
-// Msgrcv
-// Msgsnd
-// Nfsservctl
-// Personality
-// Pselect6
-// Ptrace
-// Putpmsg
-// Quotactl
-// Readahead
-// Readv
-// RemapFilePages
-// RestartSyscall
-// RtSigaction
-// RtSigpending
-// RtSigqueueinfo
-// RtSigreturn
-// RtSigsuspend
-// RtSigtimedwait
-// SchedGetPriorityMax
-// SchedGetPriorityMin
-// SchedGetparam
-// SchedGetscheduler
-// SchedRrGetInterval
-// SchedSetparam
-// SchedYield
-// Security
-// Semctl
-// Semget
-// Semop
-// Semtimedop
-// SetMempolicy
-// SetRobustList
-// SetThreadArea
-// SetTidAddress
-// Sigaltstack
-// Swapoff
-// Swapon
-// Sysfs
-// TimerCreate
-// TimerDelete
-// TimerGetoverrun
-// TimerGettime
-// TimerSettime
-// Tkill (obsolete)
-// Tuxcall
-// Umount2
-// Uselib
-// Utimensat
-// Vfork
-// Vhangup
-// Vserver
-// _Sysctl
->>>>>>> cb35177 (Bump github.com/spf13/viper from 1.14.0 to 1.15.0 in /src (#417))
-=======
->>>>>>> 7a0c493 (Bump github.com/docker/docker in /src (#533))
