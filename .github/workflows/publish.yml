@@ -21,7 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.21.x
+          go-version: 1.23.x
 
       - name: Cache Go modules
         uses: actions/cache@v4
@@ -60,8 +60,8 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
-          version: v1.20.0
-          args: release --rm-dist
+          version: v2.5.0
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -101,7 +101,6 @@ jobs:
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-buster/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-stretch/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-jessie/"
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-wheezy/"
 
       - name: Deploy to Raspbian
         run: |
@@ -111,13 +110,11 @@ jobs:
       
       - name: Deploy to Ubuntu repo
         run: |
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-hirsute/"
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-groovy/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-noble/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-jammy/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-focal/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-bionic/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-xenial/"
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-trusty/"
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-jammy/"
 
       - name: Deploy to CentOS repo
         run: |
@@ -150,22 +147,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get version name
-        id: get_version
-        uses: battila7/get-version-action@v2
+      - name: Install GoMSI
+        run: choco install -y go-msi
 
       - name: Download executables
         id: download_exe
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          hub release download "${GITHUB_REF#refs/tags/}" -i '*windows_${{ matrix.config.arch }}*.zip'
+          gh release download "${GITHUB_REF#refs/tags/}" -p *windows_${{ matrix.config.arch }}*.zip
           printf "::set-output name=zip::%s\n" *.zip
           unzip -o *.zip && rm -v *.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install GoMSI
-        run: choco install -y go-msi
 
       - name: Prepare PATH
         shell: bash
@@ -182,7 +175,7 @@ jobs:
           mkdir -p build
           msi="$(basename "$ZIP_FILE" ".zip").msi"
           printf "::set-output name=msi::%s\n" "$msi"
-          go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version ${{ steps.get_version.outputs.version }}
+          go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version ${{ github.ref_name }}
           printf "::set-output name=msi::%s\n" *.msi
 
       - name: Upload MSI
