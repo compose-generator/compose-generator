@@ -66,7 +66,7 @@ func EvaluateCondition(condition string, selected *model.SelectedTemplates, varM
 func EnsureCComIsInstalled() {
 	if !commandExists("ccom") {
 		ErrorLogger.Println("CCom installation could not be found")
-		logError("CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", true)
+		logError("CCom could not be found on your system. Please go to https://ccom.compose-generator.com/install to download the latest version.", true)
 	}
 }
 

@@ -144,7 +144,7 @@ func TestCheckIfCComIsInstalled2(t *testing.T) {
 	logErrorCallCount := 0
 	logError = func(message string, exit bool) {
 		logErrorCallCount++
-		assert.Equal(t, "CCom could not be found on your system. Please go to https://github.com/compose-generator/compose-generator/releases/latest to download the latest version.", message)
+		assert.Equal(t, "CCom could not be found on your system. Please go to https://ccom.compose-generator.com/install to download the latest version.", message)
 		assert.True(t, exit)
 	}
 	// Execute test
