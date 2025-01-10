@@ -1,5 +1,5 @@
 # WARNING: This Dockerfile is not meant to be used to build the Docker image manually
-FROM alpine:3.21.1
+FROM alpine:3.21.2
 
 # Set env variables
 ENV PATH="/cg:${PATH}"
