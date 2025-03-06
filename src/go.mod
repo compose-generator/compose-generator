@@ -16,7 +16,7 @@ require (
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.10.0
-	github.com/urfave/cli/v2 v2.27.5
+	github.com/urfave/cli/v2 v2.27.6
 	gopkg.in/yaml.v2 v2.4.0
 )
 
