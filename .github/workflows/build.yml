@@ -31,7 +31,7 @@ jobs:
       run: go install golang.org/x/lint/golint@latest
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Run vet & lint
       working-directory: src
