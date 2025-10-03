@@ -8,7 +8,7 @@ require (
 	github.com/cli/safeexec v1.0.1
 	github.com/compose-generator/diu v0.0.0-20221024073354-053efc03289e
 	github.com/compose-spec/compose-go v1.18.2
-	github.com/docker/docker v25.0.5+incompatible
+	github.com/docker/docker v28.5.0+incompatible
 	github.com/fatih/color v1.18.0
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
@@ -22,6 +22,8 @@ require (
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
+	github.com/containerd/errdefs v1.0.0 // indirect
+	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -36,7 +38,6 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
@@ -47,6 +48,8 @@ require (
 	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
+	github.com/moby/docker-image-spec v1.3.1 // indirect
+	github.com/moby/sys/atomicwriter v0.1.0 // indirect
 	github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
