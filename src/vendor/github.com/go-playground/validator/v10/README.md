@@ -1,6 +1,6 @@
 Package validator
 =================
-<img align="right" src="logo.png">![Project status](https://img.shields.io/badge/version-10.25.0-green.svg)
+<img align="right" src="logo.png">[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/go-playground/validator)](https://github.com/go-playground/validator/releases)
 [![Build Status](https://github.com/go-playground/validator/actions/workflows/workflow.yml/badge.svg)](https://github.com/go-playground/validator/actions)
 [![Coverage Status](https://coveralls.io/repos/go-playground/validator/badge.svg?branch=master&service=github)](https://coveralls.io/github/go-playground/validator?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-playground/validator)](https://goreportcard.com/report/github.com/go-playground/validator)
@@ -15,7 +15,7 @@ It has the following **unique** features:
 -   Slice, Array and Map diving, which allows any or all levels of a multidimensional field to be validated.
 -   Ability to dive into both map keys and values for validation
 -   Handles type interface by determining it's underlying type prior to validation.
--   Handles custom field types such as sql driver Valuer see [Valuer](https://golang.org/src/database/sql/driver/types.go?s=1210:1293#L29)
+-   Handles custom field types such as sql driver [Valuer](https://golang.org/src/database/sql/driver/types.go?s=1210:1293#L29) and the [Valuer interface](https://github.com/go-playground/validator/blob/master/_examples/valuer/main.go)
 -   Alias validation tags, which allows for mapping of several validations to a single tag for easier defining of validations on structs
 -   Extraction of custom defined Field Name e.g. can specify to extract the JSON name while validating and have it available in the resulting FieldError
 -   Customizable i18n aware error messages.
@@ -24,7 +24,7 @@ It has the following **unique** features:
 A Call for Maintainers
 ----------------------
 
-Please read the discussiong started [here](https://github.com/go-playground/validator/discussions/1330) if you are interested in contributing/helping maintain this package.
+Please read the discussion started [here](https://github.com/go-playground/validator/discussions/1330) if you are interested in contributing/helping maintain this package.
 
 Installation
 ------------
@@ -106,8 +106,9 @@ validate := validator.New(validator.WithRequiredStructEnabled())
 | datauri | Data URL |
 | fqdn | Full Qualified Domain Name (FQDN) |
 | hostname | Hostname RFC 952 |
-| hostname_port | HostPort |
 | hostname_rfc1123 | Hostname RFC 1123 |
+| hostname_port | HostPort |
+| port | Port number |
 | ip | Internet Protocol Address IP |
 | ip4_addr | Internet Protocol Address IPv4 |
 | ip6_addr | Internet Protocol Address IPv6 |
@@ -122,9 +123,11 @@ validate := validator.New(validator.WithRequiredStructEnabled())
 | udp6_addr | User Datagram Protocol Address UDPv6 |
 | udp_addr | User Datagram Protocol Address UDP |
 | unix_addr | Unix domain socket end point Address |
+| uds_exists | Unix domain socket exists (checks filesystem sockets and Linux abstract sockets) |
 | uri | URI String |
 | url | URL String |
-| http_url | HTTP URL String |
+| http_url | HTTP(s) URL String |
+| https_url | HTTPS-only URL String |
 | url_encoded | URL Encoded |
 | urn_rfc2141 | Urn RFC 2141 String |
 
@@ -133,7 +136,9 @@ validate := validator.New(validator.WithRequiredStructEnabled())
 | Tag | Description |
 | - | - |
 | alpha | Alpha Only |
+| alphaspace | Alpha Space |
 | alphanum | Alphanumeric |
+| alphanumspace | Alphanumeric Space |
 | alphanumunicode | Alphanumeric Unicode |
 | alphaunicode | Alpha Unicode |
 | ascii | ASCII |
@@ -161,7 +166,8 @@ validate := validator.New(validator.WithRequiredStructEnabled())
 | base64 | Base64 String |
 | base64url | Base64URL String |
 | base64rawurl | Base64RawURL String |
-| bic | Business Identifier Code (ISO 9362) |
+| bic_iso_9362_2014 | Business Identifier Code (ISO 9362:2014) |
+| bic | Business Identifier Code (ISO 9362:2022) |
 | bcp47_language_tag | Language tag (BCP 47) |
 | btc_addr | Bitcoin Address |
 | btc_addr_bech32 | Bitcoin Bech32 Address (segwit) |
@@ -172,13 +178,14 @@ validate := validator.New(validator.WithRequiredStructEnabled())
 | spicedb | SpiceDb ObjectID/Permission/Type |
 | datetime | Datetime |
 | e164 | e164 formatted phone number |
-| ein | U.S. Employeer Identification Number |
+| ein | U.S. Employer Identification Number |
 | email | E-mail String
 | eth_addr | Ethereum Address |
 | hexadecimal | Hexadecimal String |
 | hexcolor | Hexcolor String |
 | hsl | HSL String |
 | hsla | HSLA String |
+| cmyk | CMYK String |
 | html | HTML Tags |
 | html_encoded | HTML Encoded |
 | isbn | International Standard Book Number |
@@ -262,11 +269,13 @@ validate := validator.New(validator.WithRequiredStructEnabled())
 | excluded_without | Excluded Without |
 | excluded_without_all | Excluded Without All |
 | unique | Unique |
+| validateFn | Verify if the method `Validate() error` does not return an error (or any specified method) |
+
 
 #### Aliases:
 | Tag | Description |
 | - | - |
-| iscolor | hexcolor\|rgb\|rgba\|hsl\|hsla |
+| iscolor | hexcolor\|rgb\|rgba\|hsl\|hsla\|cmyk |
 | country_code | iso3166_1_alpha2\|iso3166_1_alpha3\|iso3166_1_alpha_numeric |
 
 Benchmarks
