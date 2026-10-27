@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Get branch name
         id: vars
@@ -23,13 +23,13 @@ jobs:
       - name: Check Copyright
         uses: VinnyBabuManjaly/copyright-action@v1.0.0
         with:
-          CopyrightString: '/*\nCopyright © 2021-2022 Compose Generator Contributors\nAll rights reserved.\n*/\n\n'
+          CopyrightString: '/*\nCopyright © 2021-2023 Compose Generator Contributors\nAll rights reserved.\n*/\n\n'
           Path: 'src'
           IgnorePath: 'src/vendor'
           FileType: '.go'
           
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: ${{ steps.vars.outputs.short_ref }}

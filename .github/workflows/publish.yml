@@ -14,17 +14,17 @@ jobs:
       DOCKER_CLI_EXPERIMENTAL: enabled
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v7
         with:
-          go-version: 1.18.x
+          go-version: 1.23.x
 
       - name: Cache Go modules
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -32,20 +32,20 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v4
         
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v4
 
       - name: Docker login GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
 
       - name: Docker login Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v4
         with:
           registry: docker.io
           username: chillibits
@@ -58,18 +58,14 @@ jobs:
           tar cfvz ./predefined-services.tar.gz *
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v3
+        uses: goreleaser/goreleaser-action@v7
         with:
-          version: v1.9.2
-          args: release --rm-dist
+          version: v2.5.0
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          #TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
-          #TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-          #TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          #TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v7
         with:
           name: dist-output
           path: dist/
@@ -94,17 +90,17 @@ jobs:
         uses: battila7/get-version-action@v2
 
       - name: Download dist output
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v8
         with:
           name: dist-output
 
       - name: Deploy to Debian
         run: |
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-bookworm/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-bullseye/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-buster/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-stretch/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-jessie/"
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/debian-wheezy/"
 
       - name: Deploy to Raspbian
         run: |
@@ -114,12 +110,11 @@ jobs:
       
       - name: Deploy to Ubuntu repo
         run: |
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-hirsute/"
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-groovy/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-noble/"
+          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-jammy/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-focal/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-bionic/"
           curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-xenial/"
-          curl -sSf -u "${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }}" -H "Content-Type: multipart/form-data" --data-binary "@./compose-generator_${{ matrix.arch }}.deb" "${{ secrets.NEXUS_URL }}/ubuntu-trusty/"
 
       - name: Deploy to CentOS repo
         run: |
@@ -150,24 +145,20 @@ jobs:
             }
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
-      - name: Get version name
-        id: get_version
-        uses: battila7/get-version-action@v2
+      - name: Install GoMSI
+        run: choco install -y go-msi
 
       - name: Download executables
         id: download_exe
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          hub release download "${GITHUB_REF#refs/tags/}" -i '*windows_${{ matrix.config.arch }}*.zip'
+          gh release download "${GITHUB_REF#refs/tags/}" -p *windows_${{ matrix.config.arch }}*.zip
           printf "::set-output name=zip::%s\n" *.zip
           unzip -o *.zip && rm -v *.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install GoMSI
-        run: choco install -y go-msi
 
       - name: Prepare PATH
         shell: bash
@@ -184,7 +175,7 @@ jobs:
           mkdir -p build
           msi="$(basename "$ZIP_FILE" ".zip").msi"
           printf "::set-output name=msi::%s\n" "$msi"
-          go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version ${{ steps.get_version.outputs.version }}
+          go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version ${{ github.ref_name }}
           printf "::set-output name=msi::%s\n" *.msi
 
       - name: Upload MSI
@@ -194,4 +185,17 @@ jobs:
           file: ${{ steps.build_msi.outputs.msi }}
           asset_name: compose-generator_${{ matrix.config.label }}_setup.msi
           tag: ${{ github.ref }}
-          
+
+  deploy-win-installers:
+    name: Deploy installers
+    needs: build-win-installers
+    runs-on: windows-latest
+
+    steps:
+      - name: Release to WinGet
+        uses: vedantmgoyal2009/winget-releaser@v2
+        with:
+          identifier: ChilliBits.ComposeGenerator
+          version: ${{ github.ref_name }}
+          release-tag: ${{ github.ref_name }}
+          token: ${{ secrets.CR_PAT }}

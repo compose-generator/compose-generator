@@ -14,18 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
 
     - name: Upgrade apt packages
       run: sudo apt-get update && sudo apt-get upgrade -y
 
     - name: Install Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v7
       with:
-        go-version: 1.18.x
+        go-version: 1.23.x
 
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v7
       with:
         python-version: 3.x
 

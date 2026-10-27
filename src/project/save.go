@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2022 Compose Generator Contributors
+Copyright © 2021-2023 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -8,7 +8,7 @@ package project
 import (
 	"compose-generator/model"
 	"compose-generator/util"
-	"io/ioutil"
+	"os"
 	"sort"
 	"time"
 
@@ -38,18 +38,18 @@ func saveComposeFile(project *model.CGProject, opt SaveOptions) {
 	// Minify compose file
 	project.Composition.WithoutUnnecessaryResources()
 	// Remove unsupported options
-	for serviceIndex, service := range project.Composition.Services {
+	/*for serviceIndex, service := range project.Composition.Services {
 		for volumeIndex := range service.Volumes {
 			project.Composition.Services[serviceIndex].Volumes[volumeIndex].Bind = nil
 		}
-	}
+	}*/
 	// Save docker compose file
 	content, err := yaml.Marshal(project.Composition)
 	if err != nil {
 		errorLogger.Println("Could not save " + opt.ComposeFileName + ": " + err.Error())
 		logError("Could not save "+opt.ComposeFileName, true)
 	}
-	err = ioutil.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0600)
+	err = os.WriteFile(opt.WorkingDir+opt.ComposeFileName, content, 0600)
 	if err != nil {
 		errorLogger.Println("Could not save " + opt.ComposeFileName + ": " + err.Error())
 		logError("Could not save "+opt.ComposeFileName, true)
@@ -98,7 +98,7 @@ func saveEnvFiles(project *model.CGProject, opt SaveOptions) {
 		}
 		content = util.ReplaceVarsInString(content, secretMap)
 		// Write to disk
-		if err := ioutil.WriteFile(opt.WorkingDir+fileName, []byte(content), 0600); err != nil {
+		if err := os.WriteFile(opt.WorkingDir+fileName, []byte(content), 0600); err != nil {
 			errorLogger.Println("Unable to write environment file '" + fileName + "' to the disk: " + err.Error())
 			logError("Unable to write environment file '"+fileName+"' to the disk", true)
 		}
@@ -114,7 +114,7 @@ func saveGitignore(project *model.CGProject, opt SaveOptions) {
 		for _, pattern := range project.GitignorePatterns {
 			content += pattern + "\n"
 		}
-		if err := ioutil.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0600); err != nil {
+		if err := os.WriteFile(opt.WorkingDir+".gitignore", []byte(content), 0600); err != nil {
 			errorLogger.Println("Could not write .gitignore file: " + err.Error())
 			logError("Could not write .gitignore file", true)
 		}
@@ -130,7 +130,7 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 		for _, path := range project.ReadmeChildPaths {
 			if util.FileExists(path) {
 				// #nosec G304
-				childContent, err := ioutil.ReadFile(path)
+				childContent, err := os.ReadFile(path)
 				if err != nil {
 					errorLogger.Println("Could not load README.md from service template: " + err.Error())
 					logError("Could not load README.md from service template", false)
@@ -142,7 +142,7 @@ func saveReadme(project *model.CGProject, opt SaveOptions) {
 		// Replace vars
 		content = util.ReplaceVarsInString(content, project.Vars)
 		// Write to output file
-		if err := ioutil.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0600); err != nil {
+		if err := os.WriteFile(opt.WorkingDir+"README.md", []byte(content), 0600); err != nil {
 			errorLogger.Println("Could not write README file: " + err.Error())
 			logError("Could not write README file", true)
 		}

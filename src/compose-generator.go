@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2022 Compose Generator Contributors
+Copyright © 2021-2023 Compose Generator Contributors
 All rights reserved.
 */
 
@@ -37,7 +37,7 @@ func main() {
 		UseShortOptionHandling: true,
 		EnableBashCompletion:   true,
 		Usage:                  "Generate and manage Docker Compose configuration files for your projects.",
-		Copyright:              "© 2021-2022 Compose Generator Contributors",
+		Copyright:              "© 2021-2023 Compose Generator Contributors",
 		Flags:                  cmd.GenerateCliFlags,
 		Action:                 cmd.Generate,
 		Commands:               cmd.CliCommands,

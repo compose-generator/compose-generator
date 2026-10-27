@@ -1,0 +1,15 @@
+image: ghcr.io/muchobien/pocketbase:${{POCKETBASE_VERSION}}
+container_name: ${{PROJECT_NAME_CONTAINER}}-backend-pocketbase
+restart: always
+volumes:
+  - ${{VOLUME_POCKETBASE_DATA}}:/pb_data
+  - ${{VOLUME_POCKETBASE_PUBLIC}}:/pb_public
+networks:
+#? if has services.frontend {
+#  - frontend-backend
+#? }
+#? if has services.database {
+#  - backend-database
+#? }
+ports:
+  - ${{POCKETBASE_PORT}}:8090
